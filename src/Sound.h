@@ -9,6 +9,43 @@
 
 #define SE_MAX 160	// According to the Organya source code release, this is the real name for this constant
 
+class SOUNDBUFFER
+{
+	public:
+		SOUNDBUFFER(size_t bufSize);
+		~SOUNDBUFFER();
+		
+		void Release();
+		
+		void Lock(uint8_t **buffer, size_t *size);
+		void Unlock();
+		
+		void SetCurrentPosition(uint32_t dwNewPosition);
+		void SetFrequency(uint32_t dwFrequency);
+		void SetVolume(int32_t lVolume);
+		void SetPan(int32_t lPan);
+		void Play(bool bLooping);
+		void Stop();
+		
+		void Mix(long *stream, uint32_t samples);
+		
+		SOUNDBUFFER *next;
+	
+	public:
+		uint8_t *data;
+		size_t size;
+		
+		bool playing;
+		bool looping;
+		bool looped;
+		
+		double frequency;
+		double volume;
+		double volume_l;
+		double volume_r;
+		double samplePosition;
+};
+
 enum SoundEffectNames
 {
 	SND_YES_NO_CHANGE_CHOICE = 1,
@@ -28,8 +65,9 @@ enum SoundEffectNames
 	// To be continued
 };
 
+extern SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
+
 extern BOOL audio_backend_initialised;
-extern AudioBackend_Sound *lpSECONDARYBUFFER[SE_MAX];
 
 BOOL InitDirectSound(void);
 void EndDirectSound(void);
@@ -37,4 +75,4 @@ void PlaySoundObject(int no, int mode);
 void ChangeSoundFrequency(int no, unsigned long rate);
 void ChangeSoundVolume(int no, long volume);
 void ChangeSoundPan(int no, long pan);
-int MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no);
+size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no);

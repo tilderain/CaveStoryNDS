@@ -171,7 +171,7 @@ int StageSelectLoop(int *p_event)
 	{
 		GetTrg();
 
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{

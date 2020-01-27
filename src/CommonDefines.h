@@ -1,7 +1,7 @@
 #pragma once
 
-#define WINDOW_WIDTH 320
-#define WINDOW_HEIGHT 240
+#define WINDOW_WIDTH 256
+#define WINDOW_HEIGHT 192
 
 #define TILES_TO_PIXELS(x) ((int)((x) * 0x10))
 #define PIXELS_TO_TILES(x) ((int)((x) / 0x10))

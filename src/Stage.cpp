@@ -147,7 +147,7 @@ BOOL TransferStage(int no, int w, int x, int y)
 	sprintf(path, "%s/Prt%s", path_dir, gTMT[no].parts);
 	if (!ReloadBitmap_File(path, SURFACE_ID_LEVEL_TILESET))
 		bError = TRUE;
-
+	
 	sprintf(path, "%s/%s.pxa", path_dir, gTMT[no].parts);
 	if (!LoadAttributeData(path))
 		bError = TRUE;

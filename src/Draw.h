@@ -41,27 +41,40 @@ typedef enum SurfaceID
 	SURFACE_ID_CREDIT_CAST = 35,
 	SURFACE_ID_CREDITS_IMAGE = 36,
 	SURFACE_ID_CASTS = 37,
-	SURFACE_ID_MAX = 40
+	SURFACE_ID_FONT = 40,
+	SURFACE_ID_MAX = 41
 } SurfaceID;
 
+struct BUFFER_PIXEL
+{
+	uint8_t r, g, b;
+};
+
+struct SURFACE
+{
+	int w;
+	int h;
+	BUFFER_PIXEL *data;
+};
+
 BOOL Flip_SystemTask(void);
-BOOL StartDirectDraw(const char *title, int width, int height, int lMagnification);
+BOOL StartDirectDraw();
 void EndDirectDraw(void);
 void ReleaseSurface(SurfaceID s);
 BOOL MakeSurface_Resource(const char *name, SurfaceID surf_no);
 BOOL MakeSurface_File(const char *name, SurfaceID surf_no);
 BOOL ReloadBitmap_Resource(const char *name, SurfaceID surf_no);
 BOOL ReloadBitmap_File(const char *name, SurfaceID surf_no);
-BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no, BOOL bSystem);
-void BackupSurface(SurfaceID surf_no, const RECT *rect);
-void PutBitmap3(const RECT *rcView, int x, int y, const RECT *rect, SurfaceID surf_no);
-void PutBitmap4(const RECT *rcView, int x, int y, const RECT *rect, SurfaceID surf_no);
-void Surface2Surface(int x, int y, const RECT *rect, int to, int from);
+BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no);
+void BackupSurface(SurfaceID surf_no, RECT *rect);
+void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
+void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
+void Surface2Surface(int x, int y, RECT *rect, int to, int from);
 unsigned long GetCortBoxColor(unsigned long col);
-void CortBox(const RECT *rect, unsigned long col);
-void CortBox2(const RECT *rect, unsigned long col, SurfaceID surf_no);
+void CortBox(RECT *rect, unsigned long col);
+void CortBox2(RECT *rect, unsigned long col, SurfaceID surf_no);
 int RestoreSurfaces(void);
-void InitTextObject(const char *font_name);
+void InitTextObject();
 void PutText(int x, int y, const char *text, unsigned long color);
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no);
 void EndTextObject(void);

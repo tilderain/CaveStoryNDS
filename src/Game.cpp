@@ -1,10 +1,8 @@
 #include "Game.h"
 
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
-
-#include "SDL.h"
 
 #include "WindowsWrapper.h"
 
@@ -150,7 +148,7 @@ int ModeOpening(void)
 		GetTrg();
 
 		// Escape menu
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -215,8 +213,7 @@ int ModeOpening(void)
 		++gCounter;
 	}
 
-	wait = SDL_GetTicks();
-	while (SDL_GetTicks() < wait + 500)
+	for (wait = 0; wait < 500; wait += 20)
 	{
 		CortBox(&grcGame, 0x000000);
 		PutFramePerSecound();
@@ -362,7 +359,7 @@ int ModeTitle(void)
 			}
 		}
 
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -460,11 +457,9 @@ int ModeTitle(void)
 
 	ChangeMusic(MUS_SILENCE);
 
-	// Black screen when option is selected
-	wait = SDL_GetTicks();
-	while (SDL_GetTicks() < wait + 1000)
+	for (wait = 0; wait < 500; wait += 20)
 	{
-		CortBox(&grcGame, 0);
+		CortBox(&grcGame, 0x000000);
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return 0;
@@ -526,7 +521,7 @@ int ModeAction(void)
 		GetTrg();
 
 		// Escape menu
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -691,14 +686,11 @@ BOOL Game(void)
 
 	if (!LoadGenericData())
 	{
-#ifdef JAPANESE
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "エラー", "汎用ファイルが読めない", NULL);
-#else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Couldn't read general purpose files", NULL);
-#endif
-
+		printf("Error: Couldn't read general purpose files");
 		return FALSE;
 	}
+
+	printf("hi from the world of 7morrow\n");
 
 	PlaySoundObject(7, -1);
 
@@ -707,19 +699,17 @@ BOOL Game(void)
 
 	if (!LoadNpcTable(path))
 	{
-#ifdef JAPANESE
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "エラー", "NPCテーブルが読めない", NULL);
-#else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Couldn't read the NPC table", NULL);
-#endif
-
-		return FALSE;
+		printf("Error: Couldn't read the NPC table");
 	}
+
+	printf("hi from the world of 8morrow\n");
 
 	InitTextScript2();
 	InitSkipFlags();
 	InitMapData2();
 	InitCreditScript();
+
+	printf("hi from the world of 9morrow\n");
 
 	mode = 1;
 	while (mode)
@@ -731,6 +721,8 @@ BOOL Game(void)
 		if (mode == 3)
 			mode = ModeAction();
 	}
+
+	printf("bye i guess");
 
 	PlaySoundObject(7, 0);
 

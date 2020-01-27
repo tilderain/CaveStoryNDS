@@ -91,7 +91,7 @@ int MiniMapLoop(void)
 	{
 		GetTrg();
 
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -136,7 +136,7 @@ int MiniMapLoop(void)
 		if (gKeyTrg & (gKeyOk | gKeyCancel))
 			break;
 
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -180,7 +180,7 @@ int MiniMapLoop(void)
 	{
 		GetTrg();
 
-		if (gKey & KEY_ESCAPE)
+		if (gKey & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{

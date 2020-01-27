@@ -26,29 +26,22 @@ BOOL InitBack(const char *fName, int type)
 
 	// Get width and height
 	char path[MAX_PATH];
-	sprintf(path, "%s/%s.pbm", gDataPath, fName);
-
+	sprintf(path, "%s/%s.png", gDataPath, fName);
+	
 	FILE *fp = fopen(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
-	if (fgetc(fp) != 'B' || fgetc(fp) != 'M')
-	{
-		fclose(fp);
-		return FALSE;
-	}
+	fseek(fp, 0x10, SEEK_SET);
+	gBack.partsW = File_ReadBE32(fp);
+	gBack.partsH = File_ReadBE32(fp);
 
-	fseek(fp, 18, SEEK_SET);
-
-	gBack.partsW = File_ReadLE32(fp);
-	gBack.partsH = File_ReadLE32(fp);
 	fclose(fp);
 
 	// Set background stuff and load texture
 	gBack.flag = TRUE;
 	if (!ReloadBitmap_File(fName, SURFACE_ID_LEVEL_BACKGROUND))
 		return FALSE;
-
 	gBack.type = type;
 	gWaterY = 240 * 0x10 * 0x200;
 	return TRUE;

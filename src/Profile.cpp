@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "SDL.h"
-
 #include "WindowsWrapper.h"
 
 #include "ArmsItem.h"
@@ -247,11 +245,7 @@ BOOL InitializeGame(void)
 	InitFlags();
 	if (!TransferStage(13, 200, 10, 8))
 	{
-#ifdef JAPANESE
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "エラー", "ステージの読み込みに失敗", NULL);
-#else
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Failed to load stage", NULL);
-#endif
+		printf("Error: Failed to load stage");
 
 		return FALSE;
 	}

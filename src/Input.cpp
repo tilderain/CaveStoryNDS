@@ -1,118 +1,134 @@
-#include "Input.h"
-
 #include <stddef.h>
-#include <stdio.h>
+#include <stdint.h>
 #include <string.h>
-
-#include "SDL.h"
 
 #include "WindowsWrapper.h"
 
-// The original names for these variables are unknown
-static SDL_Joystick *joystick = NULL;
-static int joystick_neutral_x = 0;
-static int joystick_neutral_y = 0;
+#include "Input.h"
+#include "KeyControl.h"
+#include "CommonDefines.h"
+#include "Tags.h"
 
-void ReleaseDirectInput(void)
+#include "nds.h"
+
+#define STICK_DEADZONE 0x20
+#define STICK_DEADSML  -STICK_DEADZONE
+#define STICK_DEADBIG   STICK_DEADZONE
+
+void ReleaseDirectInput()
 {
-	// Close opened joystick (if exists)
-	if (joystick != NULL)
+	//WPAD_Shutdown();
+}
+
+bool InitDirectInput()
+{
+	//WPAD_Init();
+	//PAD_Init();
+	return true;
+}
+
+bool UpdateInput()
+{
+	
+	scanKeys();
+
+	int keys = keysHeld();
+	gKey = 0;
+	
+	gKey |= (keys & KEY_UP) ? gKeyUp : 0 ;
+	gKey |= (keys & KEY_RIGHT) ? gKeyRight : 0 ;
+	gKey |= (keys & KEY_DOWN) ? gKeyDown : 0 ;
+	gKey |= (keys & KEY_LEFT) ? gKeyLeft : 0 ;
+	
+	gKey |= (keys & KEY_A) ? gKeyJump : 0 ;
+	gKey |= (keys & KEY_B) ? gKeyShot : 0 ;
+	gKey |= (keys & KEY_A) ? gKeyOk : 0 ;
+	gKey |= (keys & KEY_B) ? gKeyCancel : 0 ;
+	gKey |= (keys & KEY_START) ? gKeyItem : 0 ;
+	
+	gKey |= (keys & KEY_X) ? gKeyArms : 0 ;
+	gKey |= (keys & KEY_Y) ? gKeyArmsRev : 0 ;
+
+	/*
+	WPAD_ScanPads();
+	PAD_ScanPads();
+	
+	uint32_t wpadHeld = WPAD_ButtonsHeld(0);
+	uint32_t padHeld = PAD_ButtonsHeld(0);
+	
+	//Clear all keys
+	gKey = 0;
+	
+	/* Wiimote and Wii Classic Controller 
+	//Escape key
+	if (wpadHeld & WPAD_BUTTON_HOME || wpadHeld & WPAD_CLASSIC_BUTTON_HOME)
+		gKey |= KEY_ESCAPE;
+	
+	//Direction
+	if (!(wpadHeld & WPAD_BUTTON_B))
 	{
-		SDL_JoystickClose(joystick);
-		joystick = NULL;
+		gKey |= (wpadHeld & WPAD_BUTTON_UP)	? gKeyLeft : 0;
+		gKey |= (wpadHeld & WPAD_BUTTON_DOWN)	? gKeyRight : 0;
 	}
-
-	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
-}
-
-// It looks like Pixel declared his functions early, so he could forward-reference
-BOOL FindAndOpenDirectInputDevice(void);
-
-BOOL InitDirectInput(void)
-{
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-
-	if (!FindAndOpenDirectInputDevice())
-		return FALSE;
-
-	return TRUE;
-}
-
-// The original name for this function and its variables are unknown.
-// This function finds and hooks the first available DirectInput device (or SDL Joystick, in this case).
-BOOL FindAndOpenDirectInputDevice(void)
-{
-	int i;
-
-#ifndef NDEBUG
-	for (i = 0; i < SDL_NumJoysticks(); ++i)
-		printf("Joystick #%d name: %s\n", i, SDL_JoystickNameForIndex(i));
-#endif
-
-	// Open first available joystick
-	for (i = 0; i < SDL_NumJoysticks(); ++i)
+	
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_LEFT)		? gKeyLeft : 0;
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_RIGHT)	? gKeyRight : 0;
+	gKey |= (wpadHeld & WPAD_BUTTON_RIGHT	|| wpadHeld & WPAD_CLASSIC_BUTTON_UP)		? gKeyUp : 0;
+	gKey |= (wpadHeld & WPAD_BUTTON_LEFT	|| wpadHeld & WPAD_CLASSIC_BUTTON_DOWN)		? gKeyDown : 0;
+	
+	//Jump and shoot
+	gKey |= (wpadHeld & WPAD_BUTTON_2		|| wpadHeld & WPAD_CLASSIC_BUTTON_B)		? gKeyJump : 0;
+	gKey |= (wpadHeld & WPAD_BUTTON_1		|| wpadHeld & WPAD_CLASSIC_BUTTON_Y)		? gKeyShot : 0;
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_A)		? gKeyJump : 0;
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_X)		? gKeyShot : 0;
+	
+	//Ok and cancel
+	gKey |= (wpadHeld & WPAD_BUTTON_2		|| wpadHeld & WPAD_CLASSIC_BUTTON_B)		? gKeyOk : 0;
+	gKey |= (wpadHeld & WPAD_BUTTON_1		|| wpadHeld & WPAD_CLASSIC_BUTTON_Y)		? gKeyCancel : 0;
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_A)		? gKeyOk : 0;
+	gKey |= 								  (wpadHeld & WPAD_CLASSIC_BUTTON_X)		? gKeyCancel : 0;
+	
+	//Inventory and map system key
+	gKey |= (wpadHeld & WPAD_BUTTON_PLUS	|| wpadHeld & WPAD_CLASSIC_BUTTON_PLUS)		? gKeyItem : 0;
+	gKey |= (wpadHeld & WPAD_BUTTON_MINUS	|| wpadHeld & WPAD_CLASSIC_BUTTON_MINUS)	? gKeyMap : 0;
+	
+	//Weapon switch keys
+	if (wpadHeld & WPAD_BUTTON_B)
 	{
-		joystick = SDL_JoystickOpen(i);
-
-		// Break as soon as a joystick is properly opened
-		if (joystick != NULL)
-			return TRUE;
+		gKey |= (wpadHeld & WPAD_BUTTON_DOWN)	? gKeyArms : 0;
+		gKey |= (wpadHeld & WPAD_BUTTON_UP)		? gKeyArmsRev : 0;
 	}
-
-	return FALSE;
-}
-
-BOOL GetJoystickStatus(JOYSTICK_STATUS *status)
-{
-	if (joystick == NULL)
-		return FALSE;
-
-	// The original Input.cpp assumed there were 32 buttons (because of DirectInput's 'DIJOYSTATE' struct)
-	int numButtons = SDL_JoystickNumButtons(joystick);
-	if (numButtons > 32)
-		numButtons = 32;
-
-	// Read whatever buttons actually exist
-	int i = 0;
-	for (; i < numButtons; ++i)
-	{
-		if (SDL_JoystickGetButton(joystick, i) != 0)
-			status->bButton[i] = TRUE;
-		else
-			status->bButton[i] = FALSE;
-	}
-
-	// Blank the buttons that do not
-	for (; i < 32; ++i)
-		status->bButton[i] = FALSE;
-
-	status->bDown = FALSE;
-	status->bRight = FALSE;
-	status->bUp = FALSE;
-	status->bLeft = FALSE;
-
-	const Sint16 joystick_x = SDL_JoystickGetAxis(joystick, 0);
-	if (joystick_x < joystick_neutral_x - 10000)
-		status->bLeft = TRUE;
-	else if (joystick_x > joystick_neutral_x + 10000)
-		status->bRight = TRUE;
-
-	const Sint16 joystick_y = SDL_JoystickGetAxis(joystick, 1);
-	if (joystick_y < joystick_neutral_y - 10000)
-		status->bUp = TRUE;
-	else if (joystick_y > joystick_neutral_y + 10000)
-		status->bDown = TRUE;
-
-	return TRUE;
-}
-
-BOOL ResetJoystickStatus(void)
-{
-	if (joystick == NULL)
-		return FALSE;
-
-	joystick_neutral_x = SDL_JoystickGetAxis(joystick, 0);
-	joystick_neutral_y = SDL_JoystickGetAxis(joystick, 1);
-
-	return TRUE;
+	
+	gKey |= (wpadHeld & WPAD_CLASSIC_BUTTON_FULL_R)	? gKeyArms : 0;
+	gKey |= (wpadHeld & WPAD_CLASSIC_BUTTON_FULL_L)	? gKeyArmsRev : 0;
+	
+	/* Gamecube controller 
+	//Direction
+	gKey |= (padHeld & PAD_BUTTON_LEFT)		? gKeyLeft : 0;
+	gKey |= (padHeld & PAD_BUTTON_RIGHT)	? gKeyRight : 0;
+	gKey |= (padHeld & PAD_BUTTON_UP)		? gKeyUp : 0;
+	gKey |= (padHeld & PAD_BUTTON_DOWN)		? gKeyDown : 0;
+	
+	//Analogue stick
+	gKey |= (PAD_StickX(0) < STICK_DEADSML)	? gKeyLeft : 0;
+	gKey |= (PAD_StickX(0) > STICK_DEADBIG)	? gKeyRight : 0;
+	gKey |= (PAD_StickY(0) > STICK_DEADBIG)	? gKeyUp : 0;
+	gKey |= (PAD_StickY(0) < STICK_DEADSML)	? gKeyDown : 0;
+	
+	//Jump and shoot
+	gKey |= (padHeld & PAD_BUTTON_A)		? gKeyJump : 0;
+	gKey |= (padHeld & PAD_BUTTON_B)		? gKeyShot : 0;
+	
+	//Ok and cancel
+	gKey |= (padHeld & PAD_BUTTON_A)		? gKeyOk : 0;
+	gKey |= (padHeld & PAD_BUTTON_B)		? gKeyCancel : 0;
+	
+	//Inventory and map system key
+	gKey |= (padHeld & PAD_BUTTON_START)	? gKeyItem : 0;
+	gKey |= (padHeld & PAD_TRIGGER_Z)		? gKeyMap : 0;
+	
+	//Weapon switch keys
+	gKey |= (padHeld & PAD_TRIGGER_R)		? gKeyArms : 0;
+	gKey |= (padHeld & PAD_TRIGGER_L)		? gKeyArmsRev : 0; */
+	return true;
 }

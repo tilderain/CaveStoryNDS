@@ -41,6 +41,15 @@ unsigned char* LoadFileToMemory(const char *file_path, size_t *file_size)
 	return NULL;
 }
 
+unsigned char File_ReadU8(FILE *stream)
+{
+	unsigned char byte;
+	
+	fread(&byte, 1, 1, stream);
+	
+	return byte;
+}
+
 unsigned short File_ReadBE16(FILE *stream)
 {
 	unsigned char bytes[2];

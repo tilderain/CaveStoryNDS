@@ -3,25 +3,25 @@
 long gKey;
 long gKeyTrg;
 
-long gKeyJump = KEY_Z;
-long gKeyShot = KEY_X;
-long gKeyArms = KEY_ARMS;
-long gKeyArmsRev = KEY_ARMSREV;
-long gKeyItem = KEY_ITEM;
-long gKeyMap = KEY_MAP;
+long gKeyJump = CEY_Z;
+long gKeyShot = CEY_X;
+long gKeyArms = CEY_ARMS;
+long gKeyArmsRev = CEY_ARMSREV;
+long gKeyItem = CEY_ITEM;
+long gKeyMap = CEY_MAP;
 
-long gKeyOk = KEY_Z;
-long gKeyCancel = KEY_X;
+long gKeyOk = CEY_Z;
+long gKeyCancel = CEY_X;
 
-long gKeyLeft = KEY_LEFT;
-long gKeyUp = KEY_UP;
-long gKeyRight = KEY_RIGHT;
-long gKeyDown = KEY_DOWN;
+long gKeyLeft = CEY_LEFT;
+long gKeyUp = CEY_UP;
+long gKeyRight = CEY_RIGHT;
+long gKeyDown = CEY_DOWN;
 
 void GetTrg(void)
 {
-	static int key_old;
-	gKeyTrg = gKey ^ key_old;
+	static int CEY_old;
+	gKeyTrg = gKey ^ CEY_old;
 	gKeyTrg = gKey & gKeyTrg;
-	key_old = gKey;
+	CEY_old = gKey;
 }

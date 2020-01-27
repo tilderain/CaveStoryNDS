@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SDL.h"
-
 #include "WindowsWrapper.h"
 
 #include "ArmsItem.h"
@@ -66,7 +64,7 @@ BOOL InitTextScript2(void)
 
 	// Create line surfaces
 	for (i = 0; i < 4; ++i)
-		MakeSurface_Generic(gRect_line.right, gRect_line.bottom, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i), FALSE);
+		MakeSurface_Generic(gRect_line.right, gRect_line.bottom, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 
 	// Clear text
 	memset(text, 0, sizeof(text));
@@ -726,12 +724,7 @@ int TextScriptProc(void)
 
 						if (!TransferStage(z, w, x, y))
 						{
-							#ifdef JAPANESE
-							SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "エラー", "ステージの読み込みに失敗", NULL);
-							#else
-							SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Failed to load stage", NULL);
-							#endif
-
+							printf("Error : Failed to load stage");
 							return enum_ESCRETURN_exit;
 						}
 					}
@@ -1282,13 +1275,7 @@ int TextScriptProc(void)
 					else
 					{
 						char str_0[0x40];
-						#ifdef JAPANESE
-						sprintf(str_0, "不明のコード:<%c%c%c", gTS.data[gTS.p_read + 1], gTS.data[gTS.p_read + 2], gTS.data[gTS.p_read + 3]);
-						SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "エラー", str_0, NULL);
-						#else
-						sprintf(str_0, "Unknown code:<%c%c%c", gTS.data[gTS.p_read + 1], gTS.data[gTS.p_read + 2], gTS.data[gTS.p_read + 3]);
-						SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", str_0, NULL);
-						#endif
+						printf(str_0, "Unknown code:<%c%c%c", gTS.data[gTS.p_read + 1], gTS.data[gTS.p_read + 2], gTS.data[gTS.p_read + 3]);
 
 						return enum_ESCRETURN_exit;
 					}

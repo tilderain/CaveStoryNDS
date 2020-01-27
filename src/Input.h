@@ -15,3 +15,5 @@ void ReleaseDirectInput(void);
 BOOL InitDirectInput(void);
 BOOL GetJoystickStatus(JOYSTICK_STATUS *status);
 BOOL ResetJoystickStatus(void);
+
+bool UpdateInput();
