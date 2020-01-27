@@ -11,7 +11,6 @@
 
 #include "CommonDefines.h"
 #include "Main.h"
-#include "Resource.h"
 #include "Sound.h"
 #include "Tags.h"
 
@@ -427,7 +426,7 @@ void LoadOrganya(const char *name)
 	memset(&info, 0, sizeof(info));
 	
 	//does this thing even have enough memory?
-	OrganyaNoteAlloc(0x256); //down from FFFF
+	OrganyaNoteAlloc(0xFFF); //down from FFFF
 	
 	//Stop currently playing notes
 	memset(play_np, 0, sizeof(play_np));

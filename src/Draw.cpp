@@ -11,7 +11,6 @@
 #include "Draw.h"
 #include "Main.h"
 #include "Input.h"
-#include "Resource.h"
 #include "Tags.h"
 
 #include "nds.h"
@@ -76,6 +75,8 @@ BOOL Flip_SystemTask()
 	oamUpdate(&oamMain);
 	
 	curGfx = 0;
+
+	oamClear(&oamMain, 0, 0);
 	
 	//Write to framebuffer
 	/*uint32_t *pointer = xfb[currentFramebuffer];
@@ -322,11 +323,18 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	}*/
 	
 	if(curGfx >= gfxPtrCount) return;
-	
-	if(surf_no != SURFACE_ID_MY_CHAR) return;
-	
+
+	if(x > WINDOW_WIDTH || x < -32) return;
+	if(y > WINDOW_HEIGHT || y < -32) return;
+
+	if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
+	if(surf_no == SURFACE_ID_LEVEL_TILESET) return;
+	if(surf_no == SURFACE_ID_FADE) return;
+	if(surf_no == SURFACE_ID_TEXT_BOX) return;
+	if(surf_no == SURFACE_ID_FACE) return;
+
 	oamSet(&oamMain, 
-			0, 
+			curGfx, 
 			x, 
 			y, 
 			0, 

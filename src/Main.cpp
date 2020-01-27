@@ -21,7 +21,6 @@
 #include "MyChar.h"
 #include "Organya.h"
 #include "Profile.h"
-#include "Resource.h"
 #include "Sound.h"
 #include "Triangle.h"
 
