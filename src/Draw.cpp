@@ -24,43 +24,31 @@
 
 #include "lodepng.h"
 
+#include "gl2d.h"
+
+#define REG_DISPCNT_MAIN  (*(vu32*)0x04000000)
+#define REG_DISPCNT_SUB   (*(vu32*)0x04001000)
+#define MODE_FB0          (0x00020000)
+#define VRAM_A            ((u16*)0x6800000)
+#define VRAM_A_CR         (*(vu8*)0x04000240)
+#define VRAM_ENABLE       (1<<7)
+#define SCANLINECOUNTER   *(vu16 *)0x4000006
+
+#define COLOR(r,g,b)  ((r) | (g)<<5 | (b)<<10)
+#define PIXEL_ENABLE (1<<15)
+#define OFFSET(r,c,w) ((r)*(w)+(c))
+
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
 SURFACE surf[SURFACE_ID_MAX];
 
-//Some stuff to convert RGB to YUV because the Wii is horrible!!! :D
-typedef struct YUVColour
-{
-	uint8_t y;
-	uint8_t cb;
-	uint8_t cr;
-} YUVColour;
 
-YUVColour RGBToYUV(uint8_t red, uint8_t green, uint8_t blue)
+
+void clearScreen()
 {
-	YUVColour yuv;
-	yuv.y = (299 * red + 587 * green + 114 * blue) / 1000;
-	yuv.cb = (-16874 * red - 33126 * green + 50000 * blue + 12800000) / 100000;
-	yuv.cr = (50000 * red - 41869 * green - 8131 * blue + 12800000) / 100000;
-	return yuv;
+	memset(VRAM_A, 0, sizeof(u16)*WINDOW_WIDTH*WINDOW_HEIGHT);
 }
-
-#define SET_BUFFER_PIXEL(buffer, w, x, y, sr, sg, sb)    buffer[y * w + x].r = sr; \
-                                                         buffer[y * w + x].g = sg; \
-                                                         buffer[y * w + x].b = sb;
-
-//Frame-buffers and screen mode
-uint32_t *xfb[2];
-
-bool currentFramebuffer;
-//GXRModeObj *prefMode;
-
-int curGfx;
-
-const int gfxPtrCount = 128;
-u16* gfxPtrs[gfxPtrCount] = {NULL};
-
 
 //Draw to screen
 BOOL Flip_SystemTask()
@@ -69,14 +57,17 @@ BOOL Flip_SystemTask()
 	UpdateInput();
 	
 	mmStreamUpdate();
-	
+
+	glEnd2D();
+
+	glFlush(0);
 	swiWaitForVBlank();
 
-	oamUpdate(&oamMain);
-	
-	curGfx = 0;
+	//clearScreen();
 
-	oamClear(&oamMain, 0, 0);
+	//oamUpdate(&oamMain);
+
+	//oamClear(&oamMain, 0, 0);
 	
 	//Write to framebuffer
 	/*uint32_t *pointer = xfb[currentFramebuffer];
@@ -101,12 +92,12 @@ BOOL Flip_SystemTask()
 	
 	//Swap frame-buffer
 	currentFramebuffer = !currentFramebuffer;*/
+	glBegin2D();
 	
 	return TRUE;
 }
 PrintConsole bottomScreen;
 
-u16*sprite_gfx_mem;
 //Initialize video and frame-buffers
 
 BOOL StartDirectDraw()
@@ -115,23 +106,34 @@ BOOL StartDirectDraw()
 	//-----------------------------------------------------------------
 	// Initialize the graphics engines
 	//-----------------------------------------------------------------
-	videoSetMode(MODE_0_2D);
-	videoSetModeSub(MODE_0_2D);
+	videoSetMode( MODE_5_3D );
 
-	vramSetBankA(VRAM_A_MAIN_SPRITE);
-	vramSetBankC(VRAM_C_SUB_BG); //vramSetBankD(VRAM_D_SUB_SPRITE);
+
+    vramSetBankA( VRAM_A_TEXTURE );     
+	vramSetBankB( VRAM_B_TEXTURE );
 	
-	oamInit(&oamMain, SpriteMapping_1D_32, false);
+	vramSetBankD( VRAM_D_TEXTURE );
+	
+	vramSetBankE(VRAM_E_TEX_PALETTE);  // Allocate VRAM bank for all the palettes
+	glScreen2D();
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin2D();
+	
+
+
+
+	//oamInit(&oamMain, SpriteMapping_1D_32, false);
 	//oamInit(&oamSub, SpriteMapping_1D_128, false);
 	
 	//Initialize printing screen
-	consoleInit(&bottomScreen, 3,BgType_Text4bpp, BgSize_T_256x256, 31, 0, false, true);
-	consoleSelect(&bottomScreen);
+	//consoleInit(&bottomScreen, 3,BgType_Text4bpp, BgSize_T_256x256, 31, 0, false, true);
+	//consoleSelect(&bottomScreen);
 	
 	//dmaCopy(manPal, SPRITE_PALETTE, 512);
 	
 	//sprite_gfx_mem = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
-	
+	/*
 	curGfx = 0;
 	for(int i = 0; i < gfxPtrCount; i++)
 	{
@@ -143,7 +145,7 @@ BOOL StartDirectDraw()
 		gfxPtrs[i] = gfx;
 	}
 
-	SPRITE_PALETTE[1] = RGB15(31,0,0);
+	SPRITE_PALETTE[1] = RGB15(31,0,0);*/
 
 	return TRUE;
 }
@@ -172,6 +174,8 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 	return TRUE;
 }
 
+
+
 BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 {
 	struct stat file_descriptor;
@@ -185,14 +189,88 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	
 	unsigned int bitmap_width, bitmap_height;
 	unsigned char *bitmap_pixels;
-	//lodepng_decode32(&bitmap_pixels, &bitmap_width, &bitmap_height, file_buffer, file_size);
+	
+	lodepng_decode24(&bitmap_pixels, &bitmap_width, &bitmap_height, file_buffer, file_size);
+
+	//printf("Type %d\n", state.info_png.color.colortype);
+	//printf("Size %d\n", state.info_png.color.palettesize);
+	
+	//for (int i = 0; i < state.info_png.color.palettesize; i++)
+	//{
+	//	printf("Color %d", state.info_png.color.palette[i*4]);
+	//	printf(" %d", state.info_png.color.palette[i*4+1]);
+	//	printf(" %d", state.info_png.color.palette[i*4+2]);
+	//	printf(" %d\n", state.info_png.color.palette[i*4+3]);
+	//}
+	
 	free(file_buffer);
-	
+
 	if (create_surface)
+	{
 		MakeSurface_Generic(bitmap_width, bitmap_height, surf_no);
+	}
+		
 	else
+	{
 		memset(surf[surf_no].data, 0, surf[surf_no].w * surf[surf_no].h * sizeof(BUFFER_PIXEL));
+		glDeleteTextures(1, &surf[surf_no].textureid);
+	}
 	
+	int pos;
+	//printf("Size %d\n", sizeof(bitmap_pixels) / sizeof(bitmap_pixels)[0]);
+
+	for (int y = 0; y < bitmap_height; y++)
+	{
+		for (int x = 0; x < bitmap_width; x++)
+		{
+			uint8_t r,g,b;
+			pos = (y*bitmap_width) + x;
+			r = bitmap_pixels[pos*3] / 8;
+			g = bitmap_pixels[pos*3+1] / 8;
+			b = bitmap_pixels[pos*3+2] / 8;
+
+			//if(pos >= bitmap_width * bitmap_height) break;
+			surf[surf_no].data[pos].color = COLOR(r, g, b);
+
+			
+		}
+	}
+	
+	int textureid;
+	
+	glGenTextures(1, &textureid);
+	glBindTexture(0, textureid);
+
+	int texW, texH;
+	switch(bitmap_width)
+	{
+		case 16: texW= TEXTURE_SIZE_16; break;
+		case 32: texW= TEXTURE_SIZE_32; break;
+		case 64: texW= TEXTURE_SIZE_64; break;
+		case 128: texW= TEXTURE_SIZE_128; break;
+		case 256: texW= TEXTURE_SIZE_256; break;
+		case 512: texW= TEXTURE_SIZE_512; break;
+		default: texW= TEXTURE_SIZE_64;
+	}
+	switch(bitmap_height)
+	{
+		case 16: texH= TEXTURE_SIZE_16; break;
+		case 32: texH= TEXTURE_SIZE_32; break;
+		case 64: texH= TEXTURE_SIZE_64; break;
+		case 128: texH= TEXTURE_SIZE_128; break;
+		case 256: texH= TEXTURE_SIZE_256; break;
+		case 512: texH= TEXTURE_SIZE_512; break;
+		default: texH= TEXTURE_SIZE_64;
+	}
+
+	glTexImage2D(0,0, GL_RGB, texW, texH, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF,
+		(u8*)surf[surf_no].data);
+	surf[surf_no].textureid = textureid;
+
+	glColorTableEXT( 0, 0, 0, 0, 0, 0 );
+
+	printf("Texture Id %d \n", textureid);
 	/*
 	for (int x = 0; x < bitmap_height; x++)
 	{
@@ -206,7 +284,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	}*/
 
 	//dmaCopy(bitmap_pixels, sprite_gfx_mem, 32*32);
-	
+	free(bitmap_pixels);
+	if(create_surface)
+		free(surf[surf_no].data);
 	fclose(fp);
 	
 	return TRUE;
@@ -291,8 +371,55 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 	}
 }
 
+
+void setPixel(int row, int col, u16 color) {
+    VRAM_A[OFFSET(row, col, WINDOW_WIDTH)] = color;
+}
+
+void setRow(int row, int x, int rectx, int recty, int width, SURFACE surf) {
+	memcpy(&VRAM_A[OFFSET(row, x, WINDOW_WIDTH)], &surf.data[(recty * surf.w) + rectx], (2*width));
+}
+
 static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, bool transparent)
 {
+	//if(curGfx) return;
+
+	//if(surf_no != SURFACE_ID_MY_CHAR) return;
+
+	//if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
+	//if(surf_no == SURFACE_ID_LEVEL_TILESET) return;
+	//if(surf_no == SURFACE_ID_FADE) return;
+
+	if(x > WINDOW_WIDTH) return;
+	if(y > WINDOW_HEIGHT) return;
+
+	//int rectW = surf[surf_no].w;
+	//int rectH = surf[surf_no].h;
+
+	//rect->left = 0;
+	//rect->top = 0;
+
+	glSprite(x, y, rect, surf[surf_no].textureid, 0);
+
+	/*for (int yy = 0; yy < rectH; yy++)
+	{
+		//int rectx = rect->left;
+		//int recty = rect->top + yy;
+
+		//printf("%d ", rectx);
+
+		//int pos = (recty * surf[surf_no].w);
+		
+		//printf("%d ",pos+rectx);
+
+		//uint16_t col = surf[surf_no].data[pos + rectx].color;
+		//if(col == 0) continue;
+		setRow(y + yy, x, rect->left, rect->top + yy, rectW, surf[surf_no]);
+	}*/
+
+
+	//curGfx++;
+	
 	/*
 	if (surf[surf_no].data)
 	{
@@ -322,6 +449,7 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 		}
 	}*/
 	
+	/*
 	if(curGfx >= gfxPtrCount) return;
 
 	if(x > WINDOW_WIDTH || x < -32) return;
@@ -349,7 +477,7 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 			false	
 			);              
 			
-	curGfx++;
+	curGfx++;*/
 	//oamSet(&oamMain, 0, x, y, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, 
 	//		sprite_gfx_mem, -1, false, false, false, false, false);
 }
@@ -382,9 +510,9 @@ void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 				int dx = x + (fx - rect->left);
 				int dy = y + (fy - rect->top);
 				
-				BUFFER_PIXEL *pixel = &surf[from].data[fy * surf[from].w + fx];
-				if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
-					continue;
+				//BUFFER_PIXEL *pixel = &surf[from].data[fy * surf[from].w + fx];
+				//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
+				//	continue;
 				//SET_BUFFER_PIXEL(surf[to].data, surf[to].w, dx, dy, pixel->r, pixel->g, pixel->b);
 			}
 		}
@@ -472,8 +600,8 @@ void PutText(int x, int y, const char *text, uint32_t color)
 					int dy = y + (fy - rect->top);
 					
 					BUFFER_PIXEL *pixel = &surf[SURFACE_ID_FONT].data[fy * surf[SURFACE_ID_FONT].w + fx];
-					if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0)
-						continue;
+					//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0)
+					//	continue;
 					//SET_BUFFER_PIXEL(screenBuffer, WINDOW_WIDTH, dx, dy, r, g, b);
 				}
 			}
@@ -516,8 +644,8 @@ void PutText2(int x, int y, const char *text, uint32_t color, SurfaceID surf_no)
 					int dy = y + (fy - rect->top);
 					
 					BUFFER_PIXEL *pixel = &surf[SURFACE_ID_FONT].data[fy * surf[SURFACE_ID_FONT].w + fx];
-					if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
-						continue;
+					//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
+					//	continue;
 					//SET_BUFFER_PIXEL(surf[surf_no].data, surf[surf_no].w, dx, dy, r, g, b);
 				}
 			}

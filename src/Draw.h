@@ -47,13 +47,14 @@ typedef enum SurfaceID
 
 struct BUFFER_PIXEL
 {
-	uint8_t r, g, b;
+	uint16_t color;
 };
 
 struct SURFACE
 {
 	int w;
 	int h;
+	int textureid;
 	BUFFER_PIXEL *data;
 };
 
@@ -78,3 +79,5 @@ void InitTextObject();
 void PutText(int x, int y, const char *text, unsigned long color);
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no);
 void EndTextObject(void);
+
+void glBegin2D( void );
