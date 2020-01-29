@@ -1,0 +1,65 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "execute make",
+            "command": "make",
+            "args": [
+
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+		},
+		{
+            "type": "shell",
+            "label": "kill things",
+            "command": "killall -3 desmume",
+            "args": [
+
+            ],
+
+		},
+		{
+            "type": "shell",
+            "label": "make and launch desmume",
+            "command": "make && sleep 1 && desmume --arm9gdb 30001 ${workspaceFolder}/CSE2-DS-New.nds",
+            "args": [
+
+			],
+			"options": {
+                "cwd": "${workspaceFolder}"
+            },
+			"isBackground": true,
+			"problemMatcher": [
+				{
+				  "pattern": [
+					{
+					  "regexp": ".",
+					  "file": 1,
+					  "location": 2,
+					  "message": 3
+					}
+				  ],
+				  "background": {
+					"activeOnStart": true,
+					"beginsPattern": ".",
+					"endsPattern": ".",
+				  }
+				}
+			]
+		},
+		{
+			"label": "Build",
+			"dependsOn": [
+				"execute make",
+				"launch desmume"
+			]
+		}
+    ],
+    "version": "2.0.0"
+}

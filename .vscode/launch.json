@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "2.0.0",
+    "configurations": [
+    {
+			"type": "gdb",
+			"request": "attach",
+			"name": "Attach to gdbserver",
+			"executable": "CSE2-DS-New.elf",
+			"target": "127.0.0.1:30001",
+			"remote": true,
+			"cwd": "${workspaceRoot}", 
+			"gdbpath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gdb",
+		
+	
+			"preLaunchTask": "make and launch desmume",
+			"postDebugTask": "kill things"
+    }
+    ]
+}
