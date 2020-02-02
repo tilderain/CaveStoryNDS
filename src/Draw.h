@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindowsWrapper.h"
+#include "nds.h"
 
 extern RECT grcGame;
 extern RECT grcFull;
@@ -47,7 +48,7 @@ typedef enum SurfaceID
 
 struct BUFFER_PIXEL
 {
-	uint16_t color;
+	char color;
 };
 
 struct SURFACE
@@ -55,7 +56,10 @@ struct SURFACE
 	int w;
 	int h;
 	int textureid;
+	GL_TEXTURE_TYPE_ENUM paletteType;
+	int palettesize;
 	BUFFER_PIXEL *data;
+	u16* palette;
 };
 
 BOOL Flip_SystemTask(void);
