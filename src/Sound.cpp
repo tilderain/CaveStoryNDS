@@ -244,7 +244,7 @@ bool InitDirectSound()
 	SetYtrigger( 0 );
 	irqEnable( IRQ_VCOUNT );
 	
-	StartOrganya();
+	//StartOrganya();
 
 	return true;
 }

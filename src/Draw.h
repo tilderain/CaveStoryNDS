@@ -56,6 +56,9 @@ struct SURFACE
 	int w;
 	int h;
 	int textureid;
+	int xoffset;
+	int yoffset;
+	int paletteOffset;
 	GL_TEXTURE_TYPE_ENUM paletteType;
 	int palettesize;
 	BUFFER_PIXEL *data;
