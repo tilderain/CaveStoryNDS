@@ -63,7 +63,7 @@ void MakeWaveTables(void)
 		gWaveModelTable[5][i] = (signed char)(msvc_rand() & 0xFF) / 2;
 }
 
-//BOOL wave_tables_made;
+BOOL wave_tables_made;
 
 BOOL MakePixelWaveData(const PIXTONEPARAMETER *ptp, unsigned char *pData)
 {
@@ -80,11 +80,11 @@ BOOL MakePixelWaveData(const PIXTONEPARAMETER *ptp, unsigned char *pData)
 	double d1, d2, d3;
 
 	// The Linux port added a cute optimisation here, where MakeWaveTables is only called once during the game's execution
-	//if (wave_tables_made != TRUE)
-	//{
+	if (wave_tables_made != TRUE)
+	{
 		MakeWaveTables();
-	//	wave_tables_made = TRUE;
-	//}
+		wave_tables_made = TRUE;
+	}
 
 	memset(envelopeTable, 0, sizeof(envelopeTable));
 

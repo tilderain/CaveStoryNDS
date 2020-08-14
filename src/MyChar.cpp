@@ -35,8 +35,8 @@ void InitMyChar(void)
 	gMC.hit.front = 5 * 0x200;
 	gMC.hit.bottom = 8 * 0x200;
 
-	gMC.life = 3;
-	gMC.max_life = 3;
+	gMC.life = 9000;
+	gMC.max_life = 9000;
 	gMC.unit = 0;
 }
 
