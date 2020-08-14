@@ -42,6 +42,7 @@ int gTextureLoaded = 0;
 int gTextureWidth = TEXTURE_SIZE_1024;
 int gTextureHeight = TEXTURE_SIZE_512;
 
+int gTextureWidth256 = TEXTURE_SIZE_512;
 int gTextureHeight256 = TEXTURE_SIZE_256;
 
 void* gCurrentPalette;
@@ -121,6 +122,14 @@ BOOL StartDirectDraw()
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
 	
+	glGenTextures(1, &gAtlas256Color);
+	glBindTexture(0, gAtlas256Color);
+	glTexImage2D(0,0, GL_RGB256, gTextureWidth256, gTextureHeight256, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
+	
+	
+	
 	return TRUE;
 }
 
@@ -144,6 +153,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 		surf[surf_no].h = bysize;
 		surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
 		surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
+		surf[surf_no].textureid = NULL;
 	}
 
 	return TRUE;
@@ -425,7 +435,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
 		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
-		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE)
+		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
+	    || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_ARMS_IMAGE\
+		|| surf_no == SURFACE_ID_STAGE_ITEM)
 	{
 
 	}
@@ -475,7 +487,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	else
 	{
 		memset(surf[surf_no].data, 0, surf[surf_no].w * surf[surf_no].h * sizeof(BUFFER_PIXEL));
-		glDeleteTextures(1, &surf[surf_no].textureid);
 	}
 
 	GL_TEXTURE_TYPE_ENUM paletteType;
@@ -490,7 +501,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			break;
 		case 256:
 			paletteType = GL_RGB256;
-			return TRUE;
 			break;
 		default:
 			paletteType = GL_RGB16;
@@ -563,13 +573,31 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	//glTexImage2D(0,0, paletteType, texW, texH, 0,
 	//	GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 	//	(u8*)surf[surf_no].data);
+	BUFFER_PIXEL* tex;
+	int texH = gTextureHeight;
+	int texW = gTextureWidth;
+	switch (paletteType)
+	{
+		case GL_RGB16:
+			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas16Color1);
+			texH = gTextureHeight;
+			texW = gTextureWidth;
+			surf[surf_no].textureid = gAtlas16Color1;
+			break;
+		case GL_RGB256:
+			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas256Color);
+			texH = gTextureHeight256;
+			texW = gTextureWidth256;
+			surf[surf_no].textureid = gAtlas256Color;
+			break;
+		default:
+			return TRUE;
+	}
 
-	BUFFER_PIXEL* tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas16Color1);
-	
 	uint32 vramTemp = VRAM_CR;
 
 	uint32 size = 0;
-	size = 1 << (gTextureWidth + gTextureHeight + 6);
+	size = 1 << (texW + texH + 6);
 
 	uint16 *startBank = vramGetBank( (uint16*)tex );
 	uint16 *endBank = vramGetBank(( uint16*)( (char*)tex + size - 1 ));
@@ -589,8 +617,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	//dmaCopyWords(0, surf[surf_no].data, tex, size);
 	int w = surf[surf_no].w;
 
-	int gW = 1 << (gTextureWidth + 3);
-	int gH = 1 << (gTextureHeight + 3);
+	int gW = 1 << (texW + 3);
+	int gH = 1 << (texH + 3);
 
 	int yoffset = 0;
 	int xoffset = 0;
@@ -628,7 +656,22 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
 			xoffset = 768;
-			yoffset = 256;
+			yoffset = 240;
+			break;
+		case SURFACE_ID_NPC_REGU:
+			xoffset = 0;
+			break;
+		case SURFACE_ID_FACE:
+			xoffset = 0;
+			break;
+		case SURFACE_ID_ARMS_IMAGE:
+			yoffset = 432;
+			xoffset = 0;
+			break;
+		case SURFACE_ID_STAGE_ITEM:
+			yoffset = 448;
+			xoffset = 0;
+			break;
 	}
 
 	int texDivi = 2;
@@ -766,20 +809,16 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	srcRect->top += surf[surf_no].yoffset;
 	srcRect->right += surf[surf_no].xoffset;
 	srcRect->bottom += surf[surf_no].yoffset;
-
 	if(!surf[surf_no].palette) return;
+	if(!surf[surf_no].textureid) return;
 	
 	
 	//glColorSubTableEXT( 0, 0, surf[surf_no].palettesize, 0, 0, surf[surf_no].palette );
+	
 
-	if(gCurPaletteOffset != surf[surf_no].paletteOffset)
-	{
-		GFX_PAL_FORMAT = surf[surf_no].paletteOffset;
-		gCurPaletteOffset = surf[surf_no].paletteOffset;
-	}
 
-	glSprite(x, y, rect, gAtlas16Color1, 0);
-	//glSprite(x, y, rect, surf[surf_no].textureid, 0);
+	//glSprite(x, y, rect, gAtlas16Color1, 0);
+	glSprite(x, y, rect, surf[surf_no].textureid, 0, surf[surf_no].paletteOffset);
 }
 
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Transparency

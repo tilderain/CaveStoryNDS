@@ -8,6 +8,7 @@
 static v16 g_depth = 0;
 
 static int gCurrentTexture = 0;
+static int gCurPaletteOffset = 0;
 
 void glScreen2D( void )
 {
@@ -126,7 +127,7 @@ static inline void gxVertex2i(v16 x, v16 y)
 	GFX_VERTEX_XY = (y << 16) | (x & 0xFFFF);	
 }
 
-void glSprite( int x, int y, RECT *rect, int textureID, int flipmode)
+void glSprite( int x, int y, RECT *rect, int textureID, int flipmode, int paletteOffset)
 {
 
 	int width = rect->right - rect->left;
@@ -152,7 +153,13 @@ void glSprite( int x, int y, RECT *rect, int textureID, int flipmode)
         glBindTexture( GL_TEXTURE_2D, textureID);
         gCurrentTexture = textureID;
     }
-
+	
+	if(gCurPaletteOffset != paletteOffset)
+	{
+		GFX_PAL_FORMAT = paletteOffset;
+		gCurPaletteOffset = paletteOffset;
+	}
+	
 	glBegin( GL_QUADS );
 		
 		gxTexcoord2i( u1, v1 ); gxVertex3i( x1, y1, g_depth );	
