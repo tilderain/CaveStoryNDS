@@ -267,7 +267,7 @@ bool LoadGenericData()
 		pixtone_bytes += MakePixToneObject(&gPtpTable[90], 1, 111);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[91], 1, 112);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[92], 1, 113);
-		pixtone_bytes += MakePixToneObject(&gPtpTable[93], 2, 114);*
+		pixtone_bytes += MakePixToneObject(&gPtpTable[93], 2, 114);*/
 		pixtone_bytes += MakePixToneObject(&gPtpTable[95], 2, 150);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[97], 2, 151);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[99], 1, 152);
@@ -291,7 +291,7 @@ bool LoadGenericData()
 		pixtone_bytes += MakePixToneObject(&gPtpTable[129], 2, 62);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[131], 2, 63);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[133], 2, 64);
-		pixtone_bytes += MakePixToneObject(&gPtpTable[135], 1, 65);*
+		pixtone_bytes += MakePixToneObject(&gPtpTable[135], 1, 65);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[136], 1, 3);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[137], 1, 6);
 		pixtone_bytes += MakePixToneObject(&gPtpTable[138], 1, 7);*/

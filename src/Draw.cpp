@@ -573,6 +573,66 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	//glTexImage2D(0,0, paletteType, texW, texH, 0,
 	//	GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 	//	(u8*)surf[surf_no].data);
+
+		int yoffset = 0;
+	int xoffset = 0;
+	int paletteOffset = 0;
+
+	switch(surf_no)
+	{
+		case SURFACE_ID_TEXT_BOX:
+			xoffset = 256;
+			yoffset = 0;
+			break;
+		case SURFACE_ID_MY_CHAR:
+			xoffset = 256;
+			yoffset = 144;
+			break;
+		case SURFACE_ID_LEVEL_SPRITESET_1:
+			if(paletteType == GL_RGB256) return TRUE;
+			xoffset = 512;
+			yoffset = 0;
+			break;
+		case SURFACE_ID_CARET:
+			xoffset = 320;
+			yoffset = 256;
+			break;
+		case SURFACE_ID_BULLET:
+			xoffset = 0;
+			yoffset = 256;
+			break;
+		case SURFACE_ID_NPC_SYM:
+			xoffset = 640;
+			yoffset = 256;
+			break;
+		case SURFACE_ID_LEVEL_BACKGROUND:
+			xoffset = 768;
+			yoffset = 0;
+			break;
+		case SURFACE_ID_ITEM_IMAGE:
+			xoffset = 768;
+			yoffset = 240;
+			break;
+		case SURFACE_ID_NPC_REGU:
+			xoffset = 0;
+			break;
+		case SURFACE_ID_FACE:
+			xoffset = 0;
+			break;
+		case SURFACE_ID_ARMS_IMAGE:
+			yoffset = 432;
+			xoffset = 0;
+			break;
+		case SURFACE_ID_STAGE_ITEM:
+			yoffset = 448;
+			xoffset = 0;
+			break;
+		case SURFACE_ID_LEVEL_TILESET:
+			break;
+		default:
+			return TRUE;
+	}
+
 	BUFFER_PIXEL* tex;
 	int texH = gTextureHeight;
 	int texW = gTextureWidth;
@@ -619,60 +679,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	int gW = 1 << (texW + 3);
 	int gH = 1 << (texH + 3);
-
-	int yoffset = 0;
-	int xoffset = 0;
-	int paletteOffset = 0;
-
-	switch(surf_no)
-	{
-		case SURFACE_ID_TEXT_BOX:
-			xoffset = 256;
-			yoffset = 0;
-			break;
-		case SURFACE_ID_MY_CHAR:
-			xoffset = 256;
-			yoffset = 144;
-			break;
-		case SURFACE_ID_LEVEL_SPRITESET_1:
-			xoffset = 512;
-			yoffset = 0;
-			break;
-		case SURFACE_ID_CARET:
-			xoffset = 320;
-			yoffset = 256;
-			break;
-		case SURFACE_ID_BULLET:
-			xoffset = 0;
-			yoffset = 256;
-			break;
-		case SURFACE_ID_NPC_SYM:
-			xoffset = 640;
-			yoffset = 256;
-			break;
-		case SURFACE_ID_LEVEL_BACKGROUND:
-			xoffset = 768;
-			yoffset = 0;
-			break;
-		case SURFACE_ID_ITEM_IMAGE:
-			xoffset = 768;
-			yoffset = 240;
-			break;
-		case SURFACE_ID_NPC_REGU:
-			xoffset = 0;
-			break;
-		case SURFACE_ID_FACE:
-			xoffset = 0;
-			break;
-		case SURFACE_ID_ARMS_IMAGE:
-			yoffset = 432;
-			xoffset = 0;
-			break;
-		case SURFACE_ID_STAGE_ITEM:
-			yoffset = 448;
-			xoffset = 0;
-			break;
-	}
 
 	int texDivi = 2;
 	switch(paletteType)
@@ -809,16 +815,19 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	srcRect->top += surf[surf_no].yoffset;
 	srcRect->right += surf[surf_no].xoffset;
 	srcRect->bottom += surf[surf_no].yoffset;
-	if(!surf[surf_no].palette) return;
-	if(!surf[surf_no].textureid) return;
+	//if(!surf[surf_no].palette) return;
+	//if(!surf[surf_no].textureid) return;
 	
 	
-	//glColorSubTableEXT( 0, 0, surf[surf_no].palettesize, 0, 0, surf[surf_no].palette );
-	
-
+	int textureid;
+	if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
+	else
+	{
+		textureid = surf[surf_no].textureid;
+	}
 
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, rect, surf[surf_no].textureid, 0, surf[surf_no].paletteOffset);
+	glSprite(x, y, rect, textureid, 0, surf[surf_no].paletteOffset);
 }
 
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Transparency
