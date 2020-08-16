@@ -280,7 +280,7 @@ bool InitWaveData100()
 		return false;
 	}
 
-	memcpy(wave_data, fp, 100 * 0x100);
+	fread(wave_data, 0x100, 100, fp);
 	return true;
 }
 

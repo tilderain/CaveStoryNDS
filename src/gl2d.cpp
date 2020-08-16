@@ -98,6 +98,8 @@ void glBegin2D( void )
 
 	g_depth = 0; 	// set depth to 0. We need this var since we cannot disable depth testing
 
+	glBegin( GL_QUADS );
+
 }
 
 void glEnd2D( void )
@@ -160,14 +162,13 @@ void glSprite( int x, int y, RECT *rect, int textureID, int flipmode, int palett
 		gCurPaletteOffset = paletteOffset;
 	}
 	
-	glBegin( GL_QUADS );
 		
 		gxTexcoord2i( u1, v1 ); gxVertex3i( x1, y1, g_depth );	
 		gxTexcoord2i( u1, v2 ); gxVertex2i( x1, y2 );
 		gxTexcoord2i( u2, v2 ); gxVertex2i( x2, y2 );
 		gxTexcoord2i( u2, v1 ); gxVertex2i( x2, y1 );
 		
-	glEnd();
+	//glEnd();
 	
 	g_depth++;
 
