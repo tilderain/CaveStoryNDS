@@ -1,4 +1,4 @@
 #pragma once
 
-#define DSP_DEFAULT_FREQ 2000
-#define SND_BUFFERSIZE 256
+#define DSP_DEFAULT_FREQ 22050
+#define SND_BUFFERSIZE 512

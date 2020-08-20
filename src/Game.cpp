@@ -451,6 +451,9 @@ int ModeTitle(void)
 
 		PutFramePerSecound();
 
+		DoOrganya();
+
+
 		if (!Flip_SystemTask())
 			return 0;
 	}
@@ -670,6 +673,9 @@ int ModeAction(void)
 		PutTextScript();
 
 		PutFramePerSecound();
+
+		DoOrganya();
+
 
 		if (!Flip_SystemTask())
 			return 0;

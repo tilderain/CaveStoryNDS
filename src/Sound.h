@@ -39,11 +39,13 @@ class SOUNDBUFFER
 		bool looping;
 		bool looped;
 		
-		double frequency;
-		double volume;
-		double volume_l;
-		double volume_r;
-		double samplePosition;
+		int frequency;
+		int volume;
+		int volume_l;
+		int volume_r;
+		int samplePosition;
+
+		char channelId;
 };
 
 enum SoundEffectNames
@@ -76,3 +78,5 @@ void ChangeSoundFrequency(int no, unsigned long rate);
 void ChangeSoundVolume(int no, long volume);
 void ChangeSoundPan(int no, long pan);
 size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no);
+void DoOrganya(void);
+void killAllSounds(void);

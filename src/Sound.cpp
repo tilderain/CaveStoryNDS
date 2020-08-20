@@ -18,7 +18,10 @@
 
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
-static long mixer_buffer[SND_BUFFERSIZE * 2];
+//static long mixer_buffer[SND_BUFFERSIZE * 2];
+#define NUM_CHANNELS 16
+
+char channelStates[NUM_CHANNELS] = {0};
 
 //Keep track of all existing sound buffers
 SOUNDBUFFER *soundBuffers;
@@ -33,11 +36,12 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	looping = false;
 	looped = false;
 	
-	frequency = 0.0;
-	volume = 1.0;
-	volume_l = 1.0;
-	volume_r = 1.0;
-	samplePosition = 0.0;
+	frequency = 0;
+	volume = 1;
+	volume_l = 1;
+	volume_r = 1;
+	samplePosition = 0;
+	channelId = NULL;
 	
 	//Create waveform buffer
 	data = new uint8_t[bufSize];
@@ -92,19 +96,27 @@ void SOUNDBUFFER::SetCurrentPosition(uint32_t dwNewPosition)
 
 void SOUNDBUFFER::SetFrequency(uint32_t dwFrequency)
 {
-	frequency = (double)dwFrequency;
+	frequency = dwFrequency;
+	//SCHANNEL_TIMER(channelId) = SOUND_FREQ(frequency);
+	if (channelId == NULL) return;
+	soundSetFreq(channelId, (u16)frequency);
 }
 
 float MillibelToVolume(int32_t lVolume)
 {
 	//Volume is in hundredths of decibels, from 0 to -10000
+
 	lVolume = clamp(lVolume, (int32_t)-10000, (int32_t)0);
 	return (float)pow(10.0, lVolume / 2000.0);
 }
 
 void SOUNDBUFFER::SetVolume(int32_t lVolume)
 {
-	volume = MillibelToVolume(lVolume);
+	volume = (int)(lVolume / 2);
+	
+	//SCHANNEL_CR(channelId) = SCHANNEL_ENABLE | SOUND_FORMAT_8BIT | SOUND_VOL(lVolume);
+	if (channelId == NULL) return;
+	soundSetVolume(channelId, volume);
 }
 
 void SOUNDBUFFER::SetPan(int32_t lPan)
@@ -113,20 +125,45 @@ void SOUNDBUFFER::SetPan(int32_t lPan)
 	volume_r = MillibelToVolume(lPan);
 }
 
+int played = false;
+
 void SOUNDBUFFER::Play(bool bLooping)
 {
+
+	//if(played > 4)	return;
+	//played++;
+
 	playing = true;
 	looping = bLooping;
+	if (channelId) {soundKill(channelId); channelId = NULL; return;};
+	if (!data) return;
+
+	channelId = soundPlaySample(NULL, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)127, looping, (u16)0);
+
+	//do nothing if no slots
 }
 
 void SOUNDBUFFER::Stop()
 {
 	playing = false;
+	//if(channelId) soundKill(channelId);
+	if(channelId == NULL) return;
+	channelStates[channelId] = false;
+	channelId = NULL;
+}
+
+void killAllSounds()
+{
+	for(int i=0;i<16;i++)
+	{
+		soundKill(i);
+		channelStates[i] = false;
+	}
 }
 
 void SOUNDBUFFER::Mix(long *stream, uint32_t samples)
 {
-	
+	/*
 	if (!playing) //This sound buffer isn't playing
 		return;
 	
@@ -167,44 +204,23 @@ void SOUNDBUFFER::Mix(long *stream, uint32_t samples)
 				break;
 			}
 		}
-	}
+	}*/
 	
 }
 
 //Sound things
 SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
-mm_word StreamCallback(mm_word length, mm_addr dest, mm_stream_formats format)
+
+void DoOrganya(void)
 {
-	
-	s16 *stream = (s16*)dest;
-	int len = length;
-	//len very important
-	uint32_t samples = len;
-
-	for (unsigned int i = 0; i < len * 2; ++i)
-		mixer_buffer[i] = 0;
-
-	//Mix sounds to primary buffer
-	for (SOUNDBUFFER *sound = soundBuffers; sound != NULL; sound = sound->next)
-		sound->Mix(mixer_buffer, samples);
-
-	for (unsigned int i = 0; i < len * 2; ++i)
-		stream[i] = (int16_t)(clamp(mixer_buffer[i], -0xFF, 0xFF) << 8);
-
-	//im not sure if this actually does anything
-	DC_FlushRange(dest, len);
-	
-	//Play organya
-	gOrgTimer += samples;
+	gOrgTimer += SND_BUFFERSIZE;
 	
 	if (gOrgTimer > gOrgSamplePerStep)
 	{
 		OrganyaPlayData();
 		gOrgTimer %= gOrgSamplePerStep;
 	}
-	
-	return length;
 }
 
 mm_stream mystream;
@@ -225,26 +241,13 @@ bool InitDirectSound()
 	//----------------------------------------------------------------
 	// initialize maxmod without any soundbank (unusual setup)
 	//----------------------------------------------------------------
-
-	sys.mod_count 			= 0;
-	sys.samp_count			= 0;
-	sys.mem_bank			= 0;
-	sys.fifo_channel		= FIFO_MAXMOD;
-	mmInit( &sys );
 	
-
-	mystream.sampling_rate	= DSP_DEFAULT_FREQ;					// sampling rate = 25khz
-	mystream.buffer_length	= SND_BUFFERSIZE;						// buffer length = 1200 samples
-	mystream.callback		= StreamCallback;		// set callback function
-	mystream.format			= MM_STREAM_16BIT_STEREO;	// format = stereo 16-bit
-	mystream.timer			= MM_TIMER0;				// use hardware timer 0
-	mystream.manual			= true;					// use manual filling
-	mmStreamOpen( &mystream );
-	
-	SetYtrigger( 0 );
-	irqEnable( IRQ_VCOUNT );
+	//SetYtrigger( 0 );
+	//irqEnable( IRQ_VCOUNT );
 	
 	StartOrganya();
+
+	soundEnable();
 
 	return true;
 }
