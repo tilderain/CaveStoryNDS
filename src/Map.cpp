@@ -13,7 +13,7 @@
 #include "Main.h"
 #include "NpChar.h"
 
-#define PXM_BUFFER_SIZE 0x1F000
+#define PXM_BUFFER_SIZE 0x9000
 
 MAP_DATA gMap;
 

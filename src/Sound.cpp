@@ -37,6 +37,11 @@ u8 getFreeChannel(void)
 	return -1;
 }
 
+void updateChannelStates(void)
+{
+	//TODO: if a one-shot sound has passed all of its samples already, make channelStates[channel] free
+}
+
 //Keep track of all existing sound buffers
 SOUNDBUFFER *soundBuffers;
 
@@ -54,7 +59,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	volume = 127;
 	pan = 63;
 	samplePosition = 0;
-	channelId = NULL;
+	channelId = -1;
 	
 	//Create waveform buffer
 	data = new uint8_t[bufSize];
@@ -111,7 +116,7 @@ void SOUNDBUFFER::SetFrequency(uint32_t dwFrequency)
 {
 	frequency = dwFrequency;
 	//SCHANNEL_TIMER(channelId) = SOUND_FREQ(frequency);
-	if (channelId == NULL) return;
+	if (channelId == -1) return;
 	soundSetFreq(channelId, (u16)frequency);
 }
 
@@ -128,14 +133,14 @@ void SOUNDBUFFER::SetVolume(int32_t lVolume)
 	volume = (int)(lVolume / 2);
 	
 	//SCHANNEL_CR(channelId) = SCHANNEL_ENABLE | SOUND_FORMAT_8BIT | SOUND_VOL(lVolume);
-	if (channelId == NULL) return;
+	if (channelId == -1) return;
 	soundSetVolume(channelId, volume);
 }
 
 void SOUNDBUFFER::SetPan(int32_t lPan)
 {
 	pan = (int)((double)lPan / 512.0 * 127.0); // pan_tbl max to nds 127 pan max
-	if (channelId == NULL) return;
+	if (channelId == -1) return;
 	soundSetPan(channelId, pan);
 }
 
@@ -145,31 +150,34 @@ void SOUNDBUFFER::Play(bool bLooping)
 {
 	playing = true;
 	looping = bLooping;
-	if (channelId) 
+
+	if (channelId != -1) 
 	{
 		soundKill(channelId); 
 		channelStates[channelId] = false;
-		channelId = NULL; 
-		return;
+		channelId = -1; 
 	}
+	else
+	{
+		channelId = getFreeChannel();
+	}
+	
 	if (!data) return;
 
-	u8 channel = getFreeChannel();
-	if(channel == -1) return;
-	channelId = channel;
-	channelStates[channel] = 1;
+	if(channelId == -1) return;
+	channelStates[channelId] = 1;
 
 	//printf() pan
 
-	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channel);
+	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
 }
 
 void SOUNDBUFFER::Stop()
 {
 	playing = false;
-	if(channelId) soundKill(channelId);
+	if(channelId != -1) soundKill(channelId);
 	channelStates[channelId] = false;
-	channelId = NULL;
+	channelId = -1;
 }
 
 void killAllSounds()
@@ -235,6 +243,7 @@ SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
 void DoOrganya(void)
 {
+	updateChannelStates();
 	gOrgTimer += SND_BUFFERSIZE;
 	
 	if (gOrgTimer > gOrgSamplePerStep)

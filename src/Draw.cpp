@@ -147,13 +147,17 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 {
 	if (surf_no < SURFACE_ID_MAX)
 	{
-		free(surf[surf_no].data);
+		if(surf[surf_no].data)
+			free(surf[surf_no].data);
+		if(surf[surf_no].palette)
+			free(surf[surf_no].palette);
 
 		surf[surf_no].w = bxsize;
 		surf[surf_no].h = bysize;
 		surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
 		surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
 		surf[surf_no].textureid = NULL;
+		surf[surf_no].paletteAddress = NULL;
 	}
 
 	return TRUE;
@@ -366,10 +370,33 @@ vramBlock_allocateSpecial( s_vramBlock *mb, uint8 *addr, uint32 size ) {
 	return 0;
 }
 
-int AssignColorPalette(uint16 width, const uint16* table)
+int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 {
 	uint32 colFormatVal = 4;
 	uint8* checkAddr = vramBlock_examineSpecial( glGlob->vramBlocks[ 1 ], (uint8*)VRAM_E, width << 1, colFormatVal );
+
+	if(surf.paletteAddress) //use last address
+	{
+		uint32 tempVRAM = VRAM_EFG_CR;
+		uint16 *startBank = vramGetBank( (uint16*)surf.paletteAddress );
+		uint16 *endBank = vramGetBank( (uint16*)((char*)surf.paletteAddress + ( width << 1 ) - 1));
+		do {
+			if( startBank == VRAM_E ) {
+				vramSetBankE( VRAM_E_LCD );
+				startBank += 0x8000;
+			} else if( startBank == VRAM_F ) {
+				vramSetBankF( VRAM_F_LCD );
+				startBank += 0x2000;
+			} else if( startBank == VRAM_G ) {
+				vramSetBankG( VRAM_G_LCD );
+				startBank += 0x2000;
+			}
+		} while ( startBank <= endBank );
+
+		swiCopy( table, (void*)surf.paletteAddress, width | COPY_MODE_HWORD );
+		vramRestoreBanks_EFG( tempVRAM );
+		return surf.paletteOffset;
+	}
 
 	if( checkAddr ) {
 		// Calculate the address, logical and actual, of where the palette will go
@@ -417,6 +444,7 @@ int AssignColorPalette(uint16 width, const uint16* table)
 
 		swiCopy( table, palette->vramAddr, width | COPY_MODE_HWORD );
 		vramRestoreBanks_EFG( tempVRAM );
+		surf.paletteAddress = (int)palette->vramAddr;
 		return addr;
 	}
 	else
@@ -430,9 +458,6 @@ int AssignColorPalette(uint16 width, const uint16* table)
 BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 {
 
-	//if (gTextureLoaded) return TRUE;
-	//gTextureLoaded = 1;
-
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
 		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
 		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
@@ -443,10 +468,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	}
 	else
 	{
+		fclose(fp);
 		return TRUE;
 	}
-	
-
 
 	struct stat file_descriptor;
 	long file_size;
@@ -630,6 +654,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		case SURFACE_ID_LEVEL_TILESET:
 			break;
 		default:
+			fclose(fp);
+			free(bitmap_pixels);
 			return TRUE;
 	}
 
@@ -651,6 +677,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			surf[surf_no].textureid = gAtlas256Color;
 			break;
 		default:
+			fclose(fp);
+			free(bitmap_pixels);
 			return TRUE;
 	}
 
@@ -722,7 +750,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
-	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no].palettesize, palette);
+	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], surf[surf_no].palettesize, palette);
 
 
 	free(bitmap_pixels);
@@ -735,6 +763,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
+	if(!strcmp(name, surf[surf_no].name)) return TRUE;
 	printf("LoadBitmap_File %s\n", name);
 	printf("Memory: %d %d %d\n", mallinfo().arena, mallinfo().uordblks, mallinfo().fordblks);
 	//Attempt to load PNG
@@ -747,7 +776,11 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	{
 		printf("Loading surface (as .png) from %s for surface id %d\n", path, surf_no);
 		if (LoadBitmap(fp, surf_no, create_surface))
+		{
+			strcpy(surf[surf_no].name, name);
 			return TRUE;
+		}
+			
 	}
 	
 	printf("Failed to open file %s\n", name);

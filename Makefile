@@ -38,7 +38,7 @@ ARCH	:=	-mthumb -mthumb-interwork
 
 CFLAGS	:=	-g -Wall -O3\
  		-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-		-ffast-math \
+		-ffast-math -DFIX_BUGS \
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9 -DLODEPNG_NO_COMPILE_ENCODER -DLODEPNG_NO_COMPILE_DISK -DLODEPNG_NO_COMPILE_ERROR_TEXT -DLODEPNG_NO_COMPILE_CPP

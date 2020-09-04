@@ -58,11 +58,13 @@ struct SURFACE
 	int textureid;
 	int xoffset;
 	int yoffset;
-	int paletteOffset;
+	int paletteOffset; //offset from palette vram banks
+	int paletteAddress; //real address of palette in memory
 	GL_TEXTURE_TYPE_ENUM paletteType;
 	int palettesize;
 	BUFFER_PIXEL *data;
 	u16* palette;
+	char name[16];
 };
 
 BOOL Flip_SystemTask(void);

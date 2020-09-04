@@ -45,7 +45,7 @@ class SOUNDBUFFER
 		
 		int samplePosition;
 
-		char channelId;
+		signed char channelId;
 };
 
 enum SoundEffectNames
