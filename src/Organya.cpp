@@ -181,7 +181,7 @@ uint8_t key_twin[MAXTRACK] = {0};
 void ChangeOrganPan(uint8_t key, uint8_t pan, int8_t track)
 {
 	if(old_key[track] != PANDUMMY)
-		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetPan((pan_tbl[pan] - 0x100) * 10);
+		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetPan(pan_tbl[pan]);
 }
 
 void ChangeOrganVolume(int no, int32_t volume, int8_t track)
@@ -306,7 +306,7 @@ void ChangeDramFrequency(uint8_t key, int8_t track)
 
 void ChangeDramPan(uint8_t pan, int8_t track)
 {
-	lpDRAMBUFFER[track]->SetPan((pan_tbl[pan] - 0x100) * 10);
+	lpDRAMBUFFER[track]->SetPan(pan_tbl[pan]);
 }
 
 void ChangeDramVolume(int32_t volume, int8_t track)

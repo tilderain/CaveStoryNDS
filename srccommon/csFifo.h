@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdio>
-
 enum
 {
 	CSFIFO_ARM7_PRINT = 0,
@@ -16,6 +14,7 @@ struct CSFIFOMessage
 		{
 			char printData[32];
 		};
+		
 	};
 	
 };

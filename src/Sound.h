@@ -41,8 +41,8 @@ class SOUNDBUFFER
 		
 		int frequency;
 		int volume;
-		int volume_l;
-		int volume_r;
+		int pan;
+		
 		int samplePosition;
 
 		char channelId;

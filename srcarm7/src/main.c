@@ -23,15 +23,17 @@
 #include "audio.h"
 #include <dswifi7.h>
 #include <maxmod7.h>
-#include "../../srccommon/csFifo.h"
-#include <cstring>
+//#include "../../srccommon/csFifo.h"
+#include <string.h>
 
 void sendPrint(char data[])
 {
+	/*
 	CSFIFOMessage msg;
 	msg.type = CSFIFO_ARM7_PRINT;
 	strcpy(msg.printData, data);
 	fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
+	*/
 }
 
 
@@ -80,7 +82,7 @@ int main() {
 	SetYtrigger(80);
 
 	installWifiFIFO();
-	installSoundFIFO();
+	installSoundeFIFO();
 
 	installSystemFIFO();
 

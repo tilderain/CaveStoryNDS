@@ -24,12 +24,15 @@
 
 char channelStates[NUM_CHANNELS] = {0};
 
-int getFreeChannel(void)
+u8 getFreeChannel(void)
 {
-	for(int i=0;i<16;i++)
+	for(u8 i=0;i<16;i++)
 	{	
 		if(!channelStates[i])
+		{
 			return i;
+		}
+			
 	}
 	return -1;
 }
@@ -49,8 +52,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	
 	frequency = 0;
 	volume = 1;
-	volume_l = 1;
-	volume_r = 1;
+	pan = 63;
 	samplePosition = 0;
 	channelId = NULL;
 	
@@ -132,8 +134,9 @@ void SOUNDBUFFER::SetVolume(int32_t lVolume)
 
 void SOUNDBUFFER::SetPan(int32_t lPan)
 {
-	volume_l = MillibelToVolume(-lPan);
-	volume_r = MillibelToVolume(lPan);
+	pan = (int)((double)lPan / 512.0 * 127.0); // pan_tbl max to nds 127 pan max
+	if (channelId == NULL) return;
+	soundSetPan(channelId, pan);
 }
 
 int played = false;
@@ -141,17 +144,25 @@ int played = false;
 void SOUNDBUFFER::Play(bool bLooping)
 {
 
-	//if(played > 4)	return;
-	//played++;
-
 	playing = true;
 	looping = bLooping;
-	if (channelId) {soundKill(channelId); channelId = NULL; return;};
+	if (channelId) 
+	{
+		soundKill(channelId); 
+		channelStates[channelId] = false;
+		channelId = NULL; 
+		return;
+	}
 	if (!data) return;
 
-	channelId = soundPlaySample(NULL, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)127, looping, (u16)0);
+	u8 channel = getFreeChannel();
+	if(channel == -1) return;
+	channelId = channel;
+	channelStates[channel] = 1;
 
-	//do nothing if no slots
+	//printf() pan
+
+	soundPlaySampleC(NULL, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)63, looping, (u16)0, channel);
 }
 
 void SOUNDBUFFER::Stop()
@@ -165,11 +176,9 @@ void SOUNDBUFFER::Stop()
 
 void killAllSounds()
 {
-	for(int i=0;i<16;i++)
-	{
-		soundKill(i);
-		channelStates[i] = false;
-	}
+	soundMicOff();
+	channelStates[NUM_CHANNELS] = {0};
+
 }
 
 void SOUNDBUFFER::Mix(long *stream, uint32_t samples)

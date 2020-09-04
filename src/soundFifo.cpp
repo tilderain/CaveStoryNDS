@@ -25,6 +25,7 @@
 
 
 ---------------------------------------------------------------------------------*/
+#include <nds/arm9/sound.h>
 #include "soundFifo.h"
 #include <nds/fifocommon.h>
 #include <nds/fifomessages.h>
@@ -38,37 +39,8 @@ void soundEnable(void){
 void soundDisable(void){
 	fifoSendValue32(FIFO_SOUND, SOUND_MASTER_DISABLE);
 }
-int soundPlayPSG(DutyCycle cycle, u16 freq, u8 volume, u8 pan){
-	FifoMessage msg;
 
-	msg.type = SOUND_PSG_MESSAGE;
-	msg.SoundPsg.dutyCycle = cycle;
-	msg.SoundPsg.freq = freq;
-	msg.SoundPsg.volume = volume;
-	msg.SoundPsg.pan = pan;
-
-	fifoSendDatamsg(FIFO_SOUND, sizeof(msg), (u8*)&msg);
-
-	while(!fifoCheckValue32(FIFO_SOUND));
-
-	return (int)fifoGetValue32(FIFO_SOUND);
-}
-int soundPlayNoise(u16 freq, u8 volume, u8 pan){
-	FifoMessage msg;
-
-	msg.type = SOUND_NOISE_MESSAGE;
-	msg.SoundPsg.freq = freq;
-	msg.SoundPsg.volume = volume;
-	msg.SoundPsg.pan = pan;
-
-	fifoSendDatamsg(FIFO_SOUND, sizeof(msg), (u8*)&msg);
-
-	while(!fifoCheckValue32(FIFO_SOUND));
-
-	return (int)fifoGetValue32(FIFO_SOUND);
-}
-
-int soundPlaySample(const void* data, SoundFormat format, u32 dataSize, u16 freq, u8 volume, u8 pan, bool loop, u16 loopPoint){ 
+void soundPlaySampleC(const void* data, SoundFormat format, u32 dataSize, u16 freq, u8 volume, u8 pan, bool loop, u16 loopPoint, u8 channel){ 
 	
 	FifoMessage msg;
 
@@ -81,12 +53,10 @@ int soundPlaySample(const void* data, SoundFormat format, u32 dataSize, u16 freq
 	msg.SoundPlay.format = format;
 	msg.SoundPlay.loopPoint = loopPoint;
 	msg.SoundPlay.dataSize = dataSize >> 2;
+	msg.SoundPlay.channel = channel;
 
 	fifoSendDatamsg(FIFO_SOUND, sizeof(msg), (u8*)&msg);
 
-	while(!fifoCheckValue32(FIFO_SOUND));
-
-	return (int)fifoGetValue32(FIFO_SOUND);
 }
 
 void soundPause(int soundId){
