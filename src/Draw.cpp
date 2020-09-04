@@ -155,7 +155,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 		surf[surf_no].w = bxsize;
 		surf[surf_no].h = bysize;
 		surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
-		surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
+		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
 		surf[surf_no].textureid = NULL;
 		surf[surf_no].paletteAddress = NULL;
 	}
@@ -457,7 +457,6 @@ int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 
 BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 {
-
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
 		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
 		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
@@ -480,7 +479,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	unsigned char *file_buffer = (unsigned char*)malloc(file_size);
 	fread(file_buffer, file_size, 1, fp);
-	
+
 	unsigned int bitmap_width, bitmap_height;
 	unsigned char *bitmap_pixels;
 
@@ -613,7 +612,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 144;
 			break;
 		case SURFACE_ID_LEVEL_SPRITESET_1:
-			if(paletteType == GL_RGB256) return TRUE;
+			if(paletteType == GL_RGB256) goto free;
 			xoffset = 512;
 			yoffset = 0;
 			break;
@@ -654,8 +653,10 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		case SURFACE_ID_LEVEL_TILESET:
 			break;
 		default:
+free:
 			fclose(fp);
 			free(bitmap_pixels);
+			lodepng_state_cleanup(&state);
 			return TRUE;
 	}
 
@@ -679,6 +680,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		default:
 			fclose(fp);
 			free(bitmap_pixels);
+			lodepng_state_cleanup(&state);
 			return TRUE;
 	}
 
@@ -757,6 +759,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	if(create_surface)
 		free(surf[surf_no].data);
 	fclose(fp);
+	lodepng_state_cleanup(&state);
 	
 	return TRUE;
 }
