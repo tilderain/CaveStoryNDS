@@ -492,6 +492,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	printf("Size %d\n", state.info_png.color.palettesize);
 
+	int palettesize = state.info_png.color.palettesize;	
+
 	/*for (int i = 0; i < state.info_png.color.palettesize; i++)
 	{
 		printf("Color %d", state.info_png.color.palette[i*4]);
@@ -500,7 +502,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		printf(" %d\n", state.info_png.color.palette[i*4+3]);
 	}*/
 	
-	free(file_buffer);
+
 
 	if (create_surface)
 	{
@@ -512,8 +514,21 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		memset(surf[surf_no].data, 0, surf[surf_no].w * surf[surf_no].h * sizeof(BUFFER_PIXEL));
 	}
 
+	surf[surf_no].palette = (u16*)malloc(palettesize*2);
+	for (int i = 0; i < palettesize; i++)
+	{
+		uint8_t r,g,b;
+		r = state.info_png.color.palette[i*4] / 8;
+		g = state.info_png.color.palette[i*4+1] / 8;
+		b = state.info_png.color.palette[i*4+2] / 8;
+		surf[surf_no].palette[i] = COLOR(r,g,b);
+	}
+
+	lodepng_state_cleanup(&state);
+	free(file_buffer);
+
 	GL_TEXTURE_TYPE_ENUM paletteType;
-	switch (state.info_png.color.palettesize)
+	switch (palettesize)
 	{
 		case 2:
 		case 4:
@@ -656,7 +671,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 free:
 			fclose(fp);
 			free(bitmap_pixels);
-			lodepng_state_cleanup(&state);
 			return TRUE;
 	}
 
@@ -680,7 +694,6 @@ free:
 		default:
 			fclose(fp);
 			free(bitmap_pixels);
-			lodepng_state_cleanup(&state);
 			return TRUE;
 	}
 
@@ -731,35 +744,23 @@ free:
 
 	vramRestorePrimaryBanks(vramTemp);
 
-	u16* palette = (u16*)malloc(state.info_png.color.palettesize*2);
-	for (int i = 0; i < state.info_png.color.palettesize; i++)
-	{
-		uint8_t r,g,b;
-		r = state.info_png.color.palette[i*4] / 8;
-		g = state.info_png.color.palette[i*4+1] / 8;
-		b = state.info_png.color.palette[i*4+2] / 8;
-		palette[i] = COLOR(r,g,b);
-	}
-
 	//TODO: palette length
 	//glColorTableEXT( 0, 0, 256, 0, 0, palette );
 
 	//printf("Texture Id %d \n", textureid);
 
-	surf[surf_no].palette = palette;
 	surf[surf_no].paletteType = paletteType;
-	surf[surf_no].palettesize = state.info_png.color.palettesize;
+	surf[surf_no].palettesize = palettesize;
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
-	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], surf[surf_no].palettesize, palette);
+	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], surf[surf_no].palettesize, surf[surf_no].palette);
 
 
 	free(bitmap_pixels);
 	if(create_surface)
 		free(surf[surf_no].data);
 	fclose(fp);
-	lodepng_state_cleanup(&state);
 	
 	return TRUE;
 }
