@@ -51,7 +51,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	looped = false;
 	
 	frequency = 0;
-	volume = 1;
+	volume = 127;
 	pan = 63;
 	samplePosition = 0;
 	channelId = NULL;
@@ -143,7 +143,6 @@ int played = false;
 
 void SOUNDBUFFER::Play(bool bLooping)
 {
-
 	playing = true;
 	looping = bLooping;
 	if (channelId) 
@@ -169,7 +168,6 @@ void SOUNDBUFFER::Stop()
 {
 	playing = false;
 	if(channelId) soundKill(channelId);
-	if(channelId == NULL) return;
 	channelStates[channelId] = false;
 	channelId = NULL;
 }
@@ -177,8 +175,11 @@ void SOUNDBUFFER::Stop()
 void killAllSounds()
 {
 	soundMicOff();
-	channelStates[NUM_CHANNELS] = {0};
 
+	for (int i=0;i<NUM_CHANNELS;i++)
+	{
+		channelStates[i] = 0;
+	}
 }
 
 void SOUNDBUFFER::Mix(long *stream, uint32_t samples)

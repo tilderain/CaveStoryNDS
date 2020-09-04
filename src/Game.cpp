@@ -698,7 +698,7 @@ BOOL Game(void)
 
 	printf("hi from the world of 7morrow\n");
 
-	PlaySoundObject(7, -1);
+	//PlaySoundObject(7, -1);
 
 	char path[MAX_PATH];
 	sprintf(path, "%s/npc.tbl", gDataPath);
@@ -730,7 +730,7 @@ BOOL Game(void)
 
 	printf("bye i guess");
 
-	PlaySoundObject(7, 0);
+	//PlaySoundObject(7, 0);
 
 	EndMapData();
 	EndTextScript();

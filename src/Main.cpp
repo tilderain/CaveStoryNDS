@@ -218,7 +218,7 @@ void InactiveWindow(void)
 		SleepNoise();
 	}
 
-	PlaySoundObject(7, 0);
+	//PlaySoundObject(7, 0);
 }
 
 void ActiveWindow(void)
@@ -231,7 +231,7 @@ void ActiveWindow(void)
 		ResetNoise();
 	}
 
-	PlaySoundObject(7, -1);
+	//PlaySoundObject(7, -1);
 }
 
 void JoystickProc(void);
