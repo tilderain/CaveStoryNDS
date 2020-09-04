@@ -162,7 +162,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 
 	//printf() pan
 
-	soundPlaySampleC(NULL, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channel);
+	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channel);
 }
 
 void SOUNDBUFFER::Stop()
