@@ -65,3 +65,7 @@
 
 # Exclude the (recommended) CMake build directory
 /build
+/srcarm7/build
+
+*.elf
+*.nds

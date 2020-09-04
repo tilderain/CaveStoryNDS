@@ -10,6 +10,7 @@
 #include "PixTone.h"
 
 #include "nds.h"
+#include "soundFifo.h"
 #include <maxmod9.h>
 
 #include "stdio.h"
@@ -22,6 +23,16 @@
 #define NUM_CHANNELS 16
 
 char channelStates[NUM_CHANNELS] = {0};
+
+int getFreeChannel(void)
+{
+	for(int i=0;i<16;i++)
+	{	
+		if(!channelStates[i])
+			return i;
+	}
+	return -1;
+}
 
 //Keep track of all existing sound buffers
 SOUNDBUFFER *soundBuffers;
@@ -146,7 +157,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 void SOUNDBUFFER::Stop()
 {
 	playing = false;
-	//if(channelId) soundKill(channelId);
+	if(channelId) soundKill(channelId);
 	if(channelId == NULL) return;
 	channelStates[channelId] = false;
 	channelId = NULL;

@@ -26,6 +26,8 @@
 
 #include "nds.h"
 #include <filesystem.h>
+#include "../srccommon/csFifo.h"
+#include "nds/fifocommon.h"
 
 char gModulePath[MAX_PATH];
 char gDataPath[MAX_PATH];
@@ -60,6 +62,22 @@ unsigned long GetFramePerSecound(void)
 	return 60;
 }
 
+void fifoDataHandler(int bytes, void *user_data) 
+{
+	CSFIFOMessage msg;
+	int val;
+
+	val = fifoGetDatamsg(FIFO_USER_01, bytes, (u8*)&msg);
+
+	//printf("help");
+
+	if(msg.type == CSFIFO_ARM7_PRINT)
+	{
+		printf(msg.printData);
+		//printf("%p\n", msg.printData);
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	//Get executable's path
@@ -67,6 +85,9 @@ int main(int argc, char *argv[])
 	
 	consoleDemoInit();
 	printf("hi from the world of 2morrow\n");
+
+	//irqEnable(IRQ_FIFO_NOT_EMPTY);
+	//fifoInit();
 	
 	strcpy(gModulePath, "/");
 	
