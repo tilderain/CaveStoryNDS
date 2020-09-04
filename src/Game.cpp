@@ -581,6 +581,23 @@ int ModeAction(void)
 			ActionStripper();
 		}
 
+#ifdef TWO_SCREENS
+
+		if((gCounter & 1) == 0)
+		{
+			lcdMainOnBottom();
+			vramSetBankC(VRAM_C_LCD);
+			vramSetBankD(VRAM_D_SUB_SPRITE);
+			REG_DISPCAPCNT = DCAP_BANK(2) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+		else
+		{
+			lcdMainOnTop();
+			vramSetBankD(VRAM_D_LCD);
+			vramSetBankC(VRAM_C_SUB_BG);
+			REG_DISPCAPCNT = DCAP_BANK(3) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+#endif
 		ProcFade();
 		CortBox(&grcFull, color);
 		GetFramePosition(&frame_x, &frame_y);

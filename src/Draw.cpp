@@ -25,6 +25,8 @@
 
 #include "gl2d.h"
 
+#include "Game.h"
+
 #define COLOR(r,g,b)  ((r) | (g)<<5 | (b)<<10)
 
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
@@ -96,6 +98,36 @@ BOOL Flip_SystemTask()
 	return TRUE;
 }
 
+void initSubSprites(void){
+//-------------------------------------------------------
+ 
+	oamInit(&oamSub, SpriteMapping_Bmp_2D_256, false);
+ 
+	int x = 0;
+	int y = 0;
+ 
+	int id = 0;
+
+	//set up a 4x3 grid of 64x64 sprites to cover the screen
+	for(y = 0; y < 3; y++)
+	for(x = 0; x < 4; x++)
+	{
+	/*	u16 *offset = &SPRITE_GFX_SUB[(x * 64) + (y * 64 * 256)];
+ 
+		oamSet(&oamSub, x + y * 4, x * 64, y * 64, 0, 15, SpriteSize_64x64, 
+			SpriteColorFormat_Bmp, offset, -1, false,false,false,false,false);
+	*/
+		oamSub.oamMemory[id].attribute[0] = ATTR0_BMP | ATTR0_SQUARE | (64 * y);
+		oamSub.oamMemory[id].attribute[1] = ATTR1_SIZE_64 | (64 * x);
+		oamSub.oamMemory[id].attribute[2] = ATTR2_ALPHA(1) | (8 * 32 * y) | (8 * x);
+		id++;
+	}
+ 
+	swiWaitForVBlank();
+ 
+	oamUpdate(&oamSub);
+}
+
 BOOL StartDirectDraw()
 {
 	
@@ -103,7 +135,15 @@ BOOL StartDirectDraw()
 	// Initialize the graphics engines
 	//-----------------------------------------------------------------
 	videoSetMode( MODE_5_3D );
-
+#ifdef TWO_SCREENS
+	videoSetModeSub(MODE_5_2D);
+ 
+	// sub sprites hold the bottom image when 3D directed to top
+	initSubSprites();
+ 
+	// sub background holds the top image when 3D directed to bottom
+	bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+#endif
 
     vramSetBankA( VRAM_A_TEXTURE );     
 	vramSetBankB( VRAM_B_TEXTURE );
@@ -844,8 +884,25 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 {
 	//TODO: draw queueing
 	//TODO: don't render if transparent
+#ifdef TWO_SCREENS
+	int temp = x;
+	x = WINDOW_HEIGHT - y;
+	y = temp;
+	if(x > WINDOW_HEIGHT) return;
+	if(y > WINDOW_WIDTH) return;
+
+	if((gCounter & 1) == 0) // bottom screen
+	{
+		
+	}
+	else
+	{
+		y -= WINDOW_WIDTH / 2;
+	}
+#else
 	if(x > WINDOW_WIDTH) return;
 	if(y > WINDOW_HEIGHT) return;
+#endif
 
 	RECT* srcRect = rect;
 	srcRect->left += surf[surf_no].xoffset;

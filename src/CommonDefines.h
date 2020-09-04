@@ -1,7 +1,12 @@
 #pragma once
 
+#ifdef TWO_SCREENS
+#define WINDOW_WIDTH 384
+#define WINDOW_HEIGHT 256
+#else
 #define WINDOW_WIDTH 256
 #define WINDOW_HEIGHT 192
+#endif
 
 #define TILES_TO_PIXELS(x) ((int)((x) * 0x10))
 #define PIXELS_TO_TILES(x) ((int)((x) / 0x10))
