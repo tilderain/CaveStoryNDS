@@ -371,8 +371,8 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 
 	unsigned char *pcm_buffer = (unsigned char*)malloc(sample_count);
 	unsigned char *mixed_pcm_buffer = (unsigned char*)malloc(sample_count);
-	memset(pcm_buffer, 0x80, sample_count);
-	memset(mixed_pcm_buffer, 0x80, sample_count);
+	memset(pcm_buffer, 0, sample_count);
+	memset(mixed_pcm_buffer, 0, sample_count);
 
 	for (int i = 0; i < ptp_num; ++i)
 	{
@@ -385,8 +385,12 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 
 		for (int j = 0; j < ptp[i].size; ++j)
 		{
-			mixed_pcm_buffer[j] = -0x7F;
-			mixed_pcm_buffer[j] += pcm_buffer[j];
+            if ((signed char)pcm_buffer[j] + (signed char)mixed_pcm_buffer[j] < -0x7F)
+                mixed_pcm_buffer[j] = -0x7F;
+            else if ((signed char)pcm_buffer[j] + (signed char)mixed_pcm_buffer[j] > 0x7F)
+                mixed_pcm_buffer[j] = 0x7F;
+            else
+                mixed_pcm_buffer[j] = mixed_pcm_buffer[j] + pcm_buffer[j];
 		}
 	}
 
