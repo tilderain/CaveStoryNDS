@@ -210,6 +210,13 @@ void killAllSounds()
 	{
 		channelStates[i] = 0;
 	}
+
+	for (SOUNDBUFFER *sound = soundBuffers; sound != NULL; sound = sound->next)
+	{
+		sound->playing = false;
+		sound->channelId = -1;
+		sound->timer = 0;
+	}
 }
 
 void SOUNDBUFFER::Mix(long *stream, uint32_t samples)

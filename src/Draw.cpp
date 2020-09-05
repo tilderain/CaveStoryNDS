@@ -907,15 +907,39 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	if(y > WINDOW_HEIGHT) return;
 #endif
 
-	RECT* srcRect = rect;
-	srcRect->left += surf[surf_no].xoffset;
-	srcRect->top += surf[surf_no].yoffset;
-	srcRect->right += surf[surf_no].xoffset;
-	srcRect->bottom += surf[surf_no].yoffset;
-	//if(!surf[surf_no].palette) return;
-	//if(!surf[surf_no].textureid) return;
+////
+	RECT srcRect = *rect;
+	srcRect.left += surf[surf_no].xoffset;
+	srcRect.top += surf[surf_no].yoffset;
 	
-	
+	srcRect.right += surf[surf_no].xoffset;
+	srcRect.bottom += surf[surf_no].yoffset;
+
+	if(rcView->left > x)
+	{
+		srcRect.left += rcView->left - x;
+		x = rcView->left;
+	}
+
+	if(rcView->top > y)
+	{
+		srcRect.top += rcView->top - y;
+		y = rcView->top;
+	}
+
+	int width = srcRect.right - srcRect.left;
+	int height = srcRect.bottom - srcRect.top;
+	if(x + width > rcView->right)
+	{
+		srcRect.right -= x + width - rcView->right;
+	}
+
+	if(y + height > rcView->bottom)
+	{
+		srcRect.bottom -= y + height - rcView->bottom;
+	}
+////
+
 	int textureid;
 	if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
 	else
@@ -924,7 +948,7 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	}
 
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, rect, textureid, 0, surf[surf_no].paletteOffset);
+	glSprite(x, y, &srcRect, textureid, 0, surf[surf_no].paletteOffset);
 }
 
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Transparency
