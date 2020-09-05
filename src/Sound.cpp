@@ -385,7 +385,8 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 
 		for (int j = 0; j < ptp[i].size; ++j)
 		{
-			mixed_pcm_buffer[j] += pcm_buffer[j] - 0x40;
+			mixed_pcm_buffer[j] = -0x7F;
+			mixed_pcm_buffer[j] += pcm_buffer[j];
 		}
 	}
 
