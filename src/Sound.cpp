@@ -153,7 +153,8 @@ float MillibelToVolume(int32_t lVolume)
 
 void SOUNDBUFFER::SetVolume(int32_t lVolume)
 {
-	volume = (int)(lVolume / 2);
+	float vol = MillibelToVolume(lVolume);
+	volume = (vol * 127);
 	
 	//SCHANNEL_CR(channelId) = SCHANNEL_ENABLE | SOUND_FORMAT_8BIT | SOUND_VOL(lVolume);
 	if (channelId == -1) return;
