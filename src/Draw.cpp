@@ -97,6 +97,25 @@ BOOL Flip_SystemTask()
 	DoOrganya();
 
 	glBegin2D();
+
+	#ifdef TWO_SCREENS
+
+		if((gCounter & 1) == 0)
+		{
+			lcdMainOnTop();
+			vramSetBankD(VRAM_D_LCD);
+			vramSetBankC(VRAM_C_SUB_BG);
+			REG_DISPCAPCNT = DCAP_BANK(3) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+		else
+		{
+			lcdMainOnBottom();
+			vramSetBankC(VRAM_C_LCD);
+			vramSetBankD(VRAM_D_SUB_SPRITE);
+			REG_DISPCAPCNT = DCAP_BANK(2) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+#endif
+
 	
 	return TRUE;
 }
@@ -891,8 +910,6 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	int temp = x;
 	x = WINDOW_HEIGHT - y;
 	y = temp;
-	if(x > WINDOW_HEIGHT) return;
-	if(y > WINDOW_WIDTH) return;
 
 	if((gCounter & 1) == 0) // bottom screen
 	{
@@ -902,16 +919,16 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	{
 		y -= WINDOW_WIDTH / 2;
 	}
-#else
-	if(x > WINDOW_WIDTH) return;
-	if(y > WINDOW_HEIGHT) return;
+
 #endif
 
+	if(x > WINDOW_WIDTH) return;
+	if(y > WINDOW_HEIGHT) return;
 ////
 	RECT srcRect = *rect;
 	srcRect.left += surf[surf_no].xoffset;
 	srcRect.top += surf[surf_no].yoffset;
-	
+
 	srcRect.right += surf[surf_no].xoffset;
 	srcRect.bottom += surf[surf_no].yoffset;
 
