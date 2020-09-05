@@ -39,6 +39,8 @@ class SOUNDBUFFER
 		bool looping;
 		bool looped;
 		
+		int timer;
+
 		int frequency;
 		int volume;
 		int pan;

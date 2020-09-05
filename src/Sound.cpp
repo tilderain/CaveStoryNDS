@@ -17,6 +17,9 @@
 
 #include "NDSSoundSpec.h"
 
+#include "Draw.h"
+#include "Game.h"
+
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
@@ -24,7 +27,7 @@
 
 char channelStates[NUM_CHANNELS] = {0};
 
-u8 getFreeChannel(void)
+s8 getFreeChannel(void)
 {
 	for(u8 i=0;i<16;i++)
 	{	
@@ -37,13 +40,31 @@ u8 getFreeChannel(void)
 	return -1;
 }
 
-void updateChannelStates(void)
-{
-	//TODO: if a one-shot sound has passed all of its samples already, make channelStates[channel] free
-}
+
 
 //Keep track of all existing sound buffers
 SOUNDBUFFER *soundBuffers;
+
+
+void updateChannelStates(void)
+{
+	//if a one-shot sound has passed all of its samples already, make channelStates[channel] free
+	for (SOUNDBUFFER *sound = soundBuffers; sound != NULL; sound = sound->next)
+	{
+		if(sound->playing && sound->looping == false)
+		{
+			if(sound->timer++ * (sound->frequency / 59) > sound->size) // samples in a frame plus a bit
+			{
+				// TODO: give organbuffer priority
+				sound->playing = false;
+				channelStates[sound->channelId] = 0;
+				soundKill(sound->channelId);
+				sound->channelId = -1;
+				sound->timer = 0;
+			}
+		}
+	}
+}
 
 //Sound buffer code
 SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
@@ -54,6 +75,8 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	playing = false;
 	looping = false;
 	looped = false;
+
+	timer = 0;
 	
 	frequency = 0;
 	volume = 127;
@@ -148,21 +171,19 @@ int played = false;
 
 void SOUNDBUFFER::Play(bool bLooping)
 {
+
+	if (!data) return;
 	playing = true;
 	looping = bLooping;
 
 	if (channelId != -1) 
 	{
-		soundKill(channelId); 
-		channelStates[channelId] = false;
-		channelId = -1; 
+		//soundKill(channelId);
 	}
 	else
 	{
 		channelId = getFreeChannel();
 	}
-	
-	if (!data) return;
 
 	if(channelId == -1) return;
 	channelStates[channelId] = 1;
@@ -170,6 +191,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 	//printf() pan
 
 	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
+	timer = 0;
 }
 
 void SOUNDBUFFER::Stop()
@@ -243,7 +265,6 @@ SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
 void DoOrganya(void)
 {
-	updateChannelStates();
 	gOrgTimer += SND_BUFFERSIZE;
 	
 	if (gOrgTimer > gOrgSamplePerStep)
@@ -251,6 +272,7 @@ void DoOrganya(void)
 		OrganyaPlayData();
 		gOrgTimer %= gOrgSamplePerStep;
 	}
+	updateChannelStates();
 }
 
 mm_stream mystream;

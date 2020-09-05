@@ -26,6 +26,7 @@
 #include "gl2d.h"
 
 #include "Game.h"
+#include "Sound.h"
 
 #define COLOR(r,g,b)  ((r) | (g)<<5 | (b)<<10)
 
@@ -86,12 +87,14 @@ BOOL Flip_SystemTask()
 	//Update inputs
 	UpdateInput();
 	
-	mmStreamUpdate();
+	//mmStreamUpdate();
 
 	glEnd2D();
 
 	glFlush(0);
 	swiWaitForVBlank();
+	
+	DoOrganya();
 
 	glBegin2D();
 	
