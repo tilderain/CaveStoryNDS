@@ -53,7 +53,7 @@ void updateChannelStates(void)
 	{
 		if(sound->playing && sound->looping == false)
 		{
-			if(sound->timer++ * (sound->frequency / 59) > sound->size) // samples in a frame plus a bit
+			if(sound->timer++ * (sound->frequency / 63) > sound->size) // samples in a frame plus a bit
 			{
 				// TODO: give organbuffer priority
 				sound->playing = false;
