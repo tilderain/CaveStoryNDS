@@ -7,6 +7,8 @@
 #include "Backends/Audio.h"
 #include "PixTone.h"
 
+#include "nds/ndstypes.h"
+
 #define SE_MAX 160	// According to the Organya source code release, this is the real name for this constant
 
 class SOUNDBUFFER
@@ -17,7 +19,7 @@ class SOUNDBUFFER
 		
 		void Release();
 		
-		void Lock(uint8_t **buffer, size_t *size);
+		void Lock(s8 **buffer, size_t *size);
 		void Unlock();
 		
 		void SetCurrentPosition(uint32_t dwNewPosition);
@@ -32,7 +34,7 @@ class SOUNDBUFFER
 		SOUNDBUFFER *next;
 	
 	public:
-		uint8_t *data;
+		s8 *data;
 		size_t size;
 		
 		bool playing;

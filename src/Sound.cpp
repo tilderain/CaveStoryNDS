@@ -85,7 +85,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 	channelId = -1;
 	
 	//Create waveform buffer
-	data = new uint8_t[bufSize];
+	data = new s8[bufSize];
 	memset(data, 0x80, bufSize);
 	
 	//Add to buffer list
@@ -116,7 +116,7 @@ void SOUNDBUFFER::Release()
 	delete this;
 }
 
-void SOUNDBUFFER::Lock(uint8_t **outBuffer, size_t *outSize)
+void SOUNDBUFFER::Lock(s8 **outBuffer, size_t *outSize)
 {
 	if (outBuffer != NULL)
 		*outBuffer = data;
@@ -385,18 +385,13 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 
 		for (int j = 0; j < ptp[i].size; ++j)
 		{
-			if (pcm_buffer[j] + mixed_pcm_buffer[j] - 0x100 < -0x7F)
-				mixed_pcm_buffer[j] = 0;
-			else if (pcm_buffer[j] + mixed_pcm_buffer[j] - 0x100 > 0x7F)
-				mixed_pcm_buffer[j] = 0xFF;
-			else
-				mixed_pcm_buffer[j] += pcm_buffer[j] + -0x80;
+			mixed_pcm_buffer[j] += pcm_buffer[j] - 0x40;
 		}
 	}
 
 	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(sample_count);
 
-	unsigned char *buf;
+	s8 *buf;
 	lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
 	memcpy(buf, mixed_pcm_buffer, sample_count);
 	lpSECONDARYBUFFER[no]->Unlock();

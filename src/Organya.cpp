@@ -135,7 +135,7 @@ bool MakeSoundObject8(int8_t *wavep, int8_t track, int8_t pipi)
 			for (size_t i = 0; i < data_size; i++)
 			{
 				uint8_t work = *(wavep+wav_tp);
-				work += 0x80;
+				//work += 0x80;
 				
 				*wp_sub = work;
 				
@@ -147,7 +147,7 @@ bool MakeSoundObject8(int8_t *wavep, int8_t track, int8_t pipi)
 			}
 			
 			//Copy wave data to sound buffer
-			uint8_t *buf;
+			s8 *buf;
 			lpORGANBUFFER[track][j][k]->Lock(&buf, NULL);
 			memcpy(buf, wp, data_size);
 			lpORGANBUFFER[track][j][k]->Unlock();
