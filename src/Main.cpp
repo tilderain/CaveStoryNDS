@@ -29,6 +29,12 @@
 #include "../srccommon/csFifo.h"
 #include "nds/fifocommon.h"
 
+#ifdef CYG_PROFILER
+#define __cplusplus
+#include "cyg-profile.h"
+#undef __cplusplus
+#endif
+
 char gModulePath[MAX_PATH];
 char gDataPath[MAX_PATH];
 
@@ -77,14 +83,29 @@ void fifoDataHandler(int bytes, void *user_data)
 		//printf("%p\n", msg.printData);
 	}
 }
+#ifdef CYG_PROFILER
+ int hblanks = 0;
+ static void hblankCount (void)
+  __attribute__ ((no_instrument_function));
+
+ void hblankCount(){
+  hblanks++;
+ }
+#endif
 
 int main(int argc, char *argv[])
 {
 	//Get executable's path
 	nitroFSInit(&argv[0]);
-	
 	consoleDemoInit();
 	printf("hi from the world of 2morrow\n");
+
+#ifdef CYG_PROFILER
+ irqEnable(IRQ_HBLANK); 
+ irqSet(IRQ_HBLANK, hblankCount);
+ cygprofile_begin();
+ cygprofile_enable();
+#endif
 
 	//irqEnable(IRQ_FIFO_NOT_EMPTY);
 	//fifoInit();

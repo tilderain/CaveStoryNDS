@@ -106,6 +106,7 @@ void GetMapData(unsigned char **data, short *mw, short *ml)
 		*ml = gMap.length;
 }
 
+__attribute__((hot))
 unsigned char GetAttribute(int x, int y)
 {
 	size_t a;

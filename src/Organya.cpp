@@ -599,7 +599,7 @@ void StopOrganyaMusic()
 	memset(key_on, 0, sizeof(key_on));
 	memset(key_twin, 0, sizeof(key_twin));
 
-	killAllSounds();
+	//killAllSounds();
 }
 
 void SetOrganyaFadeout()

@@ -33,6 +33,12 @@
 #include "Sound.h"
 #include "Stage.h"
 
+#ifdef CYG_PROFILER
+#define __cplusplus
+#include "cyg-profile.h"
+#undef __cplusplus
+#endif
+
 #define TSC_BUFFER_SIZE 0x5000
 
 #define TEXT_LEFT (WINDOW_WIDTH / 2 - 108)
@@ -1193,6 +1199,9 @@ int TextScriptProc(void)
 					}
 					else if (IS_COMMAND('S','V','P'))
 					{
+						#ifdef CYG_PROFILER
+						cygprofile_end();
+						#endif
 						SaveProfile(NULL);
 						gTS.p_read += 4;
 					}

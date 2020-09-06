@@ -264,6 +264,7 @@ void JudgeHitNpCharWater(NPCHAR *npc, int x, int y)
 	npc->flag |= hit;
 }
 
+__attribute__((hot))
 void HitNpCharMap(void)
 {
 	int x, y;
@@ -532,6 +533,7 @@ void LoseNpChar(NPCHAR *npc, BOOL bVanish)
 	}
 }
 
+__attribute__((hot))
 void HitNpCharBullet(void)
 {
 	int n, b;

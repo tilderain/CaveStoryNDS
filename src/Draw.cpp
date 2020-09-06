@@ -902,6 +902,7 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 
 int gCurPaletteOffset = 0;
 
+__attribute__((hot))
 static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, bool transparent)
 {
 	//TODO: draw queueing
@@ -965,9 +966,10 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	}
 
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, &srcRect, textureid, 0, surf[surf_no].paletteOffset);
+	glSprite(x, y, &srcRect, textureid, surf[surf_no].paletteOffset);
 }
 
+__attribute__((hot))
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Transparency
 {
 	DrawBitmap(rcView, x, y, rect, surf_no, true);

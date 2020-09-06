@@ -113,6 +113,7 @@ void glEnd2D( void )
 
 }
 
+__attribute__((hot))
 static inline void gxTexcoord2i(t16 u, t16 v)
 {
 	GFX_TEX_COORD = (v << 20) | ( (u << 4) & 0xFFFF );
@@ -124,32 +125,28 @@ static inline void gxVertex3i(v16 x, v16 y, v16 z)
 	GFX_VERTEX16 = ((uint32)(uint16)z);
 }
 
+__attribute__((hot))
 static inline void gxVertex2i(v16 x, v16 y)
 {
 	GFX_VERTEX_XY = (y << 16) | (x & 0xFFFF);	
 }
 
-void glSprite( int x, int y, RECT *rect, int textureID, int flipmode, int paletteOffset)
+__attribute__((hot))
+void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset)
 {
 
 	int width = rect->right - rect->left;
 	int height = rect->bottom - rect->top;
 
-	if(x + width < 0) return;
-	if(y + height < 0) return;
+	if(x1 + width < 0) return;
+	if(y1 + height < 0) return;
 
-	int x1 = x;
-	int y1 = y;
-	int x2 = x + width;
-	int y2 = y + height;
+	int x2 = x1 + width;
+	int y2 = y1 + height;
 
-	int	u1 = rect->left + (( flipmode & 2 ) ? width-1  : 0);
- 	int	u2 = rect->left + (( flipmode & 2 ) ? 0			    : width);
-	int v1 = rect->top + (( flipmode & 4 ) ? height-1 : 0);
- 	int v2 = rect->top + (( flipmode & 4 ) ? 0 		    : height);
+ 	int	u2 = rect->left + width;
+ 	int v2 = rect->top + height;
 
-	
- 
     if ( textureID != gCurrentTexture )
     {
         glBindTexture( GL_TEXTURE_2D, textureID);
@@ -164,15 +161,15 @@ void glSprite( int x, int y, RECT *rect, int textureID, int flipmode, int palett
 
 
 #ifdef TWO_SCREENS
-		gxTexcoord2i( u1, v1 ); gxVertex3i( x2, y1, g_depth );	
-		gxTexcoord2i( u1, v2 ); gxVertex2i( x1, y1 );
+		gxTexcoord2i( rect->left, rect->top ); gxVertex3i( x2, y1, g_depth );	
+		gxTexcoord2i( rect->left, v2 ); gxVertex2i( x1, y1 );
 		gxTexcoord2i( u2, v2 ); gxVertex2i( x1, y2 );
-		gxTexcoord2i( u2, v1 ); gxVertex2i( x2, y2 );
+		gxTexcoord2i( u2, rect->top ); gxVertex2i( x2, y2 );
 #else
-		gxTexcoord2i( u1, v1 ); gxVertex3i( x1, y1, g_depth );	
-		gxTexcoord2i( u1, v2 ); gxVertex2i( x1, y2 );
+		gxTexcoord2i( rect->left, rect->top ); gxVertex3i( x1, y1, g_depth );	
+		gxTexcoord2i( rect->left, v2 ); gxVertex2i( x1, y2 );
 		gxTexcoord2i( u2, v2 ); gxVertex2i( x2, y2 );
-		gxTexcoord2i( u2, v1 ); gxVertex2i( x2, y1 );
+		gxTexcoord2i( u2, rect->top ); gxVertex2i( x2, y1 );
 #endif
 	//glEnd();
 	
