@@ -20,6 +20,9 @@
 #include "Draw.h"
 #include "Game.h"
 
+#include "File.h"
+#include "Main.h"
+
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
@@ -407,4 +410,41 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 	free(mixed_pcm_buffer);
 
 	return sample_count;
+}
+
+BOOL ReadSound(int no)
+{
+    //Get file path
+    char path[MAX_PATH];
+    sprintf(path, "%s/Wave/%03d.ptw", gDataPath, no);
+    
+    //Open file
+    FILE *fp = fopen(path, "rb");
+    if (fp == NULL)
+        return FALSE;
+    
+    //Read file
+    size_t size = File_ReadLE32(fp);
+    signed char *data = (signed char *)malloc(size);
+    if (data == NULL)
+    {
+        fclose(fp);
+        return FALSE;
+    }
+    fread(data, size, 1, fp);
+    fclose(fp);
+    
+    //Create buffer
+    lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size);
+    if (lpSECONDARYBUFFER[no] == NULL)
+        return FALSE;
+    
+    //Upload data to buffer
+    s8 *buf;
+    lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
+    memcpy(buf, data, size);
+    lpSECONDARYBUFFER[no]->Unlock();
+    lpSECONDARYBUFFER[no]->SetFrequency(22050);
+	free(data);
+    return TRUE;
 }
