@@ -744,8 +744,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 256;
 			break;
 		case SURFACE_ID_LEVEL_BACKGROUND:
-			xoffset = 320;
-			textureid = gAtlas16Color2;
+			textureid = gAtlas16Color3;
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
 			xoffset = 768;
@@ -769,7 +768,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 464;
 			break;
 		case SURFACE_ID_ARMS:
-			textureid = gAtlas16Color3;
+			textureid = gAtlas16Color2;
+			xoffset = 320;
 			break;
 		case SURFACE_ID_FONT:
 			xoffset = 320;
