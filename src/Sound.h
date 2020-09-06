@@ -84,3 +84,4 @@ void ChangeSoundPan(int no, long pan);
 size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no);
 void DoOrganya(void);
 void killAllSounds(void);
+BOOL ReadSound(int no);
