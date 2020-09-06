@@ -180,11 +180,16 @@ void SOUNDBUFFER::Play(bool bLooping)
 	playing = true;
 	looping = bLooping;
 
-	if (channelId != -1) 
+	if (channelId != -1 && size < 257 && !looping) 
 	{
-		//soundKill(channelId);
+		//org for some reason sends a play message without looping for stopping..
+		//so it is better to just cut it off here rather than start a new sound
+		soundKill(channelId);
+		channelStates[channelId] = 0;
+		channelId = -1;
+		return;
 	}
-	else
+	if (channelId == -1)
 	{
 		channelId = getFreeChannel();
 	}

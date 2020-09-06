@@ -270,30 +270,10 @@ void HitNpCharMap(void)
 	int x, y;
 	int judg;
 
-	int offx[9];
-	int offy[9];
+	const int offx[] = {0, 1, 0, 1, 2, 2, 2, 0, 1};
+	const int offy[] = {0, 0, 1, 1, 0, 1, 2, 2, 2};
 
 	int i, j;
-
-	offx[0] = 0;
-	offx[1] = 1;
-	offx[2] = 0;
-	offx[3] = 1;
-	offx[4] = 2;
-	offx[5] = 2;
-	offx[6] = 2;
-	offx[7] = 0;
-	offx[8] = 1;
-
-	offy[0] = 0;
-	offy[1] = 0;
-	offy[2] = 1;
-	offy[3] = 1;
-	offy[4] = 0;
-	offy[5] = 1;
-	offy[6] = 2;
-	offy[7] = 2;
-	offy[8] = 2;
 
 	for (i = 0; i < NPC_MAX; ++i)
 	{

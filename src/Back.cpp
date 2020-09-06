@@ -24,24 +24,14 @@ BOOL InitBack(const char *fName, int type)
 	// Unused
 	color_black = GetCortBoxColor(RGB(0, 0, 0x10));
 
-	// Get width and height
-	char path[MAX_PATH];
-	sprintf(path, "%s/%s.png", gDataPath, fName);
-	
-	FILE *fp = fopen(path, "rb");
-	if (fp == NULL)
-		return FALSE;
-
-	fseek(fp, 0x10, SEEK_SET);
-	gBack.partsW = File_ReadBE32(fp);
-	gBack.partsH = File_ReadBE32(fp);
-
-	fclose(fp);
-
 	// Set background stuff and load texture
 	gBack.flag = TRUE;
 	if (!ReloadBitmap_File(fName, SURFACE_ID_LEVEL_BACKGROUND))
 		return FALSE;
+
+	gBack.partsW = surf[SURFACE_ID_LEVEL_BACKGROUND].w;
+	gBack.partsH = surf[SURFACE_ID_LEVEL_BACKGROUND].h;
+
 	gBack.type = type;
 	gWaterY = 240 * 0x10 * 0x200;
 	return TRUE;

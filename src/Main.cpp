@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 {
 	//Get executable's path
 	nitroFSInit(&argv[0]);
-	consoleDemoInit();
+
 	printf("hi from the world of 2morrow\n");
 
 #ifdef CYG_PROFILER

@@ -11,6 +11,7 @@ typedef struct MAP_NAME
 	BOOL flag;
 	int wait;
 	char name[0x20];
+	int length;
 } MAP_NAME;
 
 MAP_NAME gMapName;
@@ -87,13 +88,10 @@ void ReadyMapName(const char *str)
 
 	// Copy map's name to the global map name
 	strcpy(gMapName.name, str);
+	gMapName.length = (int)strlen(gMapName.name);
 
-	// Draw the text to the surface
-	a = (int)strlen(gMapName.name);
-	CortBox2(&rc, 0, SURFACE_ID_ROOM_NAME);
-	PutText2(((160 - (a * 6)) / 2) + 6, 1, gMapName.name, RGB(0x11, 0x00, 0x22), SURFACE_ID_ROOM_NAME);
-	PutText2(((160 - (a * 6)) / 2) + 6, 0, gMapName.name, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_ROOM_NAME);
 }
+
 
 void PutMapName(BOOL bMini)
 {
@@ -110,12 +108,14 @@ void PutMapName(BOOL bMini)
 		rcBack.bottom = 24;
 
 		CortBox(&rcBack, 0x000000);
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 86, 10, &rc, SURFACE_ID_ROOM_NAME);
+		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 	}
 	else if (gMapName.flag)
 	{
 		// MNA
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 86, (WINDOW_HEIGHT / 2) - 40, &rc, SURFACE_ID_ROOM_NAME);
+		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 		if (++gMapName.wait > 160)
 			gMapName.flag = FALSE;
 	}
@@ -129,6 +129,7 @@ void StartMapName(void)
 
 void RestoreMapName(void)
 {
+	return;
 	int a = (int)strlen(gMapName.name);
 
 	CortBox2(&rc, 0, SURFACE_ID_ROOM_NAME);

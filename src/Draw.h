@@ -67,6 +67,9 @@ struct SURFACE
 	char name[16];
 };
 
+extern SURFACE surf[SURFACE_ID_MAX];
+
+
 BOOL Flip_SystemTask(void);
 BOOL StartDirectDraw();
 void EndDirectDraw(void);

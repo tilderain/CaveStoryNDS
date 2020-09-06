@@ -37,7 +37,18 @@ SURFACE surf[SURFACE_ID_MAX];
 
 PrintConsole bottomScreen;
 
+static char* font_letters[3] = {
+	" !\"#$%&`()*+,-./0123456789:;<=>?",
+	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]%_",
+	"'abcdefghijklmnopqrstuvwxyz{|}~"
+};
+
 int gAtlas16Color1;
+int gAtlas16Color2;
+int gAtlas16Color3;
+int gAtlas16Color4;
+int gAtlas16Color5;
+
 int gAtlas256Color;
 
 int gTextureLoaded = 0;
@@ -87,14 +98,14 @@ BOOL Flip_SystemTask()
 	//Update inputs
 	UpdateInput();
 	
-	//mmStreamUpdate();
+	DoOrganya();
 
 	glEnd2D();
 
 	glFlush(0);
 	swiWaitForVBlank();
 	
-	DoOrganya();
+
 
 	glBegin2D();
 
@@ -169,7 +180,7 @@ BOOL StartDirectDraw()
 
     vramSetBankA( VRAM_A_TEXTURE );     
 	vramSetBankB( VRAM_B_TEXTURE );
-	
+	vramSetBankC( VRAM_C_TEXTURE );
 	vramSetBankD( VRAM_D_TEXTURE );
 	
 	vramSetBankE(VRAM_E_TEX_PALETTE);  // Allocate VRAM bank for all the palettes
@@ -183,13 +194,30 @@ BOOL StartDirectDraw()
 	glTexImage2D(0,0, GL_RGB16, gTextureWidth, gTextureHeight, 0,
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
+
+	glGenTextures(1, &gAtlas16Color2);
+	glBindTexture(0, gAtlas16Color2);
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth256, gTextureHeight256, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
 	
+		
+	glGenTextures(1, &gAtlas16Color3);
+	glBindTexture(0, gAtlas16Color3);
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth256, gTextureHeight256, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
+
+
 	glGenTextures(1, &gAtlas256Color);
 	glBindTexture(0, gAtlas256Color);
 	glTexImage2D(0,0, GL_RGB256, gTextureWidth256, gTextureHeight256, 0,
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
-	
+
+	videoSetModeSub( MODE_0_2D  );
+	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
+	consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
 	
 	
 	return TRUE;
@@ -522,8 +550,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
 		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
 		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
-	    || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_ARMS_IMAGE\
-		|| surf_no == SURFACE_ID_STAGE_ITEM)
+	    || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_FADE\
+		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
+		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT)
 	{
 
 	}
@@ -565,7 +594,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	}*/
 	
 
-
+	
+	surf[surf_no].w = bitmap_width; surf[surf_no].h = bitmap_height;
+	
 	if (create_surface)
 	{
 		MakeSurface_Generic(bitmap_width, bitmap_height, surf_no);
@@ -674,9 +705,12 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	//	GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 	//	(u8*)surf[surf_no].data);
 
-		int yoffset = 0;
+	int yoffset = 0;
 	int xoffset = 0;
 	int paletteOffset = 0;
+	int textureid;
+
+	textureid = gAtlas16Color1;
 
 	switch(surf_no)
 	{
@@ -693,6 +727,10 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			xoffset = 512;
 			yoffset = 0;
 			break;
+		case SURFACE_ID_LEVEL_SPRITESET_2:
+			if(paletteType == GL_RGB256) goto free;
+			textureid = gAtlas16Color2;
+			break;
 		case SURFACE_ID_CARET:
 			xoffset = 320;
 			yoffset = 256;
@@ -706,8 +744,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 256;
 			break;
 		case SURFACE_ID_LEVEL_BACKGROUND:
-			xoffset = 768;
-			yoffset = 0;
+			xoffset = 320;
+			textureid = gAtlas16Color2;
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
 			xoffset = 768;
@@ -727,6 +765,17 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 448;
 			xoffset = 0;
 			break;
+		case SURFACE_ID_FADE:
+			yoffset = 464;
+			break;
+		case SURFACE_ID_ARMS:
+			textureid = gAtlas16Color3;
+			break;
+		case SURFACE_ID_FONT:
+			xoffset = 320;
+			yoffset = 200;
+			textureid = gAtlas16Color3;
+			break;
 		case SURFACE_ID_LEVEL_TILESET:
 			break;
 		default:
@@ -742,10 +791,24 @@ free:
 	switch (paletteType)
 	{
 		case GL_RGB16:
-			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas16Color1);
-			texH = gTextureHeight;
-			texW = gTextureWidth;
-			surf[surf_no].textureid = gAtlas16Color1;
+			tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid);
+			if(textureid == gAtlas16Color1)
+			{
+				texW = gTextureWidth;
+				texH = gTextureHeight;
+			}
+			else if (textureid == gAtlas16Color2)
+			{
+				texW = gTextureWidth256;
+				texH = gTextureHeight256;
+			}
+			else if (textureid == gAtlas16Color3)
+			{
+				texW = gTextureWidth256;
+				texH = gTextureHeight256;
+			}
+
+			surf[surf_no].textureid = textureid;
 			break;
 		case GL_RGB256:
 			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas256Color);
@@ -925,6 +988,9 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 
 	if(x > WINDOW_WIDTH) return;
 	if(y > WINDOW_HEIGHT) return;
+
+	if(surf_no == SURFACE_ID_SCREEN_GRAB) return;
+
 ////
 	RECT srcRect = *rect;
 	srcRect.left += surf[surf_no].xoffset;
@@ -1051,96 +1117,63 @@ void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)
 
 void InitTextObject()
 {
-	MakeSurface_File("Font", SURFACE_ID_FONT);
+	MakeSurface_File("smalfont", SURFACE_ID_FONT);
 }
 
-void PutText(int x, int y, const char *text, uint32_t color)
+static RECT GetFontRect(char character)
 {
-	RECT rcCharacter;
-	RECT *rcView = &grcFull;
-	RECT *rect = &rcCharacter;
-	RECT renderRect;
-	
-	//Get our surface colour
-	int r = (color & 0xFF0000) >> 16;
-	int g = (color & 0x00FF00) >>  8;
-	int b = (color & 0x0000FF) >>  0;
-	
-	for (int i = 0; i < strlen(text); i++)
+	RECT rect;
+	bool found = false;
+	int j,k;
+	for(j=0;j<3;j++)
 	{
-		rcCharacter.left = (text[i] % 0x20) * 12;
-		rcCharacter.top = (text[i] / 0x20 - 1) * 12;
-		rcCharacter.right = rcCharacter.left + 12;
-		rcCharacter.bottom = rcCharacter.top + 12;
-		
-		if (surf[SURFACE_ID_FONT].data)
+		for(k=0;k<33;k++)
 		{
-			//Clip our rect
-			renderRect.left = (x < rcView->left) ? (rect->left + (rcView->left - x)) : rect->left;
-			renderRect.top = (y < rcView->top) ? (rect->top + (rcView->top - y)) : rect->top;
-			renderRect.right = ((x + rect->right - rect->left) >= rcView->right) ? rect->right - ((x + rect->right - rect->left) - rcView->right) : rect->right;
-			renderRect.bottom = ((y + rect->bottom - rect->top) >= rcView->bottom) ? rect->bottom - ((y + rect->bottom - rect->top) - rcView->bottom) : rect->bottom;
-			
-			for (int fx = renderRect.left; fx < renderRect.right; fx++)
-			{
-				for (int fy = renderRect.top; fy < renderRect.bottom; fy++)
-				{
-					int dx = (x + 5 * i) + (fx - rect->left);
-					int dy = y + (fy - rect->top);
-					
-					BUFFER_PIXEL *pixel = &surf[SURFACE_ID_FONT].data[fy * surf[SURFACE_ID_FONT].w + fx];
-					//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0)
-					//	continue;
-					//SET_BUFFER_PIXEL(screenBuffer, WINDOW_WIDTH, dx, dy, r, g, b);
-				}
+			if(font_letters[j][k] == character)
+			{	
+				found = true;
+				break;
 			}
 		}
+		if(found) break;
+	}
+	rect = {k*6, j*12, k*6+6, j*12+12};
+	return rect;
+}
+
+void PutText(int x, int y, const char *text, unsigned long color)
+{
+	RECT rect = {0, 0, 0, 0};
+	int i = 0;
+	
+	while(text[i] != NULL)
+	{
+		char character = text[i];
+		rect = GetFontRect(character);
+
+		PutBitmap3(&grcGame, x, y, &rect, SURFACE_ID_FONT);
+		x+=6;
+		i++;
+	}
+	
+}
+
+void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no)
+{
+	RECT rect = {0, 0, 0, 0};
+	int i = 0;
+	
+	while(text[i] != NULL)
+	{
+		char character = text[i];
+		rect = GetFontRect(character);
+		
+		//Surface2SurfaceColored(PixelToScreenCoord(x)/mag, PixelToScreenCoord(y)/mag, &rect, surf_no, SURFACE_ID_FONT, color);
+		x+=6;
+		i++;
 	}
 }
 
-void PutText2(int x, int y, const char *text, uint32_t color, SurfaceID surf_no)
-{
-	RECT rcCharacter;
-	RECT *rcView = &grcFull;
-	RECT *rect = &rcCharacter;
-	RECT renderRect;
-	
-	//Get our surface colour
-	int r = (color & 0xFF0000) >> 16;
-	int g = (color & 0x00FF00) >>  8;
-	int b = (color & 0x0000FF) >>  0;
-	
-	for (int i = 0; i < strlen(text); i++)
-	{
-		rcCharacter.left = (text[i] % 0x20) * 12;
-		rcCharacter.top = (text[i] / 0x20 - 1) * 12;
-		rcCharacter.right = rcCharacter.left + 12;
-		rcCharacter.bottom = rcCharacter.top + 12;
-		
-		if (surf[SURFACE_ID_FONT].data && surf[surf_no].data)
-		{
-			//Clip our rect
-			renderRect.left = (x < 0) ? (rect->left + (0 - x)) : rect->left;
-			renderRect.top = (y < 0) ? (rect->top + (0 - y)) : rect->top;
-			renderRect.right = ((x + rect->right - rect->left) >= surf[surf_no].w) ? rect->right - ((x + rect->right - rect->left) - surf[surf_no].w) : rect->right;
-			renderRect.bottom = ((y + rect->bottom - rect->top) >= surf[surf_no].h) ? rect->bottom - ((y + rect->bottom - rect->top) - surf[surf_no].h) : rect->bottom;
-			
-			for (int fx = renderRect.left; fx < renderRect.right; fx++)
-			{
-				for (int fy = renderRect.top; fy < renderRect.bottom; fy++)
-				{
-					int dx = (x + 5 * i) + (fx - rect->left);
-					int dy = y + (fy - rect->top);
-					
-					BUFFER_PIXEL *pixel = &surf[SURFACE_ID_FONT].data[fy * surf[SURFACE_ID_FONT].w + fx];
-					//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
-					//	continue;
-					//SET_BUFFER_PIXEL(surf[surf_no].data, surf[surf_no].w, dx, dy, r, g, b);
-				}
-			}
-		}
-	}
-}
 
 void EndTextObject()
 {
