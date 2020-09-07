@@ -433,7 +433,7 @@ void ClearTextLine(void)
 	for (i = 0; i < 4; ++i)
 	{
 		gTS.ypos_line[i] = i * 16;
-		CortBox2(&gRect_line, 0x000000, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+		//CortBox2(&gRect_line, 0x000000, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 		memset(text[i], 0, sizeof(text[0]));
 	}
 }
@@ -502,7 +502,8 @@ void PutTextScript(void)
 		text_offset = 0;
 
 	for (i = 0; i < 4; ++i)
-		PutBitmap3(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, &gRect_line, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+		PutText(TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, text[i], RGB(0xFF, 0xFF, 0xFE));
+	//PutBitmap3(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, &gRect_line, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 
 	// Draw NOD cursor
 	if ((gTS.wait_beam++ % 20 > 12) && gTS.mode == 2)
@@ -1355,6 +1356,7 @@ int TextScriptProc(void)
 							c[1] = '\0';
 						}
 
+
 						// Print text
 						if (c[0] == '=')
 						{
@@ -1491,6 +1493,7 @@ int TextScriptProc(void)
 
 void RestoreTextScript(void)
 {
+	return;
 	int i;
 
 	for (i = 0; i < 4; ++i)

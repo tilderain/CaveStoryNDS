@@ -28,8 +28,6 @@
 #include "Game.h"
 #include "Sound.h"
 
-#define COLOR(r,g,b)  ((r) | (g)<<5 | (b)<<10)
-
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
@@ -552,7 +550,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
 	    || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_FADE\
 		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
-		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT)
+		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_LOADING\
+		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE)
 	{
 
 	}
@@ -614,7 +613,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		r = state.info_png.color.palette[i*4] / 8;
 		g = state.info_png.color.palette[i*4+1] / 8;
 		b = state.info_png.color.palette[i*4+2] / 8;
-		surf[surf_no].palette[i] = COLOR(r,g,b);
+		surf[surf_no].palette[i] = RGB15(r,g,b);
 	}
 
 	lodepng_state_cleanup(&state);
@@ -714,6 +713,15 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	switch(surf_no)
 	{
+		case SURFACE_ID_TITLE:
+			xoffset = 512;
+			break;
+		case SURFACE_ID_LOADING:
+			break;
+		case SURFACE_ID_PIXEL:
+			xoffset = 512;
+			yoffset = 48;
+			break;
 		case SURFACE_ID_TEXT_BOX:
 			xoffset = 256;
 			yoffset = 0;
@@ -892,7 +900,11 @@ free:
 
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
-	if(!strcmp(name, surf[surf_no].name)) return TRUE;
+	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE)
+	{
+
+	}
+	else if(!strcmp(name, surf[surf_no].name)) return TRUE;
 	printf("LoadBitmap_File %s\n", name);
 	printf("Memory: %d %d %d\n", mallinfo().arena, mallinfo().uordblks, mallinfo().fordblks);
 	//Attempt to load PNG
@@ -1086,15 +1098,11 @@ void CortBox(RECT *rect, uint32_t col)
 	const unsigned char col_green = (col & 0x00FF00) >> 8;
 	const unsigned char col_blue = (col & 0xFF0000) >> 16;
 	//const BUFFER_PIXEL colPixel = {col_red, col_green, col_blue};
+
+	col = RGB15(col_red / 8, col_green / 8, col_blue / 8);
 	
-	for (int y = (rect->top < 0 ? 0 : rect->top); y < (rect->bottom >= WINDOW_HEIGHT ? WINDOW_HEIGHT : rect->bottom); y++)
-	{
-		//memcpy(screenBuffer, &colPixel, sizeof(BUFFER_PIXEL));
-		for (int x = (rect->left < 0 ? 0 : rect->left); x < (rect->right >= WINDOW_WIDTH ? WINDOW_WIDTH : rect->right); x++)
-		{
-			//SET_BUFFER_PIXEL(screenBuffer, WINDOW_WIDTH, x, y, col_red, col_green, col_blue);
-		}
-	}
+	glBoxFilled(rect->left, rect->top, rect->right, rect->bottom, col);
+
 }
 
 void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)

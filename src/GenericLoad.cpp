@@ -156,7 +156,7 @@ static const PIXTONEPARAMETER gPtpTable[139] =
 bool LoadGenericData()
 {
 	printf("loading generic data\n");
-	MakeSurface_Resource("PIXEL", SURFACE_ID_PIXEL);
+	MakeSurface_File("PIXEL", SURFACE_ID_PIXEL);
 	
 	
 	bool bError = false;
