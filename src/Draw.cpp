@@ -235,10 +235,6 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 {
 	if (surf_no < SURFACE_ID_MAX)
 	{
-		if(surf[surf_no].data)
-			free(surf[surf_no].data);
-		if(surf[surf_no].palette)
-			free(surf[surf_no].palette);
 
 		surf[surf_no].w = bxsize;
 		surf[surf_no].h = bysize;
