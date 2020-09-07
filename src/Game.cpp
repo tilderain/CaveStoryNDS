@@ -340,8 +340,8 @@ int ModeTitle(void)
 	// Start loop
 	wait = 0;
 
-	MakeSurface_File("PIXEL", SURFACE_ID_PIXEL);
-	MakeSurface_File("Title", SURFACE_ID_TITLE);
+	ReloadBitmap_File("PIXEL", SURFACE_ID_PIXEL);
+	ReloadBitmap_File("Title", SURFACE_ID_TITLE);
 	strcpy(surf[SURFACE_ID_LEVEL_SPRITESET_1].name, "asdf");
 
 	while (1)
