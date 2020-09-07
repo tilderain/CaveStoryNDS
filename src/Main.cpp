@@ -195,7 +195,10 @@ int main(int argc, char *argv[])
 	
 	
 	//Load the "LOADING" text
-	MakeSurface_File("Loading", SURFACE_ID_LOADING);
+
+	// Bandaid fix for weird, probably undefined behavior when loading on hardware
+	MakeSurface_Generic(64, 8, SURFACE_ID_LOADING);
+	ReloadBitmap_File("Loading", SURFACE_ID_LOADING);
 	
 	printf("hi from the world of 3morrow\n");
 	
