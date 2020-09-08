@@ -185,12 +185,10 @@ void glBoxFilled( int x1, int y1, int x2, int y2, int color )
 	
 	glBindTexture( 0, 0 );
 	glColor( color );
-	glBegin( GL_QUADS );
 		gxVertex3i( x1, y1, g_depth );		// use 3i for first vertex so that we increment HW depth
 		gxVertex2i( x1, y2 );				// no need for 3 vertices as 2i would share last depth call
 		gxVertex2i( x2, y2 );
 		gxVertex2i( x2, y1 );
-	glEnd();
 	glColor( 0x7FFF );
 	g_depth++;
 	gCurrentTexture = 0;
