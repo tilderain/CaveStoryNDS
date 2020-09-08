@@ -508,16 +508,7 @@ void PutTextScript(void)
 	// Draw NOD cursor
 	if ((gTS.wait_beam++ % 20 > 12) && gTS.mode == 2)
 	{
-		char* curline =  text[gTS.line % 4];
-		int spacing = 0;
-		char v;
-		while (v = *curline++)
-		{
-		    if ((v -= 0x20) >= 0x00 && v <= 0x60)
-		    {
-		        spacing += font_space[v];
-		    }
-		}
+		int spacing = GetTextSpacing(text[gTS.line % 4]);
 		rect.left = TEXT_LEFT + spacing + text_offset + 2;
 		rect.top = gTS.ypos_line[gTS.line % 4] + gTS.rcText.top + gTS.offsetY - 2;
 		rect.right = rect.left + 5;

@@ -1129,6 +1129,20 @@ static RECT GetFontRect(char character)
 	return rect;
 }
 
+int GetTextSpacing(const char *text)
+{
+	int spacing = 0;
+	char v;
+	while (v = *text++)
+	{
+	    if ((v -= 0x20) >= 0x00 && v <= 0x60)
+	    {
+	        spacing += font_space[v];
+	    }
+	}
+	return spacing;
+}
+
 void PutText(int x, int y, const char *text, unsigned long colour)
 {
     char v;

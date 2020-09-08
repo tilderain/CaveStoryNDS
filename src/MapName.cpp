@@ -11,7 +11,6 @@ typedef struct MAP_NAME
 	BOOL flag;
 	int wait;
 	char name[0x20];
-	int length;
 } MAP_NAME;
 
 MAP_NAME gMapName;
@@ -88,7 +87,6 @@ void ReadyMapName(const char *str)
 
 	// Copy map's name to the global map name
 	strcpy(gMapName.name, str);
-	gMapName.length = (int)strlen(gMapName.name);
 
 }
 
@@ -98,6 +96,7 @@ void PutMapName(BOOL bMini)
 	// 'unused_rect' isn't the original name. The Linux port optimised this out, so there's no known name for it.
 	RECT unused_rect = {0, 0, 160, 16};
 
+	int spacing = GetTextSpacing(gMapName.name);
 	if (bMini)
 	{
 		// Map system
@@ -108,14 +107,14 @@ void PutMapName(BOOL bMini)
 		rcBack.bottom = 24;
 
 		CortBox(&rcBack, 0x000000);
-		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
-		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
+		PutText((WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText((WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 	}
 	else if (gMapName.flag)
 	{
 		// MNA
-		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
-		PutText((WINDOW_WIDTH / 2) - (gMapName.length * 3), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
+		PutText((WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText((WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 		if (++gMapName.wait > 160)
 			gMapName.flag = FALSE;
 	}
