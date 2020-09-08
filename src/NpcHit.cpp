@@ -584,7 +584,7 @@ void HitNpCharBullet(void)
 							gNPC[n].damage_view -= gBul[b].damage;
 					}
 				}
-				else if (gBul[b].code_bullet == 13
+				/*else if (gBul[b].code_bullet == 13
 					|| gBul[b].code_bullet == 14
 					|| gBul[b].code_bullet == 15
 					|| gBul[b].code_bullet == 28
@@ -592,7 +592,7 @@ void HitNpCharBullet(void)
 					|| gBul[b].code_bullet == 30)
 				{
 					// Strange empty case that's needed for accurate assembly
-				}
+				}*/
 				else if (!(gBul[b].bbits & 0x10))
 				{
 					// Hit invulnerable NPC

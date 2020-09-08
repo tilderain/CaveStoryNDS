@@ -43,18 +43,15 @@ static char* font_letters[3] = {
 
 int gAtlas16Color1;
 int gAtlas16Color2;
-int gAtlas16Color3;
-int gAtlas16Color4;
-int gAtlas16Color5;
 
 int gAtlas256Color;
 
 int gTextureLoaded = 0;
 
-int gTextureWidth = TEXTURE_SIZE_1024;
-int gTextureHeight = TEXTURE_SIZE_512;
+int gTextureWidth1024 = TEXTURE_SIZE_1024;
+int gTextureHeight512 = TEXTURE_SIZE_512;
 
-int gTextureWidth256 = TEXTURE_SIZE_512;
+int gTextureWidth512 = TEXTURE_SIZE_512;
 int gTextureHeight256 = TEXTURE_SIZE_256;
 
 void* gCurrentPalette;
@@ -189,27 +186,19 @@ BOOL StartDirectDraw()
 
 	glGenTextures(1, &gAtlas16Color1);
 	glBindTexture(0, gAtlas16Color1);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth, gTextureHeight, 0,
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight512, 0,
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
 
 	glGenTextures(1, &gAtlas16Color2);
 	glBindTexture(0, gAtlas16Color2);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth256, gTextureHeight256, 0,
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
-	
-		
-	glGenTextures(1, &gAtlas16Color3);
-	glBindTexture(0, gAtlas16Color3);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth256, gTextureHeight256, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
 
 	glGenTextures(1, &gAtlas256Color);
 	glBindTexture(0, gAtlas256Color);
-	glTexImage2D(0,0, GL_RGB256, gTextureWidth256, gTextureHeight256, 0,
+	glTexImage2D(0,0, GL_RGB256, gTextureWidth512, gTextureHeight256, 0,
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
 
@@ -456,6 +445,9 @@ vramBlock_allocateSpecial( s_vramBlock *mb, uint8 *addr, uint32 size ) {
 
 int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 {
+
+	if(width < 17) width = 17;
+
 	uint32 colFormatVal = 4;
 	uint8* checkAddr = vramBlock_examineSpecial( glGlob->vramBlocks[ 1 ], (uint8*)VRAM_E, width << 1, colFormatVal );
 
@@ -709,50 +701,48 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	switch(surf_no)
 	{
+		case SURFACE_ID_LEVEL_SPRITESET_1:
+			if(paletteType == GL_RGB256) goto free;
+			break;
+		case SURFACE_ID_LEVEL_SPRITESET_2:
+			if(paletteType == GL_RGB256) goto free;
+			yoffset = 240;
+			break;
+		case SURFACE_ID_NPC_SYM:
+			xoffset = 320;
+			yoffset = 240;
+			break;
+		case SURFACE_ID_LEVEL_TILESET:
+			xoffset = 320;
+			break;
 		case SURFACE_ID_TITLE:
-			xoffset = 512;
 			break;
 		case SURFACE_ID_LOADING:
 			break;
 		case SURFACE_ID_PIXEL:
-			xoffset = 512;
 			yoffset = 48;
 			break;
-		case SURFACE_ID_TEXT_BOX:
-			xoffset = 256;
-			yoffset = 0;
-			break;
-		case SURFACE_ID_MY_CHAR:
-			xoffset = 256;
-			yoffset = 144;
-			break;
-		case SURFACE_ID_LEVEL_SPRITESET_1:
-			if(paletteType == GL_RGB256) goto free;
-			xoffset = 512;
-			yoffset = 0;
-			break;
-		case SURFACE_ID_LEVEL_SPRITESET_2:
-			if(paletteType == GL_RGB256) goto free;
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_CARET:
-			xoffset = 320;
-			yoffset = 256;
-			break;
 		case SURFACE_ID_BULLET:
-			xoffset = 0;
-			yoffset = 256;
-			break;
-		case SURFACE_ID_NPC_SYM:
 			xoffset = 640;
-			yoffset = 256;
+			yoffset = 135;
 			break;
-		case SURFACE_ID_LEVEL_BACKGROUND:
-			textureid = gAtlas16Color3;
+		case SURFACE_ID_ARMS:
+			xoffset = 640;
+			yoffset = 311;
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
-			xoffset = 768;
-			yoffset = 240;
+			xoffset = 576;
+			break;
+		case SURFACE_ID_ARMS_IMAGE:
+			xoffset = 256;
+			yoffset = 480;
+			break;
+		case SURFACE_ID_STAGE_ITEM:
+			xoffset = 256;
+			yoffset = 496;
+			break;
+		case SURFACE_ID_FADE:
+			yoffset = 480;
 			break;
 		case SURFACE_ID_NPC_REGU:
 			xoffset = 0;
@@ -760,27 +750,26 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		case SURFACE_ID_FACE:
 			xoffset = 0;
 			break;
-		case SURFACE_ID_ARMS_IMAGE:
-			yoffset = 432;
-			xoffset = 0;
-			break;
-		case SURFACE_ID_STAGE_ITEM:
-			yoffset = 448;
-			xoffset = 0;
-			break;
-		case SURFACE_ID_FADE:
-			yoffset = 464;
-			break;
-		case SURFACE_ID_ARMS:
+		case SURFACE_ID_LEVEL_BACKGROUND:
 			textureid = gAtlas16Color2;
+			break;
+		case SURFACE_ID_CARET:
 			xoffset = 320;
+			textureid = gAtlas16Color2;
+			break;
+		case SURFACE_ID_TEXT_BOX:
+			xoffset = 640;
+			yoffset = 112;
+			textureid = gAtlas16Color2;
 			break;
 		case SURFACE_ID_FONT:
-			xoffset = 320;
-			yoffset = 200;
-			textureid = gAtlas16Color3;
+			xoffset = 640;
+			yoffset = 64;
+			textureid = gAtlas16Color2;
 			break;
-		case SURFACE_ID_LEVEL_TILESET:
+		case SURFACE_ID_MY_CHAR:
+			xoffset = 640;
+			textureid = gAtlas16Color2;
 			break;
 		default:
 free:
@@ -790,25 +779,20 @@ free:
 	}
 
 	BUFFER_PIXEL* tex;
-	int texH = gTextureHeight;
-	int texW = gTextureWidth;
+	int texH;
+	int texW;
 	switch (paletteType)
 	{
 		case GL_RGB16:
 			tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid);
 			if(textureid == gAtlas16Color1)
 			{
-				texW = gTextureWidth;
-				texH = gTextureHeight;
+				texW = gTextureWidth1024;
+				texH = gTextureHeight512;
 			}
 			else if (textureid == gAtlas16Color2)
 			{
-				texW = gTextureWidth256;
-				texH = gTextureHeight256;
-			}
-			else if (textureid == gAtlas16Color3)
-			{
-				texW = gTextureWidth256;
+				texW = gTextureWidth1024;
 				texH = gTextureHeight256;
 			}
 
@@ -816,8 +800,8 @@ free:
 			break;
 		case GL_RGB256:
 			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas256Color);
+			texW = gTextureWidth512;
 			texH = gTextureHeight256;
-			texW = gTextureWidth256;
 			surf[surf_no].textureid = gAtlas256Color;
 			break;
 		default:
