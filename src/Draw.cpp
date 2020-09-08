@@ -531,6 +531,101 @@ int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 	
 }
 
+// Copy data from surf_no to texture
+BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect)
+{
+	BUFFER_PIXEL* tex;
+	int texH;
+	int texW;
+	switch (paletteType)
+	{
+		case GL_RGB16:
+			tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid);
+			if(textureid == gAtlas16Color1)
+			{
+				texW = gTextureWidth1024;
+				texH = gTextureHeight512;
+			}
+			else if (textureid == gAtlas16Color2)
+			{
+				texW = gTextureWidth1024;
+				texH = gTextureHeight256;
+			}
+
+			surf[surf_no].textureid = textureid;
+			break;
+		case GL_RGB256:
+			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas256Color);
+			texW = gTextureWidth512;
+			texH = gTextureHeight256;
+			surf[surf_no].textureid = gAtlas256Color;
+			break;
+		default:
+
+			return FALSE;
+	}
+
+	uint32 vramTemp = VRAM_CR;
+
+	uint32 size = 0;
+	size = 1 << (texW + texH + 6);
+
+	uint16 *startBank = vramGetBank( (uint16*)tex );
+	uint16 *endBank = vramGetBank(( uint16*)( (char*)tex + size - 1 ));
+
+	do {
+		if( startBank == VRAM_A )
+			vramSetBankA( VRAM_A_LCD );
+		else if( startBank == VRAM_B )
+			vramSetBankB( VRAM_B_LCD );
+		else if( startBank == VRAM_C )
+			vramSetBankC( VRAM_C_LCD );
+		else if( startBank == VRAM_D )
+			vramSetBankD( VRAM_D_LCD );
+		startBank += 0x10000;
+	} while ( startBank <= endBank );
+
+	//dmaCopyWords(0, surf[surf_no].data, tex, size);
+
+	int atlasW = 1 << (texW + 3);
+	int atlasH = 1 << (texH + 3);
+
+	int texDivi = 2;
+
+	int surfaceW = surf[surf_no].w;
+	int rectW = rect->right - rect->left;
+	if(rectW <= 3) rectW = 4;
+	
+	int rectH = rect->bottom - rect->top;
+
+	switch(paletteType)
+	{
+		case GL_RGB4:
+			texDivi = 4;
+		break;
+		case GL_RGB16:
+			texDivi = 2;
+		break;
+		case GL_RGB256:
+			texDivi = 1;
+		break;
+	}
+	int surfStartH = rect->top; 
+	// maybe this will help on hardware?
+	DC_FlushRange(surf[surf_no].data, surf[surf_no].w*surf[surf_no].h);
+	for(int h = 0; h < rectH; h++)
+	{
+		dmaCopyHalfWords(0, surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf
+											tex + (atlasW*h/texDivi) + (atlasW*yoffset/texDivi) + (xoffset/texDivi), //position to copy to
+											(rectW/texDivi)); //how many pixels to copy
+		surfStartH++;
+	}
+
+	vramRestorePrimaryBanks(vramTemp);
+
+	return TRUE;
+}
+
 BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 {
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
@@ -572,16 +667,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 
 	int palettesize = state.info_png.color.palettesize;	
 
-	/*for (int i = 0; i < state.info_png.color.palettesize; i++)
-	{
-		printf("Color %d", state.info_png.color.palette[i*4]);
-		printf(" %d", state.info_png.color.palette[i*4+1]);
-		printf(" %d", state.info_png.color.palette[i*4+2]);
-		printf(" %d\n", state.info_png.color.palette[i*4+3]);
-	}*/
-	
-
-	
 	surf[surf_no].w = bitmap_width; surf[surf_no].h = bitmap_height;
 	
 	if (create_surface)
@@ -659,38 +744,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			surf[surf_no].data[ pos ].color = color;
 		}
 	}
-	
-	//int textureid;
-	//glGenTextures(1, &textureid);
-	//glBindTexture(0, textureid);
-	/*
-	int texW, texH;
-	switch(surf[surf_no].w)
-	{
-		case 16: texW= TEXTURE_SIZE_16; break;
-		case 32: texW= TEXTURE_SIZE_32; break;
-		case 64: texW= TEXTURE_SIZE_64; break;
-		case 128: texW= TEXTURE_SIZE_128; break;
-		case 256: texW= TEXTURE_SIZE_256; break;
-		case 512: texW= TEXTURE_SIZE_512; break;
-		default: texW= TEXTURE_SIZE_256;
-	}
-	switch(surf[surf_no].h)
-	{
-		case 16: texH= TEXTURE_SIZE_16; break;
-		case 32: texH= TEXTURE_SIZE_32; break;
-		case 64: texH= TEXTURE_SIZE_64; break;
-		case 128: texH= TEXTURE_SIZE_128; break;
-		case 256: texH= TEXTURE_SIZE_256; break;
-		case 512: texH= TEXTURE_SIZE_512; break;
-		default: texH= TEXTURE_SIZE_256;
-	}
-	*/
-	//if(surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_ITEM_IMAGE) paletteType = GL_RGB256;
-
-	//glTexImage2D(0,0, paletteType, texW, texH, 0,
-	//	GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-	//	(u8*)surf[surf_no].data);
 
 	int yoffset = 0;
 	int xoffset = 0;
@@ -778,89 +831,13 @@ free:
 			return TRUE;
 	}
 
-	BUFFER_PIXEL* tex;
-	int texH;
-	int texW;
-	switch (paletteType)
+	RECT datarect = {0, 0, bitmap_width, bitmap_height};
+	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
-		case GL_RGB16:
-			tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid);
-			if(textureid == gAtlas16Color1)
-			{
-				texW = gTextureWidth1024;
-				texH = gTextureHeight512;
-			}
-			else if (textureid == gAtlas16Color2)
-			{
-				texW = gTextureWidth1024;
-				texH = gTextureHeight256;
-			}
-
-			surf[surf_no].textureid = textureid;
-			break;
-		case GL_RGB256:
-			tex = (BUFFER_PIXEL*)glGetTexturePointer(gAtlas256Color);
-			texW = gTextureWidth512;
-			texH = gTextureHeight256;
-			surf[surf_no].textureid = gAtlas256Color;
-			break;
-		default:
-			fclose(fp);
-			free(bitmap_pixels);
-			return TRUE;
+		fclose(fp);
+		free(bitmap_pixels);
+		return TRUE;
 	}
-
-	uint32 vramTemp = VRAM_CR;
-
-	uint32 size = 0;
-	size = 1 << (texW + texH + 6);
-
-	uint16 *startBank = vramGetBank( (uint16*)tex );
-	uint16 *endBank = vramGetBank(( uint16*)( (char*)tex + size - 1 ));
-
-	do {
-		if( startBank == VRAM_A )
-			vramSetBankA( VRAM_A_LCD );
-		else if( startBank == VRAM_B )
-			vramSetBankB( VRAM_B_LCD );
-		else if( startBank == VRAM_C )
-			vramSetBankC( VRAM_C_LCD );
-		else if( startBank == VRAM_D )
-			vramSetBankD( VRAM_D_LCD );
-		startBank += 0x10000;
-	} while ( startBank <= endBank );
-
-	//dmaCopyWords(0, surf[surf_no].data, tex, size);
-	int w = surf[surf_no].w;
-
-	int gW = 1 << (texW + 3);
-	int gH = 1 << (texH + 3);
-
-	int texDivi = 2;
-	switch(paletteType)
-	{
-		case GL_RGB4:
-			texDivi = 4;
-		break;
-		case GL_RGB16:
-			texDivi = 2;
-		break;
-		case GL_RGB256:
-			texDivi = 1;
-		break;
-	}
-
-	for(int h = 0; h < surf[surf_no].h; h++)
-	{
-		dmaCopyWords(0, surf[surf_no].data+(w*h/texDivi), tex+(gW*h/texDivi)+(gW*yoffset/texDivi)+(xoffset/texDivi), w/texDivi);
-	}
-
-	vramRestorePrimaryBanks(vramTemp);
-
-	//TODO: palette length
-	//glColorTableEXT( 0, 0, 256, 0, 0, palette );
-
-	//printf("Texture Id %d \n", textureid);
 
 	surf[surf_no].paletteType = paletteType;
 	surf[surf_no].palettesize = palettesize;
@@ -871,7 +848,7 @@ free:
 
 
 	free(bitmap_pixels);
-	if(create_surface)
+	if(create_surface && surf_no != SURFACE_ID_TEXT_BOX)
 		free(surf[surf_no].data);
 	fclose(fp);
 	
@@ -1041,29 +1018,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No 
 void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 {
 	//TODO
-	if (surf[from].data && surf[to].data)
-	{
-		//Clip our rect
-		RECT renderRect;
-		renderRect.left = (x < 0) ? (rect->left + (0 - x)) : rect->left;
-		renderRect.top = (y < 0) ? (rect->top + (0 - y)) : rect->top;
-		renderRect.right = ((x + rect->right - rect->left) >= surf[to].w) ? rect->right - ((x + rect->right - rect->left) - surf[to].w) : rect->right;
-		renderRect.bottom = ((y + rect->bottom - rect->top) >= surf[to].h) ? rect->bottom - ((y + rect->bottom - rect->top) - surf[to].h) : rect->bottom;
-		
-		for (int fx = renderRect.left; fx < renderRect.right; fx++)
-		{
-			for (int fy = renderRect.top; fy < renderRect.bottom; fy++)
-			{
-				int dx = x + (fx - rect->left);
-				int dy = y + (fy - rect->top);
-				
-				//BUFFER_PIXEL *pixel = &surf[from].data[fy * surf[from].w + fx];
-				//if (pixel->r == 0 && pixel->g == 0 && pixel->b == 0) //Surface2Surface is always color keyed
-				//	continue;
-				//SET_BUFFER_PIXEL(surf[to].data, surf[to].w, dx, dy, pixel->r, pixel->g, pixel->b);
-			}
-		}
-	}
+	CopyDataToTexture(surf[from].paletteType, surf[from].textureid, from, x + surf[to].xoffset, y + surf[to].yoffset, rect);
 }
 
 unsigned long GetCortBoxColor(unsigned long col)
