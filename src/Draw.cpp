@@ -1129,21 +1129,18 @@ static RECT GetFontRect(char character)
 	return rect;
 }
 
-void PutText(int x, int y, const char *text, unsigned long color)
+void PutText(int x, int y, const char *text, unsigned long colour)
 {
-	RECT rect = {0, 0, 0, 0};
-	int i = 0;
-	
-	while(text[i] != NULL)
-	{
-		char character = text[i];
-		rect = GetFontRect(character);
-
-		PutBitmap3(&grcGame, x, y, &rect, SURFACE_ID_FONT);
-		x+=6;
-		i++;
-	}
-	
+    char v;
+    while (v = *text++)
+    {
+        if ((v -= 0x20) >= 0x00 && v <= 0x60)
+        {
+            RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
+            PutBitmap3(&grcFull, x, y, &rect, SURFACE_ID_FONT);
+            x += font_space[v];
+        }
+    }
 }
 
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no)
