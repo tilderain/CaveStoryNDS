@@ -191,9 +191,9 @@ void PutValueView(int flx, int fly)
 
 
 		if (minus)
-			PutBitmap3(&grcGame, x + gVV[v].rect.left, y, &rcMinus, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcGame, x, y, &rcMinus, SURFACE_ID_TEXT_BOX);
 		else
-			PutBitmap3(&grcGame, x + gVV[v].rect.left, y, &rcPlus, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcGame, x, y, &rcPlus, SURFACE_ID_TEXT_BOX);
 
 		BOOL sw = FALSE;
 
@@ -209,7 +209,7 @@ void PutValueView(int flx, int fly)
 
 			rect[fig[i]].top += gVV[v].rect.top;
 
-			PutBitmap3(&grcGame, x + ((3 - i) * 8) + 8, y, &rect[fig[i]], SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcGame, x + ((3 - i) * 8) + 8 - gVV[v].rect.left, y, &rect[fig[i]], SURFACE_ID_TEXT_BOX);
 		}
 
 	}
