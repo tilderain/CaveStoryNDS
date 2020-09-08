@@ -202,6 +202,16 @@ bool LoadGenericData()
 		MakeSurface_Generic(WINDOW_WIDTH, 16 * MAX_STRIP, SURFACE_ID_CREDIT_CAST);
 		MakeSurface_Generic(320, 48, SURFACE_ID_TITLE);
 		MakeSurface_Generic(160, 16, SURFACE_ID_PIXEL);
+
+		surf[SURFACE_ID_MAP].xoffset = 0;
+		surf[SURFACE_ID_MAP].yoffset = 0;
+		surf[SURFACE_ID_MAP].palette = surf[SURFACE_ID_TEXT_BOX].palette;
+		surf[SURFACE_ID_MAP].paletteAddress = surf[SURFACE_ID_TEXT_BOX].paletteAddress;
+		surf[SURFACE_ID_MAP].paletteOffset = surf[SURFACE_ID_TEXT_BOX].paletteOffset;
+		surf[SURFACE_ID_MAP].palettesize = surf[SURFACE_ID_TEXT_BOX].palettesize;
+		surf[SURFACE_ID_MAP].paletteType = surf[SURFACE_ID_TEXT_BOX].paletteType;
+		surf[SURFACE_ID_MAP].textureid = surf[SURFACE_ID_TEXT_BOX].textureid;
+
 		printf("done\n");
 		printf("pxt creation (please wait)\n");
 

@@ -89,6 +89,7 @@ void BackupSurface(SurfaceID surf_no, RECT *rect);
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 void Surface2Surface(int x, int y, RECT *rect, int to, int from);
+void Surface2Texture(int x, int y, RECT *rect, int to, int from);
 unsigned long GetCortBoxColor(unsigned long col);
 void CortBox(RECT *rect, unsigned long col);
 void CortBox2(RECT *rect, unsigned long col, SurfaceID surf_no);
@@ -98,5 +99,6 @@ int GetTextSpacing(const char *text);
 void PutText(int x, int y, const char *text, unsigned long color);
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no);
 void EndTextObject(void);
+BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect);
 
 void glBegin2D( void );

@@ -1017,6 +1017,32 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No 
 
 void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 {
+	BUFFER_PIXEL* dFrom = surf[from].data;
+	BUFFER_PIXEL* dTo = surf[to].data;
+
+
+	int fW = surf[from].w;
+	int fH = surf[from].h;
+
+	int tW = surf[to].w;
+	int tH = surf[to].h;
+
+	int rectW = rect->right - rect->left;
+	int rectH = rect->bottom - rect->top;
+
+	int surfStartH = rect->top; 
+	for(int h = 0; h < rectH; h++)
+	{
+
+		memcpy(dTo + (tW*h/2) + (tW*y/2) + (x/2),
+				dFrom+((rect->left/2) + (fW*surfStartH/2)),
+				(rectW/2));
+		surfStartH++;
+	}
+}
+
+void Surface2Texture(int x, int y, RECT *rect, int to, int from)
+{
 	//TODO
 	CopyDataToTexture(surf[from].paletteType, surf[from].textureid, from, x + surf[to].xoffset, y + surf[to].yoffset, rect);
 }
@@ -1042,6 +1068,7 @@ void CortBox(RECT *rect, uint32_t col)
 
 void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)
 {
+	return;
 	if (surf[surf_no].data)
 	{
 		const unsigned char col_red = col & 0x0000FF;
