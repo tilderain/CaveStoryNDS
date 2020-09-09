@@ -445,9 +445,6 @@ vramBlock_allocateSpecial( s_vramBlock *mb, uint8 *addr, uint32 size ) {
 
 int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 {
-
-	if(width < 17) width = 17;
-
 	uint32 colFormatVal = 4;
 	uint8* checkAddr = vramBlock_examineSpecial( glGlob->vramBlocks[ 1 ], (uint8*)VRAM_E, width << 1, colFormatVal );
 
@@ -844,7 +841,7 @@ free:
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
-	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], surf[surf_no].palettesize, surf[surf_no].palette);
+	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], 256, surf[surf_no].palette);
 
 
 	free(bitmap_pixels);
