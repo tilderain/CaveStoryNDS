@@ -443,16 +443,16 @@ vramBlock_allocateSpecial( s_vramBlock *mb, uint8 *addr, uint32 size ) {
 	return 0;
 }
 
-int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
+int AssignColorPalette(SURFACE* surf, uint16 width, const uint16* table)
 {
 	uint32 colFormatVal = 4;
 	uint8* checkAddr = vramBlock_examineSpecial( glGlob->vramBlocks[ 1 ], (uint8*)VRAM_E, width << 1, colFormatVal );
 
-	if(surf.paletteAddress) //use last address
+	if(surf->paletteAddress) //use last address
 	{
 		uint32 tempVRAM = VRAM_EFG_CR;
-		uint16 *startBank = vramGetBank( (uint16*)surf.paletteAddress );
-		uint16 *endBank = vramGetBank( (uint16*)((char*)surf.paletteAddress + ( width << 1 ) - 1));
+		uint16 *startBank = vramGetBank( (uint16*)surf->paletteAddress );
+		uint16 *endBank = vramGetBank( (uint16*)((char*)surf->paletteAddress + ( width << 1 ) - 1));
 		do {
 			if( startBank == VRAM_E ) {
 				vramSetBankE( VRAM_E_LCD );
@@ -466,9 +466,9 @@ int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 			}
 		} while ( startBank <= endBank );
 
-		swiCopy( table, (void*)surf.paletteAddress, width | COPY_MODE_HWORD );
+		swiCopy( table, (void*)surf->paletteAddress, width | COPY_MODE_HWORD );
 		vramRestoreBanks_EFG( tempVRAM );
-		return surf.paletteOffset;
+		return surf->paletteOffset;
 	}
 
 	if( checkAddr ) {
@@ -517,7 +517,7 @@ int AssignColorPalette(SURFACE surf, uint16 width, const uint16* table)
 
 		swiCopy( table, palette->vramAddr, width | COPY_MODE_HWORD );
 		vramRestoreBanks_EFG( tempVRAM );
-		surf.paletteAddress = (int)palette->vramAddr;
+		surf->paletteAddress = (int)palette->vramAddr;
 		return addr;
 	}
 	else
@@ -841,7 +841,7 @@ free:
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
-	surf[surf_no].paletteOffset = AssignColorPalette(surf[surf_no], 256, surf[surf_no].palette);
+	surf[surf_no].paletteOffset = AssignColorPalette(&surf[surf_no], 256, surf[surf_no].palette);
 
 
 	free(bitmap_pixels);
