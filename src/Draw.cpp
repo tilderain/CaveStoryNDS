@@ -1127,7 +1127,16 @@ int GetTextSpacing(const char *text)
 
 void PutText(int x, int y, const char *text, unsigned long colour)
 {
+
     char v;
+
+	const unsigned char col_red = colour & 0x0000FF;
+	const unsigned char col_green = (colour & 0x00FF00) >> 8;
+	const unsigned char col_blue = (colour & 0xFF0000) >> 16;
+	colour = RGB15(col_red / 8, col_green / 8, col_blue / 8);
+	
+
+	glColor(colour);
     while (v = *text++)
     {
         if ((v -= 0x20) >= 0x00 && v <= 0x60)
@@ -1137,6 +1146,7 @@ void PutText(int x, int y, const char *text, unsigned long colour)
             x += font_space[v];
         }
     }
+	glColor( 0x7FFF );
 }
 
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no)

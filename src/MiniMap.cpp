@@ -212,6 +212,11 @@ int MiniMapLoop(void)
 			return enum_ESCRETURN_exit;
 	}
 
+	char temp[32];
+	strcpy(temp, surf[SURFACE_ID_LEVEL_BACKGROUND].name);
+	strcpy(surf[SURFACE_ID_LEVEL_BACKGROUND].name, "");
+	ReloadBitmap_File(temp, SURFACE_ID_LEVEL_BACKGROUND);
+
 	return enum_ESCRETURN_continue;
 }
 
