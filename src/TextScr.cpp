@@ -236,6 +236,7 @@ BOOL StartTextScript(int no)
 	gTS.flags = 0;
 	gTS.wait_beam = 0;
 	gTS.face = 0;
+	CopyFaceTexture(gTS.face);
 	gTS.item = 0;
 	gTS.offsetY = 0;
 
@@ -621,6 +622,7 @@ int TextScriptProc(void)
 						gMC.cond &= ~1;
 						g_GameFlags |= 3;
 						gTS.face = 0;
+						CopyFaceTexture(gTS.face);
 						bExit = TRUE;
 					}
 					else if (IS_COMMAND('L','I','+'))
@@ -825,6 +827,7 @@ int TextScriptProc(void)
 						if (gTS.flags & 0x40)
 							gTS.flags |= 0x10;
 						gTS.face = 0;
+						CopyFaceTexture(gTS.face);
 						gTS.p_read += 4;
 						bExit = TRUE;
 					}
