@@ -51,6 +51,7 @@ SOUNDBUFFER *soundBuffers;
 
 void updateChannelStates(void)
 {
+	//todo: optimize this
 	//if a one-shot sound has passed all of its samples already, make channelStates[channel] free
 	for (SOUNDBUFFER *sound = soundBuffers; sound != NULL; sound = sound->next)
 	{

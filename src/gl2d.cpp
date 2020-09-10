@@ -9,6 +9,7 @@ static v16 g_depth = 0;
 
 static int gCurrentTexture = 0;
 static int gCurPaletteOffset = 0;
+static int gCurTexType = 0;
 
 void glScreen2D( void )
 {
@@ -132,7 +133,7 @@ static inline void gxVertex2i(v16 x, v16 y)
 }
 
 __attribute__((hot))
-void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset)
+void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int texType)
 {
 
 	int width = rect->right - rect->left;
@@ -153,11 +154,29 @@ void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset)
         gCurrentTexture = textureID;
     }
 	
+	gl_texture_data *tex = NULL;
+	if(texType == GL_RGB256)
+	{
+
+		// name exist?
+		if(( tex = (gl_texture_data*)DynamicArrayGet( &glGlob->texturePtrs, textureID ))) 
+		{
+			tex->texFormat &= ~(GL_RGB16 << 26);
+			tex->texFormat |= (GL_RGB256 << 26);
+			tex->texFormat &= ~(TEXTURE_SIZE_1024 << 20);
+			tex->texFormat |= (TEXTURE_SIZE_512 << 20);
+			GFX_TEX_FORMAT = tex->texFormat ;
+		}
+	}
+
 	if(gCurPaletteOffset != paletteOffset)
 	{
 		GFX_PAL_FORMAT = paletteOffset;
 		gCurPaletteOffset = paletteOffset;
 	}
+
+
+
 
 
 #ifdef TWO_SCREENS
@@ -174,6 +193,15 @@ void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset)
 	//glEnd();
 	
 	g_depth++;
+
+	if(texType == GL_RGB256)
+	{
+		tex->texFormat &= ~(GL_RGB256 << 26);
+		tex->texFormat |= (GL_RGB16 << 26);
+		tex->texFormat &= ~(TEXTURE_SIZE_512 << 20);
+		tex->texFormat |= (TEXTURE_SIZE_1024 << 20);
+		GFX_TEX_FORMAT = tex->texFormat;
+	}
 
 }
 
@@ -193,5 +221,5 @@ void glBoxFilled( int x1, int y1, int x2, int y2, int color )
 	g_depth++;
 	gCurrentTexture = 0;
 	gCurPaletteOffset = 0;
-
+	gCurTexType = 0;
 }

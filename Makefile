@@ -155,4 +155,4 @@ endif
 #---------------------------------------------------------------------------------------
 %.nds: %.elf
 	$(SILENTCMD)ndstool -h 0x200 -c $@ -9 $< -7 $(TOPDIRREAL)/$(SOURCEARM7)/CSE2-arm7.elf -b $(GAME_ICON) "$(GAME_TITLE);$(GAME_SUBTITLE1);$(GAME_SUBTITLE2)" $(_ADDFILES)
-	$(SILENTMSG)echo built ... $(notdir $@)
+	echo built ... $(notdir $@)
