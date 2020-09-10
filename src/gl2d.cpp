@@ -155,18 +155,28 @@ void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int
     }
 	
 	gl_texture_data *tex = NULL;
-	if(texType == GL_RGB256)
+	uint32 texFormat;
+	if(gCurTexType != texType && (tex = (gl_texture_data*)DynamicArrayGet( &glGlob->texturePtrs, textureID)))
 	{
-
-		// name exist?
-		if(( tex = (gl_texture_data*)DynamicArrayGet( &glGlob->texturePtrs, textureID ))) 
+		texFormat = tex->texFormat;
+		if(texType == GL_RGB256)
 		{
-			tex->texFormat &= ~(GL_RGB16 << 26);
-			tex->texFormat |= (GL_RGB256 << 26);
-			tex->texFormat &= ~(TEXTURE_SIZE_1024 << 20);
-			tex->texFormat |= (TEXTURE_SIZE_512 << 20);
-			GFX_TEX_FORMAT = tex->texFormat ;
+			texFormat &= ~(GL_RGB16 << 26);
+			texFormat |= (GL_RGB256 << 26);
+			texFormat &= ~(TEXTURE_SIZE_1024 << 20);
+			texFormat |= (TEXTURE_SIZE_512 << 20);
+			GFX_TEX_FORMAT = texFormat ;
 		}
+		else
+		{
+			texFormat &= ~(GL_RGB256 << 26);
+			texFormat |= (GL_RGB16 << 26);
+			texFormat &= ~(TEXTURE_SIZE_512 << 20);
+			texFormat |= (TEXTURE_SIZE_1024 << 20);
+			GFX_TEX_FORMAT = texFormat;
+		}
+		gCurTexType = texType;
+		
 	}
 
 	if(gCurPaletteOffset != paletteOffset)
@@ -193,16 +203,6 @@ void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int
 	//glEnd();
 	
 	g_depth++;
-
-	if(texType == GL_RGB256)
-	{
-		tex->texFormat &= ~(GL_RGB256 << 26);
-		tex->texFormat |= (GL_RGB16 << 26);
-		tex->texFormat &= ~(TEXTURE_SIZE_512 << 20);
-		tex->texFormat |= (TEXTURE_SIZE_1024 << 20);
-		GFX_TEX_FORMAT = tex->texFormat;
-	}
-
 }
 
 void glBoxFilled( int x1, int y1, int x2, int y2, int color )
@@ -221,5 +221,5 @@ void glBoxFilled( int x1, int y1, int x2, int y2, int color )
 	g_depth++;
 	gCurrentTexture = 0;
 	gCurPaletteOffset = 0;
-	gCurTexType = 0;
+	gCurTexType = -1;
 }
