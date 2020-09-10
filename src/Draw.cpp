@@ -619,7 +619,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	 || surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_FADE\
 		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
 		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_LOADING\
-		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_NPC_REGU)
+		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_NPC_REGU\
+		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE)
 	{
 
 	}
@@ -736,16 +737,21 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	int textureid;
 
 	textureid = gAtlas16Color1;
+	RECT datarect = {0, 0, bitmap_width, bitmap_height};
 
 	switch(surf_no)
 	{
-		case SURFACE_ID_LEVEL_SPRITESET_1:
+		case SURFACE_ID_LEVEL_SPRITESET_1: // Guest will always be in spriteset 1 (don't change it)
 			break;
 		case SURFACE_ID_LEVEL_SPRITESET_2:
 			xoffset = 640;
 			textureid = gAtlas256Color;
 			break;
 		case SURFACE_ID_NPC_SYM:
+			xoffset = 320;
+			yoffset = 240;
+			break;
+		case SURFACE_ID_CASTS:
 			xoffset = 320;
 			yoffset = 240;
 			break;
@@ -787,7 +793,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			xoffset = 0;
 			break;
 		case SURFACE_ID_FACE:
-			xoffset = 0;
+			xoffset = 896;
+			CopyFaceTexture(0);
+			goto facejump;
 			break;
 		case SURFACE_ID_LEVEL_BACKGROUND:
 			textureid = gAtlas16Color2;
@@ -817,7 +825,6 @@ free:
 			return TRUE;
 	}
 
-	RECT datarect = {0, 0, bitmap_width, bitmap_height};
 	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
 		fclose(fp);
@@ -825,6 +832,7 @@ free:
 		return TRUE;
 	}
 
+facejump:
 	surf[surf_no].paletteType = paletteType;
 	surf[surf_no].palettesize = palettesize;
 	surf[surf_no].xoffset = xoffset;
@@ -834,7 +842,7 @@ free:
 
 
 	free(bitmap_pixels);
-	if(create_surface && surf_no != SURFACE_ID_TEXT_BOX)
+	if(create_surface && surf_no != SURFACE_ID_TEXT_BOX && surf_no != SURFACE_ID_FACE)
 		free(surf[surf_no].data);
 	fclose(fp);
 	
@@ -918,7 +926,16 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 	}
 }
 
-int gCurPaletteOffset = 0;
+void CopyFaceTexture(int face)
+{
+	RECT rcFace;
+	rcFace.left = (face % 6) * 48;
+	rcFace.top = (face / 6) * 48;
+	rcFace.right = rcFace.left + 48;
+	rcFace.bottom = rcFace.top + 48;
+	CopyDataToTexture(surf[SURFACE_ID_FACE].paletteType, gAtlas16Color1, SURFACE_ID_FACE, 
+		surf[SURFACE_ID_FACE].xoffset, surf[SURFACE_ID_FACE].yoffset, &rcFace);
+}
 
 __attribute__((hot))
 static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, bool transparent)
@@ -946,13 +963,39 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 
 	if(surf_no == SURFACE_ID_SCREEN_GRAB) return;
 
+
+	int textureid;
+	if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
+	else
+	{
+		textureid = surf[surf_no].textureid;
+	}
+
 ////
 	RECT srcRect = *rect;
-	srcRect.left += surf[surf_no].xoffset;
-	srcRect.top += surf[surf_no].yoffset;
 
-	srcRect.right += surf[surf_no].xoffset;
+	if(surf_no == SURFACE_ID_FACE)
+	{
+		srcRect.right -= srcRect.left;
+		srcRect.bottom -= srcRect.top;
+		srcRect.left = 0;
+		srcRect.top = 0;
+	}
+
+	srcRect.top += surf[surf_no].yoffset;
 	srcRect.bottom += surf[surf_no].yoffset;
+
+	if(surf[surf_no].paletteType == GL_RGB16)
+	{
+		srcRect.left += surf[surf_no].xoffset;
+		srcRect.right += surf[surf_no].xoffset;
+	}
+	else
+	{
+		// To compensate for the texture size being halved when turning from 16 to 256 color
+		srcRect.left += surf[surf_no].xoffset / 2;
+		srcRect.right += surf[surf_no].xoffset / 2;
+	}
 
 	if(rcView->left > x)
 	{
@@ -979,15 +1022,8 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	}
 ////
 
-	int textureid;
-	if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
-	else
-	{
-		textureid = surf[surf_no].textureid;
-	}
-
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, &srcRect, textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
+	glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
 }
 
 __attribute__((hot))

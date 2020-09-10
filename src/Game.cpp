@@ -134,6 +134,14 @@ int ModeOpening(void)
 	grcGame.bottom = WINDOW_HEIGHT;
 #endif
 
+	if (g_GameFlags & 8)
+	{
+		// To make up for casts obliterating these by its mere presence
+		ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
+		ReloadBitmap_File("Bullet", SURFACE_ID_BULLET);
+		ReloadBitmap_File("Arms", SURFACE_ID_ARMS);
+	} 
+
 	g_GameFlags = 3;
 
 	CutNoise();

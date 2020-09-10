@@ -1219,16 +1219,7 @@ int TextScriptProc(void)
 						{
 							gTS.face = (signed char)z;
 							gTS.face_x = (WINDOW_WIDTH / 2 - 156) * 0x200;
-						}
-						gTS.p_read += 8;
-					}
-					else if (IS_COMMAND('F','A','C'))	// Duplicate command
-					{
-						z = GetTextScriptNo(gTS.p_read + 4);
-						if (gTS.face != (signed char)z)
-						{
-							gTS.face = (signed char)z;
-							gTS.face_x = (WINDOW_WIDTH / 2 - 156) * 0x200;
+							CopyFaceTexture(gTS.face);
 						}
 						gTS.p_read += 8;
 					}
