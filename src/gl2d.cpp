@@ -192,5 +192,6 @@ void glBoxFilled( int x1, int y1, int x2, int y2, int color )
 	glColor( 0x7FFF );
 	g_depth++;
 	gCurrentTexture = 0;
+	gCurPaletteOffset = 0;
 
 }
