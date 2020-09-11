@@ -152,6 +152,7 @@ void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int
     {
         glBindTexture( GL_TEXTURE_2D, textureID);
         gCurrentTexture = textureID;
+		gCurTexType = -1;
     }
 	
 	gl_texture_data *tex = NULL;

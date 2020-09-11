@@ -181,7 +181,6 @@ bool LoadGenericData()
 		bError = true;
 	if (!MakeSurface_File("Fade", SURFACE_ID_FADE))
 		bError = true;
-	MakeSurface_Resource("CREDIT01", SURFACE_ID_CREDITS_IMAGE);
 
 	if (bError)
 	{
@@ -202,6 +201,8 @@ bool LoadGenericData()
 		MakeSurface_Generic(WINDOW_WIDTH, 16 * MAX_STRIP, SURFACE_ID_CREDIT_CAST);
 		MakeSurface_Generic(320, 48, SURFACE_ID_TITLE);
 		MakeSurface_Generic(160, 16, SURFACE_ID_PIXEL);
+		MakeSurface_Generic(160, 240, SURFACE_ID_CREDITS_IMAGE);
+
 
 		surf[SURFACE_ID_MAP].xoffset = 0;
 		surf[SURFACE_ID_MAP].yoffset = 0;

@@ -53,7 +53,8 @@ void PutStripper(void)
 			rc.top = s * 16;
 			rc.bottom = rc.top + 16;
 
-			PutBitmap3(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
+			//PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
+			PutText((Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
 
 			// Draw character
 			rc.left = (Strip[s].cast % 13) * 24;
@@ -93,7 +94,7 @@ void SetStripper(int x, int y, const char *text, int cast)
 	rc.bottom = rc.top + 16;
 
 	CortBox2(&rc, 0, SURFACE_ID_CREDIT_CAST);
-	PutText2(0, rc.top, text, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_CREDIT_CAST);
+	//PutText2(0, rc.top, text, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_CREDIT_CAST);
 }
 
 // Regenerate cast text
@@ -157,8 +158,8 @@ void PutIllust(void)
 void ReloadIllust(int a)
 {
 	char name[16];
-	sprintf(name, "CREDIT%02d", a);
-	ReloadBitmap_Resource(name, SURFACE_ID_CREDITS_IMAGE);
+	sprintf(name, "BITMAP/CREDIT%02d", a);
+	ReloadBitmap_File(name, SURFACE_ID_CREDITS_IMAGE);
 }
 
 const char *credit_script = "Credit.tsc";

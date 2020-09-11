@@ -620,7 +620,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
 		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_LOADING\
 		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_NPC_REGU\
-		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE)
+		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_CREDITS_IMAGE)
 	{
 
 	}
@@ -748,12 +748,15 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			textureid = gAtlas256Color;
 			break;
 		case SURFACE_ID_NPC_SYM:
-			xoffset = 320;
-			yoffset = 240;
+			xoffset = 640;
 			break;
 		case SURFACE_ID_CASTS:
-			xoffset = 320;
+			xoffset = 256;
 			yoffset = 240;
+			break;
+		case SURFACE_ID_CREDITS_IMAGE:
+			xoffset = 480;
+			textureid = gAtlas16Color2;
 			break;
 		case SURFACE_ID_LEVEL_TILESET:
 			textureid = gAtlas16Color1;
@@ -767,19 +770,20 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 48;
 			break;
 		case SURFACE_ID_BULLET:
-			xoffset = 640;
-			yoffset = 128;
+			xoffset = 256;
+			yoffset = 184;
 			break;
 		case SURFACE_ID_ARMS:
-			xoffset = 640;
-			yoffset = 311;
+			xoffset = 576;
+			yoffset = 240;
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
-			xoffset = 640;
+			xoffset = 256;
+			yoffset = 360;
 			break;
 		case SURFACE_ID_ARMS_IMAGE:
-			xoffset = 256;
-			yoffset = 480;
+			xoffset = 512;
+			yoffset = 496;
 			break;
 		case SURFACE_ID_STAGE_ITEM:
 			xoffset = 256;
@@ -794,7 +798,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			break;
 		case SURFACE_ID_FACE:
 			xoffset = 896;
-			CopyFaceTexture(0);
+			yoffset = 240;
 			goto facejump;
 			break;
 		case SURFACE_ID_LEVEL_BACKGROUND:

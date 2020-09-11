@@ -140,6 +140,9 @@ int ModeOpening(void)
 		ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
 		ReloadBitmap_File("Bullet", SURFACE_ID_BULLET);
 		ReloadBitmap_File("Arms", SURFACE_ID_ARMS);
+
+		// also this
+		ReloadBitmap_File("Caret", SURFACE_ID_CARET);
 	} 
 
 	g_GameFlags = 3;
@@ -348,7 +351,7 @@ int ModeTitle(void)
 	// Start loop
 	wait = 0;
 
-	ReloadBitmap_File("PIXEL", SURFACE_ID_PIXEL);
+	ReloadBitmap_File("BITMAP/PIXEL", SURFACE_ID_PIXEL);
 	ReloadBitmap_File("Title", SURFACE_ID_TITLE);
 	strcpy(surf[SURFACE_ID_LEVEL_SPRITESET_1].name, "asdf");
 
