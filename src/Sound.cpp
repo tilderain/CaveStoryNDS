@@ -28,11 +28,11 @@
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
 #define NUM_CHANNELS 16
 
-char channelStates[NUM_CHANNELS] = {0};
+SOUNDBUFFER* channelStates[NUM_CHANNELS] = {NULL};
 
 s8 getFreeChannel(void)
 {
-	for(u8 i=0;i<16;i++)
+	for(u8 i=0;i<NUM_CHANNELS;i++)
 	{	
 		if(!channelStates[i])
 		{
@@ -51,17 +51,17 @@ SOUNDBUFFER *soundBuffers;
 
 void updateChannelStates(void)
 {
-	//todo: optimize this
 	//if a one-shot sound has passed all of its samples already, make channelStates[channel] free
-	for (SOUNDBUFFER *sound = soundBuffers; sound != NULL; sound = sound->next)
+	for (int i = 0; i < NUM_CHANNELS; i++)
 	{
-		if(sound->playing && sound->looping == false)
+		SOUNDBUFFER *sound = channelStates[i];
+		if(sound && sound->playing && sound->looping == false)
 		{
 			if(sound->timer++ * (sound->frequency / 63) > sound->size) // samples in a frame plus a bit
 			{
 				// TODO: give organbuffer priority
 				sound->playing = false;
-				channelStates[sound->channelId] = 0;
+				channelStates[sound->channelId] = NULL;
 				soundKill(sound->channelId);
 				sound->channelId = -1;
 				sound->timer = 0;
@@ -117,6 +117,7 @@ SOUNDBUFFER::~SOUNDBUFFER()
 void SOUNDBUFFER::Release()
 {
 	//TODO: find a better and more stable(?) way to handle this function
+	if(channelId != -1) channelStates[channelId] = NULL;
 	delete this;
 }
 
@@ -186,7 +187,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 		//org for some reason sends a play message without looping for stopping..
 		//so it is better to just cut it off here rather than start a new sound
 		soundKill(channelId);
-		channelStates[channelId] = 0;
+		channelStates[channelId] = NULL;
 		channelId = -1;
 		return;
 	}
@@ -196,7 +197,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 	}
 
 	if(channelId == -1) return;
-	channelStates[channelId] = 1;
+	channelStates[channelId] = this;
 
 	//printf() pan
 
@@ -208,7 +209,7 @@ void SOUNDBUFFER::Stop()
 {
 	playing = false;
 	if(channelId != -1) soundKill(channelId);
-	channelStates[channelId] = false;
+	channelStates[channelId] = NULL;
 	channelId = -1;
 }
 
