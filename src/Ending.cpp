@@ -54,7 +54,7 @@ void PutStripper(void)
 			rc.bottom = rc.top + 16;
 
 			//PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
-			PutText((Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
+			PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
 
 			// Draw character
 			rc.left = (Strip[s].cast % 13) * 24;

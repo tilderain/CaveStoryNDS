@@ -97,7 +97,7 @@ void CortBox2(RECT *rect, unsigned long col, SurfaceID surf_no);
 int RestoreSurfaces(void);
 void InitTextObject();
 int GetTextSpacing(const char *text);
-void PutText(int x, int y, const char *text, unsigned long color);
+void PutText(RECT* rcView, int x, int y, const char *text, unsigned long color);
 void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID surf_no);
 void EndTextObject(void);
 BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect);

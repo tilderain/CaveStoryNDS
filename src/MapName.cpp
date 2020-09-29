@@ -107,14 +107,14 @@ void PutMapName(BOOL bMini)
 		rcBack.bottom = 24;
 
 		CortBox(&rcBack, 0x000000);
-		PutText((WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
-		PutText((WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 	}
 	else if (gMapName.flag)
 	{
 		// MNA
-		PutText((WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
-		PutText((WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 		if (++gMapName.wait > 160)
 			gMapName.flag = FALSE;
 	}

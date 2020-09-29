@@ -1151,7 +1151,7 @@ int GetTextSpacing(const char *text)
 	return spacing;
 }
 
-void PutText(int x, int y, const char *text, unsigned long colour)
+void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
 {
 
     char v;
@@ -1168,7 +1168,7 @@ void PutText(int x, int y, const char *text, unsigned long colour)
         if ((v -= 0x20) >= 0x00 && v <= 0x60)
         {
             RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
-            PutBitmap3(&grcFull, x, y, &rect, SURFACE_ID_FONT);
+            PutBitmap3(rcView, x, y, &rect, SURFACE_ID_FONT);
             x += font_space[v];
         }
     }

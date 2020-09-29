@@ -503,7 +503,7 @@ void PutTextScript(void)
 		text_offset = 0;
 
 	for (i = 0; i < 4; ++i)
-		PutText(TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, text[i], RGB(0xFF, 0xFF, 0xFE));
+		PutText(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, text[i], RGB(0xFF, 0xFF, 0xFE));
 	//PutBitmap3(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, &gRect_line, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 
 	// Draw NOD cursor
