@@ -1271,9 +1271,19 @@ void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
     {
         if ((v -= 0x20) >= 0x00 && v <= 0x60)
         {
-            RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
-            PutBitmap3(rcView, x, y, &rect, SURFACE_ID_FONT);
-            x += font_space[v];
+			if(v == '=' - 0x20)
+			{
+				RECT rcSymbol = {64, 48, 72, 56};
+				PutBitmap3(rcView, x, y + 2, &rcSymbol, SURFACE_ID_TEXT_BOX);
+				x += font_space[v];
+			}
+			else
+			{
+				RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
+            	PutBitmap3(rcView, x, y, &rect, SURFACE_ID_FONT);
+            	x += font_space[v];
+			}
+
         }
     }
 	glColor( 0x7FFF );
