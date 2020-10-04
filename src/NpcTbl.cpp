@@ -10,6 +10,8 @@
 #include "Generic.h"
 #include "NpcAct.h"
 
+#include "fopen.h"
+
 // Npc function table
 const NPCFUNCTION gpNpcFuncTbl[361] = {
 	ActNpc000,
@@ -379,12 +381,20 @@ NPC_TABLE *gNpcTable;
 
 BOOL LoadNpcTable(const char *path)
 {
-	FILE *fp;
+	FILE_e *fp;
 	int n;
 	size_t size;
 	int num;
 
-	size = GetFileSizeLong(path);	// TODO - Investigate whether GetFileSizeLong actually returns an unsigned long or not
+	fp = fopen_embed(path, "rb");
+	if (fp == NULL)
+	{
+		free(gNpcTable);
+		gNpcTable = NULL;
+		return FALSE;
+	}
+
+	size = fp->size;
 	if (size == -1)
 		return FALSE;
 
@@ -394,36 +404,29 @@ BOOL LoadNpcTable(const char *path)
 	if (gNpcTable == NULL)
 		return FALSE;
 
-	fp = fopen(path, "rb");
-	if (fp == NULL)
-	{
-		free(gNpcTable);
-		gNpcTable = NULL;
-		return FALSE;
-	}
 
 	for (n = 0; n < num; ++n) // bits
 		gNpcTable[n].bits = File_ReadLE16(fp);
 	for (n = 0; n < num; ++n) // life
 		gNpcTable[n].life = File_ReadLE16(fp);
 	for (n = 0; n < num; ++n) // surf
-		fread(&gNpcTable[n].surf, 1, 1, fp);
+		fread_embed(&gNpcTable[n].surf, 1, 1, fp);
 	for (n = 0; n < num; ++n) // destroy_voice
-		fread(&gNpcTable[n].destroy_voice, 1, 1, fp);
+		fread_embed(&gNpcTable[n].destroy_voice, 1, 1, fp);
 	for (n = 0; n < num; ++n) // hit_voice
-		fread(&gNpcTable[n].hit_voice, 1, 1, fp);
+		fread_embed(&gNpcTable[n].hit_voice, 1, 1, fp);
 	for (n = 0; n < num; ++n) // size
-		fread(&gNpcTable[n].size, 1, 1, fp);
+		fread_embed(&gNpcTable[n].size, 1, 1, fp);
 	for (n = 0; n < num; ++n) // exp
 		gNpcTable[n].exp = File_ReadLE32(fp);
 	for (n = 0; n < num; ++n) // damage
 		gNpcTable[n].damage = File_ReadLE32(fp);
 	for (n = 0; n < num; ++n) // hit
-		fread(&gNpcTable[n].hit, 4, 1, fp);
+		fread_embed(&gNpcTable[n].hit, 4, 1, fp);
 	for (n = 0; n < num; ++n) // view
-		fread(&gNpcTable[n].view, 4, 1, fp);
+		fread_embed(&gNpcTable[n].view, 4, 1, fp);
 
-	fclose(fp);
+	fclose_embed(fp);
 	return TRUE;
 }
 

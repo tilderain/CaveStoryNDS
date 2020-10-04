@@ -13,6 +13,8 @@
 #include "Main.h"
 #include "NpChar.h"
 
+#include "fopen.h"
+
 #define PXM_BUFFER_SIZE 0x9000
 
 MAP_DATA gMap;
@@ -27,7 +29,7 @@ BOOL InitMapData2(void)
 
 BOOL LoadMapData2(const char *path_map)
 {
-	FILE *fp;
+	FILE_e *fp;
 	char check[3];
 	char path[MAX_PATH];
 
@@ -35,52 +37,52 @@ BOOL LoadMapData2(const char *path_map)
 	sprintf(path, "%s/%s", gDataPath, path_map);
 
 	// Open file
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
 	// Make sure file begins with "PXM"
-	fread(check, 1, 3, fp);
+	fread_embed(check, 1, 3, fp);
 
 	if (memcmp(check, code_pxma, 3))
 	{
-		fclose(fp);
+		fclose_embed(fp);
 		return FALSE;
 	}
 
 	unsigned char dum;
-	fread(&dum, 1, 1, fp);
+	fread_embed(&dum, 1, 1, fp);
 	// Get width and height
 	gMap.width = File_ReadLE16(fp);
 	gMap.length = File_ReadLE16(fp);
 
 	if (gMap.data == NULL)
 	{
-		fclose(fp);
+		fclose_embed(fp);
 		return FALSE;
 	}
 
 	// Read tile data
-	fread(gMap.data, 1, gMap.width * gMap.length, fp);
-	fclose(fp);
+	fread_embed(gMap.data, 1, gMap.width * gMap.length, fp);
+	fclose_embed(fp);
 	return TRUE;
 }
 
 BOOL LoadAttributeData(const char *path_atrb)
 {
-	FILE *fp;
+	FILE_e *fp;
 	char path[MAX_PATH];
 
 	// Open file
 	sprintf(path, "%s/%s", gDataPath, path_atrb);
 
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
 	// Read data
-	fread(gMap.atrb, 1, sizeof(gMap.atrb), fp);
-	fclose(fp);
+	fread_embed(gMap.atrb, 1, sizeof(gMap.atrb), fp);
+	fclose_embed(fp);
 	return TRUE;
 }
 

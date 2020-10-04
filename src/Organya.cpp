@@ -17,6 +17,7 @@
 #include "WindowsWrapper.h"
 
 #include "NDSSoundSpec.h"
+#include "fopen.h"
 
 #define PANDUMMY 0xFF
 #define VOLDUMMY 0xFF
@@ -125,7 +126,7 @@ bool MakeSoundObject8(int8_t *wavep, int8_t track, int8_t pipi)
 			size_t data_size = pipi ? wave_size * oct_wave[j].oct_size : wave_size;
 			
 			//Create sound buffer
-			lpORGANBUFFER[track][j][k] = new SOUNDBUFFER(data_size);
+			lpORGANBUFFER[track][j][k] = new SOUNDBUFFER(data_size, NULL);
 			
 			//Get wave data
 			uint8_t *wp = new uint8_t[data_size];
@@ -272,7 +273,7 @@ bool InitWaveData100()
 	char path[MAX_PATH];
 	sprintf(path, "%s/ORG/wave.dat", gDataPath);
 	
-	FILE *fp = fopen(path, "rb");
+	FILE_e *fp = fopen_embed(path, "rb");
 
 	if (fp == NULL)
 	{
@@ -280,7 +281,8 @@ bool InitWaveData100()
 		return false;
 	}
 
-	fread(wave_data, 0x100, 100, fp);
+	fread_embed(wave_data, 0x100, 100, fp);
+	fclose_embed(fp);
 	return true;
 }
 
@@ -426,7 +428,7 @@ void LoadOrganya(const char *name)
 	memset(&info, 0, sizeof(info));
 	
 	//does this thing even have enough memory?
-	OrganyaNoteAlloc(0xFFF); //down from FFFF
+	OrganyaNoteAlloc(0x3FF); //down from FFFF
 	
 	//Stop currently playing notes
 	memset(play_np, 0, sizeof(play_np));
@@ -441,7 +443,7 @@ void LoadOrganya(const char *name)
 	char path[MAX_PATH];
 	sprintf(path, "%s/ORG/%s.org", gDataPath, name);
 	
-	FILE *fp = fopen(path, "rb");
+	FILE_e *fp = fopen_embed(path, "rb");
 
 	if (!fp)
 	{
@@ -453,7 +455,7 @@ void LoadOrganya(const char *name)
 	uint8_t ver = 0;
 	char pass_check[6];
 
-	fread(&pass_check[0], sizeof(char), 6, fp);
+	fread_embed(&pass_check[0], sizeof(char), 6, fp);
 
 	if (!memcmp(pass_check, "Org-01", 6))ver = 1;
 	if (!memcmp(pass_check, "Org-02", 6))ver = 2;
@@ -539,7 +541,7 @@ void LoadOrganya(const char *name)
 		}
 	}
 
-	fclose(fp);
+	fclose_embed(fp);
 	remove(path);
 
 	//Create waves

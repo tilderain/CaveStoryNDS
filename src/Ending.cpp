@@ -17,6 +17,8 @@
 #include "Stage.h"
 #include "TextScr.h"
 
+#include "fopen.h"
+
 CREDIT Credit;
 STRIP Strip[MAX_STRIP];
 ILLUSTRATION Illust;
@@ -185,7 +187,7 @@ void ReleaseCreditScript(void)
 // Start playing credits
 BOOL StartCreditScript(void)
 {
-	FILE *fp;
+	FILE_e *fp;
 	char path[MAX_PATH];
 
 	// Clear previously existing credits data
@@ -198,7 +200,14 @@ BOOL StartCreditScript(void)
 	// Open file
 	sprintf(path, "%s/%s", gDataPath, credit_script);
 
-	Credit.size = GetFileSizeLong(path);
+	fp = fopen_embed(path, "rb");
+	if (fp == NULL)
+	{
+		free(Credit.pData);
+		return FALSE;
+	}
+
+	Credit.size = fp->size;
 	if (Credit.size == -1)
 		return FALSE;
 
@@ -207,20 +216,13 @@ BOOL StartCreditScript(void)
 	if (Credit.pData == NULL)
 		return FALSE;
 
-	fp = fopen(path, "rb");
-	if (fp == NULL)
-	{
-		free(Credit.pData);
-		return FALSE;
-	}
-
 	// Read data
-	fread(Credit.pData, 1, Credit.size, fp);
+	fread_embed(Credit.pData, 1, Credit.size, fp);
 	EncryptionBinaryData2((unsigned char*)Credit.pData, Credit.size);
 
 #ifdef FIX_BUGS
 	// The original game forgot to close the file
-	fclose(fp);
+	fclose_embed(fp);
 #endif
 
 	// Reset credits

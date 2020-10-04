@@ -28,6 +28,8 @@
 #include "Game.h"
 #include "Sound.h"
 
+#include "fopen.h"
+
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
@@ -202,9 +204,11 @@ BOOL StartDirectDraw()
 		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
 		NULL);
 
+#ifndef TWO_SCREENS
 	videoSetModeSub( MODE_0_2D  );
 	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
-	consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+	//consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+#endif
 	
 	
 	return TRUE;
@@ -227,7 +231,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 
 		surf[surf_no].w = bxsize;
 		surf[surf_no].h = bysize;
-		surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
+		//surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
 		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
 		surf[surf_no].textureid = NULL;
 		surf[surf_no].paletteAddress = NULL;
@@ -535,19 +539,20 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 	int texH;
 	int texW;
 	
-	tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid);
-	if(textureid == gAtlas16Color1)
-	{
-		texW = gTextureWidth1024;
-		texH = gTextureHeight512;
-	}
-	else
-	{
-		texW = gTextureWidth1024;
-		texH = gTextureHeight256;
-	}
-
-	surf[surf_no].textureid = textureid;
+	if(!(tex = (BUFFER_PIXEL*)glGetTexturePointer(textureid)))
+		return FALSE;
+	if(textureid == gAtlas16Color1)	
+	{	
+		texW = gTextureWidth1024;	
+		texH = gTextureHeight512;	
+	}	
+	else 
+	{	
+		texW = gTextureWidth1024;	
+		texH = gTextureHeight256;	
+	}	
+	
+	surf[surf_no].textureid = textureid;	
 
 	uint32 vramTemp = VRAM_CR;
 
@@ -600,9 +605,9 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 
 	for(int h = 0; h < rectH; h++)
 	{
-		dmaCopyHalfWords(0, surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf
-											tex + (atlasW*h/2) + (atlasW*yoffset/2) + (xoffset/2), //position to copy to
-											(rectW/texDivi)); //how many pixels to copy
+	memcpy(tex + (atlasW*h/2) + (atlasW*yoffset/2) + (xoffset/2), //position to copy to	
+			surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf				
+							(rectW/texDivi)); //how many pixels to copy
 		surfStartH++;
 	}
 
@@ -611,7 +616,7 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 	return TRUE;
 }
 
-BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
+BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 {
 	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
 		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
@@ -626,18 +631,17 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	}
 	else
 	{
-		fclose(fp);
+		fclose_embed(fp);
 		return TRUE;
 	}
 
 	struct stat file_descriptor;
 	long file_size;
 	
-	fstat(fileno(fp), &file_descriptor);
-	file_size = file_descriptor.st_size;
+	file_size = fp->size;
 
 	unsigned char *file_buffer = (unsigned char*)malloc(file_size);
-	fread(file_buffer, file_size, 1, fp);
+	fread_embed(file_buffer, file_size, 1, fp);
 
 	unsigned int bitmap_width, bitmap_height;
 	unsigned char *bitmap_pixels;
@@ -658,11 +662,6 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 	if (create_surface)
 	{
 		MakeSurface_Generic(bitmap_width, bitmap_height, surf_no);
-	}
-		
-	else
-	{
-		memset(surf[surf_no].data, 0, surf[surf_no].w * surf[surf_no].h * sizeof(BUFFER_PIXEL));
 	}
 
 	surf[surf_no].palette = (u16*)malloc(palettesize*2);
@@ -696,6 +695,9 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			printf("UHOHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 			break;
 	}
+
+	surf[surf_no].data = (BUFFER_PIXEL*)malloc(bitmap_width * bitmap_height * sizeof(BUFFER_PIXEL));
+
 	// Image must have transparency..
 	for (int y = 0; y < bitmap_height; y++)
 	{
@@ -748,7 +750,8 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			textureid = gAtlas256Color;
 			break;
 		case SURFACE_ID_NPC_SYM:
-			xoffset = 640;
+			xoffset = 704;
+			yoffset = 256;
 			break;
 		case SURFACE_ID_CASTS:
 			xoffset = 256;
@@ -774,8 +777,7 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			yoffset = 184;
 			break;
 		case SURFACE_ID_ARMS:
-			xoffset = 576;
-			yoffset = 240;
+			textureid = gAtlas16Color2;
 			break;
 		case SURFACE_ID_ITEM_IMAGE:
 			xoffset = 256;
@@ -797,12 +799,12 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			xoffset = 0;
 			break;
 		case SURFACE_ID_FACE:
-			xoffset = 896;
-			yoffset = 240;
+			xoffset = 888;
+			yoffset = 196;
 			goto facejump;
 			break;
 		case SURFACE_ID_LEVEL_BACKGROUND:
-			textureid = gAtlas16Color2;
+			xoffset = 640;
 			break;
 		case SURFACE_ID_CARET:
 			xoffset = 320;
@@ -823,16 +825,14 @@ BOOL LoadBitmap(FILE *fp, SurfaceID surf_no, bool create_surface)
 			textureid = gAtlas16Color2;
 			break;
 		default:
-free:
-			fclose(fp);
-			free(bitmap_pixels);
-			return TRUE;
+			break;
 	}
 
 	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
-		fclose(fp);
+		fclose_embed(fp);
 		free(bitmap_pixels);
+		free(surf[surf_no].data);
 		return TRUE;
 	}
 
@@ -846,16 +846,17 @@ facejump:
 
 
 	free(bitmap_pixels);
-	if(create_surface && surf_no != SURFACE_ID_TEXT_BOX && surf_no != SURFACE_ID_FACE)
+	if(surf_no != SURFACE_ID_TEXT_BOX && surf_no != SURFACE_ID_FACE)
 		free(surf[surf_no].data);
-	fclose(fp);
+	fclose_embed(fp);
 	
 	return TRUE;
 }
 
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
-	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE)
+	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET
+		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE)
 	{
 
 	}
@@ -867,7 +868,7 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s.png", gDataPath, name);
 	
-	FILE *fp = fopen(path, "rb");
+	FILE_e *fp = fopen_embed(path, "rb");
 	if (fp)
 	{
 		printf("Loading surface (as .png) from %s for surface id %d\n", path, surf_no);
@@ -930,14 +931,18 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 	}
 }
 
+int gFaceNo = -1;
+
 void CopyFaceTexture(int face)
 {
+	if(face == gFaceNo) return;
+	gFaceNo = face;
 	RECT rcFace;
 	rcFace.left = (face % 6) * 48;
 	rcFace.top = (face / 6) * 48;
 	rcFace.right = rcFace.left + 48;
 	rcFace.bottom = rcFace.top + 48;
-	CopyDataToTexture(surf[SURFACE_ID_FACE].paletteType, gAtlas16Color1, SURFACE_ID_FACE, 
+	CopyDataToTexture(surf[SURFACE_ID_FACE].paletteType, gAtlas16Color2, SURFACE_ID_FACE, 
 		surf[SURFACE_ID_FACE].xoffset, surf[SURFACE_ID_FACE].yoffset, &rcFace);
 }
 
@@ -985,7 +990,6 @@ static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 		srcRect.left = 0;
 		srcRect.top = 0;
 	}
-
 	srcRect.top += surf[surf_no].yoffset;
 	srcRect.bottom += surf[surf_no].yoffset;
 
@@ -1043,6 +1047,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No 
 
 void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 {
+	return;
 	BUFFER_PIXEL* dFrom = surf[from].data;
 	BUFFER_PIXEL* dTo = surf[to].data;
 

@@ -1,0 +1,19 @@
+fix rendering of credits
+move npcsym to arms in credits
+glSprite dstrect
+
+correct oside bk
+correct opening camera
+
+game will hang when closing the lid enough times on ending
+
+remove 4th line text when advancing
+construct the minimap texture in memory
+put circle = textbox
+dont render negative rects
+fix curlys gun rect so it doesnt overflow
+level 3 rocket right and bottom sprite is invisible on hardware
+escape menu
+control config menu?
+swap screens button
+bitmap conversion program

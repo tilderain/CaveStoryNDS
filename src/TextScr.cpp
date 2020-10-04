@@ -33,6 +33,8 @@
 #include "Sound.h"
 #include "Stage.h"
 
+#include "fopen.h"
+
 #ifdef CYG_PROFILER
 #define __cplusplus
 #include "cyg-profile.h"
@@ -127,25 +129,25 @@ void EncryptionBinaryData2(unsigned char *pData, long size)
 // Load generic .tsc
 BOOL LoadTextScript2(const char *name)
 {
-	FILE *fp;
+	FILE_e *fp;
 	char path[MAX_PATH];
 
 	// Get path
 	sprintf(path, "%s/%s", gDataPath, name);
 
-	gTS.size = GetFileSizeLong(path);
-	if (gTS.size == -1)
-		return FALSE;
-
 	// Open file
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
+	gTS.size = fp->size;
+	if (gTS.size == -1)
+		return FALSE;
+
 	// Read data
-	fread(gTS.data, 1, gTS.size, fp);
+	fread_embed(gTS.data, 1, gTS.size, fp);
 	gTS.data[gTS.size] = 0;
-	fclose(fp);
+	fclose_embed(fp);
 
 	// Set path
 	strcpy(gTS.path, name);
@@ -159,7 +161,7 @@ BOOL LoadTextScript2(const char *name)
 // Load stage .tsc
 BOOL LoadTextScript_Stage(const char *name)
 {
-	FILE *fp;
+	FILE_e *fp;
 	char path[MAX_PATH];
 	long head_size;
 	long body_size;
@@ -167,36 +169,36 @@ BOOL LoadTextScript_Stage(const char *name)
 	// Open Head.tsc
 	sprintf(path, "%s/%s", gDataPath, "Head.tsc");
 
-	head_size = GetFileSizeLong(path);
-	if (head_size == -1)
-		return FALSE;
-
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
+	head_size = fp->size;
+	if (head_size == -1)
+		return FALSE;
+
 	// Read Head.tsc
-	fread(gTS.data, 1, head_size, fp);
+	fread_embed(gTS.data, 1, head_size, fp);
 	EncryptionBinaryData2((unsigned char*)gTS.data, head_size);
 	gTS.data[head_size] = 0;
-	fclose(fp);
+	fclose_embed(fp);
 
 	// Open stage's .tsc
 	sprintf(path, "%s/%s", gDataPath, name);
 
-	body_size = GetFileSizeLong(path);
-	if (body_size == -1)
-		return FALSE;
-
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
+	body_size = fp->size;
+	if (body_size == -1)
+		return FALSE;
+
 	// Read stage's tsc
-	fread(&gTS.data[head_size], 1, body_size, fp);
+	fread_embed(&gTS.data[head_size], 1, body_size, fp);
 	EncryptionBinaryData2((unsigned char*)&gTS.data[head_size], body_size);
 	gTS.data[head_size + body_size] = 0;
-	fclose(fp);
+	fclose_embed(fp);
 
 	// Set parameters
 	gTS.size = head_size + body_size;
@@ -236,7 +238,6 @@ BOOL StartTextScript(int no)
 	gTS.flags = 0;
 	gTS.wait_beam = 0;
 	gTS.face = 0;
-	CopyFaceTexture(gTS.face);
 	gTS.item = 0;
 	gTS.offsetY = 0;
 
@@ -477,6 +478,8 @@ void PutTextScript(void)
 		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX);
 	}
 
+	CopyFaceTexture(gTS.face);
+
 	// Draw face picture
 	RECT rcFace;
 	rcFace.left = (gTS.face % 6) * 48;
@@ -622,7 +625,6 @@ int TextScriptProc(void)
 						gMC.cond &= ~1;
 						g_GameFlags |= 3;
 						gTS.face = 0;
-						CopyFaceTexture(gTS.face);
 						bExit = TRUE;
 					}
 					else if (IS_COMMAND('L','I','+'))
@@ -827,7 +829,6 @@ int TextScriptProc(void)
 						if (gTS.flags & 0x40)
 							gTS.flags |= 0x10;
 						gTS.face = 0;
-						CopyFaceTexture(gTS.face);
 						gTS.p_read += 4;
 						bExit = TRUE;
 					}
@@ -1222,7 +1223,6 @@ int TextScriptProc(void)
 						{
 							gTS.face = (signed char)z;
 							gTS.face_x = (WINDOW_WIDTH / 2 - 156) * 0x200;
-							CopyFaceTexture(gTS.face);
 						}
 						gTS.p_read += 8;
 					}

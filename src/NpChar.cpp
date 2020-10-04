@@ -18,6 +18,8 @@
 #include "Sound.h"
 #include "ValueView.h"
 
+#include "fopen.h"
+
 NPCHAR gNPC[NPC_MAX];
 int gCurlyShoot_wait;
 int gCurlyShoot_x;
@@ -54,7 +56,7 @@ void SetUniqueParameter(NPCHAR *npc)
 BOOL LoadEvent(const char *path_event)
 {
 	int i, n;
-	FILE *fp;
+	FILE_e *fp;
 	int count;
 	char code[4];
 	EVENT eve;
@@ -62,17 +64,17 @@ BOOL LoadEvent(const char *path_event)
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s", gDataPath, path_event);
 
-	fp = fopen(path, "rb");
+	fp = fopen_embed(path, "rb");
 	if (fp == NULL)
 		return FALSE;
 
 	// Read "PXE" check
-	fread(code, 1, 4, fp);
+	fread_embed(code, 1, 4, fp);
 	if (memcmp(code, gPassPixEve, 3) != 0)
 	{
 #ifdef FIX_BUGS
 		// The original game forgot to close the file here
-		fclose(fp);
+		fclose_embed(fp);
 #endif
 		return FALSE;
 	}
@@ -126,7 +128,7 @@ BOOL LoadEvent(const char *path_event)
 		++n;
 	}
 
-	fclose(fp);
+	fclose_embed(fp);
 	return TRUE;
 }
 
@@ -377,7 +379,7 @@ void ActNpChar(void)
 {
 	int i;
 	int code_char;
-
+	
 	for (i = 0; i < NPC_MAX; ++i)
 	{
 		if (gNPC[i].cond & 0x80)

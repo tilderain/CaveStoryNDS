@@ -96,7 +96,7 @@ void fifoDataHandler(int bytes, void *user_data)
 int main(int argc, char *argv[])
 {
 	//Get executable's path
-	nitroFSInit(&argv[0]);
+	fatInitDefault();
 
 	printf("hi from the world of 2morrow\n");
 
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 	strcpy(gModulePath, "/");
 	
 	//Get path of the data folder
-	strcpy(gDataPath, "nitro:/data");
+	strcpy(gDataPath, "data");
 	
 	//Load configuration
 	CONFIG conf;

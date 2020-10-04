@@ -24,7 +24,7 @@ INCLUDES	:=	include
 SPRITES		:=  sprites
 
 
-NITRODATA	:=	game_english
+NITRODATA	:=	
 ifneq ($(strip $(NITRODATA)),)
 	export NITRO_FILES	:=	$(CURDIR)/$(NITRODATA)
 endif
@@ -36,7 +36,7 @@ export SDL_LIB	:=	$(DEVKITPRO)/msys2/usr/lib/SDL
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:=	-g -Wall -O3\
+CFLAGS	:=	-g -Wall -Os\
  		-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
 		-ffast-math -DFIX_BUGS \
 		$(ARCH)

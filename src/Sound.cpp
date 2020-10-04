@@ -23,6 +23,8 @@
 #include "File.h"
 #include "Main.h"
 
+#include "fopen.h"
+
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
@@ -71,7 +73,7 @@ void updateChannelStates(void)
 }
 
 //Sound buffer code
-SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
+SOUNDBUFFER::SOUNDBUFFER(size_t bufSize, const void* data_ptr)
 {
 	//Set parameters
 	size = bufSize;
@@ -82,15 +84,22 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize)
 
 	timer = 0;
 	
-	frequency = 0;
+	frequency = 22050;
 	volume = 127;
 	pan = 63;
 	samplePosition = 0;
 	channelId = -1;
 	
 	//Create waveform buffer
-	data = new s8[bufSize];
-	memset(data, 0x80, bufSize);
+	if(!data_ptr)
+	{
+		data = new s8[bufSize];
+		memset(data, 0x80, bufSize);
+	}
+	else
+	{
+		data = (s8*)data_ptr;
+	}
 	
 	//Add to buffer list
 	this->next = soundBuffers;
@@ -117,7 +126,11 @@ SOUNDBUFFER::~SOUNDBUFFER()
 void SOUNDBUFFER::Release()
 {
 	//TODO: find a better and more stable(?) way to handle this function
-	if(channelId != -1) channelStates[channelId] = NULL;
+	if(channelId != -1) 
+	{
+		soundKill(channelId);
+		channelStates[channelId] = NULL;
+	}
 	delete this;
 }
 
@@ -405,7 +418,7 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 		}
 	}
 
-	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(sample_count);
+	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(sample_count, NULL);
 
 	s8 *buf;
 	lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
@@ -423,35 +436,18 @@ BOOL ReadSound(int no)
 {
     //Get file path
     char path[MAX_PATH];
-    sprintf(path, "%s/Wave/%03d.ptw", gDataPath, no);
+    sprintf(path, "%s/Wave/%03d.raw", gDataPath, no);
     
     //Open file
-    FILE *fp = fopen(path, "rb");
+    FILE_e *fp = fopen_embed(path, "rb");
     if (fp == NULL)
         return FALSE;
     
-    //Read file
-    size_t size = File_ReadLE32(fp);
-    signed char *data = (signed char *)malloc(size);
-    if (data == NULL)
-    {
-        fclose(fp);
-        return FALSE;
-    }
-    fread(data, size, 1, fp);
-    fclose(fp);
-    
     //Create buffer
-    lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size);
+    lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
     if (lpSECONDARYBUFFER[no] == NULL)
         return FALSE;
-    
-    //Upload data to buffer
-    s8 *buf;
-    lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
-    memcpy(buf, data, size);
-    lpSECONDARYBUFFER[no]->Unlock();
-    lpSECONDARYBUFFER[no]->SetFrequency(22050);
-	free(data);
+	
+    fclose_embed(fp);    
     return TRUE;
 }

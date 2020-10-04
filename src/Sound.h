@@ -14,7 +14,7 @@
 class SOUNDBUFFER
 {
 	public:
-		SOUNDBUFFER(size_t bufSize);
+		SOUNDBUFFER(size_t bufSize, const void* data_ptr);
 		~SOUNDBUFFER();
 		
 		void Release();
