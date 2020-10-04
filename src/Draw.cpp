@@ -756,7 +756,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 			textureid = gAtlas256Color;
 			break;
 		case SURFACE_ID_NPC_SYM:
-			if(makeNpcSymTakeArmsSlot) // i hope i wont have to do this again
+			if(npcSymInArmsSlot) // i hope i wont have to do this again
 			{
 				textureid = gAtlas16Color2;
 			}
@@ -869,7 +869,7 @@ facejump:
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
 	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET
-		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE)
+		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE || surf_no == SURFACE_ID_NPC_SYM)
 	{
 
 	}
