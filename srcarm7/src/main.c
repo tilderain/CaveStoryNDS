@@ -95,9 +95,9 @@ int main() {
 
 	// Keep the ARM7 mostly idle
 	while (!exitflag) {
-		if ( 0 == (REG_KEYINPUT & (KEY_SELECT | KEY_START | KEY_L | KEY_R))) {
-			exitflag = true;
-		}
+		//if ( 0 == (REG_KEYINPUT & (KEY_SELECT | KEY_START | KEY_L | KEY_R))) {
+		//	exitflag = true;
+		//}
 		swiWaitForVBlank();
 	}
 	return 0;

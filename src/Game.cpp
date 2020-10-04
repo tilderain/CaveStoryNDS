@@ -173,7 +173,7 @@ int ModeOpening(void)
 		}
 
 		// Skip intro if OK is pressed
-		if (gKey & gKeyOk)
+		if (gKeyTrg & gKeyOk)
 			break;
 
 		// Update everything
