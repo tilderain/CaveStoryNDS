@@ -1,7 +1,3 @@
-fix rendering of credits
-move npcsym to arms in credits
-glSprite dstrect
-
 correct oside bk
 correct opening camera
 
@@ -12,7 +8,6 @@ construct the minimap texture in memory
 put circle = textbox
 dont render negative rects
 fix curlys gun rect so it doesnt overflow
-level 3 rocket right and bottom sprite is invisible on hardware
 escape menu
 control config menu?
 swap screens button

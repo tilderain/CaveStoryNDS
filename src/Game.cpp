@@ -593,7 +593,6 @@ int ModeAction(void)
 			ActionCredit();
 			ActionIllust();
 			ActionStripper();
-			SetFramePosition(0, 0);
 		}
 
 		ProcFade();
