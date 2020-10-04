@@ -194,7 +194,8 @@ int ModeOpening(void)
 		// Draw everything
 		CortBox(&grcFull, 0x000000);
 
-		GetFramePosition(&frame_x, &frame_y);
+		//GetFramePosition(&frame_x, &frame_y);
+		frame_x = 32 * 0x200; frame_y = 16 * 0x200;
 		PutBack(frame_x, frame_y);
 		PutStage_Back(frame_x, frame_y);
 		PutBossChar(frame_x, frame_y);

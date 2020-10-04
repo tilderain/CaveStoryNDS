@@ -1,5 +1,4 @@
 correct oside bk
-correct opening camera
 
 game will hang when closing the lid enough times on ending
 
@@ -7,7 +6,6 @@ remove 4th line text when advancing
 construct the minimap texture in memory
 dont render negative rects
 fix curlys gun rect so it doesnt overflow
-escape menu
 control config menu?
 swap screens button
 bitmap conversion program
