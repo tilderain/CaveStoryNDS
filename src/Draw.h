@@ -87,6 +87,8 @@ BOOL ReloadBitmap_File(const char *name, SurfaceID surf_no);
 BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no);
 void BackupSurface(SurfaceID surf_no, RECT *rect);
 void CopyFaceTexture(int face);
+void makeNpcSymTakeArmsSlot(bool toggle);
+void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent);
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 void Surface2Surface(int x, int y, RECT *rect, int to, int from);

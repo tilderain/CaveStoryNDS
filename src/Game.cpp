@@ -137,6 +137,7 @@ int ModeOpening(void)
 	if (g_GameFlags & 8)
 	{
 		// To make up for casts obliterating these by its mere presence
+		makeNpcSymTakeArmsSlot(false);
 		ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
 		ReloadBitmap_File("Bullet", SURFACE_ID_BULLET);
 		ReloadBitmap_File("Arms", SURFACE_ID_ARMS);
@@ -592,6 +593,7 @@ int ModeAction(void)
 			ActionCredit();
 			ActionIllust();
 			ActionStripper();
+			SetFramePosition(0, 0);
 		}
 
 		ProcFade();
@@ -679,6 +681,8 @@ int ModeAction(void)
 
 		if (g_GameFlags & 8)
 		{
+			static RECT half = {0, 0, WINDOW_WIDTH/2, WINDOW_HEIGHT};
+			CortBox(&half, color); // hack too lazy to clear broken data
 			PutIllust();
 			PutStripper();
 		}

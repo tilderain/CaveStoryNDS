@@ -1982,7 +1982,7 @@ void ActNpc360(NPCHAR *npc)
 	{
 		++npc->act_no;
 		npc->x -= 8 * 0x200;
-		npc->y -= 8 * 0x200;
+		npc->y -= 16 * 0x200;
 	}
 
 	npc->rect = rc;

@@ -13,4 +13,5 @@ static inline void gxTexcoord2i(t16 u, t16 v);
 static inline void gxVertex3i(v16 x, v16 y, v16 z);
 static inline void gxVertex2i(v16 x, v16 y);
 void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int texType);
+void glSpriteSizeParam( int x1, int y1, int width, int height, RECT *rect, int textureID, int paletteOffset, int texType);
 void glBoxFilled( int x1, int y1, int x2, int y2, int color );

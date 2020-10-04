@@ -55,8 +55,11 @@ void PutStripper(void)
 			rc.top = s * 16;
 			rc.bottom = rc.top + 16;
 
+			int x = (Strip[s].x / 0x200) - 40;
+			if(x <= 32) x = 32;
+
 			//PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
-			PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
+			PutText(&grcFull, x, (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
 
 			// Draw character
 			rc.left = (Strip[s].cast % 13) * 24;
@@ -64,7 +67,9 @@ void PutStripper(void)
 			rc.top = (Strip[s].cast / 13) * 24;
 			rc.bottom = rc.top + 24;
 
-			PutBitmap3(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2) - 24, (Strip[s].y / 0x200) - 8, &rc, SURFACE_ID_CASTS);
+			x = (Strip[s].x / 0x200) - 64;
+			if(x <= 0) x = 0;
+			PutBitmap3(&grcFull, x, (Strip[s].y / 0x200) - 8, &rc, SURFACE_ID_CASTS);
 		}
 	}
 }
@@ -150,7 +155,13 @@ void PutIllust(void)
 #if WINDOW_WIDTH != 320 || WINDOW_HEIGHT != 240
 	// Widescreen edit
 	RECT rcClip = {(WINDOW_WIDTH - 320) / 2, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-	PutBitmap3(&rcClip, (Illust.x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (WINDOW_HEIGHT - 240) / 2, &rcIllust, SURFACE_ID_CREDITS_IMAGE);
+	DrawBitmapSizeParam(&rcClip, (Illust.x / 0x200), 
+								 0,
+								 128,
+								 192,
+								 &rcIllust, 
+								 SURFACE_ID_CREDITS_IMAGE,
+								 false);
 #else
 	PutBitmap3(&grcFull, (Illust.x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (WINDOW_HEIGHT - 240) / 2, &rcIllust, SURFACE_ID_CREDITS_IMAGE);
 #endif
@@ -244,6 +255,9 @@ BOOL StartCreditScript(void)
 	// Reload casts
 	if (!ReloadBitmap_File("casts", SURFACE_ID_CASTS))
 		return FALSE;
+
+	makeNpcSymTakeArmsSlot(true);
+	ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
 
 	// Clear casts
 	memset(Strip, 0, sizeof(Strip));
