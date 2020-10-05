@@ -23,6 +23,12 @@ DATA		:=	data
 INCLUDES	:=	include
 SPRITES		:=  sprites
 
+GAME_TITLE := Cave Story DS ~ CSE2
+GAME_SUBTITLE1 := github.com/tilderain/CaveStoryDS
+GAME_SUBTITLE2 := 
+GAME_ICON := $(CURDIR)/../icon.bmp
+
+
 
 NITRODATA	:=	
 ifneq ($(strip $(NITRODATA)),)
