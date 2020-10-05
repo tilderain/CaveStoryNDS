@@ -39,41 +39,40 @@ bool bFadeout = false;
 unsigned int gOrgTimer = 0;
 unsigned int gOrgSamplePerStep = 0;
 
-bool OrganyaNoteAlloc(uint16_t alloc)
+bool OrganyaNoteAlloc(uint16_t alloc, int j)
 {
-	for(int j = 0; j < MAXTRACK; j++)
+
+	//info.tdata[j].wave_no = 0;
+	info.tdata[j].note_list = NULL;
+	info.tdata[j].note_p = new NOTELIST[alloc];
+	
+	if(info.tdata[j].note_p == NULL)
 	{
-		info.tdata[j].wave_no = 0;
-		info.tdata[j].note_list = NULL;
-		info.tdata[j].note_p = new NOTELIST[alloc];
-		
-		if(info.tdata[j].note_p == NULL)
+		for(int i = 0; i < MAXTRACK; i++)
 		{
-			for(int i = 0; i < MAXTRACK; i++)
+			if(info.tdata[i].note_p != NULL)
 			{
-				if(info.tdata[i].note_p != NULL)
-				{
-					delete[] info.tdata[i].note_p;
-					info.tdata[j].note_p = NULL;	// Uses j instead of i
-				}
+				delete[] info.tdata[i].note_p;
+				info.tdata[j].note_p = NULL;	// Uses j instead of i
 			}
-
-			return false;
 		}
 
-		for(int i = 0; i < alloc; i++)
-		{
-			(info.tdata[j].note_p + i)->from = NULL;
-			(info.tdata[j].note_p + i)->to = NULL;
-			(info.tdata[j].note_p + i)->length = 0;
-			(info.tdata[j].note_p + i)->pan = PANDUMMY;
-			(info.tdata[j].note_p + i)->volume = VOLDUMMY;
-			(info.tdata[j].note_p + i)->y = KEYDUMMY;
-		}
+		return false;
+	}
+
+	for(int i = 0; i < alloc; i++)
+	{
+		(info.tdata[j].note_p + i)->from = NULL;
+		(info.tdata[j].note_p + i)->to = NULL;
+		(info.tdata[j].note_p + i)->length = 0;
+		(info.tdata[j].note_p + i)->pan = PANDUMMY;
+		(info.tdata[j].note_p + i)->volume = VOLDUMMY;
+		(info.tdata[j].note_p + i)->y = KEYDUMMY;
 	}
 	
-	for(int j = 0; j < MAXMELODY; j++)
-		MakeOrganyaWave(j, info.tdata[j].wave_no, info.tdata[j].pipi);
+	
+	//for(int j = 0; j < MAXMELODY; j++)
+	//	MakeOrganyaWave(j, info.tdata[j].wave_no, info.tdata[j].pipi);
 	//for(int j = 0; j < MAXDRAM; j++)
 	//	InitDramObject(j);
 
@@ -427,9 +426,7 @@ void LoadOrganya(const char *name)
 	OrganyaReleaseNote();
 	memset(&info, 0, sizeof(info));
 	
-	//does this thing even have enough memory?
-	OrganyaNoteAlloc(0x3FF); //down from FFFF
-	
+
 	//Stop currently playing notes
 	memset(play_np, 0, sizeof(play_np));
 	memset(old_key, 0xFF, sizeof(old_key));
@@ -480,6 +477,7 @@ void LoadOrganya(const char *name)
 		const int8_t pipi = File_ReadU8(fp);
 		info.tdata[i].pipi = ver == 1 ? 0 : pipi;
 		info.tdata[i].note_num = File_ReadLE16(fp);
+		OrganyaNoteAlloc(info.tdata[i].note_num, i);
 	}
 
 	//Load notes
