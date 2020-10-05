@@ -655,7 +655,21 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	LodePNGState state;
 	lodepng_state_init(&state);
 
-	state.decoder.color_convert = false;
+	if(surf_no == SURFACE_ID_NPC_REGU || surf_no == SURFACE_ID_FACE || !strcmp("Npc/NpcGuest", surf[surf_no].name))
+	{
+		state.info_raw.palettesize = 256;
+		state.info_raw.bitdepth = 4;
+		state.info_raw.colortype = LCT_PALETTE;
+	}
+	else
+	{
+		state.info_raw.palettesize = 16;
+		state.info_raw.bitdepth = 4;
+		state.info_raw.colortype = LCT_PALETTE;
+	}
+	
+	state.decoder.color_convert = true;
+	
 	
 	lodepng_decode(&bitmap_pixels, &bitmap_width, &bitmap_height, &state, file_buffer, file_size);
 

@@ -223,7 +223,6 @@ int main(int argc, char *argv[])
 		//Run game code
 		Game();
 		printf("bye i guess");
-		while (true){}
 		//End stuff
 		EndDirectSound();
 		EndTextObject();

@@ -24,7 +24,6 @@ INCBIN(Credittsc, "../game_english/data/Credit.tsc");
 INCBIN(Facepng, "../game_english/data/Face.png");
 INCBIN(Fadepng, "../game_english/data/Fade.png");
 INCBIN(Headtsc, "../game_english/data/Head.tsc");
-INCBIN(ICON_MINIpng, "../game_english/data/ICON_MINI.png");
 INCBIN(ItemImagepng, "../game_english/data/ItemImage.png");
 INCBIN(Loadingpng, "../game_english/data/Loading.png");
 INCBIN(MyCharpng, "../game_english/data/MyChar.png");
@@ -577,7 +576,6 @@ const FILEREF files[] = {
 	{gFacepngData, gFacepngSize, "data/Face.png"},
 	{gFadepngData, gFadepngSize, "data/Fade.png"},
 	{gHeadtscData, gHeadtscSize, "data/Head.tsc"},
-	{gICON_MINIpngData, gICON_MINIpngSize, "data/ICON_MINI.png"},
 	{gItemImagepngData, gItemImagepngSize, "data/ItemImage.png"},
 	{gLoadingpngData, gLoadingpngSize, "data/Loading.png"},
 	{gMyCharpngData, gMyCharpngSize, "data/MyChar.png"},
