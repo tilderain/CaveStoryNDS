@@ -90,9 +90,15 @@ void PutBack(int fx, int fy)
 
 		case 6:
 		case 7:
+			//super duper workaround*
+
 			rect.top = 0;
 			rect.bottom = 88;
 			rect.left = 0;
+			if(!strcmp("bkMoon", surf[SURFACE_ID_LEVEL_BACKGROUND].name))
+			{
+				rect.left = 64;
+			}
 			rect.right = 320;
 			PutBitmap4(&grcGame, 0, 0, &rect, SURFACE_ID_LEVEL_BACKGROUND);
 
