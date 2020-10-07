@@ -133,11 +133,12 @@ BOOL ChangeMapParts(int x, int y, unsigned char no)
 	return TRUE;
 }
 
+__attribute__((hot))
 void PutStage_Back(int fx, int fy)
 {
-	int i, j;
+	//int i, j;
 	RECT rect;
-	int offset;
+	//int offset;
 
 	// Get range to draw
 	int num_x = ((WINDOW_WIDTH + (16 - 1)) / 16) + 1;
@@ -145,15 +146,15 @@ void PutStage_Back(int fx, int fy)
 	int put_x = ((fx / 0x200) + 8) / 16;
 	int put_y = ((fy / 0x200) + 8) / 16;
 
-	int atrb;
+	//int atrb;
 
-	for (j = put_y; j < put_y + num_y; ++j)
+	for (int j = put_y; j < put_y + num_y; ++j)
 	{
-		for (i = put_x; i < put_x + num_x; ++i)
+		for (int i = put_x; i < put_x + num_x; ++i)
 		{
 			// Get attribute
-			offset = (j * gMap.width) + i;
-			atrb = GetAttribute(i, j);
+			int offset = (j * gMap.width) + i;
+			int atrb = GetAttribute(i, j);
 
 			if (atrb >= 0x20)
 				continue;
@@ -169,12 +170,13 @@ void PutStage_Back(int fx, int fy)
 	}
 }
 
+__attribute__((hot))
 void PutStage_Front(int fx, int fy)
 {
 	RECT rcSnack = {256, 48, 272, 64};
-	int i, j;
+	//int i, j;
 	RECT rect;
-	int offset;
+	//int offset;
 
 	// Get range to draw
 	int num_x = ((WINDOW_WIDTH + (16 - 1)) / 16) + 1;
@@ -182,15 +184,15 @@ void PutStage_Front(int fx, int fy)
 	int put_x = ((fx / 0x200) + 8) / 16;
 	int put_y = ((fy / 0x200) + 8) / 16;
 
-	int atrb;
+	//int atrb;
 
-	for (j = put_y; j < put_y + num_y; ++j)
+	for (int j = put_y; j < put_y + num_y; ++j)
 	{
-		for (i = put_x; i < put_x + num_x; ++i)
+		for (int i = put_x; i < put_x + num_x; ++i)
 		{
 			// Get attribute
-			offset = (j * gMap.width) + i;
-			atrb = GetAttribute(i, j);
+			int offset = (j * gMap.width) + i;
+			int atrb = GetAttribute(i, j);
 
 			if (atrb < 0x40 || atrb >= 0x80)
 				continue;

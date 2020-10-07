@@ -513,100 +513,87 @@ void LoseNpChar(NPCHAR *npc, BOOL bVanish)
 	}
 }
 
+static void DamageNpchar(int n, int b)
+{
+	// Damage NPC
+	if (gNPC[n].bits & NPC_SHOOTABLE)
+	{
+		gNPC[n].life -= gBul[b].damage;
+
+		if (gNPC[n].life < 1)
+		{
+			gNPC[n].life = 0;
+
+			if (gNPC[n].bits & NPC_SHOW_DAMAGE)
+				gNPC[n].damage_view -= gBul[b].damage;
+
+			if ((gMC.cond & 0x80) && gNPC[n].bits & NPC_EVENT_WHEN_KILLED)
+				StartTextScript(gNPC[n].code_event);
+			else
+				//gNPC[n].cond |= 8;
+				LoseNpChar(&gNPC[n], TRUE); //wtf pixel
+		}
+		else
+		{
+			if (gNPC[n].shock < 14)
+			{
+				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
+				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
+				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
+				PlaySoundObject(gNPC[n].hit_voice, 1);
+				gNPC[n].shock = 16;
+			}
+
+			if (gNPC[n].bits & NPC_SHOW_DAMAGE)
+				gNPC[n].damage_view -= gBul[b].damage;
+		}
+	}
+	else if (!(gBul[b].bbits & 0x10))
+	{
+		// Hit invulnerable NPC
+		SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 2, 2);
+		PlaySoundObject(31, 1);
+		gBul[b].life = 0;
+		return;
+	}
+
+	--gBul[b].life;
+}
+
 __attribute__((hot))
 void HitNpCharBullet(void)
 {
-	int n, b;
-	BOOL bHit;
-
-	for (n = 0; n < NPC_MAX; ++n)
+	//int n, b;
+	//BOOL bHit;
+	for (int b = 0; b < BULLET_MAX; ++b)
 	{
-		if (!(gNPC[n].cond & 0x80))
+		if (!(gBul[b].cond & 0x80))
 			continue;
 
-		if (gNPC[n].bits & NPC_SHOOTABLE && gNPC[n].bits & NPC_INTERACTABLE)
+		if (gBul[b].damage == -1)
 			continue;
 
-		for (b = 0; b < BULLET_MAX; ++b)
+		for (int n = 0; n < NPC_MAX; ++n)
 		{
-			if (!(gBul[b].cond & 0x80))
+			if (!(gNPC[n].cond & 0x80))
 				continue;
 
-			if (gBul[b].damage == -1)
+			if (gNPC[n].bits & NPC_INTERACTABLE) //unsure if the & shootable part has any relevance
 				continue;
-
+	
 			// Check if bullet touches npc
-			bHit = FALSE;
 			if (gNPC[n].bits & NPC_SHOOTABLE
 				&& gNPC[n].x - gNPC[n].hit.back < gBul[b].x + gBul[b].enemyXL
 				&& gNPC[n].x + gNPC[n].hit.back > gBul[b].x - gBul[b].enemyXL
 				&& gNPC[n].y - gNPC[n].hit.top < gBul[b].y + gBul[b].enemyYL
 				&& gNPC[n].y + gNPC[n].hit.bottom > gBul[b].y - gBul[b].enemyYL)
-				bHit = TRUE;
+				return DamageNpchar(n, b);
 			else if (gNPC[n].bits & NPC_INVULNERABLE
 				&& gNPC[n].x - gNPC[n].hit.back < gBul[b].x + gBul[b].blockXL
 				&& gNPC[n].x + gNPC[n].hit.back > gBul[b].x - gBul[b].blockXL
 				&& gNPC[n].y - gNPC[n].hit.top < gBul[b].y + gBul[b].blockYL
 				&& gNPC[n].y + gNPC[n].hit.bottom > gBul[b].y - gBul[b].blockYL)
-				bHit = TRUE;
-
-			if (bHit)
-			{
-				// Damage NPC
-				if (gNPC[n].bits & NPC_SHOOTABLE)
-				{
-					gNPC[n].life -= gBul[b].damage;
-
-					if (gNPC[n].life < 1)
-					{
-						gNPC[n].life = 0;
-
-						if (gNPC[n].bits & NPC_SHOW_DAMAGE)
-							gNPC[n].damage_view -= gBul[b].damage;
-
-						if ((gMC.cond & 0x80) && gNPC[n].bits & NPC_EVENT_WHEN_KILLED)
-							StartTextScript(gNPC[n].code_event);
-						else
-							gNPC[n].cond |= 8;
-					}
-					else
-					{
-						if (gNPC[n].shock < 14)
-						{
-							SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-							SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-							SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-							PlaySoundObject(gNPC[n].hit_voice, 1);
-							gNPC[n].shock = 16;
-						}
-
-						if (gNPC[n].bits & NPC_SHOW_DAMAGE)
-							gNPC[n].damage_view -= gBul[b].damage;
-					}
-				}
-				/*else if (gBul[b].code_bullet == 13
-					|| gBul[b].code_bullet == 14
-					|| gBul[b].code_bullet == 15
-					|| gBul[b].code_bullet == 28
-					|| gBul[b].code_bullet == 29
-					|| gBul[b].code_bullet == 30)
-				{
-					// Strange empty case that's needed for accurate assembly
-				}*/
-				else if (!(gBul[b].bbits & 0x10))
-				{
-					// Hit invulnerable NPC
-					SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 2, 2);
-					PlaySoundObject(31, 1);
-					gBul[b].life = 0;
-					continue;
-				}
-
-				--gBul[b].life;
-			}
+				return DamageNpchar(n, b);
 		}
-
-		if (gNPC[n].cond & 8)
-			LoseNpChar(&gNPC[n], TRUE);
 	}
 }

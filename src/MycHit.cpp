@@ -586,6 +586,7 @@ void HitMyCharMap(void)
 		gMC.flag |= 0x100;
 }
 
+__attribute__((hot))
 int JudgeHitMyCharNPC(NPCHAR *npc)
 {
 	int hit = 0;
@@ -642,6 +643,7 @@ int JudgeHitMyCharNPC(NPCHAR *npc)
 	return hit;
 }
 
+__attribute__((hot))
 unsigned char JudgeHitMyCharNPC3(NPCHAR *npc)
 {
 	if (npc->direct == 0)
@@ -664,6 +666,8 @@ unsigned char JudgeHitMyCharNPC3(NPCHAR *npc)
 	return 0;
 }
 
+
+__attribute__((hot))
 int JudgeHitMyCharNPC4(NPCHAR *npc)
 {
 	// TODO: comment this
@@ -766,6 +770,7 @@ int JudgeHitMyCharNPC4(NPCHAR *npc)
 	return hit;
 }
 
+__attribute__((hot))
 void HitMyCharNpChar(void)
 {
 	int i;

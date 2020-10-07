@@ -335,14 +335,15 @@ void VanishNpChar(NPCHAR *npc)
 	SetUniqueParameter(npc);
 }
 
+__attribute__((hot))
 void PutNpChar(int fx, int fy)
 {
-	int n;
+	//int n;
 	signed char a = 0;
 
 	int side;
 
-	for (n = 0; n < NPC_MAX; ++n)
+	for (int n = 0; n < NPC_MAX; ++n)
 	{
 		if (gNPC[n].cond & 0x80)
 		{
@@ -375,12 +376,13 @@ void PutNpChar(int fx, int fy)
 	}
 }
 
+__attribute__((hot))
 void ActNpChar(void)
 {
-	int i;
+	//int i;
 	int code_char;
 	
-	for (i = 0; i < NPC_MAX; ++i)
+	for (int i = 0; i < NPC_MAX; ++i)
 	{
 		if (gNPC[i].cond & 0x80)
 		{
