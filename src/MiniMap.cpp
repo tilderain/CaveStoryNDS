@@ -105,7 +105,7 @@ int MiniMapLoop(void)
 			}
 		}
 
-		PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
 
 		rcView.left = (WINDOW_WIDTH / 2) - (((gMap.width * f) / 8) / 2);
 		rcView.right = (WINDOW_WIDTH / 2) + (((gMap.width * f) / 8) / 2);
@@ -153,7 +153,7 @@ int MiniMapLoop(void)
 			}
 		}
 
-		PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
 		CortBox(&rcView, 0);
 
 		if (line < gMap.length)
@@ -197,7 +197,7 @@ int MiniMapLoop(void)
 			}
 		}
 
-		PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
 
 		rcView.left = (WINDOW_WIDTH / 2) - (((gMap.width * f) / 8) / 2);
 		rcView.right = (WINDOW_WIDTH / 2) + (((gMap.width * f) / 8) / 2);

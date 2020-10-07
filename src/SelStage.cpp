@@ -195,10 +195,10 @@ int StageSelectLoop(int *p_event)
 		}
 
 #ifdef FIX_BUGS
-		PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
 #else
 		// The original accidentally drew the screencap with transparency enabled
-		PutBitmap3(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap3(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
 #endif
 		PutStageSelectObject();
 		PutTextScript();

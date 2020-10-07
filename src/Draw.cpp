@@ -973,93 +973,6 @@ void CopyFaceTexture(int face)
 		surf[SURFACE_ID_FACE].xoffset, surf[SURFACE_ID_FACE].yoffset, &rcFace);
 }
 
-__attribute__((hot))
-static void DrawBitmap(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, bool transparent)
-{
-	//TODO: draw queueing
-	//TODO: don't render if transparent
-#ifdef TWO_SCREENS
-	int temp = x;
-	x = WINDOW_HEIGHT - y;
-	y = temp;
-
-	if((gCounter & 1) == 0) // bottom screen
-	{
-		
-	}
-	else
-	{
-		y -= WINDOW_WIDTH / 2;
-	}
-
-#endif
-
-	if(x > WINDOW_WIDTH) return;
-	if(y > WINDOW_HEIGHT) return;
-
-	if(surf_no == SURFACE_ID_SCREEN_GRAB) return;
-
-
-	int textureid;
-	if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
-	else
-	{
-		textureid = surf[surf_no].textureid;
-	}
-
-////
-	RECT srcRect = *rect;
-
-	if(surf_no == SURFACE_ID_FACE)
-	{
-		srcRect.right -= srcRect.left;
-		srcRect.bottom -= srcRect.top;
-		srcRect.left = 0;
-		srcRect.top = 0;
-	}
-	srcRect.top += surf[surf_no].yoffset;
-	srcRect.bottom += surf[surf_no].yoffset;
-
-	if(surf[surf_no].paletteType == GL_RGB16)
-	{
-		srcRect.left += surf[surf_no].xoffset;
-		srcRect.right += surf[surf_no].xoffset;
-	}
-	else
-	{
-		// To compensate for the texture size being halved when turning from 16 to 256 color
-		srcRect.left += surf[surf_no].xoffset / 2;
-		srcRect.right += surf[surf_no].xoffset / 2;
-	}
-
-	if(rcView->left > x)
-	{
-		srcRect.left += rcView->left - x;
-		x = rcView->left;
-	}
-
-	if(rcView->top > y)
-	{
-		srcRect.top += rcView->top - y;
-		y = rcView->top;
-	}
-
-	int width = srcRect.right - srcRect.left;
-	int height = srcRect.bottom - srcRect.top;
-	if(x + width > rcView->right)
-	{
-		srcRect.right -= x + width - rcView->right;
-	}
-
-	if(y + height > rcView->bottom)
-	{
-		srcRect.bottom -= y + height - rcView->bottom;
-	}
-////
-
-	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
-}
 
 
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent)
@@ -1146,7 +1059,7 @@ void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
 	glSpriteSizeParam(x, y, width, height, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
 }
-
+/*
 __attribute__((hot))
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Transparency
 {
@@ -1156,7 +1069,7 @@ void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //Tra
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No Transparency
 {
 	DrawBitmap(rcView, x, y, rect, surf_no, false);
-}
+}*/
 
 void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 {

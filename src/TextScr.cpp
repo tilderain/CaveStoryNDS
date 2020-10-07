@@ -482,10 +482,10 @@ void PutTextScript(void)
 
 	// Draw face picture
 	RECT rcFace;
-	rcFace.left = (gTS.face % 6) * 48;
-	rcFace.top = (gTS.face / 6) * 48;
-	rcFace.right = rcFace.left + 48;
-	rcFace.bottom = rcFace.top + 48;
+	rcFace.left = 0;
+	rcFace.top = 0;
+	rcFace.right = 48;
+	rcFace.bottom = 48;
 
 	if (gTS.face_x < (TEXT_LEFT * 0x200))
 		gTS.face_x += 0x1000;
