@@ -12,6 +12,7 @@
 #include "Game.h"
 #include "MyChar.h"
 #include "NpChar.h"
+#include "NpcHit.h"
 #include "Sound.h"
 #include "Triangle.h"
 
@@ -1601,7 +1602,7 @@ void ActNpc154(NPCHAR *npc)
 				npc->ani_no = 10;
 
 			if (++npc->act_wait > 50)
-				npc->cond |= 8;
+				LoseNpChar(npc, TRUE);
 
 			break;
 	}

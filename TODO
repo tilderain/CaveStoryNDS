@@ -1,5 +1,6 @@
-
-game will hang when closing the lid enough times on ending
+Known issues:
+	game will hang when closing the lid enough times on ending
+	game will slow down when firing the spur near a sprinkler
 
 remove 4th line text when advancing
 construct the minimap texture in memory
@@ -7,4 +8,3 @@ fix curlys gun rect so it doesnt overflow
 control config menu?
 swap screens button
 
-OPTIMIZE HITNPCHARBULLET

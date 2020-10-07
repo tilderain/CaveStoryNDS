@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "MyChar.h"
 #include "NpChar.h"
+#include "NpcHit.h"
 #include "Sound.h"
 #include "Triangle.h"
 
@@ -1469,7 +1470,7 @@ void ActNpc351(NPCHAR *npc)
 			if (npc->life <= 900)
 			{
 				SetNpChar(351, npc->x - (8 * 0x200), npc->y - (12 * 0x200), 0, 0, (npc->ani_no + 4) * 10, NULL, 0);
-				npc->cond |= 8;
+				LoseNpChar(npc, TRUE);
 			}
 
 			break;

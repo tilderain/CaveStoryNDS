@@ -21,6 +21,9 @@
 #include "fopen.h"
 
 NPCHAR gNPC[NPC_MAX];
+NPCHAR* gActiveNPC[NPC_MAX];
+int gActiveNPCCount = 0;
+
 int gCurlyShoot_wait;
 int gCurlyShoot_x;
 int gCurlyShoot_y;
@@ -32,6 +35,7 @@ const char *gPassPixEve = "PXE";
 void InitNpChar(void)
 {
 	memset(gNPC, 0, sizeof(gNPC));
+	gActiveNPCCount = 0;
 }
 
 void SetUniqueParameter(NPCHAR *npc)
@@ -84,6 +88,7 @@ BOOL LoadEvent(const char *path_event)
 
 	// Load NPCs
 	memset(gNPC, 0, sizeof(gNPC));
+	gActiveNPCCount = 0;
 
 	n = 170;
 	for (i = 0; i < count; ++i)
@@ -112,16 +117,24 @@ BOOL LoadEvent(const char *path_event)
 		if (gNPC[n].bits & NPC_APPEAR_WHEN_FLAG_SET)
 		{
 			if (GetNPCFlag(gNPC[n].code_flag) == TRUE)
+			{
+				AddToActiveNPCList(&gNPC[n]);
 				gNPC[n].cond |= 0x80;
+			}
 		}
 		else if (gNPC[n].bits & NPC_HIDE_WHEN_FLAG_SET)
 		{
 			if (GetNPCFlag(gNPC[n].code_flag) == FALSE)
+			{
+				AddToActiveNPCList(&gNPC[n]);
 				gNPC[n].cond |= 0x80;
+			}
+
 		}
 		else
 		{
 			gNPC[n].cond = 0x80;
+			AddToActiveNPCList(&gNPC[n]);
 		}
 
 		// Increase index
@@ -144,6 +157,7 @@ void SetNpChar(int code_char, int x, int y, int xm, int ym, int dir, NPCHAR *npc
 	// Set NPC parameters
 	memset(&gNPC[n], 0, sizeof(NPCHAR));
 	gNPC[n].cond |= 0x80;
+	AddToActiveNPCList(&gNPC[n]);
 	gNPC[n].direct = dir;
 	gNPC[n].code_char = code_char;
 	gNPC[n].x = x;
@@ -227,6 +241,7 @@ void SetExpObjects(int x, int y, int exp)
 		}
 
 		gNPC[n].cond |= 0x80;
+		AddToActiveNPCList(&gNPC[n]);
 		gNPC[n].direct = 0;
 		gNPC[n].code_char = 1;
 		gNPC[n].x = x;
@@ -283,6 +298,7 @@ BOOL SetBulletObject(int x, int y, int val)
 
 		memset(&gNPC[n], 0, sizeof(NPCHAR));
 		gNPC[n].cond |= 0x80;
+		AddToActiveNPCList(&gNPC[n]);
 		gNPC[n].direct = 0;
 		gNPC[n].code_event = bullet_no;
 		gNPC[n].code_char = 86;
@@ -307,6 +323,7 @@ BOOL SetLifeObject(int x, int y, int val)
 
 	memset(&gNPC[n], 0, sizeof(NPCHAR));
 	gNPC[n].cond |= 0x80;
+	AddToActiveNPCList(&gNPC[n]);
 	gNPC[n].direct = 0;
 	gNPC[n].code_char = 87;
 	gNPC[n].x = x;
@@ -335,6 +352,34 @@ void VanishNpChar(NPCHAR *npc)
 	SetUniqueParameter(npc);
 }
 
+
+void UpdateActiveNpChar(void)
+{
+	for(int i=0;i<gActiveNPCCount;i++)
+	{
+		if(gActiveNPC) 0;
+	}
+}
+
+void AddToActiveNPCList(NPCHAR *npc)
+{
+	npc->lost = false;
+	gActiveNPC[gActiveNPCCount] = npc;
+	gActiveNPC[gActiveNPCCount]->index = gActiveNPCCount;
+	gActiveNPCCount++;
+}
+
+void RemoveFromActiveNPCList(NPCHAR *npc)
+{
+	npc->lost = true;
+	gActiveNPC[npc->index] = gActiveNPC[--gActiveNPCCount];
+	gActiveNPC[npc->index]->index = npc->index;
+	for(int i = npc->index+1; i < gActiveNPCCount; i++)
+	{
+		gActiveNPC[i]->index = i;
+	}
+}
+
 __attribute__((hot))
 void PutNpChar(int fx, int fy)
 {
@@ -343,36 +388,34 @@ void PutNpChar(int fx, int fy)
 
 	int side;
 
-	for (int n = 0; n < NPC_MAX; ++n)
+	for (int n = 0; n < gActiveNPCCount; ++n)
 	{
-		if (gNPC[n].cond & 0x80)
+		if (gActiveNPC[n]->shock)
 		{
-			if (gNPC[n].shock)
-			{
-				a = 2 * ((gNPC[n].shock / 2) % 2) - 1;
-			}
-			else
-			{
-				a = 0;
-				if (gNPC[n].bits & NPC_SHOW_DAMAGE && gNPC[n].damage_view)
-				{
-					SetValueView(&gNPC[n].x, &gNPC[n].y, gNPC[n].damage_view);
-					gNPC[n].damage_view = 0;
-				}
-			}
-
-			if (gNPC[n].direct == 0)
-				side = gNPC[n].view.front;
-			else
-				side = gNPC[n].view.back;
-
-			PutBitmap3(
-				&grcGame,
-				(gNPC[n].x - side) / 0x200 - fx / 0x200 + a,
-				(gNPC[n].y - gNPC[n].view.top) / 0x200 - fy / 0x200,
-				&gNPC[n].rect,
-				(SurfaceID)gNPC[n].surf);
+			a = 2 * ((gActiveNPC[n]->shock / 2) % 2) - 1;
 		}
+		else
+		{
+			a = 0;
+			if (gActiveNPC[n]->bits & NPC_SHOW_DAMAGE && gActiveNPC[n]->damage_view)
+			{
+				SetValueView(&gActiveNPC[n]->x, &gActiveNPC[n]->y, gActiveNPC[n]->damage_view);
+				gActiveNPC[n]->damage_view = 0;
+			}
+		}
+
+		if (gActiveNPC[n]->direct == 0)
+			side = gActiveNPC[n]->view.front;
+		else
+			side = gActiveNPC[n]->view.back;
+
+		PutBitmap3(
+			&grcGame,
+			(gActiveNPC[n]->x - side) / 0x200 - fx / 0x200 + a,
+			(gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200,
+			&gActiveNPC[n]->rect,
+			(SurfaceID)gActiveNPC[n]->surf);
+	
 	}
 }
 
@@ -382,16 +425,19 @@ void ActNpChar(void)
 	//int i;
 	int code_char;
 	
-	for (int i = 0; i < NPC_MAX; ++i)
+	for (int i = 0; i < gActiveNPCCount; ++i)
 	{
-		if (gNPC[i].cond & 0x80)
+		code_char = gActiveNPC[i]->code_char;
+
+		gpNpcFuncTbl[code_char](gActiveNPC[i]);
+
+		if (gActiveNPC[i]->shock)
+			--gActiveNPC[i]->shock;
+		
+		if(!gActiveNPC[i]->cond && !gActiveNPC[i]->lost)
 		{
-			code_char = gNPC[i].code_char;
-
-			gpNpcFuncTbl[code_char](&gNPC[i]);
-
-			if (gNPC[i].shock)
-				--gNPC[i].shock;
+			RemoveFromActiveNPCList(gActiveNPC[i]);
+			i--;
 		}
 	}
 }
@@ -604,6 +650,7 @@ void DeleteNpCharEvent(int code)
 		if ((gNPC[i].cond & 0x80) && gNPC[i].code_event == code)
 		{
 			gNPC[i].cond = 0;
+			RemoveFromActiveNPCList(&gNPC[i]);
 			SetNPCFlag(gNPC[i].code_flag);
 		}
 	}
@@ -617,6 +664,7 @@ void DeleteNpCharCode(int code, BOOL bSmoke)
 	{
 		if ((gNPC[n].cond & 0x80) && gNPC[n].code_char == code)
 		{
+			RemoveFromActiveNPCList(&gNPC[n]);
 			gNPC[n].cond = 0;
 			SetNPCFlag(gNPC[n].code_flag);
 

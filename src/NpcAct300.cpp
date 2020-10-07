@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "MyChar.h"
 #include "NpChar.h"
+#include "NpcHit.h"
 #include "Sound.h"
 #include "Triangle.h"
 
@@ -1654,7 +1655,7 @@ void ActNpc316(NPCHAR *npc)
 				npc->ani_no = 1;
 
 			if (++npc->act_wait > 50)
-				npc->cond |= 8;
+				LoseNpChar(npc, TRUE);
 
 			break;
 	}
@@ -1823,7 +1824,7 @@ void ActNpc318(NPCHAR *npc)
 				npc->ani_no = 1;
 
 			if (++npc->act_wait > 50)
-				npc->cond |= 8;
+				LoseNpChar(npc, TRUE);
 
 			break;
 	}

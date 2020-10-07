@@ -779,78 +779,76 @@ void HitMyCharNpChar(void)
 	if (!(gMC.cond & 0x80) || gMC.cond & 2)
 		return;
 
-	for (i = 0; i < NPC_MAX; ++i)
+	for (i = 0; i < gActiveNPCCount; ++i)
 	{
-		if (!(gNPC[i].cond & 0x80))
-			continue;
 
 		hit = 0;
 
-		if (gNPC[i].bits & NPC_SOLID_SOFT)
+		if (gActiveNPC[i]->bits & NPC_SOLID_SOFT)
 		{
-			hit = JudgeHitMyCharNPC(&gNPC[i]);
+			hit = JudgeHitMyCharNPC(gActiveNPC[i]);
 			gMC.flag |= hit;
 		}
-		else if (gNPC[i].bits & NPC_SOLID_HARD)
+		else if (gActiveNPC[i]->bits & NPC_SOLID_HARD)
 		{
-			hit = JudgeHitMyCharNPC4(&gNPC[i]);
+			hit = JudgeHitMyCharNPC4(gActiveNPC[i]);
 			gMC.flag |= hit;
 		}
 		else
 		{
-			hit = JudgeHitMyCharNPC3(&gNPC[i]);
+			hit = JudgeHitMyCharNPC3(gActiveNPC[i]);
 		}
 
 		// Special NPCs (pickups)
-		if (hit != 0 && gNPC[i].code_char == 1)
+		if (hit != 0 && gActiveNPC[i]->code_char == 1)
 		{
 			PlaySoundObject(14, 1);
-			AddExpMyChar(gNPC[i].exp);
-			gNPC[i].cond = 0;
+			AddExpMyChar(gActiveNPC[i]->exp);
+			gActiveNPC[i]->cond = 0;
 		}
 
-		if (hit != 0 && gNPC[i].code_char == 86)
+		if (hit != 0 && gActiveNPC[i]->code_char == 86)
 		{
 			PlaySoundObject(42, 1);
-			AddBulletMyChar(gNPC[i].code_event, gNPC[i].exp);
-			gNPC[i].cond = 0;
+			AddBulletMyChar(gActiveNPC[i]->code_event, gActiveNPC[i]->exp);
+			gActiveNPC[i]->cond = 0;
 		}
 
-		if (hit != 0 && gNPC[i].code_char == 87)
+		if (hit != 0 && gActiveNPC[i]->code_char == 87)
 		{
 			PlaySoundObject(20, 1);
-			AddLifeMyChar(gNPC[i].exp);
-			gNPC[i].cond = 0;
+			AddLifeMyChar(gActiveNPC[i]->exp);
+			gActiveNPC[i]->cond = 0;
 		}
 
 		// Run event on contact
-		if (!(g_GameFlags & 4) && hit != 0 && gNPC[i].bits & NPC_EVENT_WHEN_TOUCHED)
-			StartTextScript(gNPC[i].code_event);
+		if (!(g_GameFlags & 4) && hit != 0 && gActiveNPC[i]->bits & NPC_EVENT_WHEN_TOUCHED)
+			StartTextScript(gActiveNPC[i]->code_event);
 
 		// NPC damage
-		if (g_GameFlags & 2 && !(gNPC[i].bits & NPC_INTERACTABLE))
+		if (g_GameFlags & 2 && !(gActiveNPC[i]->bits & NPC_INTERACTABLE))
 		{
-			if (gNPC[i].bits & NPC_REAR_AND_TOP_DONT_HURT)
+			if (gActiveNPC[i]->bits & NPC_REAR_AND_TOP_DONT_HURT)
 			{
-				if (hit & 4 && gNPC[i].xm < 0)
-					DamageMyChar(gNPC[i].damage);
-				if (hit & 1 && gNPC[i].xm > 0)
-					DamageMyChar(gNPC[i].damage);
-				if (hit & 8 && gNPC[i].ym < 0)
-					DamageMyChar(gNPC[i].damage);
-				if (hit & 2 && gNPC[i].ym > 0)
-					DamageMyChar(gNPC[i].damage);
+				if (hit & 4 && gActiveNPC[i]->xm < 0)
+					DamageMyChar(gActiveNPC[i]->damage);
+				if (hit & 1 && gActiveNPC[i]->xm > 0)
+					DamageMyChar(gActiveNPC[i]->damage);
+				if (hit & 8 && gActiveNPC[i]->ym < 0)
+					DamageMyChar(gActiveNPC[i]->damage);
+				if (hit & 2 && gActiveNPC[i]->ym > 0)
+					DamageMyChar(gActiveNPC[i]->damage);
 			}
-			else if (hit != 0 && gNPC[i].damage && !(g_GameFlags & 4))
+			else if (hit != 0 && gActiveNPC[i]->damage && !(g_GameFlags & 4))
 			{
-				DamageMyChar(gNPC[i].damage);
+				DamageMyChar(gActiveNPC[i]->damage);
 			}
 		}
 
 		// Interaction
-		if (!(g_GameFlags & 4) && hit != 0 && gMC.cond & 1 && gNPC[i].bits & NPC_INTERACTABLE)
+		if (!(g_GameFlags & 4) && hit != 0 && gMC.cond & 1 && gActiveNPC[i]->bits & NPC_INTERACTABLE)
 		{
-			StartTextScript(gNPC[i].code_event);
+			StartTextScript(gActiveNPC[i]->code_event);
 			gMC.xm = 0;
 			gMC.ques = FALSE;
 		}

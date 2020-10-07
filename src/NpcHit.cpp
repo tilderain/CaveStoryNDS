@@ -275,28 +275,26 @@ void HitNpCharMap(void)
 
 	int i, j;
 
-	for (i = 0; i < NPC_MAX; ++i)
+	for (i = 0; i < gActiveNPCCount; ++i)
 	{
-		if (!(gNPC[i].cond & 0x80))
+
+		if (gActiveNPC[i]->bits & NPC_IGNORE_SOLIDITY)
 			continue;
 
-		if (gNPC[i].bits & NPC_IGNORE_SOLIDITY)
-			continue;
-
-		if (gNPC[i].size >= 3)
+		if (gActiveNPC[i]->size >= 3)
 		{
 			judg = 9;
-			x = (gNPC[i].x - 0x1000) / 0x10 / 0x200;
-			y = (gNPC[i].y - 0x1000) / 0x10 / 0x200;
+			x = (gActiveNPC[i]->x - 0x1000) / 0x10 / 0x200;
+			y = (gActiveNPC[i]->y - 0x1000) / 0x10 / 0x200;
 		}
 		else
 		{
 			judg = 4;
-			x = gNPC[i].x / 0x10 / 0x200;
-			y = gNPC[i].y / 0x10 / 0x200;
+			x = gActiveNPC[i]->x / 0x10 / 0x200;
+			y = gActiveNPC[i]->y / 0x10 / 0x200;
 		}
 
-		gNPC[i].flag = 0;
+		gActiveNPC[i]->flag = 0;
 
 		for (j = 0; j < judg; ++j)
 		{
@@ -304,7 +302,7 @@ void HitNpCharMap(void)
 			{
 				// No NPC block
 				case 0x44:
-					if (gNPC[i].bits & NPC_IGNORE_TILE_44)
+					if (gActiveNPC[i]->bits & NPC_IGNORE_TILE_44)
 						break;
 					// Fallthrough
 				// Block
@@ -312,129 +310,129 @@ void HitNpCharMap(void)
 				case 0x05:
 				case 0x41:
 				case 0x43:
-					JadgeHitNpCharBlock(&gNPC[i], x + offx[j], y + offy[j]);
+					JadgeHitNpCharBlock(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				// Slopes
 				case 0x50:
-					JudgeHitNpCharTriangleA(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleA(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x51:
-					JudgeHitNpCharTriangleB(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleB(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x52:
-					JudgeHitNpCharTriangleC(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleC(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x53:
-					JudgeHitNpCharTriangleD(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleD(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x54:
-					JudgeHitNpCharTriangleE(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleE(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x55:
-					JudgeHitNpCharTriangleF(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleF(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x56:
-					JudgeHitNpCharTriangleG(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleG(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x57:
-					JudgeHitNpCharTriangleH(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleH(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				// Water
 				case 0x02:
 				case 0x60:
 				case 0x62:
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				// Water block
 				case 0x04:
 				case 0x61:
 				case 0x64:
-					JadgeHitNpCharBlock(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JadgeHitNpCharBlock(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				// Water slopes
 				case 0x70:
-					JudgeHitNpCharTriangleA(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleA(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x71:
-					JudgeHitNpCharTriangleB(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleB(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x72:
-					JudgeHitNpCharTriangleC(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleC(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x73:
-					JudgeHitNpCharTriangleD(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleD(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x74:
-					JudgeHitNpCharTriangleE(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleE(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x75:
-					JudgeHitNpCharTriangleF(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleF(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x76:
-					JudgeHitNpCharTriangleG(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleG(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0x77:
-					JudgeHitNpCharTriangleH(&gNPC[i], x + offx[j], y + offy[j]);
-					JudgeHitNpCharWater(&gNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharTriangleH(gActiveNPC[i], x + offx[j], y + offy[j]);
+					JudgeHitNpCharWater(gActiveNPC[i], x + offx[j], y + offy[j]);
 					break;
 
 				case 0xA0:
-					gNPC[i].flag |= 0x100;
+					gActiveNPC[i]->flag |= 0x100;
 					// Fallthrough
 				case 0x80:
-					gNPC[i].flag |= 0x1000;
+					gActiveNPC[i]->flag |= 0x1000;
 					break;
 
 				case 0xA1:
-					gNPC[i].flag |= 0x100;
+					gActiveNPC[i]->flag |= 0x100;
 					// Fallthrough
 				case 0x81:
-					gNPC[i].flag |= 0x2000;
+					gActiveNPC[i]->flag |= 0x2000;
 					break;
 
 				case 0xA2:
-					gNPC[i].flag |= 0x100;
+					gActiveNPC[i]->flag |= 0x100;
 					// Fallthrough
 				case 0x82:
-					gNPC[i].flag |= 0x4000;
+					gActiveNPC[i]->flag |= 0x4000;
 					break;
 
 				case 0xA3:
-					gNPC[i].flag |= 0x100;
+					gActiveNPC[i]->flag |= 0x100;
 					// Fallthrough
 				case 0x83:
-					gNPC[i].flag |= 0x8000;
+					gActiveNPC[i]->flag |= 0x8000;
 					break;
 			}
 
-			if (gNPC[i].y > gWaterY + 0x800)
-				gNPC[i].flag |= 0x100;
+			if (gActiveNPC[i]->y > gWaterY + 0x800)
+				gActiveNPC[i]->flag |= 0x100;
 		}
 	}
 }
@@ -509,55 +507,62 @@ void LoseNpChar(NPCHAR *npc, BOOL bVanish)
 	}
 	else
 	{
+		RemoveFromActiveNPCList(npc);
 		npc->cond = 0;
 	}
 }
 
-static void DamageNpchar(int n, int b)
+static BOOL DamageNpchar(int n, int b)
 {
 	// Damage NPC
-	if (gNPC[n].bits & NPC_SHOOTABLE)
+	if (gActiveNPC[n]->bits & NPC_SHOOTABLE)
 	{
-		gNPC[n].life -= gBul[b].damage;
+		gActiveNPC[n]->life -= gBul[b].damage;
 
-		if (gNPC[n].life < 1)
+		if (gActiveNPC[n]->life < 1)
 		{
-			gNPC[n].life = 0;
+			gActiveNPC[n]->life = 0;
 
-			if (gNPC[n].bits & NPC_SHOW_DAMAGE)
-				gNPC[n].damage_view -= gBul[b].damage;
+			if (gActiveNPC[n]->bits & NPC_SHOW_DAMAGE)
+				gActiveNPC[n]->damage_view -= gBul[b].damage;
 
-			if ((gMC.cond & 0x80) && gNPC[n].bits & NPC_EVENT_WHEN_KILLED)
-				StartTextScript(gNPC[n].code_event);
+			if ((gMC.cond & 0x80) && gActiveNPC[n]->bits & NPC_EVENT_WHEN_KILLED)
+				StartTextScript(gActiveNPC[n]->code_event);
 			else
-				//gNPC[n].cond |= 8;
-				LoseNpChar(&gNPC[n], TRUE); //wtf pixel
+			{
+				//gActiveNPC[n]->cond |= 8; //wtf pixel
+				LoseNpChar(gActiveNPC[n], TRUE);
+				--gBul[b].life;
+				return TRUE;
+			}
+
 		}
 		else
 		{
-			if (gNPC[n].shock < 14)
+			if (gActiveNPC[n]->shock < 14)
 			{
-				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-				SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 11, 0);
-				PlaySoundObject(gNPC[n].hit_voice, 1);
-				gNPC[n].shock = 16;
+				SetCaret((gBul[b].x + gActiveNPC[n]->x) / 2, (gBul[b].y + gActiveNPC[n]->y) / 2, 11, 0);
+				SetCaret((gBul[b].x + gActiveNPC[n]->x) / 2, (gBul[b].y + gActiveNPC[n]->y) / 2, 11, 0);
+				SetCaret((gBul[b].x + gActiveNPC[n]->x) / 2, (gBul[b].y + gActiveNPC[n]->y) / 2, 11, 0);
+				PlaySoundObject(gActiveNPC[n]->hit_voice, 1);
+				gActiveNPC[n]->shock = 16;
 			}
 
-			if (gNPC[n].bits & NPC_SHOW_DAMAGE)
-				gNPC[n].damage_view -= gBul[b].damage;
+			if (gActiveNPC[n]->bits & NPC_SHOW_DAMAGE)
+				gActiveNPC[n]->damage_view -= gBul[b].damage;
 		}
 	}
 	else if (!(gBul[b].bbits & 0x10))
 	{
 		// Hit invulnerable NPC
-		SetCaret((gBul[b].x + gNPC[n].x) / 2, (gBul[b].y + gNPC[n].y) / 2, 2, 2);
+		SetCaret((gBul[b].x + gActiveNPC[n]->x) / 2, (gBul[b].y + gActiveNPC[n]->y) / 2, 2, 2);
 		PlaySoundObject(31, 1);
 		gBul[b].life = 0;
-		return;
+		return FALSE;
 	}
 
 	--gBul[b].life;
+	return FALSE;
 }
 
 __attribute__((hot))
@@ -573,27 +578,33 @@ void HitNpCharBullet(void)
 		if (gBul[b].damage == -1)
 			continue;
 
-		for (int n = 0; n < NPC_MAX; ++n)
+		for (int n = 0; n < gActiveNPCCount; ++n)
 		{
-			if (!(gNPC[n].cond & 0x80))
+			if (!(gActiveNPC[n]->cond & 0x80))
 				continue;
 
-			if (gNPC[n].bits & NPC_INTERACTABLE) //unsure if the & shootable part has any relevance
+			if (gActiveNPC[n]->bits & NPC_INTERACTABLE) //unsure if the & shootable part has any relevance
 				continue;
 	
 			// Check if bullet touches npc
-			if (gNPC[n].bits & NPC_SHOOTABLE
-				&& gNPC[n].x - gNPC[n].hit.back < gBul[b].x + gBul[b].enemyXL
-				&& gNPC[n].x + gNPC[n].hit.back > gBul[b].x - gBul[b].enemyXL
-				&& gNPC[n].y - gNPC[n].hit.top < gBul[b].y + gBul[b].enemyYL
-				&& gNPC[n].y + gNPC[n].hit.bottom > gBul[b].y - gBul[b].enemyYL)
-				return DamageNpchar(n, b);
-			else if (gNPC[n].bits & NPC_INVULNERABLE
-				&& gNPC[n].x - gNPC[n].hit.back < gBul[b].x + gBul[b].blockXL
-				&& gNPC[n].x + gNPC[n].hit.back > gBul[b].x - gBul[b].blockXL
-				&& gNPC[n].y - gNPC[n].hit.top < gBul[b].y + gBul[b].blockYL
-				&& gNPC[n].y + gNPC[n].hit.bottom > gBul[b].y - gBul[b].blockYL)
-				return DamageNpchar(n, b);
+			if (gActiveNPC[n]->bits & NPC_SHOOTABLE
+				&& gActiveNPC[n]->x - gActiveNPC[n]->hit.back < gBul[b].x + gBul[b].enemyXL
+				&& gActiveNPC[n]->x + gActiveNPC[n]->hit.back > gBul[b].x - gBul[b].enemyXL
+				&& gActiveNPC[n]->y - gActiveNPC[n]->hit.top < gBul[b].y + gBul[b].enemyYL
+				&& gActiveNPC[n]->y + gActiveNPC[n]->hit.bottom > gBul[b].y - gBul[b].enemyYL)
+				if(DamageNpchar(n, b))
+				{
+					--n;
+				}
+			else if (gActiveNPC[n]->bits & NPC_INVULNERABLE
+				&& gActiveNPC[n]->x - gActiveNPC[n]->hit.back < gBul[b].x + gBul[b].blockXL
+				&& gActiveNPC[n]->x + gActiveNPC[n]->hit.back > gBul[b].x - gBul[b].blockXL
+				&& gActiveNPC[n]->y - gActiveNPC[n]->hit.top < gBul[b].y + gBul[b].blockYL
+				&& gActiveNPC[n]->y + gActiveNPC[n]->hit.bottom > gBul[b].y - gBul[b].blockYL)
+				if(DamageNpchar(n, b))
+				{
+					--n;
+				}
 		}
 	}
 }

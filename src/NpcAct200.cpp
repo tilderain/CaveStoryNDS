@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "MyChar.h"
 #include "NpChar.h"
+#include "NpcHit.h"
 #include "Sound.h"
 #include "Triangle.h"
 
@@ -505,7 +506,7 @@ void ActNpc206(NPCHAR *npc)
 					PlaySoundObject(35, 1);
 					SetDestroyNpChar(npc->x, npc->y, 0x10000, 100);
 					SetQuake(20);
-					npc->cond |= 8;
+					LoseNpChar(npc, TRUE);
 					break;
 			}
 

@@ -99,6 +99,8 @@ typedef struct NPCHAR
 	int damage_view;
 	int damage;
 	struct NPCHAR *pNpc;
+	int index;
+	bool lost;
 } NPCHAR;
 
 struct EVENT
@@ -112,6 +114,9 @@ struct EVENT
 };
 
 extern NPCHAR gNPC[NPC_MAX];
+extern NPCHAR* gActiveNPC[NPC_MAX];
+extern int gActiveNPCCount;
+
 extern int gCurlyShoot_wait;
 extern int gCurlyShoot_x;
 extern int gCurlyShoot_y;
@@ -127,6 +132,9 @@ void SetExpObjects(int x, int y, int exp);
 BOOL SetBulletObject(int x, int y, int val);
 BOOL SetLifeObject(int x, int y, int val);
 void VanishNpChar(NPCHAR *npc);
+void UpdateActiveNpChar(void);
+void AddToActiveNPCList(NPCHAR *npc);
+void RemoveFromActiveNPCList(NPCHAR *npc);
 void PutNpChar(int fx, int fy);
 void ActNpChar(void);
 void ChangeNpCharByEvent(int code_event, int code_char, int dir);

@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "MyChar.h"
 #include "NpChar.h"
+#include "NpcHit.h"
 #include "Sound.h"
 
 // Curly (carried, shooting)
@@ -262,7 +263,7 @@ void ActNpc322(NPCHAR *npc)
 						DeleteMapParts((npc->x + (8 * 0x200)) / 0x200 / 0x10, npc->y / 0x200 / 0x10);
 					}
 
-					npc->cond |= 8;
+					LoseNpChar(npc, TRUE);
 					break;
 			}
 
