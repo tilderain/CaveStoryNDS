@@ -470,7 +470,7 @@ int CampLoop(void)
 		}
 
 		// Get currently displayed image
-		PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
+		//PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
 		PutCampObject();
 		PutTextScript();
 		PutFramePerSecound();
