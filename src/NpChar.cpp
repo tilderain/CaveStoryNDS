@@ -371,6 +371,7 @@ void AddToActiveNPCList(NPCHAR *npc)
 
 void RemoveFromActiveNPCList(NPCHAR *npc)
 {
+	if(npc->lost) return;
 	npc->lost = true;
 	gActiveNPC[npc->index] = gActiveNPC[--gActiveNPCCount];
 	gActiveNPC[npc->index]->index = npc->index;
@@ -436,8 +437,7 @@ void ActNpChar(void)
 		
 		if(!gActiveNPC[i]->cond)
 		{
-			if(!gActiveNPC[i]->lost)
-				RemoveFromActiveNPCList(gActiveNPC[i]);
+			RemoveFromActiveNPCList(gActiveNPC[i]);
 			i--;
 		}
 	}
