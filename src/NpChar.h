@@ -99,8 +99,6 @@ typedef struct NPCHAR
 	int damage_view;
 	int damage;
 	struct NPCHAR *pNpc;
-	int index;
-	bool lost;
 } NPCHAR;
 
 struct EVENT
