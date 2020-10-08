@@ -134,7 +134,7 @@ BOOL SetLifeObject(int x, int y, int val);
 void VanishNpChar(NPCHAR *npc);
 void UpdateActiveNpChar(void);
 void AddToActiveNPCList(NPCHAR *npc);
-void RemoveFromActiveNPCList(NPCHAR *npc);
+BOOL RemoveFromActiveNPCList(NPCHAR *npc);
 void PutNpChar(int fx, int fy);
 void ActNpChar(void);
 void ChangeNpCharByEvent(int code_event, int code_char, int dir);

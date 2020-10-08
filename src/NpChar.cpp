@@ -363,22 +363,21 @@ void UpdateActiveNpChar(void)
 
 void AddToActiveNPCList(NPCHAR *npc)
 {
-	npc->lost = false;
 	gActiveNPC[gActiveNPCCount] = npc;
-	gActiveNPC[gActiveNPCCount]->index = gActiveNPCCount;
 	gActiveNPCCount++;
 }
 
-void RemoveFromActiveNPCList(NPCHAR *npc)
+BOOL RemoveFromActiveNPCList(NPCHAR *npc)
 {
-	if(npc->lost) return;
-	npc->lost = true;
-	gActiveNPC[npc->index] = gActiveNPC[--gActiveNPCCount];
-	gActiveNPC[npc->index]->index = npc->index;
-	for(int i = npc->index+1; i < gActiveNPCCount; i++)
+	for(int i = 0; i < gActiveNPCCount; i++)
 	{
-		gActiveNPC[i]->index = i;
+		if(gActiveNPC[i] == npc)
+		{
+			gActiveNPC[i] = gActiveNPC[--gActiveNPCCount];
+			return TRUE;
+		}
 	}
+	return FALSE;
 }
 
 __attribute__((hot))
@@ -437,8 +436,8 @@ void ActNpChar(void)
 		
 		if(!gActiveNPC[i]->cond)
 		{
-			RemoveFromActiveNPCList(gActiveNPC[i]);
-			i--;
+			if(RemoveFromActiveNPCList(gActiveNPC[i]))
+				i--;
 		}
 	}
 }
