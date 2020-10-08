@@ -434,9 +434,10 @@ void ActNpChar(void)
 		if (gActiveNPC[i]->shock)
 			--gActiveNPC[i]->shock;
 		
-		if(!gActiveNPC[i]->cond && !gActiveNPC[i]->lost)
+		if(!gActiveNPC[i]->cond)
 		{
-			RemoveFromActiveNPCList(gActiveNPC[i]);
+			if(!gActiveNPC[i]->lost)
+				RemoveFromActiveNPCList(gActiveNPC[i]);
 			i--;
 		}
 	}
