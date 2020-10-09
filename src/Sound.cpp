@@ -331,6 +331,8 @@ bool InitDirectSound()
 	StartOrganya();
 
 	soundEnable();
+	irqEnable(IRQ_VBLANK);
+	irqSet(IRQ_VBLANK, DoOrganya);
 
 	return true;
 }

@@ -95,7 +95,6 @@ BOOL Flip_SystemTask()
 	//Update inputs
 	UpdateInput();
 	
-	DoOrganya();
 
 	glEnd2D();
 
