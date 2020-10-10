@@ -583,7 +583,7 @@ void HitNpCharBullet(void)
 			if (!(gActiveNPC[n]->cond & 0x80))
 				continue;
 
-			if (gActiveNPC[n]->bits & NPC_INTERACTABLE) //unsure if the & shootable part has any relevance
+			if (gActiveNPC[n]->bits & NPC_SHOOTABLE && gActiveNPC[n]->bits & NPC_INTERACTABLE)
 				continue;
 	
 			// Check if bullet touches npc
