@@ -40,11 +40,11 @@ static void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffs
 	int width = rect->right - rect->left;
 	int height = rect->bottom - rect->top;
 
+	if(width <= 0) return;
+	if(height <= 0) return;
+
 	int x2 = x1 + width;
 	int y2 = y1 + height;
-
-	if(x2 <= 0) return;
-	if(y2 <= 0) return;
 
  	int	u2 = rect->left + width;
  	int v2 = rect->top + height;
