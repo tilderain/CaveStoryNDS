@@ -41,6 +41,8 @@ unsigned char* LoadFileToMemory(const char *file_path, size_t *file_size)
 	return NULL;
 }
 
+#ifndef READ_FROM_SD
+
 unsigned char File_ReadU8(FILE_e *stream)
 {
 	unsigned char byte;
@@ -67,6 +69,8 @@ unsigned long File_ReadLE32(FILE_e *stream)
 
 	return (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
 }
+
+#endif
 
 unsigned char File_ReadU8(FILE *stream)
 {

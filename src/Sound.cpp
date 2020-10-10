@@ -25,6 +25,8 @@
 
 #include "fopen.h"
 
+#include "Generic.h"
+
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
@@ -446,7 +448,26 @@ BOOL ReadSound(int no)
         return FALSE;
     
     //Create buffer
+#ifndef READ_FROM_SD
     lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
+#else
+	int size = GetFileSizeLong(path);
+    signed char *data = (signed char *)malloc(size);
+	fread(data, size, 1, fp);
+
+	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);
+
+	if (lpSECONDARYBUFFER[no] == NULL)
+        return FALSE;
+
+	s8 *buf;
+    lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
+    memcpy(buf, data, size);
+    lpSECONDARYBUFFER[no]->Unlock();
+    lpSECONDARYBUFFER[no]->SetFrequency(22050);
+	free(data);
+#endif
+
     if (lpSECONDARYBUFFER[no] == NULL)
         return FALSE;
 	

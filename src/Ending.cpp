@@ -218,7 +218,12 @@ BOOL StartCreditScript(void)
 		return FALSE;
 	}
 
+#ifndef READ_FROM_SD
 	Credit.size = fp->size;
+#else
+	Credit.size = GetFileSizeLong(path);
+#endif
+
 	if (Credit.size == -1)
 		return FALSE;
 

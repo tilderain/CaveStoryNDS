@@ -206,7 +206,9 @@ BOOL StartDirectDraw()
 #ifndef TWO_SCREENS
 	videoSetModeSub( MODE_0_2D  );
 	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
-	//consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+	scanKeys();
+	if(keysHeld() & KEY_SELECT)
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
 #endif
 	
 	
@@ -642,8 +644,12 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 
 	struct stat file_descriptor;
 	long file_size;
-	
+#ifndef READ_FROM_SD
 	file_size = fp->size;
+#else
+	fstat(fileno(fp), &file_descriptor);
+	file_size = file_descriptor.st_size;
+#endif
 
 	unsigned char *file_buffer = (unsigned char*)malloc(file_size);
 	fread_embed(file_buffer, file_size, 1, fp);

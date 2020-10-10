@@ -1,6 +1,8 @@
 #include <cstring>
 #include <stdlib.h>
 
+#ifndef READ_FROM_SD
+
 //File references
 #include "../incbin.h"
 #define INCBIN_PREFIX g
@@ -1165,3 +1167,5 @@ size_t fread_embed(void *ptr, size_t size, size_t nmemb, FILE_e *fp)
 	fp->position += size * nmemb;
 	return nmemb;
 }
+
+#endif

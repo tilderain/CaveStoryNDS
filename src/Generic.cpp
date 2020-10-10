@@ -88,8 +88,6 @@ BOOL CheckFileExists(const char *name)
 
 long GetFileSizeLong(const char *path)
 {
-	return 0;
-	/*
 	long len;
 	FILE *fp;
 
@@ -102,7 +100,7 @@ long GetFileSizeLong(const char *path)
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
 	fclose(fp);
-	return len;*/
+	return len;
 }
 
 BOOL PrintBitmapError(const char *string, int value)
