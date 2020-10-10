@@ -592,19 +592,19 @@ void HitNpCharBullet(void)
 				&& gActiveNPC[n]->x + gActiveNPC[n]->hit.back > gBul[b].x - gBul[b].enemyXL
 				&& gActiveNPC[n]->y - gActiveNPC[n]->hit.top < gBul[b].y + gBul[b].enemyYL
 				&& gActiveNPC[n]->y + gActiveNPC[n]->hit.bottom > gBul[b].y - gBul[b].enemyYL)
+			{
 				if(DamageNpchar(n, b))
-				{
 					--n;
-				}
+			}
 			else if (gActiveNPC[n]->bits & NPC_INVULNERABLE
 				&& gActiveNPC[n]->x - gActiveNPC[n]->hit.back < gBul[b].x + gBul[b].blockXL
 				&& gActiveNPC[n]->x + gActiveNPC[n]->hit.back > gBul[b].x - gBul[b].blockXL
 				&& gActiveNPC[n]->y - gActiveNPC[n]->hit.top < gBul[b].y + gBul[b].blockYL
 				&& gActiveNPC[n]->y + gActiveNPC[n]->hit.bottom > gBul[b].y - gBul[b].blockYL)
+			{
 				if(DamageNpchar(n, b))
-				{
 					--n;
-				}
+			}
 		}
 	}
 }
