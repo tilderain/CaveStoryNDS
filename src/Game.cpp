@@ -681,8 +681,6 @@ int ModeAction(void)
 
 		if (g_GameFlags & 8)
 		{
-			static RECT half = {0, 0, WINDOW_WIDTH/2, WINDOW_HEIGHT};
-			CortBox(&half, color); // hack too lazy to clear broken data
 			PutIllust();
 			PutStripper();
 		}
