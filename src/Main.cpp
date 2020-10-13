@@ -95,6 +95,8 @@ void fifoDataHandler(int bytes, void *user_data)
 
 int main(int argc, char *argv[])
 {
+	defaultExceptionHandler();
+	
 	//Get executable's path
 	fatInitDefault();
 
