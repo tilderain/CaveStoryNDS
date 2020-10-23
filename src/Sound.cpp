@@ -1,3 +1,22 @@
+// THIS IS DECOMPILED PROPRIETARY CODE - USE AT YOUR OWN RISK.
+//
+// The original code belongs to Daisuke "Pixel" Amaya.
+//
+// Modifications and custom code are under the MIT licence.
+// See LICENCE.txt for details.
+
+// Some of the original source code for this file can be found here:
+// https://github.com/shbow/organya/blob/master/source/Sound.cpp
+
+/*
+TODO - Code style
+Pixel's code was *extremely* Windows-centric, to the point of using
+things like ZeroMemory and LPCSTR instead of standard things like
+memset and const char*. For now, the decompilation is accurate despite
+not using these since they're just macros that evaluate to the portable
+equivalents.
+*/
+
 #include "Sound.h"
 
 #include <algorithm>

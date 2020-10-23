@@ -112,4 +112,12 @@ Once built, the executables can be found in the `game_english`/`game_japanese` f
 
 ## Licensing
 
+<<<<<<< HEAD
 Being a decompilation, the majority of the code in this project belongs to Daisuke "Pixel" Amaya - not us. We've yet to agree on a license for our own code.
+=======
+Being a decompilation, the majority of the code in this project is proprietary
+and belongs to Daisuke "Pixel" Amaya.
+
+Modifications and custom code are made available under the MIT licence. See
+`LICENCE.txt` for details.
+>>>>>>> d81c46a7... Release custom code under the MIT licence
