@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
  * and/or modify it under the terms of the Do What The F*** You Want
@@ -20,6 +21,31 @@
 #include <fstream>
 
 struct data
+=======
+// Released under the MIT licence.
+// See LICENCE.txt for details.
+
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#ifdef LEGACY_OPENGL
+#include "imgui/imgui_impl_opengl2.h"
+#else
+#include "imgui/imgui_impl_opengl3.h"
+#endif
+
+#define WINDOW_WIDTH 360
+#define WINDOW_HEIGHT 290
+
+struct Config
+>>>>>>> 98f78716... Update portable branch with licence boilerplates
 {
 	char magic[32];
 	char font[64];
