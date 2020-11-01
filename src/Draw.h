@@ -11,6 +11,9 @@ extern RECT grcFull;
 extern int magnification;
 extern BOOL fullscreen;
 
+extern int gFaceNo;
+extern int gFaceNoCurrent;
+
 static const u8 font_space[32*3] = {
     3,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,8,4,5,
     8,6,6,6,6,5,5,6,6,2,5,6,5,6,6,6,6,6,6,5,6,6,6,6,6,6,5,4,4,4,4,6,
@@ -89,7 +92,7 @@ BOOL ReloadBitmap_Resource(const char *name, SurfaceID surf_no);
 BOOL ReloadBitmap_File(const char *name, SurfaceID surf_no);
 BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no);
 void BackupSurface(SurfaceID surf_no, RECT *rect);
-void CopyFaceTexture(int face);
+void CopyFaceTexture();
 void makeNpcSymTakeArmsSlot(bool toggle);
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent);
 static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)

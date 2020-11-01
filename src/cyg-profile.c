@@ -15,6 +15,8 @@
 
 /* Hint: -finstrument-functions, no_instrument_function */
 
+#ifdef CYG_PROFILER
+
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -313,3 +315,5 @@ closelogfile (void)
 	if (logfile)
 		fclose (logfile);
 }
+
+#endif

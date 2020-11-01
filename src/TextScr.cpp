@@ -492,7 +492,7 @@ void PutTextScript(void)
 		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX);
 	}
 
-	CopyFaceTexture(gTS.face);
+	gFaceNo = gTS.face;
 
 	// Draw face picture
 	RECT rcFace;
@@ -500,18 +500,21 @@ void PutTextScript(void)
 	rcFace.top = 0;
 	rcFace.right = 48;
 	rcFace.bottom = 48;
-
-	if (gTS.face_x < (TEXT_LEFT * 0x200))
-		gTS.face_x += 0x1000;
+	if(gFaceNoCurrent == gFaceNo)
+	{
+		
+		if (gTS.face_x < (TEXT_LEFT * 0x200))
+			gTS.face_x += 0x1000;
 
 #ifdef FIX_BUGS
-	gTS.rcText.top -= 2;
-	PutBitmap3(&gTS.rcText, gTS.face_x / 0x200, gTS.rcText.top, &rcFace, SURFACE_ID_FACE);
-	gTS.rcText.top += 2;
+		gTS.rcText.top -= 2;
+		PutBitmap3(&gTS.rcText, gTS.face_x / 0x200, gTS.rcText.top, &rcFace, SURFACE_ID_FACE);
+		gTS.rcText.top += 2;
 #else
-	// The top few rows of pixels are cut off by the clip rectangle, and the facepic is off-centre
-	PutBitmap3(&gTS.rcText, gTS.face_x / 0x200, gTS.rcText.top - 3, &rcFace, SURFACE_ID_FACE);
+		// The top few rows of pixels are cut off by the clip rectangle, and the facepic is off-centre
+		PutBitmap3(&gTS.rcText, gTS.face_x / 0x200, gTS.rcText.top - 3, &rcFace, SURFACE_ID_FACE);
 #endif
+	}
 
 	// Draw text
 	if (gTS.face != 0)

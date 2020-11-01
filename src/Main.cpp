@@ -83,8 +83,9 @@ void fifoDataHandler(int bytes, void *user_data)
 		//printf("%p\n", msg.printData);
 	}
 }
-#ifdef CYG_PROFILER
  int hblanks = 0;
+#ifdef CYG_PROFILER
+
  static void hblankCount (void)
   __attribute__ ((no_instrument_function));
 

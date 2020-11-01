@@ -1,10 +1,22 @@
 Known issues:
 	game will hang when closing the lid enough times on ending
-	game will slow down when firing the spur near a sprinkler
+	game will slow down when firing the spur near a sprinkler and in sand zone
+	The minimap doesn't work
 
-remove 4th line text when advancing
 construct the minimap texture in memory
-fix curlys gun rect so it doesnt overflow
-control config menu?
+control config menu? - test menu
 swap screens button
 
+correct vram
+
+sound test
+vram viewer?
+cheat mode? - noclip (ingame toggle?)
+You can noclip, toggle invinciblity, change stages, fast forward, give yourself weapons and items.
+save, hitboxes?
+savestates?
+
+fat fs read define
+If the regular version doesn't work for some reason, you can try the SD card load version.
+It's a little bit slower, but you can modify the game files easier.
+To use CYG_PROFILER, you'll need the fat switch as well

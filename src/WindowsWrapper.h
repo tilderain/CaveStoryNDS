@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+ #include <stdint.h>
 
 #define RGB(r,g,b) ((r) | ((g) << 8) | ((b) << 16))
 

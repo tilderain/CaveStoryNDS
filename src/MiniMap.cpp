@@ -72,7 +72,7 @@ void WriteMiniMapLine(int line)
 			Surface2Surface(x, line, &rcLevel[3], SURFACE_ID_MAP, SURFACE_ID_TEXT_BOX);
 	}
 	RECT rect = {0, 0, gMap.width, gMap.length};
-	CopyDataToTexture(surf[SURFACE_ID_MAP].paletteType, surf[SURFACE_ID_MAP].textureid, SURFACE_ID_MAP, 0, 0, &rect);
+	//CopyDataToTexture(surf[SURFACE_ID_MAP].paletteType, surf[SURFACE_ID_MAP].textureid, SURFACE_ID_MAP, 0, 0, &rect);
 }
 
 int MiniMapLoop(void)
@@ -134,6 +134,8 @@ int MiniMapLoop(void)
 
 	surf[SURFACE_ID_MAP].w = gMap.width;
 	surf[SURFACE_ID_MAP].h = gMap.length;
+	//free(surf[SURFACE_ID_MAP].data);
+	//surf[SURFACE_ID_MAP].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_MAP].w * surf[SURFACE_ID_MAP].h * sizeof(BUFFER_PIXEL));
 	while (1)
 	{
 		GetTrg();

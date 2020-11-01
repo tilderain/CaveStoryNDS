@@ -99,9 +99,11 @@ BOOL Flip_SystemTask()
 	glEnd2D();
 
 	glFlush(0);
+
+	CopyFaceTexture();
+
 	swiWaitForVBlank();
 	
-
 
 	glBegin2D();
 
@@ -964,11 +966,13 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 }
 
 int gFaceNo = -1;
+int gFaceNoCurrent = -1;
 
-void CopyFaceTexture(int face)
+void CopyFaceTexture()
 {
-	if(face == gFaceNo) return;
-	gFaceNo = face;
+	if(gFaceNoCurrent == gFaceNo) return;
+	gFaceNoCurrent = gFaceNo;
+	int face = gFaceNoCurrent;
 	RECT rcFace;
 	rcFace.left = (face % 6) * 48;
 	rcFace.top = (face / 6) * 48;
@@ -1152,7 +1156,7 @@ void InitTextObject()
 	MakeSurface_File("smalfont", SURFACE_ID_FONT);
 }
 
-static RECT GetFontRect(char character)
+/*static RECT GetFontRect(char character)
 {
 	RECT rect;
 	bool found = false;
@@ -1172,7 +1176,7 @@ static RECT GetFontRect(char character)
 	rect = {k*6, j*12, k*6+6, j*12+12};
 	return rect;
 }
-
+*/
 int GetTextSpacing(const char *text)
 {
 	int spacing = 0;
@@ -1229,7 +1233,7 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 	while(text[i] != NULL)
 	{
 		char character = text[i];
-		rect = GetFontRect(character);
+		//rect = GetFontRect(character);
 		
 		//Surface2SurfaceColored(PixelToScreenCoord(x)/mag, PixelToScreenCoord(y)/mag, &rect, surf_no, SURFACE_ID_FONT, color);
 		x+=6;
