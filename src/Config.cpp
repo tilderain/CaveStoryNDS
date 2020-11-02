@@ -30,7 +30,7 @@ BOOL LoadConfigData(CONFIG *conf)
 	fread(conf->font_name, sizeof(conf->font_name), 1, fp);
 
 	// Read control settings
-	conf->move_button_mode = File_ReadLE32(fp);
+/*	conf->move_button_mode = File_ReadLE32(fp);
 	conf->attack_button_mode = File_ReadLE32(fp);
 	conf->ok_button_mode = File_ReadLE32(fp);
 
@@ -41,7 +41,7 @@ BOOL LoadConfigData(CONFIG *conf)
 	conf->bJoystick = File_ReadLE32(fp);
 	for (int button = 0; button < 8; button++)
 		conf->joystick_button[button] = File_ReadLE32(fp);
-
+*/
 	// Close file
 	fclose(fp);
 
@@ -55,6 +55,49 @@ BOOL LoadConfigData(CONFIG *conf)
 	return TRUE;
 }
 
+
+BOOL SaveConfigData(const CONFIG *conf)
+{
+	// Get path
+	char path[MAX_PATH];
+	sprintf(path, "%s/%s", gModulePath, config_filename);
+	// Open file
+	FILE *fp = fopen(path, "rb");
+	if (fp == NULL)
+		return FALSE;
+
+	// Write the version id and font name
+	fwrite(conf->proof, sizeof(conf->proof), 1, fp);
+	fwrite(conf->font_name, sizeof(conf->font_name), 1, fp);
+
+	// Write display mode
+	fputc(conf->display_mode, fp);
+
+	// Write framerate toggle
+	//fputc(conf->b60fps, fp);
+
+	// Write vsync toggle
+	//fputc(conf->bVsync, fp);
+
+	// Write smooth-scrolling toggle
+	//fputc(conf->bSmoothScrolling, fp);
+
+	// Write soundtrack value
+	//fputc(conf->soundtrack, fp);
+
+	// Write key-bindings
+	/*for (size_t i = 0; i < BINDING_TOTAL; ++i)
+	{
+		File_WriteLE32(conf->bindings[i].keyboard, fp);
+		fputc(conf->bindings[i].controller, fp);
+	}*/
+
+	// Close file
+	fclose(fp);
+
+	return TRUE;
+}
+
 void DefaultConfigData(CONFIG *conf)
 {
 	// Clear old configuration data
@@ -64,7 +107,7 @@ void DefaultConfigData(CONFIG *conf)
 	// conf->display_mode = 1;
 
 	// Reset joystick settings (as these can't simply be set to 0)
-	conf->bJoystick = TRUE;
+/*	conf->bJoystick = TRUE;
 	conf->joystick_button[0] = 2;
 	conf->joystick_button[1] = 1;
 	conf->joystick_button[2] = 5;
@@ -72,5 +115,5 @@ void DefaultConfigData(CONFIG *conf)
 	conf->joystick_button[4] = 3;
 	conf->joystick_button[5] = 4;
 	conf->joystick_button[6] = 6;
-	conf->joystick_button[7] = 3;
+	conf->joystick_button[7] = 3;*/
 }

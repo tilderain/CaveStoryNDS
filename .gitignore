@@ -69,3 +69,8 @@
 
 *.elf
 *.nds
+
+symbols.txt
+cyglog.txt
+perfdata*.txt
+resolve.pl

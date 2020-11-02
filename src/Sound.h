@@ -71,6 +71,13 @@ enum SoundEffectNames
 	// To be continued
 };
 
+enum SoundMode
+{
+	SOUND_MODE_PLAY_LOOP = -1,
+	SOUND_MODE_STOP = 0,
+	SOUND_MODE_PLAY = 1
+};
+
 extern SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
 extern BOOL audio_backend_initialised;

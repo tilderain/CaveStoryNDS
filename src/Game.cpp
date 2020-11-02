@@ -34,6 +34,7 @@
 #include "NpChar.h"
 #include "NpcHit.h"
 #include "NpcTbl.h"
+#include "Pause.h"
 #include "Profile.h"
 #include "Random.h"
 #include "SelStage.h"
@@ -47,7 +48,7 @@
 int g_GameFlags;
 int gCounter;
 
-BOOL bContinue;
+int gCursorPos;
 
 int Random(int min, int max)
 {
@@ -310,9 +311,9 @@ int ModeTitle(void)
 
 	// Set state
 	if (IsProfile())
-		bContinue = TRUE;
+		gCursorPos = 1;
 	else
-		bContinue = FALSE;
+		gCursorPos = 0;
 
 	// Set character
 	time_counter = LoadTimeCounter();
@@ -371,6 +372,20 @@ int ModeTitle(void)
 		{
 			if (gKeyTrg & gKeyOk)
 			{
+				if(gCursorPos == 2)
+				{
+					switch (Call_Pause())
+					{
+						case enum_ESCRETURN_exit:
+							return 0;
+
+						case enum_ESCRETURN_restart:
+							return 1;
+					}
+					continue;
+				}
+
+
 				PlaySoundObject(18, 1);
 				break;
 			}
@@ -393,10 +408,16 @@ int ModeTitle(void)
 		{
 			PlaySoundObject(1, 1);
 
-			if (bContinue)
-				bContinue = FALSE;
+			if (gKeyTrg & gKeyUp)
+			{
+				gCursorPos -= 1;
+				if (gCursorPos < 0) gCursorPos = 2;
+			}
 			else
-				bContinue = TRUE;
+			{
+				gCursorPos += 1;
+				if (gCursorPos > 2) gCursorPos = 0;
+			}
 		}
 
 		// Update carets
@@ -420,8 +441,11 @@ int ModeTitle(void)
 
 		// Draw main title
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 72, 40, &rcTitle, SURFACE_ID_TITLE);
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + 8, &rcNew, SURFACE_ID_TITLE);
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + 28, &rcContinue, SURFACE_ID_TITLE);
+		//PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + -8, &rcNew, SURFACE_ID_TITLE);
+		//PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + 28 - 8 - 8, &rcContinue, SURFACE_ID_TITLE);
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) - 4, "New", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 - 8 - 8, "Continue", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 , "Config", RGB(0xf7, 0xf7, 0xea));
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 80, WINDOW_HEIGHT - 48, &rcPixel, SURFACE_ID_PIXEL);
 
 		// Draw character cursor
@@ -449,15 +473,17 @@ int ModeTitle(void)
 				break;
 		}
 
-		if (!bContinue)
-			char_y = (WINDOW_HEIGHT / 2) + 7;
-		else
-			char_y = (WINDOW_HEIGHT / 2) + 27;
+		if (gCursorPos == 0)
+			char_y = (WINDOW_HEIGHT / 2) + - 7;
+		else if (gCursorPos == 1)
+			char_y = (WINDOW_HEIGHT / 2) + 27 - 18;
+		else if (gCursorPos == 2)
+			char_y = (WINDOW_HEIGHT / 2) + 27 - 4;
 
 		// Pixel being redundant
-		if (!bContinue)
-			PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 44, char_y, &char_rc, char_surf);
-		else
+		//if (!bContinue)
+		//	PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 44, char_y, &char_rc, char_surf);
+		//else
 			PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 44, char_y, &char_rc, char_surf);
 
 		// Draw carets
@@ -522,12 +548,12 @@ int ModeAction(void)
 	InitFlags();
 	InitBossLife();
 
-	if (bContinue)
+	if (gCursorPos == 1)
 	{
 		if (!LoadProfile(NULL) && !InitializeGame())
 			return 0;
 	}
-	else
+	else if (gCursorPos == 0)
 	{
 		if (!InitializeGame())
 			return 0;

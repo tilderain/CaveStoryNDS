@@ -124,62 +124,6 @@ int main(int argc, char *argv[])
 	if (!LoadConfigData(&conf))
 		DefaultConfigData(&conf);
 	
-	//Apply keybinds
-	//Swap X and Z buttons
-	if (conf.attack_button_mode)
-	{
-		if (conf.attack_button_mode == 1)
-		{
-			gKeyJump = CEY_X;
-			gKeyShot = CEY_Z;
-		}
-	}
-	else
-	{
-		gKeyJump = CEY_Z;
-		gKeyShot = CEY_X;
-	}
-	
-	//Swap Okay and Cancel buttons
-	if (conf.ok_button_mode)
-	{
-		if (conf.ok_button_mode == 1)
-		{
-			gKeyOk = gKeyShot;
-			gKeyCancel = gKeyJump;
-		}
-	}
-	else
-	{
-		gKeyOk = gKeyJump;
-		gKeyCancel = gKeyShot;
-	}
-	
-	//Swap left and right weapon switch keys
-	if (CheckFileExists("s_reverse"))
-	{
-		gKeyArms = CEY_ARMSREV;
-		gKeyArmsRev = CEY_ARMS;
-	}
-	
-	//Alternate movement keys
-	if (conf.move_button_mode)
-	{
-		if (conf.move_button_mode == 1)
-		{
-			gKeyLeft = CEY_ALT_LEFT;
-			gKeyUp = CEY_ALT_UP;
-			gKeyRight = CEY_ALT_RIGHT;
-			gKeyDown = CEY_ALT_DOWN;
-		}
-	}
-	else
-	{
-		gKeyLeft = CEY_LEFT;
-		gKeyUp = CEY_UP;
-		gKeyRight = CEY_RIGHT;
-		gKeyDown = CEY_DOWN;
-	}
 
 	//Initialize rendering
 	StartDirectDraw();
