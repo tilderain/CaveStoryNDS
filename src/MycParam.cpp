@@ -7,6 +7,7 @@
 #include "ArmsItem.h"
 #include "CommonDefines.h"
 #include "Caret.h"
+#include "Debug.h"
 #include "Draw.h"
 #include "File.h"
 #include "Game.h"
@@ -118,6 +119,9 @@ void DamageMyChar(int damage)
 	if (gMC.shock)
 		return;
 
+	if (gDebug.bNoclip || gDebug.bGodmode)
+		return;
+	
 	// Damage player
 	PlaySoundObject(16, 1);
 	gMC.cond &= ~1;
@@ -335,6 +339,9 @@ void PutMyLife(BOOL flash)
 	RECT rcCase = {0, 40, 232, 48};
 	RECT rcLife = {0, 24, 232, 32};
 	RECT rcBr = {0, 32, 232, 40};
+
+	if(gDebug.bGodmode)
+		return;
 
 	if (flash == TRUE && gMC.shock / 2 % 2)
 		return;

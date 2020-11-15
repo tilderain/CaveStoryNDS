@@ -6,6 +6,7 @@
 
 #include "ArmsItem.h"
 #include "Caret.h"
+#include "Debug.h"
 #include "Draw.h"
 #include "Flags.h"
 #include "Game.h"
@@ -251,6 +252,34 @@ void ActMyChar_Normal(BOOL bKey)
 	int resist;
 
 	int a, x;
+
+	//Debug fly
+	if (gDebug.bNoclip)
+	{
+		if (gKey & gKeyLeft)
+		{
+			gMC.x -= 0x1000;
+			gMC.direct = 0;
+		}
+		if (gKey & gKeyRight)
+		{
+			gMC.x += 0x1000;
+			gMC.direct = 2;
+		}
+		if (gKey & gKeyUp)
+		{
+			gMC.y -= 0x1000;
+		}
+		if (gKey & gKeyDown)
+		{
+			gMC.y += 0x1000;
+		}
+
+		gMC.tgt_x = gMC.x;
+		gMC.tgt_y = gMC.y;
+
+		return;
+	}
 
 	if (gMC.cond & 2)
 		return;
@@ -809,6 +838,9 @@ void ActMyChar_Stream(BOOL bKey)
 
 void AirProcess(void)
 {
+	if (gDebug.bGodmode)
+		return;
+		
 	if (gMC.equip & 0x10)
 	{
 		gMC.air = 1000;

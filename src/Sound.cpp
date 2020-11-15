@@ -61,7 +61,7 @@ void updateChannelStates(void)
 		SOUNDBUFFER *sound = channelStates[i];
 		if(sound && sound->playing && sound->looping == false)
 		{
-			if(sound->timer++ * (sound->frequency / 63) > sound->size) // samples in a frame plus a bit
+			if(sound->timer++ > sound->endTimer) // samples in a frame plus a bit
 			{
 				// TODO: give organbuffer priority
 				sound->playing = false;
@@ -69,6 +69,7 @@ void updateChannelStates(void)
 				soundKill(sound->channelId);
 				sound->channelId = -1;
 				sound->timer = 0;
+				sound->endTimer = 0;
 			}
 		}
 	}
@@ -85,6 +86,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize, const void* data_ptr)
 	looped = false;
 
 	timer = 0;
+	endTimer = 0;
 	
 	frequency = 22050;
 	volume = 127;
@@ -218,6 +220,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 
 	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
 	timer = 0;
+	endTimer = size / (frequency / 63);
 }
 
 void SOUNDBUFFER::Stop()

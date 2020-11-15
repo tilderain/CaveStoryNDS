@@ -42,6 +42,7 @@ class SOUNDBUFFER
 		bool looped;
 		
 		int timer;
+		int endTimer;
 
 		int frequency;
 		int volume;

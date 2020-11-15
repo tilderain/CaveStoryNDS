@@ -5,6 +5,7 @@
 #include "Back.h"
 #include "Boss.h"
 #include "Caret.h"
+#include "Debug.h"
 #include "Game.h"
 #include "KeyControl.h"
 #include "Map.h"
@@ -412,6 +413,9 @@ void HitMyCharMap(void)
 	int x, y;
 	int i;
 	unsigned char atrb[4];
+
+	if (gDebug.bNoclip)
+		return;
 
 	x = gMC.x / 0x10 / 0x200;
 	y = gMC.y / 0x10 / 0x200;

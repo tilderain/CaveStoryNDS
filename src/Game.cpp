@@ -14,6 +14,7 @@
 #include "Bullet.h"
 #include "Caret.h"
 #include "CommonDefines.h"
+#include "Debug.h"
 #include "Draw.h"
 #include "Ending.h"
 #include "Escape.h"
@@ -548,6 +549,8 @@ int ModeAction(void)
 	InitFlags();
 	InitBossLife();
 
+	InitConsole();
+
 	if (gCursorPos == 1)
 	{
 		if (!LoadProfile(NULL) && !InitializeGame())
@@ -714,6 +717,8 @@ int ModeAction(void)
 		PutTextScript();
 
 		PutFramePerSecound();
+
+		PutConsole();
 
 
 		if (!Flip_SystemTask())

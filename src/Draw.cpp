@@ -7,6 +7,7 @@
 #include "WindowsWrapper.h"
 
 #include "CommonDefines.h"
+#include "Debug.h"
 #include "Draw.h"
 #include "Main.h"
 #include "Input.h"
@@ -96,16 +97,32 @@ BOOL Flip_SystemTask()
 	UpdateInput();
 	
 
-	glEnd2D();
 
-	glFlush(0);
 
-	CopyFaceTexture();
+	if(gDebug.bFastForward)
+	{
 
-	swiWaitForVBlank();
+		if(gDebug.FastForwardTimer++ % 5 == 0)
+		{
+			glEnd2D();
+			glFlush(0);
+			swiWaitForVBlank();
+		}
+		else if(gDebug.FastForwardTimer++ % 5 == 4)
+		{
+			glBegin2D();
+		}
+	}
+	else
+	{
+		glEnd2D();
+		glFlush(0);
+		swiWaitForVBlank();
+		glBegin2D();
+	}
 	
 
-	glBegin2D();
+	CopyFaceTexture();
 
 	#ifdef TWO_SCREENS
 

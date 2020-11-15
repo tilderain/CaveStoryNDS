@@ -34,8 +34,8 @@ struct CONFIG
 	char font_name[0x40];
 	unsigned char display_mode;
 	BOOL b60fps;
-	BOOL bVsync;
-	BOOL bSmoothScrolling;
+	BOOL bBottomScreen;
+	BOOL bDebug;
 	unsigned char soundtrack;
 	CONFIG_BINDING bindings[BINDING_TOTAL];
 };

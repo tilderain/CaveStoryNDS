@@ -49,6 +49,9 @@ static BOOL bFps = FALSE;
 static int windowWidth;
 static int windowHeight;
 
+CONFIG conf;
+CONFIG_BINDING bindings[BINDING_TOTAL];
+
 #ifdef JAPANESE
 static const char *lpWindowName = "洞窟物語";	// "Cave Story"
 #else
@@ -119,7 +122,6 @@ int main(int argc, char *argv[])
 	strcpy(gDataPath, "data");
 	
 	//Load configuration
-	CONFIG conf;
 	
 	if (!LoadConfigData(&conf))
 		DefaultConfigData(&conf);

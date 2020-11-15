@@ -2,6 +2,7 @@
 
 #include "Boss.h"
 #include "CommonDefines.h"
+#include "Debug.h"
 #include "Game.h"
 #include "Map.h"
 #include "MyChar.h"
@@ -13,6 +14,9 @@ void MoveFrame3(void)
 {
 	short map_w, map_l;
 	GetMapData(0, &map_w, &map_l);
+
+	int wait_memo = gFrame.wait;
+	if (gDebug.bNoclip) gFrame.wait = 1;
 
 #if WINDOW_WIDTH != 320 || WINDOW_HEIGHT != 240	// TODO - Really need to make this a compiler flag (also, should probably move this stuff to the enhanced branch)
 	if (g_GameFlags & 8)
@@ -97,6 +101,7 @@ void MoveFrame3(void)
 		--gFrame.quake;
 	}
 
+	gFrame.wait = wait_memo;
 	// This code exists in the Linux port (v1.0.0.4), but not the Windows version (v1.0.0.6)
 /*	if (gFrame.x / 0x200 < 0)
 		gFrame.x = 0;
