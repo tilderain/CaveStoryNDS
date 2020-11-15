@@ -243,7 +243,7 @@ BOOL InitializeGame(void)
 	ClearPermitStage();
 	StartMapping();
 	InitFlags();
-	if (!TransferStage(68, 90, 8, 8))
+	if (!TransferStage(13, 200, 10, 8))
 	{
 		printf("Error: Failed to load stage");
 

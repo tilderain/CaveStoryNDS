@@ -36,8 +36,8 @@ void InitMyChar(void)
 	gMC.hit.front = 5 * 0x200;
 	gMC.hit.bottom = 8 * 0x200;
 
-	gMC.life = 9000;
-	gMC.max_life = 9000;
+	gMC.life = 3;
+	gMC.max_life = 3;
 	gMC.unit = 0;
 }
 
@@ -840,7 +840,7 @@ void AirProcess(void)
 {
 	if (gDebug.bGodmode)
 		return;
-		
+
 	if (gMC.equip & 0x10)
 	{
 		gMC.air = 1000;
