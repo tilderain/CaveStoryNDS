@@ -753,42 +753,49 @@ static int Callback_Quit(OptionsMenu *parent_menu, size_t this_option, CallbackA
 
 int Call_Pause(void)
 {
-	Option options[] = {
-		{"Resume", Callback_Resume, NULL, NULL, 0, FALSE},
-		{"Reset", Callback_Reset, NULL, NULL, 0, FALSE},
-		{"Options", Callback_Options, NULL, NULL, 0, FALSE},
-		{"Quit", Callback_Quit, NULL, NULL, 0, FALSE}
+	//(void)parent_menu;
+
+	//if (action != ACTION_OK)
+	//	return CALLBACK_CONTINUE;
+
+	// Make the options match the configuration data
+	CONFIG conf;
+	if (!LoadConfigData(&conf))
+		DefaultConfigData(&conf);
+
+	BOOL is_console = false;
+
+	Option options_console[] = {
+
+	};
+
+	Option options_pc[] = {
+		{"Control Config", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE},
+		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
+		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
+		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
+		{"Play sound", Callback_Sound, NULL, NULL, 0, FALSE},
 	};
 
 	OptionsMenu options_menu = {
-		"PAUSED",
-		NULL,
-		options,
-		sizeof(options) / sizeof(options[0]),
-		-14,
-		FALSE
+		"OPTIONS",
+		restart_required ? "RESTART REQUIRED" : NULL,
+		is_console ? options_console : options_pc,
+		is_console ? (sizeof(options_console) / sizeof(options_console[0])) : (sizeof(options_pc) / sizeof(options_pc[0])),
+		is_console ? -60 : -70,
+		TRUE
 	};
 
-	int return_value = EnterOptionsMenu(&options_menu, 0);
+	PlaySoundObject(5, SOUND_MODE_PLAY);
 
-	// Filter internal return values to something Cave Story can understand
-	switch (return_value)
-	{
-		case CALLBACK_CONTINUE:
-			return_value = enum_ESCRETURN_continue;
-			break;
+	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
-		case CALLBACK_RESET:
-			return_value = enum_ESCRETURN_restart;
-			break;
+	//PlaySoundObject(5, SOUND_MODE_PLAY);
 
-		case CALLBACK_EXIT:
-			return_value = enum_ESCRETURN_exit;
-			break;
-	}
+	// Save our changes to the configuration file
+	//memcpy(conf.bindings, bindings, sizeof(bindings));
 
-	gKeyTrg = gKey = 0;	// Avoid input-ghosting
-	Flip_SystemTask();
+	SaveConfigData(&conf);
 
 	return return_value;
 }

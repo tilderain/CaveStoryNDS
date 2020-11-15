@@ -126,6 +126,9 @@ int main(int argc, char *argv[])
 	if (!LoadConfigData(&conf))
 		DefaultConfigData(&conf);
 	
+	if(conf.bBottomScreen)
+		lcdMainOnBottom();
+	
 	memcpy(bindings, conf.bindings, sizeof(bindings));
 
 	//Initialize rendering
