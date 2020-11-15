@@ -8,8 +8,10 @@
 #include "File.h"
 #include "Main.h"
 
+#include "nds.h"
+
 static const char* const config_filename = "Config.dat";	// Not the original name
-static const char* const config_magic = "DOUKUTSU20041206";	// Not the original name
+static const char* const config_magic = "CSDS01";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {
@@ -27,21 +29,15 @@ BOOL LoadConfigData(CONFIG *conf)
 
 	// Read the version id and font name
 	fread(conf->proof, sizeof(conf->proof), 1, fp);
-	fread(conf->font_name, sizeof(conf->font_name), 1, fp);
 
-	// Read control settings
-/*	conf->move_button_mode = File_ReadLE32(fp);
-	conf->attack_button_mode = File_ReadLE32(fp);
-	conf->ok_button_mode = File_ReadLE32(fp);
+	fread(&conf->bBottomScreen, 1, 1, fp);
 
-	// Read display mode (320x240, 640x480, 24-bit fullscreen, 32-bit fullscreen) TODO: add more things?
-	conf->display_mode = File_ReadLE32(fp);
+	fread(&conf->bDebug, 1, 1, fp);
 
-	// Read joystick configuration (if enabled, and mappings)
-	conf->bJoystick = File_ReadLE32(fp);
-	for (int button = 0; button < 8; button++)
-		conf->joystick_button[button] = File_ReadLE32(fp);
-*/
+
+	for (size_t i = 0; i < BINDING_TOTAL; ++i)
+		conf->bindings[i].keyboard = File_ReadLE32(fp);
+
 	// Close file
 	fclose(fp);
 
@@ -68,29 +64,19 @@ BOOL SaveConfigData(const CONFIG *conf)
 
 	// Write the version id and font name
 	fwrite(conf->proof, sizeof(conf->proof), 1, fp);
-	fwrite(conf->font_name, sizeof(conf->font_name), 1, fp);
 
-	// Write display mode
-	fputc(conf->display_mode, fp);
 
-	// Write framerate toggle
-	//fputc(conf->b60fps, fp);
 
-	// Write vsync toggle
-	//fputc(conf->bVsync, fp);
+	fputc(conf->bBottomScreen, fp);
 
-	// Write smooth-scrolling toggle
-	//fputc(conf->bSmoothScrolling, fp);
+	fputc(conf->bDebug, fp);
 
-	// Write soundtrack value
-	//fputc(conf->soundtrack, fp);
 
 	// Write key-bindings
-	/*for (size_t i = 0; i < BINDING_TOTAL; ++i)
+	for (size_t i = 0; i < BINDING_TOTAL; ++i)
 	{
 		File_WriteLE32(conf->bindings[i].keyboard, fp);
-		fputc(conf->bindings[i].controller, fp);
-	}*/
+	}
 
 	// Close file
 	fclose(fp);
@@ -106,14 +92,24 @@ void DefaultConfigData(CONFIG *conf)
 	// Fun fact: The Linux port added this line:
 	// conf->display_mode = 1;
 
-	// Reset joystick settings (as these can't simply be set to 0)
-/*	conf->bJoystick = TRUE;
-	conf->joystick_button[0] = 2;
-	conf->joystick_button[1] = 1;
-	conf->joystick_button[2] = 5;
-	conf->joystick_button[3] = 6;
-	conf->joystick_button[4] = 3;
-	conf->joystick_button[5] = 4;
-	conf->joystick_button[6] = 6;
-	conf->joystick_button[7] = 3;*/
+	memset(conf, 0, sizeof(CONFIG));
+
+	strcpy(conf->proof, config_magic);
+
+	// Fun fact: The Linux port added this line:
+	// conf->display_mode = 1;
+
+	// Set default key bindings
+	conf->bindings[BINDING_UP].keyboard = KEY_UP;
+	conf->bindings[BINDING_DOWN].keyboard = KEY_DOWN;
+	conf->bindings[BINDING_LEFT].keyboard = KEY_LEFT;
+	conf->bindings[BINDING_RIGHT].keyboard = KEY_RIGHT;
+	conf->bindings[BINDING_OK].keyboard = KEY_A;
+	conf->bindings[BINDING_CANCEL].keyboard = KEY_B;
+	conf->bindings[BINDING_JUMP].keyboard = KEY_A;
+	conf->bindings[BINDING_SHOT].keyboard = KEY_B;
+	conf->bindings[BINDING_ARMSREV].keyboard = KEY_Y;
+	conf->bindings[BINDING_ARMS].keyboard = KEY_X;
+	conf->bindings[BINDING_ITEM].keyboard = KEY_START;
+	conf->bindings[BINDING_MAP].keyboard = KEY_SELECT;
 }

@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
 	if (!LoadConfigData(&conf))
 		DefaultConfigData(&conf);
 	
+	memcpy(bindings, conf.bindings, sizeof(bindings));
 
 	//Initialize rendering
 	StartDirectDraw();

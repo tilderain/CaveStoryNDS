@@ -492,7 +492,7 @@ void InitConsole(void)
 
 	gDebug.bGodmode = false;
 	gDebug.bNoclip = false;
-	gDebug.bFastForward = true;
+	gDebug.bFastForward = false;
 	gDebug.FastForwardTimer = 0;
 
  	gDebug.FrameAdvanceCount = 0;

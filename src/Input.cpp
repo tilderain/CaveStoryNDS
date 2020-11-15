@@ -9,6 +9,8 @@
 #include "CommonDefines.h"
 #include "Tags.h"
 
+#include "Main.h"
+
 #include "nds.h"
 
 #define STICK_DEADZONE 0x20
@@ -35,20 +37,20 @@ bool UpdateInput()
 	int keys = keysHeld();
 	gKey = 0;
 	
-	gKey |= (keys & KEY_UP) ? gKeyUp : 0 ;
-	gKey |= (keys & KEY_RIGHT) ? gKeyRight : 0 ;
-	gKey |= (keys & KEY_DOWN) ? gKeyDown : 0 ;
-	gKey |= (keys & KEY_LEFT) ? gKeyLeft : 0 ;
+	gKey |= (keys & bindings[BINDING_UP].keyboard) ? gKeyUp : 0 ;
+	gKey |= (keys & bindings[BINDING_RIGHT].keyboard) ? gKeyRight : 0 ;
+	gKey |= (keys & bindings[BINDING_DOWN].keyboard) ? gKeyDown : 0 ;
+	gKey |= (keys & bindings[BINDING_LEFT].keyboard) ? gKeyLeft : 0 ;
 	
-	gKey |= (keys & KEY_A) ? gKeyJump : 0 ;
-	gKey |= (keys & KEY_B) ? gKeyShot : 0 ;
-	gKey |= (keys & KEY_A) ? gKeyOk : 0 ;
-	gKey |= (keys & KEY_B) ? gKeyCancel : 0 ;
-	gKey |= (keys & KEY_START) ? gKeyItem : 0 ;
-	gKey |= (keys & KEY_SELECT) ? gKeyMap : 0 ;
+	gKey |= (keys & bindings[BINDING_JUMP].keyboard) ? gKeyJump : 0 ;
+	gKey |= (keys & bindings[BINDING_SHOT].keyboard) ? gKeyShot : 0 ;
+	gKey |= (keys & bindings[BINDING_JUMP].keyboard) ? gKeyOk : 0 ;
+	gKey |= (keys & bindings[BINDING_SHOT].keyboard) ? gKeyCancel : 0 ;
+	gKey |= (keys & bindings[BINDING_ITEM].keyboard) ? gKeyItem : 0 ;
+	gKey |= (keys & bindings[BINDING_MAP].keyboard) ? gKeyMap : 0 ;
 	
-	gKey |= (keys & KEY_X) ? gKeyArms : 0 ;
-	gKey |= (keys & KEY_Y) ? gKeyArmsRev : 0 ;
+	gKey |= (keys & bindings[BINDING_ARMS].keyboard) ? gKeyArms : 0 ;
+	gKey |= (keys & bindings[BINDING_ARMSREV].keyboard) ? gKeyArmsRev : 0 ;
 
 	if(keys & KEY_L && keys & KEY_R && keys & KEY_START)
 	{

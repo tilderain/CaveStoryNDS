@@ -264,14 +264,13 @@ static char bound_name_buffers[sizeof(controls) / sizeof(controls[0])][20];
 
 static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
-	
 	switch (action)
 	{
 		default:
 			break;
 
 		case ACTION_INIT:
-			strncpy(bound_name_buffers[this_option], GetKeyName(bindings[controls[this_option-1].binding_index].keyboard), sizeof(bound_name_buffers[0]) - 1);
+			strncpy(bound_name_buffers[this_option], GetKeyName(bindings[controls[this_option].binding_index].keyboard), sizeof(bound_name_buffers[0]) - 1);
 			break;
 
 		case ACTION_OK:
@@ -285,10 +284,10 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 			memset(tempBindings, 0, sizeof(tempBindings));
 		
 			int exit = false;
+			int timer = 0;
 			// Time-out and exit if the user takes too long (they probably don't want to rebind)
 			for (int current_control = 1; current_control < sizeof(controls) / sizeof(controls[0]) + 1; current_control++)
 			{
-				int timer = 0;
 				int setTimer = 0;
 				char *key_name = "";
 				bool key_failed = false;
@@ -304,7 +303,7 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 					}
 
 					int keys = keysUp();
-					if(timer++>16 && keys && !setTimer)
+					if(timer++>30 && keys && !setTimer)
 					{
 						key_name = GetKeyName(keys);
 
@@ -326,8 +325,8 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 						if(cont) {Flip_SystemTask(); continue;}
 
 						// Otherwise just overwrite the selected control
-						tempBindings[controls[current_control].binding_index].keyboard = keys;
-						strncpy(bound_name_buffers[current_control], key_name, sizeof(bound_name_buffers[0]) - 1);
+						tempBindings[current_control-1].keyboard = keys;
+		
 
 						PlaySoundObject(18, SOUND_MODE_PLAY);
 
@@ -372,7 +371,12 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 				}
 				if(exit) break;
 			}
-
+			if(exit) break;
+			for(int current_control=1;current_control < parent_menu->total_options;current_control++)
+			{
+				strncpy(bound_name_buffers[current_control], GetKeyName(tempBindings[current_control-1].keyboard), sizeof(bound_name_buffers[0]) - 1);
+				bindings[current_control-1].keyboard = tempBindings[current_control-1].keyboard;
+			}
 
 			break;
 	}
@@ -403,7 +407,7 @@ static int Callback_ControlsKeyboard(OptionsMenu *parent_menu, size_t this_optio
 	}
 
 	OptionsMenu options_menu = {
-		"CONTROLS (KEYBOARD)",
+		"CONTROLS",
 		NULL,
 		options,
 		sizeof(options) / sizeof(options[0]),
@@ -606,7 +610,7 @@ static int Callback_Options(OptionsMenu *parent_menu, size_t this_option, Callba
 	};
 
 	Option options_pc[] = {
-		{"Controls (Keyboard)", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE},
+		{"Control Config", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE},
 		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
