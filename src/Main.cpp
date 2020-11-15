@@ -12,6 +12,7 @@
 
 #include "CommonDefines.h"
 #include "Config.h"
+#include "Debug.h"
 #include "Draw.h"
 #include "File.h"
 #include "Game.h"
@@ -126,6 +127,8 @@ int main(int argc, char *argv[])
 	if (!LoadConfigData(&conf))
 		DefaultConfigData(&conf);
 	
+	gDebug.bEnabled = conf.bDebug;
+
 	if(conf.bBottomScreen)
 		lcdMainOnBottom();
 	

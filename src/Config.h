@@ -24,19 +24,14 @@ enum
 
 typedef struct CONFIG_BINDING
 {
-	int keyboard;
-	unsigned char controller;
+	unsigned int keyboard;
 } CONFIG_BINDING;
 
 struct CONFIG
 {
 	char proof[0x20];
-	char font_name[0x40];
-	unsigned char display_mode;
-	BOOL b60fps;
 	BOOL bBottomScreen;
 	BOOL bDebug;
-	unsigned char soundtrack;
 	CONFIG_BINDING bindings[BINDING_TOTAL];
 };
 

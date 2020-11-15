@@ -10,8 +10,8 @@
 
 #include "nds.h"
 
-static const char* const config_filename = "Config.dat";	// Not the original name
-static const char* const config_magic = "CSDS01";	// Not the original name
+const char *config_filename = "Config.dat";	// Not the original name
+const char *config_magic = "CSDS01";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {
@@ -22,10 +22,16 @@ BOOL LoadConfigData(CONFIG *conf)
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s", gModulePath, config_filename);
 
+	printf("Loading config %s\n", path);
+
 	// Open file
 	FILE *fp = fopen(path, "rb");
 	if (fp == NULL)
+	{
+		printf("failed to load config\n");
 		return FALSE;
+	}
+		
 
 	// Read the version id and font name
 	fread(conf->proof, sizeof(conf->proof), 1, fp);
@@ -33,7 +39,6 @@ BOOL LoadConfigData(CONFIG *conf)
 	fread(&conf->bBottomScreen, 1, 1, fp);
 
 	fread(&conf->bDebug, 1, 1, fp);
-
 
 	for (size_t i = 0; i < BINDING_TOTAL; ++i)
 		conf->bindings[i].keyboard = File_ReadLE32(fp);
@@ -57,18 +62,21 @@ BOOL SaveConfigData(const CONFIG *conf)
 	// Get path
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s", gModulePath, config_filename);
+
+	printf("Saving config %s\n", path);
 	// Open file
-	FILE *fp = fopen(path, "rb");
+	FILE *fp = fopen(path, "wb");
 	if (fp == NULL)
+	{
+		printf("failed to save config\n");
 		return FALSE;
+	}
+
 
 	// Write the version id and font name
 	fwrite(conf->proof, sizeof(conf->proof), 1, fp);
 
-
-
 	fputc(conf->bBottomScreen, fp);
-
 	fputc(conf->bDebug, fp);
 
 
@@ -91,8 +99,6 @@ void DefaultConfigData(CONFIG *conf)
 
 	// Fun fact: The Linux port added this line:
 	// conf->display_mode = 1;
-
-	memset(conf, 0, sizeof(CONFIG));
 
 	strcpy(conf->proof, config_magic);
 

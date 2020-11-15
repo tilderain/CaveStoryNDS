@@ -14,6 +14,12 @@ struct DebugVars
 	int FastForwardTimer;
 
 	int FrameAdvanceCount;
+
+	int cursorPos;
+	int cheatScroll;
+
+	bool cheatVisible;
+
 	bool bFrameFreeze;
 	bool bFrameCanAdvance;
 

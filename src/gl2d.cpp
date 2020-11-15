@@ -57,6 +57,7 @@ void glScreen2D( void )
 }
 
 
+
 void SetOrtho( void )		
 {
 
@@ -87,7 +88,7 @@ void glBegin2D( void )
 
 	glColor( 0xFFFF ); 				// max color
 	
-	glPolyFmt( POLY_ALPHA(31) | POLY_CULL_NONE );  // no culling
+	glPolyFmt( POLY_ALPHA(31) | POLY_CULL_NONE );;  // no culling
 
 	SetOrtho();
 	
@@ -207,4 +208,31 @@ void glBoxFilled( int x1, int y1, int x2, int y2, int color )
 	gCurrentTexture = 0;
 	gCurPaletteOffset = 0;
 	gCurTexType = -1;
+}
+
+
+
+void glBoxFilledTransparent( int x1, int y1, int x2, int y2, int color, u32 alpha)
+{
+
+	x2++;
+	y2++;
+	
+	glBindTexture( 0, 0 );
+	glPolyFmt(POLY_ALPHA(alpha) | POLY_CULL_NONE );
+	glBegin( GL_QUADS ); //why is this NEEDED NINTENDO WHY
+	glColor( color );
+		gxVertex3i( x1, y1, g_depth );		// use 3i for first vertex so that we increment HW depth
+		gxVertex2i( x1, y2 );				// no need for 3 vertices as 2i would share last depth call
+		gxVertex2i( x2, y2 );
+		gxVertex2i( x2, y1 );
+	glColor( 0x7FFF );
+	g_depth++;
+	gCurrentTexture = 0;
+	gCurPaletteOffset = 0;
+	gCurTexType = -1;
+
+	glPolyFmt(POLY_ALPHA(31) | POLY_CULL_NONE );
+	glBegin( GL_QUADS );
+
 }

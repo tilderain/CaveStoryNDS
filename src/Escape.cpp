@@ -23,11 +23,11 @@ int Call_Escape(void)
 		// Get pressed keys
 		GetTrg();
 
-		if (gKeyTrg & CEY_ESCAPE) // Escape is pressed, quit game
+		/*if (gKeyTrg & CEY_ESCAPE) // Escape is pressed, quit game
 		{
 			gKeyTrg = 0;
 			return enum_ESCRETURN_exit;
-		}
+		}*/
 		if (gKeyTrg & CEY_F1) // F1 is pressed, continue
 		{
 			gKeyTrg = 0;

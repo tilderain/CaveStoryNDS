@@ -566,6 +566,10 @@ int ModeAction(void)
 	{
 		// Get pressed keys
 		GetTrg();
+		long gKeyTrgMemo = gKeyTrg;
+		long gKeyMemo = gKey;
+		if(gDebug.cheatVisible)
+			gKeyTrg = gKey = 0;
 
 		// Escape menu
 		if (gKey & CEY_ESCAPE)
@@ -718,7 +722,15 @@ int ModeAction(void)
 
 		PutFramePerSecound();
 
+		if(gDebug.cheatVisible)
+		{
+			gKeyTrg = gKeyTrgMemo;
+			gKey = gKeyMemo;
+		}
+			
 		PutConsole();
+
+
 
 
 		if (!Flip_SystemTask())

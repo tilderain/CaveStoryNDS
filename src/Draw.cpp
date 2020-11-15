@@ -108,7 +108,7 @@ BOOL Flip_SystemTask()
 			glFlush(0);
 			swiWaitForVBlank();
 		}
-		else if(gDebug.FastForwardTimer++ % 5 == 4)
+		else if(gDebug.FastForwardTimer % 5 == 4)
 		{
 			glBegin2D();
 		}
@@ -1148,6 +1148,20 @@ void CortBox(RECT *rect, uint32_t col)
 	glBoxFilled(rect->left, rect->top, rect->right, rect->bottom, col);
 
 }
+
+void CortBoxAlpha(RECT *rect, uint32_t col, u32 alpha)
+{
+	const unsigned char col_red = col & 0x0000FF;
+	const unsigned char col_green = (col & 0x00FF00) >> 8;
+	const unsigned char col_blue = (col & 0xFF0000) >> 16;
+	//const BUFFER_PIXEL colPixel = {col_red, col_green, col_blue};
+
+	col = RGB15(col_red / 8, col_green / 8, col_blue / 8);
+	
+	glBoxFilledTransparent(rect->left, rect->top, rect->right, rect->bottom, col, alpha);
+
+}
+
 
 void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)
 {

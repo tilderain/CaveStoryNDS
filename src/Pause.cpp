@@ -13,6 +13,7 @@
 #include "CommonDefines.h"
 #include "Config.h"
 #include "Draw.h"
+#include "Debug.h"
 #include "Escape.h"
 #include "KeyControl.h"
 #include "Main.h"
@@ -27,54 +28,17 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-enum
-{
-	CALLBACK_CONTINUE = -1,
-	CALLBACK_PREVIOUS_MENU = -2,
-	CALLBACK_RESET = -3,
-	CALLBACK_EXIT = -4,
-};
-
-typedef enum CallbackAction
-{
-	ACTION_INIT,
-	ACTION_DEINIT,
-	ACTION_UPDATE,
-	ACTION_OK,
-	ACTION_LEFT,
-	ACTION_RIGHT
-} CallbackAction;
-
-typedef struct Option
-{
-	const char *name;
-	int (*callback)(struct OptionsMenu *parent_menu, size_t this_option, CallbackAction action);
-	void *user_data;
-	char *value_string;
-	long value;
-	BOOL disabled;
-} Option;
-
-typedef struct OptionsMenu
-{
-	const char *title;
-	const char *subtitle;
-	struct Option *options;
-	size_t total_options;
-	int x_offset;
-	BOOL submenu;
-} OptionsMenu;
-
 static BOOL restart_required;
 
 RECT rect_cur = {112, 88, 128, 104};
 
-static char* GetKeyName(int key)
+
+char* GetKeyName(int key)
 {
 	
 	switch (key)
 	{
- 		case KEY_A:        return "A";   break;
+ 		case KEY_A      :  return "A";   break;
  		case KEY_B      :   return "B";  break;
  		case KEY_SELECT:     return "Select";     break;
  		case KEY_START:      return "Start";  break;
@@ -82,14 +46,131 @@ static char* GetKeyName(int key)
  		case KEY_LEFT :         return "Left";  break;
  		case KEY_UP   :          return "Up";  break;
  		case KEY_DOWN :   return "Down";   break;
+		case KEY_L     :  return "L";  break;
  		case KEY_R     :   return "R"; break;
- 		case KEY_L     :  return "L";  break;
  		case KEY_X     :   return "X"; break;
  		case KEY_Y     :   return "Y"; break;
  		case KEY_TOUCH :   return "Touch"; break;
 	}
 
 	return "Unknown";
+}
+
+int autoRepeatTimer = 0;
+
+int EnterOptionsMenuIngame(OptionsMenu *options_menu)
+{
+
+	unsigned int anime = 0;
+
+	int return_value;
+
+	unsigned long back_color = GetCortBoxColor(RGB(0, 0, 0));
+	
+	// Get pressed keys
+
+	// Allow unpausing by pressing the pause button only when in the main pause menu (not submenus)
+	/*if (!options_menu->submenu && gKeyTrg & KEY_PAUSE)
+	{
+		return_value = CALLBACK_CONTINUE;
+		break;
+	}
+*/
+	// Go back one submenu when the 'cancel' button is pressed
+	if (gKeyTrg & gKeyCancel)
+	{
+		return_value = CALLBACK_CONTINUE;
+		gDebug.cheatVisible = false;
+		for (size_t i = 0; i < options_menu->total_options; ++i)
+			options_menu->options[i].callback(options_menu, i, ACTION_DEINIT);
+		return return_value;
+	}
+
+	// Handling up/down input
+	if (gKeyTrg & (gKeyUp | gKeyDown))
+	{
+		const size_t old_selection = gDebug.cursorPos;
+
+		if (gKeyTrg & gKeyDown)
+			if (gDebug.cursorPos++ == options_menu->total_options - 1)
+				gDebug.cursorPos = 0;
+
+		if (gKeyTrg & gKeyUp)
+			if (gDebug.cursorPos-- == 0)
+				gDebug.cursorPos = options_menu->total_options - 1;
+
+		// Update the menu-scrolling, if there are more options than can be fit on the screen
+		if (gDebug.cursorPos < old_selection)
+			gDebug.cheatScroll = MAX(0, MIN(gDebug.cheatScroll, (int)gDebug.cursorPos - 1));
+
+		if (gDebug.cursorPos > old_selection)
+			gDebug.cheatScroll = MIN(MAX(0, (int)options_menu->total_options - MAX_OPTIONS), MAX(gDebug.cheatScroll, (int)gDebug.cursorPos - (MAX_OPTIONS - 2)));
+
+		PlaySoundObject(1, SOUND_MODE_PLAY);
+	}
+
+	// Run option callbacks
+	for (size_t i = 0; i < options_menu->total_options; ++i)
+	{
+		if (!options_menu->options[i].disabled)
+		{
+			CallbackAction action = ACTION_UPDATE;
+
+			if (i == gDebug.cursorPos)
+			{
+				if (gKeyTrg & gKeyOk)
+					action = ACTION_OK;
+				else if (gKeyTrg & gKeyLeft || (gKey & gKeyLeft && autoRepeatTimer++ > 20))
+					action = ACTION_LEFT;
+				else if (gKeyTrg & gKeyRight || (gKey & gKeyRight && autoRepeatTimer++ > 20))
+					action = ACTION_RIGHT;
+
+				if(gKey & gKeyLeft || gKey & gKeyRight)
+				{}
+				else
+				{autoRepeatTimer = 0;}
+			}
+			
+
+			return_value = options_menu->options[i].callback(options_menu, i, action);
+
+			// If the callback returned something other than CALLBACK_CONTINUE, it's time to exit this submenu
+			if (return_value != CALLBACK_CONTINUE)
+				return return_value;
+		}
+	}
+
+	if (return_value != CALLBACK_CONTINUE)
+		return return_value;
+
+	const size_t visible_options = MIN(MAX_OPTIONS, options_menu->total_options);
+
+	int y = (WINDOW_HEIGHT / 2) - ((visible_options * 20) / 2) - (40 / 2);
+	y += 40;
+	
+	CortBoxAlpha(&grcGame, back_color, 24);
+
+	for (size_t i = gDebug.cheatScroll; i < gDebug.cheatScroll + visible_options; ++i)
+	{
+		const int x = (WINDOW_WIDTH / 2) + options_menu->x_offset;
+
+		// Draw Quote next to the selected option
+		if (i == gDebug.cursorPos)
+			PutBitmap3(&grcFull, x - 20, y - 8, &rect_cur, SURFACE_ID_TEXT_BOX);
+
+		unsigned long option_colour = options_menu->options[i].disabled ? RGB(0x80, 0x80, 0x80) : RGB(0xFF, 0xFF, 0xFF);
+
+		// Draw option name
+		PutText(&grcGame,x, y - (9 / 2), options_menu->options[i].name, option_colour);
+
+		// Draw option value, if it has one
+		if (options_menu->options[i].value_string != NULL)
+			PutText(&grcGame,x + 100, y - (9 / 2), options_menu->options[i].value_string, option_colour);
+
+		y += 20;
+	}
+
+	return return_value;
 }
 
 static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
@@ -159,10 +240,15 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 				{
 					if (gKeyTrg & gKeyOk)
 						action = ACTION_OK;
-					else if (gKeyTrg & gKeyLeft)
+					else if (gKeyTrg & gKeyLeft || (gKey & gKeyLeft && autoRepeatTimer++ > 20))
 						action = ACTION_LEFT;
-					else if (gKeyTrg & gKeyRight)
+					else if (gKeyTrg & gKeyRight || (gKey & gKeyRight && autoRepeatTimer++ > 20))
 						action = ACTION_RIGHT;
+
+					if(gKey & gKeyLeft || gKey & gKeyRight)
+					{}
+					else
+					{autoRepeatTimer = 0;}
 				}
 
 				return_value = options_menu->options[i].callback(options_menu, i, action);
@@ -226,7 +312,6 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 		}
 	}
 
-	// Deinitialise options
 	for (size_t i = 0; i < options_menu->total_options; ++i)
 		options_menu->options[i].callback(options_menu, i, ACTION_DEINIT);
 
@@ -254,8 +339,8 @@ static const Control controls[] = {
 	{"Right",           BINDING_RIGHT,  (1 << 0) | (1 << 1)},
 	{"Jump",            BINDING_JUMP,    1 << 0},
 	{"Shoot",           BINDING_SHOT,    1 << 0},
-	{"Next Weapon",     BINDING_ARMS,    1 << 0},
 	{"Previous Weapon", BINDING_ARMSREV, 1 << 0},
+	{"Next Weapon",     BINDING_ARMS,    1 << 0},
 	{"Inventory",       BINDING_ITEM,    1 << 0},
 	{"Map",             BINDING_MAP,     1 << 0},
 };
@@ -270,7 +355,8 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 			break;
 
 		case ACTION_INIT:
-			strncpy(bound_name_buffers[this_option], GetKeyName(bindings[controls[this_option].binding_index].keyboard), sizeof(bound_name_buffers[0]) - 1);
+			if(this_option == 0) break;
+			strncpy(bound_name_buffers[this_option-1], GetKeyName(bindings[controls[this_option-1].binding_index].keyboard), sizeof(bound_name_buffers[0]) - 1);
 			break;
 
 		case ACTION_OK:
@@ -303,7 +389,7 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 					}
 
 					int keys = keysUp();
-					if(timer++>30 && keys && !setTimer)
+					if(timer++>16 && keys && !setTimer)
 					{
 						key_name = GetKeyName(keys);
 
@@ -316,7 +402,7 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 							if (other_option != current_control && controls[other_option].groups & controls[current_control].groups && tempBindings[controls[other_option].binding_index].keyboard == keys)
 							{
 								key_failed = true;
-								key_failed_id = other_option;
+								key_failed_id = other_option+1;
 								PlaySoundObject(SND_QUOTE_BUMP_HEAD, 1);
 								cont = true;
 								timer = 0;
@@ -374,7 +460,8 @@ static int Callback_ControlsKeyboard_Rebind(OptionsMenu *parent_menu, size_t thi
 			if(exit) break;
 			for(int current_control=1;current_control < parent_menu->total_options;current_control++)
 			{
-				strncpy(bound_name_buffers[current_control], GetKeyName(tempBindings[current_control-1].keyboard), sizeof(bound_name_buffers[0]) - 1);
+				for (size_t i = 0; i < parent_menu->total_options; ++i)
+					parent_menu->options[i].callback(parent_menu, i, ACTION_INIT);
 				bindings[current_control-1].keyboard = tempBindings[current_control-1].keyboard;
 			}
 
@@ -427,6 +514,7 @@ static int Callback_ControlsKeyboard(OptionsMenu *parent_menu, size_t this_optio
 /////////////////////
 // Soundtrack menu //
 /////////////////////
+char musicString[32];
 
 static int Callback_Music(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
@@ -437,7 +525,8 @@ static int Callback_Music(OptionsMenu *parent_menu, size_t this_option, Callback
 		case ACTION_INIT:
 			parent_menu->options[this_option].value = 1;
 			//this needs to be a different value than the Soundtest otherwise they will just optimize into the same var..
-			parent_menu->options[this_option].value_string = "1";
+			parent_menu->options[this_option].value_string = musicString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
 			break;
 
 		case ACTION_DEINIT:
@@ -473,6 +562,8 @@ static int Callback_Music(OptionsMenu *parent_menu, size_t this_option, Callback
 	return CALLBACK_CONTINUE;
 }
 
+char soundString[32];
+
 static int Callback_Sound(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
 	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
@@ -481,7 +572,8 @@ static int Callback_Sound(OptionsMenu *parent_menu, size_t this_option, Callback
 	{
 		case ACTION_INIT:
 			parent_menu->options[this_option].value = 0;
-			parent_menu->options[this_option].value_string = "0";
+			parent_menu->options[this_option].value_string = soundString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
 			break;
 
 		case ACTION_DEINIT:
@@ -532,6 +624,7 @@ static int Callback_Cheat(OptionsMenu *parent_menu, size_t this_option, Callback
 
 		case ACTION_DEINIT:
 			conf->bDebug = parent_menu->options[this_option].value;
+			gDebug.bEnabled = parent_menu->options[this_option].value;
 			break;
 
 		case ACTION_OK:
@@ -589,55 +682,6 @@ static int Callback_Screen(OptionsMenu *parent_menu, size_t this_option, Callbac
 	}
 
 	return CALLBACK_CONTINUE;
-}
-
-static int Callback_Options(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
-{
-	(void)parent_menu;
-
-	if (action != ACTION_OK)
-		return CALLBACK_CONTINUE;
-
-	// Make the options match the configuration data
-	CONFIG conf;
-	if (!LoadConfigData(&conf))
-		DefaultConfigData(&conf);
-
-	BOOL is_console = false;
-
-	Option options_console[] = {
-
-	};
-
-	Option options_pc[] = {
-		{"Control Config", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE},
-		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
-		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
-		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
-		{"Play sound", Callback_Sound, NULL, NULL, 0, FALSE},
-	};
-
-	OptionsMenu options_menu = {
-		"OPTIONS",
-		restart_required ? "RESTART REQUIRED" : NULL,
-		is_console ? options_console : options_pc,
-		is_console ? (sizeof(options_console) / sizeof(options_console[0])) : (sizeof(options_pc) / sizeof(options_pc[0])),
-		is_console ? -60 : -70,
-		TRUE
-	};
-
-	PlaySoundObject(5, SOUND_MODE_PLAY);
-
-	const int return_value = EnterOptionsMenu(&options_menu, 0);
-
-	PlaySoundObject(5, SOUND_MODE_PLAY);
-
-	// Save our changes to the configuration file
-	//memcpy(conf.bindings, bindings, sizeof(bindings));
-
-	SaveConfigData(&conf);
-
-	return return_value;
 }
 
 ////////////////
@@ -770,7 +814,7 @@ int Call_Pause(void)
 	};
 
 	Option options_pc[] = {
-		{"Control Config", Callback_ControlsKeyboard, NULL, NULL, 0, FALSE},
+		{"Control Config", Callback_ControlsKeyboard, &conf, NULL, 0, FALSE},
 		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
@@ -793,7 +837,14 @@ int Call_Pause(void)
 	//PlaySoundObject(5, SOUND_MODE_PLAY);
 
 	// Save our changes to the configuration file
-	//memcpy(conf.bindings, bindings, sizeof(bindings));
+	memcpy(conf.bindings, bindings, sizeof(bindings));
+
+	const size_t visible_options = MIN(MAX_OPTIONS, options_menu.total_options);
+
+	int y = (WINDOW_HEIGHT / 2) - ((visible_options * 20) / 2) - (40 / 2);
+	char *string = "Saving..";
+	PutText(&grcGame, (WINDOW_WIDTH / 2) - ((strlen(string) * 5) / 2), y + 14, string, RGB(0xFF, 0xFF, 0xFF));
+	Flip_SystemTask();
 
 	SaveConfigData(&conf);
 

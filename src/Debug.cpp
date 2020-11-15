@@ -22,6 +22,7 @@
 #include "MycParam.h"
 #include "NpChar.h"
 #include "Organya.h"
+#include "Pause.h"
 #include "Sound.h"
 #include "Stage.h"
 #include "TextScr.h"
@@ -479,17 +480,393 @@ static void PutHitboxes(void)
 	}
 }
 
+
+char stageString[32];
+char weaponString[32];
+char itemString[32];
+char levelString[32];
+
+static int Callback_Noclip(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"No", "Yes"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gDebug.bNoclip;
+			parent_menu->options[this_option].value_string = strings[gDebug.bNoclip];
+			break;
+
+		case ACTION_DEINIT:
+			gDebug.bNoclip = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			parent_menu->options[this_option].value = (parent_menu->options[this_option].value + 1) % (sizeof(strings) / sizeof(strings[0]));
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+static int Callback_God(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"No", "Yes"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gDebug.bGodmode;
+			parent_menu->options[this_option].value_string = strings[gDebug.bGodmode];
+			break;
+
+		case ACTION_DEINIT:
+			gDebug.bGodmode = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			parent_menu->options[this_option].value = (parent_menu->options[this_option].value + 1) % (sizeof(strings) / sizeof(strings[0]));
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+static int Callback_FF(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"No", "Yes"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gDebug.bFastForward;
+			parent_menu->options[this_option].value_string = strings[gDebug.bFastForward];
+			break;
+
+		case ACTION_DEINIT:
+			gDebug.bFastForward = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			parent_menu->options[this_option].value = (parent_menu->options[this_option].value + 1) % (sizeof(strings) / sizeof(strings[0]));
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+static int Callback_Hit(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"No", "Yes"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gDebug.bShowHitboxes;
+			parent_menu->options[this_option].value_string = strings[gDebug.bShowHitboxes];
+			break;
+
+		case ACTION_DEINIT:
+			gDebug.bShowHitboxes = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			parent_menu->options[this_option].value = (parent_menu->options[this_option].value + 1) % (sizeof(strings) / sizeof(strings[0]));
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+int itemVal = 1;
+static int Callback_Item(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = itemVal;
+			parent_menu->options[this_option].value_string = itemString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+			break;
+
+		case ACTION_DEINIT:
+			itemVal = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			if (action == ACTION_LEFT)
+			{
+				// Decrement value (with wrapping)
+				--parent_menu->options[this_option].value;
+					
+			}
+			else if (action == ACTION_RIGHT)
+			{
+				// Increment value (with wrapping)
+				++parent_menu->options[this_option].value;
+				
+			}
+
+			if(action == ACTION_OK)
+			{	
+				AddItemData(parent_menu->options[this_option].value);
+				PlaySoundObject(29, SOUND_MODE_PLAY);
+			}
+
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+int weaponVal = 1;
+static int Callback_Weapon(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = weaponVal;
+			parent_menu->options[this_option].value_string = weaponString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+			break;
+
+		case ACTION_DEINIT:
+			weaponVal = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			if (action == ACTION_LEFT)
+			{
+				// Decrement value (with wrapping)
+				--parent_menu->options[this_option].value;
+					
+			}
+			else if (action == ACTION_RIGHT)
+			{
+				// Increment value (with wrapping)
+				++parent_menu->options[this_option].value;
+				
+			}
+
+			if(action == ACTION_OK)
+			{	
+				AddArmsData(parent_menu->options[this_option].value, 0);
+				PlaySoundObject(29, SOUND_MODE_PLAY);
+			}
+
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+int stageVal = 0;
+static int Callback_Stage(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = stageVal;
+			parent_menu->options[this_option].value_string = stageString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+			break;
+
+		case ACTION_DEINIT:
+			stageVal = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			if (action == ACTION_LEFT)
+			{
+				// Decrement value (with wrapping)
+				--parent_menu->options[this_option].value;
+					
+			}
+			else if (action == ACTION_RIGHT)
+			{
+				// Increment value (with wrapping)
+				++parent_menu->options[this_option].value;
+				
+			}
+
+			if(action == ACTION_OK)
+			{
+				TransferStage(parent_menu->options[this_option].value, 0, 8, 8);
+			}
+
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+int levelVal = 1;
+static int Callback_Level(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = levelVal;
+			parent_menu->options[this_option].value_string = "1";
+			break;
+
+		case ACTION_DEINIT:
+			levelVal = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			if (action == ACTION_LEFT)
+			{
+				// Decrement value (with wrapping)
+				--parent_menu->options[this_option].value;
+					
+			}
+			else if (action == ACTION_RIGHT)
+			{
+				// Increment value (with wrapping)
+				++parent_menu->options[this_option].value;
+				
+			}
+
+			if(action == ACTION_OK)
+				gArmsData[gSelectedArms].level = parent_menu->options[this_option].value;
+
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+Option options_pc[] = {
+	{"Noclip", Callback_Noclip, NULL, NULL, 0, FALSE},
+	{"Transfer stage", Callback_Stage, NULL, NULL, 0, FALSE},
+	{"Invincibility", Callback_God, NULL, NULL, 0, FALSE},
+	{"Fast Forward", Callback_FF, NULL, NULL, 0, FALSE},
+	{"Give item", Callback_Item, NULL, NULL, 0, FALSE},
+	{"Give weapon", Callback_Weapon, NULL, NULL, 0, FALSE},
+	{"Set level", Callback_Level, NULL, NULL, 0, FALSE},
+	{"Show hitboxes", Callback_Hit, NULL, NULL, 0, FALSE},
+};
+OptionsMenu options_menu = {
+	"",
+	NULL,
+	options_pc,
+	(sizeof(options_pc) / sizeof(options_pc[0])),
+	-70,
+	TRUE
+};
+
+
 bool shown = false;
 void PutConsole(void)
 {
 
+
+
 	PutHitboxes();
+
+	int keys = keysHeld();
+	int keysD = keysDown();
+	if(gDebug.bEnabled)
+	{
+		if (keys & KEY_L && keysD & KEY_UP ||
+		   keys & KEY_UP && keysD & KEY_L)
+		{
+			gDebug.cheatVisible ^= true;
+			for (size_t i = 0; i < options_menu.total_options; ++i)
+				options_menu.options[i].callback(&options_menu, i, (gDebug.cheatVisible ? ACTION_INIT : ACTION_DEINIT));
+			gKey = gKeyTrg = 0;
+		}
+	}
+	if(gDebug.cheatVisible)
+	{
+		EnterOptionsMenuIngame(&options_menu);
+	}
+
 }
 
 void InitConsole(void)
 {
-	gDebug.bEnabled = conf.bDebug;
-
 	gDebug.bGodmode = false;
 	gDebug.bNoclip = false;
 	gDebug.bFastForward = false;
@@ -500,5 +877,9 @@ void InitConsole(void)
 	gDebug.bFrameCanAdvance = false;
 
 	gDebug.bShowHitboxes = false;
+
+	gDebug.cheatVisible = false;
+	gDebug.cursorPos = 0;
+	gDebug.cheatScroll = 0;
 
 }
