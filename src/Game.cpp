@@ -761,8 +761,6 @@ BOOL Game(void)
 		return FALSE;
 	}
 
-	printf("hi from the world of 7morrow\n");
-
 	//PlaySoundObject(7, -1);
 
 	char path[MAX_PATH];
@@ -773,14 +771,10 @@ BOOL Game(void)
 		printf("Error: Couldn't read the NPC table");
 	}
 
-	printf("hi from the world of 8morrow\n");
-
 	InitTextScript2();
 	InitSkipFlags();
 	InitMapData2();
 	InitCreditScript();
-
-	printf("hi from the world of 9morrow\n");
 
 	mode = 1;
 	while (mode)

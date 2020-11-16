@@ -112,8 +112,6 @@ int main(int argc, char *argv[])
 	//Get executable's path
 	fatInitDefault();
 
-	printf("hi from the world of 2morrow\n");
-
 #ifdef CYG_PROFILER
  irqEnable(IRQ_HBLANK); 
  irqSet(IRQ_HBLANK, hblankCount);
@@ -163,26 +161,20 @@ int main(int argc, char *argv[])
 	MakeSurface_Generic(64, 8, SURFACE_ID_LOADING);
 	ReloadBitmap_File("Loading", SURFACE_ID_LOADING);
 	
-	printf("hi from the world of 3morrow\n");
-	
 	//Draw loading screen
 	CortBox(&clip_rect, 0x000000);
-	printf("hi from the world of 3morrow\n");
 	PutBitmap3(&clip_rect, (WINDOW_WIDTH - 64) / 2, (WINDOW_HEIGHT - 8) / 2, &loading_rect, SURFACE_ID_LOADING);
 	
-	printf("hi from the world of 4morrow\n");
 	
 	//Draw to screen
 	if (Flip_SystemTask())
 	{
-		printf("hi from the world of 5morrow\n");
 		//Initialize sound
 		InitDirectSound();
 		
 		//Initialize stuff
 		InitTextObject();
 		InitTriangleTable();
-		printf("hi from the world of 6morrow\n");
 		//Run game code
 		Game();
 		printf("bye i guess");
