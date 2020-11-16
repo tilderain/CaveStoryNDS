@@ -78,196 +78,39 @@ static unsigned int nextPowerOf2(unsigned int n)
 	}
 }  
 
-uint16* vramGetBank(uint16 *addr) {
-//---------------------------------------------------------------------------------
-	if(addr >= VRAM_A && addr < VRAM_B)
-		return VRAM_A;
-	else if(addr >= VRAM_B && addr < VRAM_C)
-		return VRAM_B;
-	else if(addr >= VRAM_C && addr < VRAM_D)
-		return VRAM_C;
-	else if(addr >= VRAM_D && addr < VRAM_E)
-		return VRAM_D;
-	else if(addr >= VRAM_E && addr < VRAM_F)
-		return VRAM_E;
-	else if(addr >= VRAM_F && addr < VRAM_G)
-		return VRAM_F;
-	else if(addr >= VRAM_G && addr < VRAM_H)
-		return VRAM_G;
-	else if(addr >= VRAM_H && addr < VRAM_I)
-		return VRAM_H;
-	else return VRAM_I;
-}
-
-//Draw to screen
-BOOL Flip_SystemTask()
-{
-	//Update inputs
-	UpdateInput();
-	
 
 
+/*---------------------------------------------------------------------------------
 
-	if(gDebug.bFastForward)
-	{
+	Video API vaguely similar to OpenGL
 
-		if(gDebug.FastForwardTimer++ % 5 == 0)
-		{
-			glEnd2D();
-			glFlush(0);
-			swiWaitForVBlank();
-		}
-		else if(gDebug.FastForwardTimer % 5 == 4)
-		{
-			glBegin2D();
-		}
-	}
-	else
-	{
-		glEnd2D();
-		glFlush(0);
-		swiWaitForVBlank();
-		glBegin2D();
-	}
-	
+  Copyright (C) 2005
+			Michael Noland (joat)
+			Jason Rogers (dovoto)
+			Dave Murphy (WinterMute)
 
-	CopyFaceTexture();
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any
+  damages arising from the use of this software.
 
-	#ifdef TWO_SCREENS
+  Permission is granted to anyone to use this software for any
+  purpose, including commercial applications, and to alter it and
+  redistribute it freely, subject to the following restrictions:
 
-		if((gCounter & 1) == 0)
-		{
-			lcdMainOnTop();
-			vramSetBankD(VRAM_D_LCD);
-			vramSetBankC(VRAM_C_SUB_BG);
-			REG_DISPCAPCNT = DCAP_BANK(3) | DCAP_ENABLE | DCAP_SIZE(3);
-		}
-		else
-		{
-			lcdMainOnBottom();
-			vramSetBankC(VRAM_C_LCD);
-			vramSetBankD(VRAM_D_SUB_SPRITE);
-			REG_DISPCAPCNT = DCAP_BANK(2) | DCAP_ENABLE | DCAP_SIZE(3);
-		}
-#endif
+  1. The origin of this software must not be misrepresented; you
+     must not claim that you wrote the original software. If you use
+     this software in a product, an acknowledgment in the product
+     documentation would be appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and
+     must not be misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source
+     distribution.
 
-	
-	return TRUE;
-}
 
-void initSubSprites(void){
-//-------------------------------------------------------
- 
-	oamInit(&oamSub, SpriteMapping_Bmp_2D_256, false);
- 
-	int x = 0;
-	int y = 0;
- 
-	int id = 0;
+---------------------------------------------------------------------------------*/
 
-	//set up a 4x3 grid of 64x64 sprites to cover the screen
-	for(y = 0; y < 3; y++)
-	for(x = 0; x < 4; x++)
-	{
-	/*	u16 *offset = &SPRITE_GFX_SUB[(x * 64) + (y * 64 * 256)];
- 
-		oamSet(&oamSub, x + y * 4, x * 64, y * 64, 0, 15, SpriteSize_64x64, 
-			SpriteColorFormat_Bmp, offset, -1, false,false,false,false,false);
-	*/
-		oamSub.oamMemory[id].attribute[0] = ATTR0_BMP | ATTR0_SQUARE | (64 * y);
-		oamSub.oamMemory[id].attribute[1] = ATTR1_SIZE_64 | (64 * x);
-		oamSub.oamMemory[id].attribute[2] = ATTR2_ALPHA(1) | (8 * 32 * y) | (8 * x);
-		id++;
-	}
- 
-	swiWaitForVBlank();
- 
-	oamUpdate(&oamSub);
-}
-
-BOOL StartDirectDraw()
-{
-	
-	//-----------------------------------------------------------------
-	// Initialize the graphics engines
-	//-----------------------------------------------------------------
-	videoSetMode( MODE_5_3D );
-#ifdef TWO_SCREENS
-	videoSetModeSub(MODE_5_2D);
- 
-	// sub sprites hold the bottom image when 3D directed to top
-	initSubSprites();
- 
-	// sub background holds the top image when 3D directed to bottom
-	bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
-#endif
-
-    vramSetBankA( VRAM_A_TEXTURE );     
-	vramSetBankB( VRAM_B_TEXTURE );
-	vramSetBankC( VRAM_C_TEXTURE );
-	vramSetBankD( VRAM_D_TEXTURE );
-	
-	vramSetBankE(VRAM_E_TEX_PALETTE);  // Allocate VRAM bank for all the palettes
-	glScreen2D();
-	glEnable(GL_TEXTURE_2D);
-
-	glBegin2D();
-
-	glGenTextures(1, &gAtlas16Color1);
-	glBindTexture(0, gAtlas16Color1);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight512, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
-	glGenTextures(1, &gAtlas16Color2);
-	glBindTexture(0, gAtlas16Color2);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
-	glGenTextures(1, &gAtlas256Color);
-	glBindTexture(0, gAtlas256Color);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
-#ifndef TWO_SCREENS
-	videoSetModeSub( MODE_0_2D  );
-	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
-	scanKeys();
-	if(keysHeld() & KEY_SELECT)
-		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
-#endif
-	
-	
-	return TRUE;
-}
-
-void EndDirectDraw()
-{
-	//TODO
-}
-
-void ReleaseSurface(SurfaceID s)
-{
-	free(surf[s].data);
-}
-
-BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
-{
-	if (surf_no < SURFACE_ID_MAX)
-	{
-
-		surf[surf_no].w = bxsize;
-		surf[surf_no].h = bysize;
-		//surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
-		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
-		surf[surf_no].textureid = NULL;
-		surf[surf_no].paletteAddress = NULL;
-	}
-
-	return TRUE;
-}
+//The following functions are modified from libnds.
+//https://github.com/devkitPro/libnds/blob/master/source/arm9/videoGL.c
 
 uint8* vramBlock_examineSpecial( s_vramBlock *mb, uint8 *addr, uint32 size, uint8 align ) {
 	// Simple validity tests
@@ -644,6 +487,205 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 
 	return TRUE;
 }
+
+uint16* vramGetBank(uint16 *addr) {
+//---------------------------------------------------------------------------------
+	if(addr >= VRAM_A && addr < VRAM_B)
+		return VRAM_A;
+	else if(addr >= VRAM_B && addr < VRAM_C)
+		return VRAM_B;
+	else if(addr >= VRAM_C && addr < VRAM_D)
+		return VRAM_C;
+	else if(addr >= VRAM_D && addr < VRAM_E)
+		return VRAM_D;
+	else if(addr >= VRAM_E && addr < VRAM_F)
+		return VRAM_E;
+	else if(addr >= VRAM_F && addr < VRAM_G)
+		return VRAM_F;
+	else if(addr >= VRAM_G && addr < VRAM_H)
+		return VRAM_G;
+	else if(addr >= VRAM_H && addr < VRAM_I)
+		return VRAM_H;
+	else return VRAM_I;
+}
+
+void initSubSprites(void){
+//-------------------------------------------------------
+ 
+	oamInit(&oamSub, SpriteMapping_Bmp_2D_256, false);
+ 
+	int x = 0;
+	int y = 0;
+ 
+	int id = 0;
+
+	//set up a 4x3 grid of 64x64 sprites to cover the screen
+	for(y = 0; y < 3; y++)
+	for(x = 0; x < 4; x++)
+	{
+	/*	u16 *offset = &SPRITE_GFX_SUB[(x * 64) + (y * 64 * 256)];
+ 
+		oamSet(&oamSub, x + y * 4, x * 64, y * 64, 0, 15, SpriteSize_64x64, 
+			SpriteColorFormat_Bmp, offset, -1, false,false,false,false,false);
+	*/
+		oamSub.oamMemory[id].attribute[0] = ATTR0_BMP | ATTR0_SQUARE | (64 * y);
+		oamSub.oamMemory[id].attribute[1] = ATTR1_SIZE_64 | (64 * x);
+		oamSub.oamMemory[id].attribute[2] = ATTR2_ALPHA(1) | (8 * 32 * y) | (8 * x);
+		id++;
+	}
+ 
+	swiWaitForVBlank();
+ 
+	oamUpdate(&oamSub);
+}
+
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//Draw to screen
+BOOL Flip_SystemTask()
+{
+	//Update inputs
+	UpdateInput();
+	
+
+
+
+	if(gDebug.bFastForward)
+	{
+
+		if(gDebug.FastForwardTimer++ % 5 == 0)
+		{
+			glEnd2D();
+			glFlush(0);
+			swiWaitForVBlank();
+		}
+		else if(gDebug.FastForwardTimer % 5 == 4)
+		{
+			glBegin2D();
+		}
+	}
+	else
+	{
+		glEnd2D();
+		glFlush(0);
+		swiWaitForVBlank();
+		glBegin2D();
+	}
+	
+
+	CopyFaceTexture();
+
+	#ifdef TWO_SCREENS
+
+		if((gCounter & 1) == 0)
+		{
+			lcdMainOnTop();
+			vramSetBankD(VRAM_D_LCD);
+			vramSetBankC(VRAM_C_SUB_BG);
+			REG_DISPCAPCNT = DCAP_BANK(3) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+		else
+		{
+			lcdMainOnBottom();
+			vramSetBankC(VRAM_C_LCD);
+			vramSetBankD(VRAM_D_SUB_SPRITE);
+			REG_DISPCAPCNT = DCAP_BANK(2) | DCAP_ENABLE | DCAP_SIZE(3);
+		}
+#endif
+
+	
+	return TRUE;
+}
+
+BOOL StartDirectDraw()
+{
+	
+	//-----------------------------------------------------------------
+	// Initialize the graphics engines
+	//-----------------------------------------------------------------
+	videoSetMode( MODE_5_3D );
+#ifdef TWO_SCREENS
+	videoSetModeSub(MODE_5_2D);
+ 
+	// sub sprites hold the bottom image when 3D directed to top
+	initSubSprites();
+ 
+	// sub background holds the top image when 3D directed to bottom
+	bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+#endif
+
+    vramSetBankA( VRAM_A_TEXTURE );     
+	vramSetBankB( VRAM_B_TEXTURE );
+	vramSetBankC( VRAM_C_TEXTURE );
+	vramSetBankD( VRAM_D_TEXTURE );
+	
+	vramSetBankE(VRAM_E_TEX_PALETTE);  // Allocate VRAM bank for all the palettes
+	glScreen2D();
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin2D();
+
+	glGenTextures(1, &gAtlas16Color1);
+	glBindTexture(0, gAtlas16Color1);
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight512, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
+
+	glGenTextures(1, &gAtlas16Color2);
+	glBindTexture(0, gAtlas16Color2);
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
+
+	glGenTextures(1, &gAtlas256Color);
+	glBindTexture(0, gAtlas256Color);
+	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
+		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
+		NULL);
+
+#ifndef TWO_SCREENS
+	videoSetModeSub( MODE_0_2D  );
+	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
+	scanKeys();
+	if(keysHeld() & KEY_SELECT)
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+#endif
+	
+	
+	return TRUE;
+}
+
+void EndDirectDraw()
+{
+	//TODO
+}
+
+void ReleaseSurface(SurfaceID s)
+{
+	free(surf[s].data);
+}
+
+BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
+{
+	if (surf_no < SURFACE_ID_MAX)
+	{
+
+		surf[surf_no].w = bxsize;
+		surf[surf_no].h = bysize;
+		//surf[surf_no].data = (BUFFER_PIXEL*)malloc(bxsize * bysize * sizeof(BUFFER_PIXEL));
+		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
+		surf[surf_no].textureid = NULL;
+		surf[surf_no].paletteAddress = NULL;
+	}
+
+	return TRUE;
+}
+
 
 bool npcSymInArmsSlot = false;
 

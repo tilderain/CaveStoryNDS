@@ -19,6 +19,9 @@
 	3.	This notice may not be removed or altered from any source
 		distribution.
 ---------------------------------------------------------------------------------*/
+
+//This file has been modified from the original source.
+//https://github.com/devkitPro/default-arm7/blob/master/source/main.c
 #include <nds.h>
 #include "audio.h"
 #include <dswifi7.h>

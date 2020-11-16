@@ -1,4 +1,13 @@
+/******************************************************************************
+	Easy GL2D
+	Relminator 2010 
+	Richard Eric M. Lope BSN RN
+	http://rel.betterwebber.com
+	A very small and simple DS rendering lib using the 3d core to render 2D stuff
+******************************************************************************/
+
 //Modified version of Easy Gl2D by relsoft
+//https://github.com/devkitPro/libnds/blob/master/source/arm9/gl2d.c
 
 #include "gl2d.h"
 

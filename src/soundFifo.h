@@ -23,6 +23,11 @@
 		distribution.
 
 ---------------------------------------------------------------------------------*/
+
+
+//This file has been modified from the original source.
+//https://github.com/devkitPro/libnds/blob/master/include/nds/arm9/sound.h
+
 #ifndef _sound_cs_h_
 #define _sound_cs_h_
 

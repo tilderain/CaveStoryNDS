@@ -26,6 +26,9 @@
 
 ---------------------------------------------------------------------------------*/
 
+//This file has been modified from the original source.
+//https://github.com/devkitPro/libnds/blob/master/source/arm7/audio.h
+
 void installSoundeFIFO(void);
 
 

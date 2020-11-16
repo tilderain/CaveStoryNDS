@@ -23,6 +23,9 @@
 
 ---------------------------------------------------------------------------------*/
 
+//This file has been modified from the original source.
+//https://github.com/devkitPro/libnds/blob/master/source/arm7/audio.c
+
 
 #include <nds/arm7/audio.h>
 #include <nds/ipc.h>
