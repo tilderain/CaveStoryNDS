@@ -136,17 +136,19 @@ int ModeOpening(void)
 	grcGame.bottom = WINDOW_HEIGHT;
 #endif
 
-	if (g_GameFlags & 8)
+	
+	// To make up for casts obliterating these by its mere presence
+	if(npcSymInArmsSlot)
 	{
-		// To make up for casts obliterating these by its mere presence
-		makeNpcSymTakeArmsSlot(false);
+		npcSymInArmsSlot = false;
 		ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
 		ReloadBitmap_File("Bullet", SURFACE_ID_BULLET);
 		ReloadBitmap_File("Arms", SURFACE_ID_ARMS);
-
+	
 		// also this
 		ReloadBitmap_File("Caret", SURFACE_ID_CARET);
-	} 
+		ReloadBitmap_File("ItemImage", SURFACE_ID_ITEM_IMAGE);
+	}
 
 	g_GameFlags = 3;
 

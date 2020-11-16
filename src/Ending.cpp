@@ -261,7 +261,7 @@ BOOL StartCreditScript(void)
 	if (!ReloadBitmap_File("casts", SURFACE_ID_CASTS))
 		return FALSE;
 
-	makeNpcSymTakeArmsSlot(true);
+	npcSymInArmsSlot = true;
 	ReloadBitmap_File("Npc/NpcSym", SURFACE_ID_NPC_SYM);
 
 	// Clear casts

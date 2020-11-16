@@ -637,10 +637,6 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 }
 
 bool npcSymInArmsSlot = false;
-void makeNpcSymTakeArmsSlot(bool toggle)
-{
-	npcSymInArmsSlot = toggle;
-}
 
 BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 {
@@ -736,7 +732,6 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 			break;
 		default:
 			paletteType = GL_RGB16;
-			printf("UHOHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 			break;
 	}
 
