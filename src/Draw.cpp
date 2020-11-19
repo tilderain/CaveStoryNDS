@@ -319,6 +319,27 @@ vramBlock_allocateSpecial( s_vramBlock *mb, uint8 *addr, uint32 size ) {
 	return 0;
 }
 
+uint16* vramGetBank(uint16 *addr) {
+//---------------------------------------------------------------------------------
+	if(addr >= VRAM_A && addr < VRAM_B)
+		return VRAM_A;
+	else if(addr >= VRAM_B && addr < VRAM_C)
+		return VRAM_B;
+	else if(addr >= VRAM_C && addr < VRAM_D)
+		return VRAM_C;
+	else if(addr >= VRAM_D && addr < VRAM_E)
+		return VRAM_D;
+	else if(addr >= VRAM_E && addr < VRAM_F)
+		return VRAM_E;
+	else if(addr >= VRAM_F && addr < VRAM_G)
+		return VRAM_F;
+	else if(addr >= VRAM_G && addr < VRAM_H)
+		return VRAM_G;
+	else if(addr >= VRAM_H && addr < VRAM_I)
+		return VRAM_H;
+	else return VRAM_I;
+}
+
 int AssignColorPalette(SURFACE* surf, uint16 width, const uint16* table)
 {
 	uint32 colFormatVal = 4;
@@ -488,26 +509,6 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 	return TRUE;
 }
 
-uint16* vramGetBank(uint16 *addr) {
-//---------------------------------------------------------------------------------
-	if(addr >= VRAM_A && addr < VRAM_B)
-		return VRAM_A;
-	else if(addr >= VRAM_B && addr < VRAM_C)
-		return VRAM_B;
-	else if(addr >= VRAM_C && addr < VRAM_D)
-		return VRAM_C;
-	else if(addr >= VRAM_D && addr < VRAM_E)
-		return VRAM_D;
-	else if(addr >= VRAM_E && addr < VRAM_F)
-		return VRAM_E;
-	else if(addr >= VRAM_F && addr < VRAM_G)
-		return VRAM_F;
-	else if(addr >= VRAM_G && addr < VRAM_H)
-		return VRAM_G;
-	else if(addr >= VRAM_H && addr < VRAM_I)
-		return VRAM_H;
-	else return VRAM_I;
-}
 
 void initSubSprites(void){
 //-------------------------------------------------------
