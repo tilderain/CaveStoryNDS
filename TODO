@@ -3,9 +3,19 @@ Known issues:
 	game will slow down when firing the spur near a sprinkler and in sand zone
 	The minimap doesn't work
 
+save profile.dat to memory
+
+fix credit bitmapreload
+
+move old libnds fifo sync code to here
 construct the minimap texture in memory
 
 vram viewer?
 
 savestates?
 
+local multiplayer??
+
+50 fps toggle
+
+Resample org & drums to 44khz
