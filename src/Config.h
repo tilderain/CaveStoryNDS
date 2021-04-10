@@ -38,6 +38,7 @@ struct CONFIG
 {
 	char proof[0x20];
 	BOOL bBottomScreen;
+	BOOL bFps;
 	BOOL bDebug;
 	CONFIG_BINDING bindings[BINDING_TOTAL];
 };

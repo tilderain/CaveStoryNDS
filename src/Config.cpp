@@ -18,7 +18,7 @@
 #include "nds.h"
 
 const char *config_filename = "Config.dat";	// Not the original name
-const char *config_magic = "CSDS01";	// Not the original name
+const char *config_magic = "CSDS02";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {
@@ -42,6 +42,8 @@ BOOL LoadConfigData(CONFIG *conf)
 
 	// Read the version id and font name
 	fread(conf->proof, sizeof(conf->proof), 1, fp);
+
+	fread(&conf->bFps, 1, 1, fp);
 
 	fread(&conf->bBottomScreen, 1, 1, fp);
 
@@ -83,6 +85,7 @@ BOOL SaveConfigData(const CONFIG *conf)
 	// Write the version id and font name
 	fwrite(conf->proof, sizeof(conf->proof), 1, fp);
 
+	fputc(conf->bFps, fp);
 	fputc(conf->bBottomScreen, fp);
 	fputc(conf->bDebug, fp);
 

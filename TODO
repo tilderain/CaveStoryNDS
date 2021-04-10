@@ -8,7 +8,8 @@ save profile.dat to memory
 fix credit bitmapreload
 
 move old libnds fifo sync code to here
-construct the minimap texture in memory
+
+switch to software render for minimap--copy screen
 
 vram viewer?
 
@@ -16,6 +17,4 @@ savestates?
 
 local multiplayer??
 
-50 fps toggle
-
-Resample org & drums to 44khz
+render screen instead of backupsurface

@@ -18,6 +18,8 @@
 
 #define SE_MAX 160	// According to the Organya source code release, this is the real name for this constant
 
+extern int gVBlankCounter;
+
 class SOUNDBUFFER
 {
 	public:

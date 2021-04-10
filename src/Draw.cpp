@@ -40,6 +40,8 @@
 
 #include "fopen.h"
 
+#include "Sound.h"
+
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
@@ -574,7 +576,10 @@ BOOL Flip_SystemTask()
 	{
 		glEnd2D();
 		glFlush(0);
+
 		swiWaitForVBlank();
+		if(gb50Fps && gVBlankCounter % 5 == 0) swiWaitForVBlank();
+		
 		glBegin2D();
 	}
 	

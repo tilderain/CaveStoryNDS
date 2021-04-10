@@ -49,6 +49,8 @@ char gDataPath[MAX_PATH];
 BOOL bFullscreen;
 BOOL gbUseJoystick = FALSE;
 
+BOOL gb50Fps = FALSE;
+
 int gJoystickButtonTable[8];
 
 static BOOL bActive = TRUE;
@@ -133,6 +135,7 @@ int main(int argc, char *argv[])
 		DefaultConfigData(&conf);
 	
 	gDebug.bEnabled = conf.bDebug;
+	gb50Fps = conf.bFps;
 
 	if(conf.bBottomScreen)
 		lcdMainOnBottom();

@@ -317,7 +317,7 @@ void SOUNDBUFFER::Mix(long *stream, uint32_t samples)
 //Sound things
 SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
-
+int gVBlankCounter = 0;
 void DoOrganya(void)
 {
 	gOrgTimer += SND_BUFFERSIZE;
@@ -328,6 +328,7 @@ void DoOrganya(void)
 		gOrgTimer %= gOrgSamplePerStep;
 	}
 	updateChannelStates();
+	gVBlankCounter++;
 }
 
 mm_stream mystream;

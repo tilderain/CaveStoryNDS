@@ -684,6 +684,45 @@ static int Callback_Screen(OptionsMenu *parent_menu, size_t this_option, Callbac
 	return CALLBACK_CONTINUE;
 }
 
+
+static int Callback_Fps(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	char *strings[] = {"60 fps", "50 fps"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = conf->bFps;
+			parent_menu->options[this_option].value_string = strings[conf->bFps];
+			break;
+
+		case ACTION_DEINIT:
+			conf->bFps = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			parent_menu->options[this_option].value = (parent_menu->options[this_option].value + 1) % (sizeof(strings) / sizeof(strings[0]));
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			gb50Fps = parent_menu->options[this_option].value;
+
+			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
 ////////////////
 // Pause menu //
 ////////////////
@@ -816,6 +855,7 @@ int Call_Pause(void)
 	Option options_pc[] = {
 		{"Control Config", Callback_ControlsKeyboard, &conf, NULL, 0, FALSE},
 		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
+		{"Framerate", Callback_Fps, &conf, NULL, 0, FALSE},
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
 		{"Play sound", Callback_Sound, NULL, NULL, 0, FALSE},
