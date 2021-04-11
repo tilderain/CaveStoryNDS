@@ -21,6 +21,46 @@
 #include "Sound.h"
 #include "TextScr.h"
 
+#include "ArmsItem.h"
+#include "Back.h"
+#include "Boss.h"
+#include "BossLife.h"
+#include "BulHit.h"
+#include "Bullet.h"
+#include "Caret.h"
+#include "CommonDefines.h"
+#include "Debug.h"
+#include "Draw.h"
+#include "Ending.h"
+#include "Escape.h"
+#include "Fade.h"
+#include "Flags.h"
+#include "Flash.h"
+#include "Frame.h"
+#include "Generic.h"
+#include "GenericLoad.h"
+#include "KeyControl.h"
+#include "Main.h"
+#include "Map.h"
+#include "MapName.h"
+#include "MiniMap.h"
+#include "MyChar.h"
+#include "MycHit.h"
+#include "MycParam.h"
+#include "NpChar.h"
+#include "NpcHit.h"
+#include "NpcTbl.h"
+#include "Pause.h"
+#include "Profile.h"
+#include "Random.h"
+#include "SelStage.h"
+#include "Shoot.h"
+#include "Sound.h"
+#include "Stage.h"
+#include "Star.h"
+#include "TextScr.h"
+#include "ValueView.h"
+
 ARMS gArmsData[ARMS_MAX];
 ITEM gItemData[ITEM_MAX];
 
@@ -478,6 +518,26 @@ int CampLoop(void)
 
 		// Get currently displayed image
 		//PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
+		int frame_x;
+		int frame_y;
+		GetFramePosition(&frame_x, &frame_y);
+		
+		PutBack(frame_x, frame_y);
+		PutStage_Back(frame_x, frame_y);
+		PutBossChar(frame_x, frame_y);
+		PutNpChar(frame_x, frame_y);
+		PutBullet(frame_x, frame_y);
+		PutMyChar(frame_x, frame_y);
+		PutStar(frame_x, frame_y);
+		PutMapDataVector(frame_x, frame_y);
+		PutStage_Front(frame_x, frame_y);
+		PutFront(frame_x, frame_y);
+		PutFlash();
+		PutCaret(frame_x, frame_y);
+		PutValueView(frame_x, frame_y);
+		PutBossLife();
+		PutFade();
+
 		PutCampObject();
 		PutTextScript();
 		PutFramePerSecound();
