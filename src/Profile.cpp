@@ -252,6 +252,7 @@ BOOL InitializeGame(void)
 	InitFlags();
 	if (!TransferStage(13, 200, 10, 8))
 	{
+		ErrorInitConsole();
 		printf("Error: Failed to load stage");
 
 		return FALSE;

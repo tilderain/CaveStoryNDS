@@ -181,6 +181,8 @@ int main(int argc, char *argv[])
 		//Run game code
 		Game();
 		printf("bye i guess");
+		if(gConsoleInited == 2) while (true){}
+		
 		//End stuff
 		EndDirectSound();
 		EndTextObject();

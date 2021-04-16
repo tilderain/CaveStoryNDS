@@ -23,6 +23,10 @@ extern int gFaceNoCurrent;
 
 extern bool npcSymInArmsSlot;
 
+extern char gConsoleInited;
+
+void ErrorInitConsole();
+
 static const u8 font_space[32*3] = {
     3,2,4,8,6,8,7,2,4,4,8,6,3,6,2,4,6,3,6,6,7,6,6,6,6,6,2,3,4,8,4,5,
     8,6,6,6,6,5,5,6,6,2,5,6,5,6,6,6,6,6,6,5,6,6,6,6,6,6,5,4,4,4,4,6,

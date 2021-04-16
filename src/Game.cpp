@@ -757,6 +757,7 @@ BOOL Game(void)
 
 	if (!LoadGenericData())
 	{
+		ErrorInitConsole();
 		printf("Error: Couldn't read general purpose files");
 		return FALSE;
 	}
@@ -768,6 +769,7 @@ BOOL Game(void)
 
 	if (!LoadNpcTable(path))
 	{
+		ErrorInitConsole();
 		printf("Error: Couldn't read the NPC table");
 	}
 

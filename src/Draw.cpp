@@ -70,6 +70,15 @@ int gTextureHeight256 = TEXTURE_SIZE_256;
 
 void* gCurrentPalette;
 
+char gConsoleInited = false;
+
+void ErrorInitConsole()
+{
+	if(!gConsoleInited)
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+	gConsoleInited = 2;
+}
+
 static unsigned int nextPowerOf2(unsigned int n)  
 {  
     unsigned power = 1; 
@@ -660,6 +669,7 @@ BOOL StartDirectDraw()
 	scanKeys();
 	if(keysHeld() & KEY_SELECT)
 		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+		gConsoleInited = TRUE;
 #endif
 	
 	
@@ -982,7 +992,7 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 		}
 			
 	}
-	
+	ErrorInitConsole();
 	printf("Failed to open file %s\n", name);
 	return FALSE;
 }

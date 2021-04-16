@@ -760,6 +760,7 @@ int TextScriptProc(void)
 
 						if (!TransferStage(z, w, x, y))
 						{
+							ErrorInitConsole();
 							printf("Error : Failed to load stage");
 							return enum_ESCRETURN_exit;
 						}
@@ -1304,6 +1305,7 @@ int TextScriptProc(void)
 					else
 					{
 						char str_0[0x40];
+						ErrorInitConsole();
 						printf(str_0, "Unknown code:<%c%c%c", gTS.data[gTS.p_read + 1], gTS.data[gTS.p_read + 2], gTS.data[gTS.p_read + 3]);
 
 						return enum_ESCRETURN_exit;
