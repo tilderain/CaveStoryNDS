@@ -485,6 +485,7 @@ char stageString[32];
 char weaponString[32];
 char itemString[32];
 char levelString[32];
+char eventString[32];
 
 static int Callback_Noclip(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
@@ -672,7 +673,7 @@ static int Callback_Item(OptionsMenu *parent_menu, size_t this_option, CallbackA
 	return CALLBACK_CONTINUE;
 }
 
-int eventVal = 0;
+static int eventVal = 0;
 static int Callback_Event(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
 	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
@@ -681,7 +682,7 @@ static int Callback_Event(OptionsMenu *parent_menu, size_t this_option, Callback
 	{
 		case ACTION_INIT:
 			parent_menu->options[this_option].value = eventVal;
-			parent_menu->options[this_option].value_string = itemString;
+			parent_menu->options[this_option].value_string = eventString;
 			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
 			break;
 
