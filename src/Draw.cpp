@@ -891,7 +891,11 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	}
 
 	if(surf_no == SURFACE_ID_NPC_SYM && npcSymInArmsSlot)
+	{
 		textureid = gAtlas16Color2;
+		xoffset = 0;
+		yoffset = 0;
+	}
 	if(surf_no == SURFACE_ID_FACE)
 		goto facejump;
 
