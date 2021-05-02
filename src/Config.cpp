@@ -18,7 +18,7 @@
 #include "nds.h"
 
 const char *config_filename = "Config.dat";	// Not the original name
-const char *config_magic = "CSDS02";	// Not the original name
+const char *config_magic = "CSDS03";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {
@@ -48,6 +48,8 @@ BOOL LoadConfigData(CONFIG *conf)
 	fread(&conf->bBottomScreen, 1, 1, fp);
 
 	fread(&conf->bDebug, 1, 1, fp);
+
+	fread(&conf->bTransparency, 1, 1, fp);
 
 	for (size_t i = 0; i < BINDING_TOTAL; ++i)
 		conf->bindings[i].keyboard = File_ReadLE32(fp);
@@ -88,7 +90,7 @@ BOOL SaveConfigData(const CONFIG *conf)
 	fputc(conf->bFps, fp);
 	fputc(conf->bBottomScreen, fp);
 	fputc(conf->bDebug, fp);
-
+	fputc(conf->bTransparency, fp);
 
 	// Write key-bindings
 	for (size_t i = 0; i < BINDING_TOTAL; ++i)

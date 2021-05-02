@@ -872,13 +872,14 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		{SURFACE_ID_STAGE_ITEM, gAtlas16Color1, 256, 496},
 		{SURFACE_ID_FADE, gAtlas16Color1, 0, 480},
 		{SURFACE_ID_NPC_REGU, gAtlas256Color, 0, 0},
-		{SURFACE_ID_FACE, gAtlas16Color2, xoffset, yoffset},
+		{SURFACE_ID_FACE, gAtlas16Color2, 888, 196},
 		{SURFACE_ID_LEVEL_BACKGROUND, gAtlas16Color1, 640, 0},
 		{SURFACE_ID_CARET, gAtlas16Color2, 320,0},
 		{SURFACE_ID_TEXT_BOX, gAtlas16Color2, 640, 112},
 		{SURFACE_ID_FONT, gAtlas16Color2, 640, 64},
 		{SURFACE_ID_MY_CHAR, gAtlas16Color2, 640, 0},
 	};
+	bool found = false;
 	for (size_t i = 0; i < sizeof(table)/sizeof(table[0]); i++)
 	{
 		if(surf_no == table[i].id)
@@ -886,8 +887,16 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 			xoffset = table[i].x;
 			yoffset = table[i].y;
 			textureid = table[i].atlas;
+			found = true;
 			break;
 		}
+	}
+	if(!found)
+	{
+		fclose_embed(fp);
+		free(bitmap_pixels);
+		free(surf[surf_no].data);
+		return TRUE;
 	}
 
 	if(surf_no == SURFACE_ID_NPC_SYM && npcSymInArmsSlot)
@@ -1117,6 +1126,78 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No 
 {
 	DrawBitmap(rcView, x, y, rect, surf_no, false);
 }*/
+
+void PutBitmap3Transparent(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, u32 alpha)
+{
+	//TODO: draw queueing
+	//TODO: don't render if transparent
+#ifdef TWO_SCREENS
+	int temp = x;
+	x = WINDOW_HEIGHT - y;
+	y = temp;
+
+	if((gCounter & 1) == 0) // bottom screen
+	{
+		
+	}
+	else
+	{
+		y -= WINDOW_WIDTH / 2;
+	}
+
+#endif
+
+	if(x > WINDOW_WIDTH) return;
+	if(y > WINDOW_HEIGHT) return;
+
+	int textureid = surf[surf_no].textureid;
+	//if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
+////
+	RECT srcRect = *rect;
+
+	srcRect.top += surf[surf_no].yoffset;
+	srcRect.bottom += surf[surf_no].yoffset;
+
+	if(surf[surf_no].paletteType == GL_RGB16)
+	{
+		srcRect.left += surf[surf_no].xoffset;
+		srcRect.right += surf[surf_no].xoffset;
+	}
+	else
+	{
+		// To compensate for the texture size being halved when turning from 16 to 256 color
+		srcRect.left += surf[surf_no].xoffset / 2;
+		srcRect.right += surf[surf_no].xoffset / 2;
+	}
+
+	if(rcView->left > x)
+	{
+		srcRect.left += rcView->left - x;
+		x = rcView->left;
+	}
+
+	if(rcView->top > y)
+	{
+		srcRect.top += rcView->top - y;
+		y = rcView->top;
+	}
+
+	int width = srcRect.right - srcRect.left;
+	int height = srcRect.bottom - srcRect.top;
+	if(x + width > rcView->right)
+	{
+		srcRect.right -= x + width - rcView->right;
+	}
+
+	if(y + height > rcView->bottom)
+	{
+		srcRect.bottom -= y + height - rcView->bottom;
+	}
+////
+
+	//glSprite(x, y, rect, gAtlas16Color1, 0);
+	glSpriteTransparent(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType, alpha);
+}
 
 int GetSurfPixel(int x, int y, int surf_no)
 {

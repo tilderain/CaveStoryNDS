@@ -384,11 +384,23 @@ void PutCampObject(void)
 	RECT rcBoxBody = {0, 8, 244, 16};
 	RECT rcBoxBottom = {0, 16, 244, 24};
 
+	u32 alpha = 27;
 	// Draw box
-	PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, (WINDOW_HEIGHT / 2) - 112, &rcBoxTop, SURFACE_ID_TEXT_BOX);
-	for (i = 1; i < 18; ++i)
-		PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBody, SURFACE_ID_TEXT_BOX);
-	PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBottom, SURFACE_ID_TEXT_BOX);
+	if(gbTransparency)
+	{
+		PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, (WINDOW_HEIGHT / 2) - 112, &rcBoxTop, SURFACE_ID_TEXT_BOX);
+		for (i = 1; i < 18; ++i)
+			PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBody, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBottom, SURFACE_ID_TEXT_BOX);
+	}
+	else
+	{
+		PutBitmap3Transparent(&rcView, (WINDOW_WIDTH / 2) - 122, (WINDOW_HEIGHT / 2) - 112, &rcBoxTop, SURFACE_ID_TEXT_BOX, alpha);
+		for (i = 1; i < 18; ++i)
+			PutBitmap3Transparent(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBody, SURFACE_ID_TEXT_BOX, alpha);
+		PutBitmap3Transparent(&rcView, (WINDOW_WIDTH / 2) - 122, ((WINDOW_HEIGHT / 2) - 120) + ((i + 1) * 8), &rcBoxBottom, SURFACE_ID_TEXT_BOX, alpha);
+	}
+	
 
 	// Move titles
 	if (gCampTitleY > (WINDOW_HEIGHT / 2) - 104)

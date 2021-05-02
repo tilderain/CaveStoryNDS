@@ -16,6 +16,7 @@ extern char gDataPath[MAX_PATH];
 extern BOOL bFullscreen;
 
 extern BOOL gb50Fps;
+extern BOOL gbTransparency;
 
 extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];

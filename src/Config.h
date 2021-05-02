@@ -40,6 +40,7 @@ struct CONFIG
 	BOOL bBottomScreen;
 	BOOL bFps;
 	BOOL bDebug;
+	BOOL bTransparency;
 	CONFIG_BINDING bindings[BINDING_TOTAL];
 };
 

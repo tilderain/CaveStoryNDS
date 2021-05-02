@@ -111,6 +111,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no);
 void BackupSurface(SurfaceID surf_no, RECT *rect);
 void CopyFaceTexture();
 void makeNpcSymTakeArmsSlot(bool toggle);
+void PutBitmap3Transparent(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, u32 alpha);
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent);
 static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 {

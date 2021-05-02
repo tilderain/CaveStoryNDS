@@ -50,6 +50,7 @@ BOOL bFullscreen;
 BOOL gbUseJoystick = FALSE;
 
 BOOL gb50Fps = FALSE;
+BOOL gbTransparency = FALSE;
 
 int gJoystickButtonTable[8];
 
@@ -136,6 +137,7 @@ int main(int argc, char *argv[])
 	
 	gDebug.bEnabled = conf.bDebug;
 	gb50Fps = conf.bFps;
+	gbTransparency = conf.bTransparency;
 
 	if(conf.bBottomScreen)
 		lcdMainOnBottom();

@@ -672,6 +672,55 @@ static int Callback_Item(OptionsMenu *parent_menu, size_t this_option, CallbackA
 	return CALLBACK_CONTINUE;
 }
 
+int eventVal = 0;
+static int Callback_Event(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	CONFIG *conf = (CONFIG*)parent_menu->options[this_option].user_data;
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = eventVal;
+			parent_menu->options[this_option].value_string = itemString;
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+			break;
+
+		case ACTION_DEINIT:
+			eventVal = parent_menu->options[this_option].value;
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			if (action == ACTION_LEFT)
+			{
+				// Decrement value (with wrapping)
+				--parent_menu->options[this_option].value;
+					
+			}
+			else if (action == ACTION_RIGHT)
+			{
+				// Increment value (with wrapping)
+				++parent_menu->options[this_option].value;
+				
+			}
+
+			if(action == ACTION_OK)
+			{	
+				StartTextScript(parent_menu->options[this_option].value);
+			}
+
+			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
+
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
 int weaponVal = 1;
 static int Callback_Weapon(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
@@ -825,6 +874,7 @@ Option options_pc[] = {
 	{"Give item", Callback_Item, NULL, NULL, 0, FALSE},
 	{"Give weapon", Callback_Weapon, NULL, NULL, 0, FALSE},
 	{"Set level", Callback_Level, NULL, NULL, 0, FALSE},
+	{"Run event", Callback_Event, NULL, NULL, 0, FALSE},
 	{"Show hitboxes", Callback_Hit, NULL, NULL, 0, FALSE},
 };
 OptionsMenu options_menu = {

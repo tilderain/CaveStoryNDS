@@ -468,6 +468,9 @@ void PutTextScript(void)
 	RECT rect;
 	int text_offset;
 
+	u32 alpha = 27;
+
+
 	if (gTS.mode == 0)
 		return;
 
@@ -493,10 +496,21 @@ void PutTextScript(void)
 		RECT rcFrame2 = {0, 8, 244, 16};
 		RECT rcFrame3 = {0, 16, 244, 24};
 
-		PutBitmap3(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX);
-		for (i = 1; i < 7; ++i)
-			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame2, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX);
+		if(gbTransparency)
+		{
+			PutBitmap3(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX);
+			for (i = 1; i < 7; ++i)
+				PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame2, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX);
+		}
+		else
+		{
+			PutBitmap3Transparent(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX, alpha);
+			for (i = 1; i < 7; ++i)
+				PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame2, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX, alpha);
+		}
+		
 	}
 
 	gFaceNo = gTS.face;
@@ -565,12 +579,25 @@ void PutTextScript(void)
 
 	if (gTS.item != 0)
 	{
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 112, &rcItemBox1, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 96, &rcItemBox2, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 112, &rcItemBox3, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 104, &rcItemBox4, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 96, &rcItemBox4, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 88, &rcItemBox5, SURFACE_ID_TEXT_BOX);
+		if(gbTransparency)
+		{
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 112, &rcItemBox1, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 96, &rcItemBox2, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 112, &rcItemBox3, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 104, &rcItemBox4, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 96, &rcItemBox4, SURFACE_ID_TEXT_BOX);
+			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 88, &rcItemBox5, SURFACE_ID_TEXT_BOX);
+		}
+		else
+		{
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 112, &rcItemBox1, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 40, WINDOW_HEIGHT - 96, &rcItemBox2, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 112, &rcItemBox3, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 104, &rcItemBox4, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 96, &rcItemBox4, SURFACE_ID_TEXT_BOX, alpha);
+			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) + 32, WINDOW_HEIGHT - 88, &rcItemBox5, SURFACE_ID_TEXT_BOX, alpha);
+		}
+		
 
 		if (gTS.item_y < WINDOW_HEIGHT - 104)
 			++gTS.item_y;

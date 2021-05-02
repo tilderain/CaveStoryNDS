@@ -106,6 +106,7 @@ static void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffs
 	g_depth++;
 }
 
+void glSpriteTransparent( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int texType, u32 alpha);
 void glSpriteSizeParam( int x1, int y1, int width, int height, RECT *rect, int textureID, int paletteOffset, int texType);
 void glBoxFilled( int x1, int y1, int x2, int y2, int color );
 void glBoxFilledTransparent( int x1, int y1, int x2, int y2, int color, u32 alpha);
