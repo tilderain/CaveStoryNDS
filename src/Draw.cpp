@@ -983,6 +983,7 @@ BOOL ReloadBitmap_Resource(const char *res, SurfaceID surf_no)
 
 void BackupSurface(SurfaceID surf_no, RECT *rect)
 {
+	return;
 	//TODO:
 	for (int fx = rect->left; fx < rect->right; fx++)
 	{
@@ -1117,9 +1118,25 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no) //No 
 	DrawBitmap(rcView, x, y, rect, surf_no, false);
 }*/
 
+int GetSurfPixel(int x, int y, int surf_no)
+{
+		//color = (bitmap_pixels[pos*2] | bitmap_pixels[pos*2+1] << 4);
+	int height = (y * surf[surf_no].w) / 2;
+	
+	if(x % 2 == 0)
+		return surf[surf_no].data[x/2 + height].color & 0x0F;
+	else
+		return surf[surf_no].data[x/2 + height].color >> 4;
+}
+
+void SetSurf2Pixels(int x, int y, int surf_no, char color)
+{
+	int height = (y * surf[surf_no].w) / 2;
+	surf[surf_no].data[x/2 + height].color = color;
+}
+
 void Surface2Surface(int x, int y, RECT *rect, int to, int from)
 {
-	return;
 	BUFFER_PIXEL* dFrom = surf[from].data;
 	BUFFER_PIXEL* dTo = surf[to].data;
 

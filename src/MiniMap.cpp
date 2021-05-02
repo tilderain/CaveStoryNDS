@@ -21,9 +21,52 @@
 #include "MyChar.h"
 #include "Stage.h"
 
-void WriteMiniMapLine(int line)
+
+
+#include "ArmsItem.h"
+#include "Back.h"
+#include "Boss.h"
+#include "BossLife.h"
+#include "BulHit.h"
+#include "Bullet.h"
+#include "Caret.h"
+#include "CommonDefines.h"
+#include "Debug.h"
+#include "Draw.h"
+#include "Ending.h"
+#include "Escape.h"
+#include "Fade.h"
+#include "Flags.h"
+#include "Flash.h"
+#include "Frame.h"
+#include "Generic.h"
+#include "GenericLoad.h"
+#include "KeyControl.h"
+#include "Main.h"
+#include "Map.h"
+#include "MapName.h"
+#include "MiniMap.h"
+#include "MyChar.h"
+#include "MycHit.h"
+#include "MycParam.h"
+#include "NpChar.h"
+#include "NpcHit.h"
+#include "NpcTbl.h"
+#include "Pause.h"
+#include "Profile.h"
+#include "Random.h"
+#include "SelStage.h"
+#include "Shoot.h"
+#include "Sound.h"
+#include "Stage.h"
+#include "Star.h"
+#include "TextScr.h"
+#include "ValueView.h"
+
+void WriteMiniMapLine()
 {
 	int x;
+	int line;
 	unsigned char a;
 
 	RECT rcLevel[4] = {
@@ -33,53 +76,92 @@ void WriteMiniMapLine(int line)
 		{243, 24, 244, 25},
 	};
 
-	for (x = 0; x < gMap.width; ++x)
-	{
-		a = GetAttribute(x, line);
+	int level0Color = GetSurfPixel(rcLevel[0].left, rcLevel[0].top, SURFACE_ID_TEXT_BOX);
+	int level1Color = GetSurfPixel(rcLevel[1].left, rcLevel[1].top, SURFACE_ID_TEXT_BOX);
+	int level2Color = GetSurfPixel(rcLevel[2].left, rcLevel[2].top, SURFACE_ID_TEXT_BOX);
+	int level3Color = GetSurfPixel(rcLevel[3].left, rcLevel[3].top, SURFACE_ID_TEXT_BOX);
 
-		// Yup, this really is an if/else chain.
-		// No switch here.
-		if (a == 0)
-			Surface2Surface(x, line, &rcLevel[0], SURFACE_ID_MAP, SURFACE_ID_TEXT_BOX);
-		else if (a == 68 ||
-			a == 1 ||
-			a == 64 ||
-			a == 128 ||
-			a == 129 ||
-			a == 130 ||
-			a == 131 ||
-			a == 81 ||
-			a == 82 ||
-			a == 85 ||
-			a == 86 ||
-			a == 2 ||
-			a == 96 ||
-			a == 113 ||
-			a == 114 ||
-			a == 117 ||
-			a == 118 ||
-			a == 160 ||
-			a == 161 ||
-			a == 162 ||
-			a == 163)
-			Surface2Surface(x, line, &rcLevel[1], SURFACE_ID_MAP, SURFACE_ID_TEXT_BOX);
-		else if (a == 67 ||
-			a == 99 ||
-			a == 80 ||
-			a == 83 ||
-			a == 84 ||
-			a == 87 ||
-			a == 96 ||	// This is already listed above, so that part of the expression is always false
-			a == 112 ||
-			a == 115 ||
-			a == 116 ||
-			a == 119)
-			Surface2Surface(x, line, &rcLevel[2], SURFACE_ID_MAP, SURFACE_ID_TEXT_BOX);
-		else
-			Surface2Surface(x, line, &rcLevel[3], SURFACE_ID_MAP, SURFACE_ID_TEXT_BOX);
+	for (line = 0; line < gMap.length; line++)
+	{
+		char colorHigh = 0;
+		char colorLow = 0;
+
+		for (x = 0; x < gMap.width; x++)
+		{
+			a = GetAttribute(x, line);
+
+			// Yup, this really is an if/else chain.
+			// No switch here.
+			if (a == 0)
+			{
+				if(x % 2 == 0) colorHigh = level0Color;
+				else colorLow = level0Color;
+			}
+			else if (a == 68 ||
+				a == 1 ||
+				a == 64 ||
+				a == 128 ||
+				a == 129 ||
+				a == 130 ||
+				a == 131 ||
+				a == 81 ||
+				a == 82 ||
+				a == 85 ||
+				a == 86 ||
+				a == 2 ||
+				a == 96 ||
+				a == 113 ||
+				a == 114 ||
+				a == 117 ||
+				a == 118 ||
+				a == 160 ||
+				a == 161 ||
+				a == 162 ||
+				a == 163)
+			{
+				if(x % 2 == 0) colorHigh = level1Color;
+				else colorLow = level1Color;
+			}
+				
+			else if (a == 67 ||
+				a == 99 ||
+				a == 80 ||
+				a == 83 ||
+				a == 84 ||
+				a == 87 ||
+				a == 96 ||	// This is already listed above, so that part of the expression is always false
+				a == 112 ||
+				a == 115 ||
+				a == 116 ||
+				a == 119)
+			{
+				if(x % 2 == 0) colorHigh = level2Color;
+				else colorLow = level2Color;
+			}
+				
+			else
+			{
+				if(x % 2 == 0) colorHigh = level3Color;
+				else colorLow = level3Color;
+			}
+
+			if(colorHigh && colorLow)
+			{
+				char color = (colorHigh | colorLow << 4);
+				SetSurf2Pixels(x, line, SURFACE_ID_MAP, color);
+				colorHigh = colorLow = 0;
+			}
+			if(x == gMap.width - 1 && x % 2 == 0)
+			{
+				char color = (colorHigh | 0 << 4);
+				SetSurf2Pixels(x, line, SURFACE_ID_MAP, color);
+				colorHigh = colorLow = 0;
+			}
+		}
 	}
-	RECT rect = {0, 0, gMap.width, gMap.length};
-	//CopyDataToTexture(surf[SURFACE_ID_MAP].paletteType, surf[SURFACE_ID_MAP].textureid, SURFACE_ID_MAP, 0, 0, &rect);
+	RECT rect = {0, 0, gMap.width*2, gMap.length};
+	CopyDataToTexture(surf[SURFACE_ID_MAP].paletteType, surf[SURFACE_ID_MAP].textureid, SURFACE_ID_MAP, 
+		surf[SURFACE_ID_MAP].xoffset, surf[SURFACE_ID_MAP].yoffset, &rect);
 }
 
 int MiniMapLoop(void)
@@ -96,6 +178,23 @@ int MiniMapLoop(void)
 	my_x = ((gMC.x / 0x200) + 8) / 16;
 	my_y = ((gMC.y / 0x200) + 8) / 16;
 
+	if(gMap.length > 80)
+	{
+		surf[SURFACE_ID_MAP].xoffset = 888;
+		surf[SURFACE_ID_MAP].yoffset = 0;
+		surf[SURFACE_ID_MAP].textureid = gAtlas16Color2;
+	}
+	else
+	{
+		surf[SURFACE_ID_MAP].xoffset = 256;
+		surf[SURFACE_ID_MAP].yoffset = 416;
+		surf[SURFACE_ID_MAP].textureid = gAtlas16Color1;
+	}
+
+	free(surf[SURFACE_ID_MAP].data);
+	surf[SURFACE_ID_MAP].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_MAP].w * surf[SURFACE_ID_MAP].h * sizeof(BUFFER_PIXEL));
+
+	WriteMiniMapLine();
 	for (f = 0; f <= 8; ++f)
 	{
 		GetTrg();
@@ -114,6 +213,28 @@ int MiniMapLoop(void)
 
 		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
 
+		int frame_x;
+		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);
+		GetFramePosition(&frame_x, &frame_y);
+		
+		PutBack(frame_x, frame_y);
+		PutStage_Back(frame_x, frame_y);
+		PutBossChar(frame_x, frame_y);
+		PutNpChar(frame_x, frame_y);
+		PutBullet(frame_x, frame_y);
+		PutMyChar(frame_x, frame_y);
+		PutStar(frame_x, frame_y);
+		PutMapDataVector(frame_x, frame_y);
+		PutStage_Front(frame_x, frame_y);
+		PutFront(frame_x, frame_y);
+		PutFlash();
+		PutCaret(frame_x, frame_y);
+		PutValueView(frame_x, frame_y);
+		PutBossLife();
+		PutFade();
+
 		rcView.left = (WINDOW_WIDTH / 2) - (((gMap.width * f) / 8) / 2);
 		rcView.right = (WINDOW_WIDTH / 2) + (((gMap.width * f) / 8) / 2);
 		rcView.top = (WINDOW_HEIGHT / 2) - (((gMap.length * f) / 8) / 2);
@@ -130,7 +251,7 @@ int MiniMapLoop(void)
 	rcMiniMap.left = 0;
 	rcMiniMap.right = gMap.width;
 	rcMiniMap.top = 0;
-	rcMiniMap.bottom = gMap.length;
+	rcMiniMap.bottom = 0;
 
 	rcView.right = --rcView.left + gMap.width + 2;
 	rcView.bottom = --rcView.top + gMap.length + 2;
@@ -138,11 +259,6 @@ int MiniMapLoop(void)
 
 	line = 0;
 	my_wait = 0;
-
-	surf[SURFACE_ID_MAP].w = gMap.width;
-	surf[SURFACE_ID_MAP].h = gMap.length;
-	//free(surf[SURFACE_ID_MAP].data);
-	//surf[SURFACE_ID_MAP].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_MAP].w * surf[SURFACE_ID_MAP].h * sizeof(BUFFER_PIXEL));
 	while (1)
 	{
 		GetTrg();
@@ -163,21 +279,43 @@ int MiniMapLoop(void)
 		}
 
 		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
+		int frame_x;
+		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);		
+		GetFramePosition(&frame_x, &frame_y);
+		
+		PutBack(frame_x, frame_y);
+		PutStage_Back(frame_x, frame_y);
+		PutBossChar(frame_x, frame_y);
+		PutNpChar(frame_x, frame_y);
+		PutBullet(frame_x, frame_y);
+		PutMyChar(frame_x, frame_y);
+		PutStar(frame_x, frame_y);
+		PutMapDataVector(frame_x, frame_y);
+		PutStage_Front(frame_x, frame_y);
+		PutFront(frame_x, frame_y);
+		PutFlash();
+		PutCaret(frame_x, frame_y);
+		PutValueView(frame_x, frame_y);
+		PutBossLife();
+		PutFade();
+
 		CortBox(&rcView, 0);
 
 		if (line < gMap.length)
 		{
-			WriteMiniMapLine(line);
+
 			++line;
 		}
 		// I guess Pixel duplicated this block of code because he
 		// wanted the minimap to draw faster?
 		if (line < gMap.length)
 		{
-			WriteMiniMapLine(line);
+
 			++line;
 		}
-
+		rcMiniMap.bottom = line;
 		PutBitmap3(&grcGame, rcView.left + 1, rcView.top + 1, &rcMiniMap, SURFACE_ID_MAP);
 
 		PutMapName(TRUE);
@@ -208,6 +346,28 @@ int MiniMapLoop(void)
 
 		//PutBitmap4(&grcGame, 0, 0, &grcGame, SURFACE_ID_SCREEN_GRAB);
 
+		int frame_x;
+		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);		
+		GetFramePosition(&frame_x, &frame_y);
+		
+		PutBack(frame_x, frame_y);
+		PutStage_Back(frame_x, frame_y);
+		PutBossChar(frame_x, frame_y);
+		PutNpChar(frame_x, frame_y);
+		PutBullet(frame_x, frame_y);
+		PutMyChar(frame_x, frame_y);
+		PutStar(frame_x, frame_y);
+		PutMapDataVector(frame_x, frame_y);
+		PutStage_Front(frame_x, frame_y);
+		PutFront(frame_x, frame_y);
+		PutFlash();
+		PutCaret(frame_x, frame_y);
+		PutValueView(frame_x, frame_y);
+		PutBossLife();
+		PutFade();
+
 		rcView.left = (WINDOW_WIDTH / 2) - (((gMap.width * f) / 8) / 2);
 		rcView.right = (WINDOW_WIDTH / 2) + (((gMap.width * f) / 8) / 2);
 		rcView.top = (WINDOW_HEIGHT / 2) - (((gMap.length * f) / 8) / 2);
@@ -220,11 +380,28 @@ int MiniMapLoop(void)
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
 	}
+		int frame_x;
+		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);		
+		GetFramePosition(&frame_x, &frame_y);
+		
 
-	char temp[32];
-	strcpy(temp, surf[SURFACE_ID_LEVEL_BACKGROUND].name);
-	strcpy(surf[SURFACE_ID_LEVEL_BACKGROUND].name, "");
-	ReloadBitmap_File(temp, SURFACE_ID_LEVEL_BACKGROUND);
+		PutBack(frame_x, frame_y);
+		PutStage_Back(frame_x, frame_y);
+		PutBossChar(frame_x, frame_y);
+		PutNpChar(frame_x, frame_y);
+		PutBullet(frame_x, frame_y);
+		PutMyChar(frame_x, frame_y);
+		PutStar(frame_x, frame_y);
+		PutMapDataVector(frame_x, frame_y);
+		PutStage_Front(frame_x, frame_y);
+		PutFront(frame_x, frame_y);
+		PutFlash();
+		PutCaret(frame_x, frame_y);
+		PutValueView(frame_x, frame_y);
+		PutBossLife();
+		PutFade();
 
 	return enum_ESCRETURN_continue;
 }

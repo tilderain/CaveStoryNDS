@@ -251,6 +251,8 @@ int StageSelectLoop(int *p_event)
 #endif
 		int frame_x;
 		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);		
 		GetFramePosition(&frame_x, &frame_y);
 		
 		PutBack(frame_x, frame_y);

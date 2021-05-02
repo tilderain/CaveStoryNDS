@@ -198,7 +198,7 @@ bool LoadGenericData()
 		printf("making surfaces\n");
 		//MakeSurface_Generic(WINDOW_WIDTH, WINDOW_HEIGHT, SURFACE_ID_SCREEN_GRAB);
 		MakeSurface_Generic(WINDOW_WIDTH, WINDOW_HEIGHT, SURFACE_ID_LEVEL_BACKGROUND);
-		MakeSurface_Generic(WINDOW_WIDTH, WINDOW_HEIGHT, SURFACE_ID_MAP);
+		MakeSurface_Generic(320, 240, SURFACE_ID_MAP);
 		MakeSurface_Generic(WINDOW_WIDTH, WINDOW_HEIGHT, SURFACE_ID_CASTS);
 		MakeSurface_Generic(256, 256, SURFACE_ID_LEVEL_TILESET);
 		MakeSurface_Generic(160, 16, SURFACE_ID_ROOM_NAME);
@@ -219,6 +219,7 @@ bool LoadGenericData()
 		surf[SURFACE_ID_MAP].palettesize = surf[SURFACE_ID_TEXT_BOX].palettesize;
 		surf[SURFACE_ID_MAP].paletteType = surf[SURFACE_ID_TEXT_BOX].paletteType;
 		surf[SURFACE_ID_MAP].textureid = surf[SURFACE_ID_TEXT_BOX].textureid;
+		surf[SURFACE_ID_MAP].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_MAP].w * surf[SURFACE_ID_MAP].h * sizeof(BUFFER_PIXEL));
 
 		printf("done\n");
 		printf("pxt creation (please wait)\n");

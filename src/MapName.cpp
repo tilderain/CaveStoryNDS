@@ -113,9 +113,9 @@ void PutMapName(BOOL bMini)
 		rcBack.top = 7;
 		rcBack.bottom = 24;
 
-		CortBox(&rcBack, 0x000000);
-		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
-		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
+		CortBoxAlpha(&rcBack, 0x000000, 12);
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 12, gMapName.name, RGB(0x11, 0x00, 0x22));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 11, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 	}
 	else if (gMapName.flag)
 	{

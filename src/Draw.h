@@ -25,6 +25,10 @@ extern bool npcSymInArmsSlot;
 
 extern char gConsoleInited;
 
+extern int gAtlas16Color1;
+extern int gAtlas16Color2;
+
+
 void ErrorInitConsole();
 
 static const u8 font_space[32*3] = {
@@ -180,6 +184,8 @@ static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
 }
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
+int GetSurfPixel(int x, int y, int surf_no);
+void SetSurf2Pixels(int x, int y, int surf_no, char color);
 void Surface2Surface(int x, int y, RECT *rect, int to, int from);
 void Surface2Texture(int x, int y, RECT *rect, int to, int from);
 unsigned long GetCortBoxColor(unsigned long col);

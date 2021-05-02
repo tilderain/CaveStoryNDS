@@ -520,6 +520,8 @@ int CampLoop(void)
 		//PutBitmap4(&rcView, 0, 0, &rcView, SURFACE_ID_SCREEN_GRAB);
 		int frame_x;
 		int frame_y;
+		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
+		CortBox(&grcFull, color);		
 		GetFramePosition(&frame_x, &frame_y);
 		
 		PutBack(frame_x, frame_y);

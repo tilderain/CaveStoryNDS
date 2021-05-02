@@ -1384,7 +1384,7 @@ int TextScriptProc(void)
 						// Print text
 						if (c[0] == '=')
 						{
-							Surface2Surface(gTS.p_write * 6, 2, &rcSymbol, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)), SURFACE_ID_TEXT_BOX);
+							//Surface2Surface(gTS.p_write * 6, 2, &rcSymbol, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)), SURFACE_ID_TEXT_BOX);
 						}
 						else
 						{
