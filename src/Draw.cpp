@@ -42,6 +42,14 @@
 
 #include "Sound.h"
 
+struct VramSlot
+{
+	SurfaceID id;
+	int atlas;
+	int x;
+	int y; 
+};
+
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
@@ -842,104 +850,50 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	int yoffset = 0;
 	int xoffset = 0;
 	int paletteOffset = 0;
-	int textureid;
+	int textureid = gAtlas16Color1;
 
-	textureid = gAtlas16Color1;
 	RECT datarect = {0, 0, bitmap_width, bitmap_height};
 
-	switch(surf_no)
+	VramSlot table[] =
 	{
-		case SURFACE_ID_LEVEL_SPRITESET_1: // Guest will always be in spriteset 1 (don't change it)
+		{SURFACE_ID_LEVEL_SPRITESET_1, gAtlas16Color1, 0, 0},
+		{SURFACE_ID_LEVEL_SPRITESET_2, gAtlas256Color, 640, 0},
+		{SURFACE_ID_NPC_SYM, gAtlas16Color1, 704, 256},
+		{SURFACE_ID_CASTS, gAtlas16Color1, 256, 256},
+		{SURFACE_ID_CREDITS_IMAGE, gAtlas16Color2, 480, 0},
+		{SURFACE_ID_LEVEL_TILESET, gAtlas16Color1, 0, 240},
+		{SURFACE_ID_TITLE, gAtlas16Color1, 0, 0},
+		{SURFACE_ID_LOADING, gAtlas16Color1, 0, 0},
+		{SURFACE_ID_PIXEL, gAtlas16Color1, 0, 48},
+		{SURFACE_ID_BULLET, gAtlas16Color1, 256, 240},
+		{SURFACE_ID_ARMS, gAtlas16Color2, 0, 0},
+		{SURFACE_ID_ITEM_IMAGE, gAtlas16Color2, 64, 128},
+		{SURFACE_ID_ARMS_IMAGE, gAtlas16Color1, 512, 496},
+		{SURFACE_ID_STAGE_ITEM, gAtlas16Color1, 256, 496},
+		{SURFACE_ID_FADE, gAtlas16Color1, 0, 480},
+		{SURFACE_ID_NPC_REGU, gAtlas256Color, 0, 0},
+		{SURFACE_ID_FACE, gAtlas16Color2, xoffset, yoffset},
+		{SURFACE_ID_LEVEL_BACKGROUND, gAtlas16Color1, 640, 0},
+		{SURFACE_ID_CARET, gAtlas16Color2, 320,0},
+		{SURFACE_ID_TEXT_BOX, gAtlas16Color2, 640, 112},
+		{SURFACE_ID_FONT, gAtlas16Color2, 640, 64},
+		{SURFACE_ID_MY_CHAR, gAtlas16Color2, 640, 0},
+	};
+	for (size_t i = 0; i < sizeof(table)/sizeof(table[0]); i++)
+	{
+		if(surf_no == table[i].id)
+		{
+			xoffset = table[i].x;
+			yoffset = table[i].y;
+			textureid = table[i].atlas;
 			break;
-		case SURFACE_ID_LEVEL_SPRITESET_2:
-			xoffset = 640;
-			textureid = gAtlas256Color;
-			break;
-		case SURFACE_ID_NPC_SYM:
-			if(npcSymInArmsSlot) // i hope i wont have to do this again
-			{
-				textureid = gAtlas16Color2;
-			}
-			else
-			{
-				xoffset = 704;
-				yoffset = 256;
-			}
-			break;
-		case SURFACE_ID_CASTS:
-			xoffset = 256;
-			yoffset = 240;
-			break;
-		case SURFACE_ID_CREDITS_IMAGE:
-			xoffset = 480;
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_LEVEL_TILESET:
-			textureid = gAtlas16Color1;
-			yoffset = 240;
-			break;
-		case SURFACE_ID_TITLE:
-			break;
-		case SURFACE_ID_LOADING:
-			break;
-		case SURFACE_ID_PIXEL:
-			yoffset = 48;
-			break;
-		case SURFACE_ID_BULLET:
-			xoffset = 256;
-			yoffset = 184;
-			break;
-		case SURFACE_ID_ARMS:
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_ITEM_IMAGE:
-			xoffset = 256;
-			yoffset = 360;
-			break;
-		case SURFACE_ID_ARMS_IMAGE:
-			xoffset = 512;
-			yoffset = 496;
-			break;
-		case SURFACE_ID_STAGE_ITEM:
-			xoffset = 256;
-			yoffset = 496;
-			break;
-		case SURFACE_ID_FADE:
-			yoffset = 480;
-			break;
-		case SURFACE_ID_NPC_REGU:
-			textureid = gAtlas256Color;
-			xoffset = 0;
-			break;
-		case SURFACE_ID_FACE:
-			xoffset = 888;
-			yoffset = 196;
-			goto facejump;
-			break;
-		case SURFACE_ID_LEVEL_BACKGROUND:
-			xoffset = 640;
-			break;
-		case SURFACE_ID_CARET:
-			xoffset = 320;
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_TEXT_BOX:
-			xoffset = 640;
-			yoffset = 112;
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_FONT:
-			xoffset = 640;
-			yoffset = 64;
-			textureid = gAtlas16Color2;
-			break;
-		case SURFACE_ID_MY_CHAR:
-			xoffset = 640;
-			textureid = gAtlas16Color2;
-			break;
-		default:
-			break;
+		}
 	}
+
+	if(surf_no == SURFACE_ID_NPC_SYM && npcSymInArmsSlot)
+		textureid = gAtlas16Color2;
+	if(surf_no == SURFACE_ID_FACE)
+		goto facejump;
 
 	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{

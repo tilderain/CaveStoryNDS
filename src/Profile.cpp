@@ -41,7 +41,8 @@ BOOL IsProfile(void)
 	FILE *file = fopen(path, "rb");
 	if (file == NULL)
 	{
-		if(profile.x) return TRUE;
+		if (memcmp(profile.code, gProfileCode, 8) == 0)
+			return TRUE;
 		return FALSE;
 	}
 
@@ -183,7 +184,6 @@ static BOOL LoadProfileReal()
 BOOL LoadProfile(const char *name)
 {
 	FILE *fp;
-	PROFILE profile;
 	char path[MAX_PATH];
 
 	// Get path
@@ -196,7 +196,7 @@ BOOL LoadProfile(const char *name)
 	fp = fopen(path, "rb");
 	if (fp == NULL)
 	{
-		if(profile.stage)
+		if (memcmp(profile.code, gProfileCode, 8) == 0)
 			return LoadProfileReal();
 		return FALSE;
 	}

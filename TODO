@@ -5,8 +5,6 @@ Known issues:
 
 fix credit bitmapreload
 
-fix missile sprite
-
 move old libnds fifo sync code to here
 
 switch to software render for minimap--copy screen

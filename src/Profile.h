@@ -37,6 +37,7 @@ typedef struct PROFILE
 	char FLAG[4];
 	unsigned char flags[1000];
 } PROFILE;
+extern PROFILE profile;
 
 BOOL IsProfile(void);
 BOOL SaveProfile(const char *name);

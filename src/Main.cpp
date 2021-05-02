@@ -142,6 +142,8 @@ int main(int argc, char *argv[])
 	
 	memcpy(bindings, conf.bindings, sizeof(bindings));
 
+	memset(&profile, 0, sizeof(PROFILE));
+
 	//Initialize rendering
 	StartDirectDraw();
 	
