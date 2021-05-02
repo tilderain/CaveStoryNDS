@@ -1233,8 +1233,11 @@ int TextScriptProc(void)
 						#ifdef CYG_PROFILER
 						cygprofile_end();
 						#endif
-						SaveProfile(NULL);
-						gTS.p_read += 4;
+						z = GetTextScriptNo(gTS.p_read + 4);
+						if(!SaveProfile(NULL))
+							JumpTextScript(z);
+
+						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('L','D','P'))
 					{

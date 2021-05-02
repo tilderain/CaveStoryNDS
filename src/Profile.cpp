@@ -31,6 +31,7 @@
 
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
+PROFILE profile;
 
 BOOL IsProfile(void)
 {
@@ -39,7 +40,11 @@ BOOL IsProfile(void)
 
 	FILE *file = fopen(path, "rb");
 	if (file == NULL)
+	{
+		if(profile.x) return TRUE;
 		return FALSE;
+	}
+
 
 	fclose(file);
 	return TRUE;
@@ -48,7 +53,6 @@ BOOL IsProfile(void)
 BOOL SaveProfile(const char *name)
 {
 	FILE *fp;
-	PROFILE profile;
 	const char *FLAG = "FLAG";
 
 	char path[MAX_PATH];
@@ -58,11 +62,6 @@ BOOL SaveProfile(const char *name)
 		sprintf(path, "%s/%s", gModulePath, name);
 	else
 		sprintf(path, "%s/%s", gModulePath, gDefaultName);
-
-	// Open file
-	fp = fopen(path, "wb");
-	if (fp == NULL)
-		return FALSE;
 
 	// Set up profile
 	memset(&profile, 0, sizeof(PROFILE));
@@ -86,6 +85,11 @@ BOOL SaveProfile(const char *name)
 	memcpy(profile.permitstage, gPermitStage, sizeof(profile.permitstage));
 	memcpy(profile.permit_mapping, gMapping, sizeof(profile.permit_mapping));
 	memcpy(profile.flags, gFlagNPC, sizeof(profile.flags));
+
+	// Open file
+	fp = fopen(path, "wb");
+	if (fp == NULL)
+		return FALSE;
 
 	// Write to file
 	fwrite(profile.code, 8, 1, fp);
@@ -126,6 +130,56 @@ BOOL SaveProfile(const char *name)
 	return TRUE;
 }
 
+static BOOL LoadProfileReal()
+{
+
+	gSelectedArms = profile.select_arms;
+	gSelectedItem = profile.select_item;
+	gCounter = profile.counter;
+
+	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
+	memcpy(gItemData, profile.items, sizeof(gItemData));
+	memcpy(gPermitStage, profile.permitstage, sizeof(gPermitStage));
+	memcpy(gMapping, profile.permit_mapping, sizeof(gMapping));
+	memcpy(gFlagNPC, profile.flags, sizeof(gFlagNPC));
+
+	// Load stage
+	ChangeMusic(profile.music);
+	InitMyChar();
+	if (!TransferStage(profile.stage, 0, 0, 1))
+		return FALSE;
+
+	// Set character properties
+	gMC.equip = profile.equip;
+	gMC.unit = profile.unit;
+	gMC.direct = profile.direct;
+	gMC.max_life = profile.max_life;
+	gMC.life = profile.life;
+	gMC.star = profile.star;
+	gMC.cond = 0x80;
+	gMC.air = 1000;
+	gMC.lifeBr = profile.life;
+	gMC.x = profile.x;
+	gMC.y = profile.y;
+
+	gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
+	gMC.rect_arms.right = gMC.rect_arms.left + 24;
+	gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
+	gMC.rect_arms.bottom = gMC.rect_arms.top + 16;
+
+	// Reset stuff
+	ClearFade();
+	SetFrameMyChar();
+	SetFrameTargetMyChar(16);
+	InitBossLife();
+	CutNoise();
+	InitStar();
+	ClearValueView();
+	gCurlyShoot_wait = 0;
+
+	return TRUE;
+}
+
 BOOL LoadProfile(const char *name)
 {
 	FILE *fp;
@@ -141,7 +195,12 @@ BOOL LoadProfile(const char *name)
 	// Open file
 	fp = fopen(path, "rb");
 	if (fp == NULL)
+	{
+		if(profile.stage)
+			return LoadProfileReal();
 		return FALSE;
+	}
+
 
 	// Check header code
 	fread(profile.code, 8, 1, fp);
@@ -192,52 +251,10 @@ BOOL LoadProfile(const char *name)
 	fclose(fp);
 
 	// Set things
-	gSelectedArms = profile.select_arms;
-	gSelectedItem = profile.select_item;
-	gCounter = profile.counter;
-
-	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
-	memcpy(gItemData, profile.items, sizeof(gItemData));
-	memcpy(gPermitStage, profile.permitstage, sizeof(gPermitStage));
-	memcpy(gMapping, profile.permit_mapping, sizeof(gMapping));
-	memcpy(gFlagNPC, profile.flags, sizeof(gFlagNPC));
-
-	// Load stage
-	ChangeMusic(profile.music);
-	InitMyChar();
-	if (!TransferStage(profile.stage, 0, 0, 1))
-		return FALSE;
-
-	// Set character properties
-	gMC.equip = profile.equip;
-	gMC.unit = profile.unit;
-	gMC.direct = profile.direct;
-	gMC.max_life = profile.max_life;
-	gMC.life = profile.life;
-	gMC.star = profile.star;
-	gMC.cond = 0x80;
-	gMC.air = 1000;
-	gMC.lifeBr = profile.life;
-	gMC.x = profile.x;
-	gMC.y = profile.y;
-
-	gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
-	gMC.rect_arms.right = gMC.rect_arms.left + 24;
-	gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
-	gMC.rect_arms.bottom = gMC.rect_arms.top + 16;
-
-	// Reset stuff
-	ClearFade();
-	SetFrameMyChar();
-	SetFrameTargetMyChar(16);
-	InitBossLife();
-	CutNoise();
-	InitStar();
-	ClearValueView();
-	gCurlyShoot_wait = 0;
-
-	return TRUE;
+	return LoadProfileReal();
 }
+
+
 
 BOOL InitializeGame(void)
 {
