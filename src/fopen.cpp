@@ -104,93 +104,93 @@ INCBIN(CREDIT17png, "../game_english/data/BITMAP/CREDIT17.png");
 INCBIN(CREDIT18png, "../game_english/data/BITMAP/CREDIT18.png");
 INCBIN(PIXELpng, "../game_english/data/BITMAP/PIXEL.png");
 INCBIN(PIXEL_JPpng, "../game_english/data/BITMAP/PIXEL_JP.png");
-INCBIN(001raw, "../game_english/data/Wave/001.raw");
-INCBIN(002raw, "../game_english/data/Wave/002.raw");
-INCBIN(003raw, "../game_english/data/Wave/003.raw");
-INCBIN(004raw, "../game_english/data/Wave/004.raw");
-INCBIN(005raw, "../game_english/data/Wave/005.raw");
-INCBIN(006raw, "../game_english/data/Wave/006.raw");
-INCBIN(011raw, "../game_english/data/Wave/011.raw");
-INCBIN(012raw, "../game_english/data/Wave/012.raw");
-INCBIN(014raw, "../game_english/data/Wave/014.raw");
-INCBIN(015raw, "../game_english/data/Wave/015.raw");
-INCBIN(016raw, "../game_english/data/Wave/016.raw");
-INCBIN(017raw, "../game_english/data/Wave/017.raw");
-INCBIN(018raw, "../game_english/data/Wave/018.raw");
-INCBIN(020raw, "../game_english/data/Wave/020.raw");
-INCBIN(021raw, "../game_english/data/Wave/021.raw");
-INCBIN(022raw, "../game_english/data/Wave/022.raw");
-INCBIN(023raw, "../game_english/data/Wave/023.raw");
-INCBIN(024raw, "../game_english/data/Wave/024.raw");
-INCBIN(025raw, "../game_english/data/Wave/025.raw");
-INCBIN(026raw, "../game_english/data/Wave/026.raw");
-INCBIN(027raw, "../game_english/data/Wave/027.raw");
-INCBIN(028raw, "../game_english/data/Wave/028.raw");
-INCBIN(029raw, "../game_english/data/Wave/029.raw");
-INCBIN(030raw, "../game_english/data/Wave/030.raw");
-INCBIN(031raw, "../game_english/data/Wave/031.raw");
-INCBIN(032raw, "../game_english/data/Wave/032.raw");
-INCBIN(033raw, "../game_english/data/Wave/033.raw");
-INCBIN(034raw, "../game_english/data/Wave/034.raw");
-INCBIN(035raw, "../game_english/data/Wave/035.raw");
-INCBIN(037raw, "../game_english/data/Wave/037.raw");
-INCBIN(038raw, "../game_english/data/Wave/038.raw");
-INCBIN(039raw, "../game_english/data/Wave/039.raw");
-INCBIN(040raw, "../game_english/data/Wave/040.raw");
-INCBIN(041raw, "../game_english/data/Wave/041.raw");
-INCBIN(042raw, "../game_english/data/Wave/042.raw");
-INCBIN(043raw, "../game_english/data/Wave/043.raw");
-INCBIN(044raw, "../game_english/data/Wave/044.raw");
-INCBIN(045raw, "../game_english/data/Wave/045.raw");
-INCBIN(046raw, "../game_english/data/Wave/046.raw");
-INCBIN(047raw, "../game_english/data/Wave/047.raw");
-INCBIN(048raw, "../game_english/data/Wave/048.raw");
-INCBIN(049raw, "../game_english/data/Wave/049.raw");
-INCBIN(050raw, "../game_english/data/Wave/050.raw");
-INCBIN(051raw, "../game_english/data/Wave/051.raw");
-INCBIN(052raw, "../game_english/data/Wave/052.raw");
-INCBIN(053raw, "../game_english/data/Wave/053.raw");
-INCBIN(054raw, "../game_english/data/Wave/054.raw");
-INCBIN(055raw, "../game_english/data/Wave/055.raw");
-INCBIN(056raw, "../game_english/data/Wave/056.raw");
-INCBIN(057raw, "../game_english/data/Wave/057.raw");
-INCBIN(058raw, "../game_english/data/Wave/058.raw");
-INCBIN(059raw, "../game_english/data/Wave/059.raw");
-INCBIN(060raw, "../game_english/data/Wave/060.raw");
-INCBIN(061raw, "../game_english/data/Wave/061.raw");
-INCBIN(062raw, "../game_english/data/Wave/062.raw");
-INCBIN(063raw, "../game_english/data/Wave/063.raw");
-INCBIN(064raw, "../game_english/data/Wave/064.raw");
-INCBIN(065raw, "../game_english/data/Wave/065.raw");
-INCBIN(070raw, "../game_english/data/Wave/070.raw");
-INCBIN(071raw, "../game_english/data/Wave/071.raw");
-INCBIN(072raw, "../game_english/data/Wave/072.raw");
-INCBIN(100raw, "../game_english/data/Wave/100.raw");
-INCBIN(101raw, "../game_english/data/Wave/101.raw");
-INCBIN(102raw, "../game_english/data/Wave/102.raw");
-INCBIN(103raw, "../game_english/data/Wave/103.raw");
-INCBIN(104raw, "../game_english/data/Wave/104.raw");
-INCBIN(105raw, "../game_english/data/Wave/105.raw");
-INCBIN(106raw, "../game_english/data/Wave/106.raw");
-INCBIN(107raw, "../game_english/data/Wave/107.raw");
-INCBIN(108raw, "../game_english/data/Wave/108.raw");
-INCBIN(109raw, "../game_english/data/Wave/109.raw");
-INCBIN(110raw, "../game_english/data/Wave/110.raw");
-INCBIN(111raw, "../game_english/data/Wave/111.raw");
-INCBIN(112raw, "../game_english/data/Wave/112.raw");
-INCBIN(113raw, "../game_english/data/Wave/113.raw");
-INCBIN(114raw, "../game_english/data/Wave/114.raw");
-INCBIN(115raw, "../game_english/data/Wave/115.raw");
-INCBIN(116raw, "../game_english/data/Wave/116.raw");
-INCBIN(117raw, "../game_english/data/Wave/117.raw");
-INCBIN(150raw, "../game_english/data/Wave/150.raw");
-INCBIN(151raw, "../game_english/data/Wave/151.raw");
-INCBIN(152raw, "../game_english/data/Wave/152.raw");
-INCBIN(153raw, "../game_english/data/Wave/153.raw");
-INCBIN(154raw, "../game_english/data/Wave/154.raw");
-INCBIN(155raw, "../game_english/data/Wave/155.raw");
-INCBIN(156raw, "../game_english/data/Wave/156.raw");
-INCBIN(157raw, "../game_english/data/Wave/157.raw");
+INCBIN(001swav, "../game_english/data/Wave/001.swav");
+INCBIN(002swav, "../game_english/data/Wave/002.swav");
+INCBIN(003swav, "../game_english/data/Wave/003.swav");
+INCBIN(004swav, "../game_english/data/Wave/004.swav");
+INCBIN(005swav, "../game_english/data/Wave/005.swav");
+INCBIN(006swav, "../game_english/data/Wave/006.swav");
+INCBIN(011swav, "../game_english/data/Wave/011.swav");
+INCBIN(012swav, "../game_english/data/Wave/012.swav");
+INCBIN(014swav, "../game_english/data/Wave/014.swav");
+INCBIN(015swav, "../game_english/data/Wave/015.swav");
+INCBIN(016swav, "../game_english/data/Wave/016.swav");
+INCBIN(017swav, "../game_english/data/Wave/017.swav");
+INCBIN(018swav, "../game_english/data/Wave/018.swav");
+INCBIN(020swav, "../game_english/data/Wave/020.swav");
+INCBIN(021swav, "../game_english/data/Wave/021.swav");
+INCBIN(022swav, "../game_english/data/Wave/022.swav");
+INCBIN(023swav, "../game_english/data/Wave/023.swav");
+INCBIN(024swav, "../game_english/data/Wave/024.swav");
+INCBIN(025swav, "../game_english/data/Wave/025.swav");
+INCBIN(026swav, "../game_english/data/Wave/026.swav");
+INCBIN(027swav, "../game_english/data/Wave/027.swav");
+INCBIN(028swav, "../game_english/data/Wave/028.swav");
+INCBIN(029swav, "../game_english/data/Wave/029.swav");
+INCBIN(030swav, "../game_english/data/Wave/030.swav");
+INCBIN(031swav, "../game_english/data/Wave/031.swav");
+INCBIN(032swav, "../game_english/data/Wave/032.swav");
+INCBIN(033swav, "../game_english/data/Wave/033.swav");
+INCBIN(034swav, "../game_english/data/Wave/034.swav");
+INCBIN(035swav, "../game_english/data/Wave/035.swav");
+INCBIN(037swav, "../game_english/data/Wave/037.swav");
+INCBIN(038swav, "../game_english/data/Wave/038.swav");
+INCBIN(039swav, "../game_english/data/Wave/039.swav");
+INCBIN(040swav, "../game_english/data/Wave/040.swav");
+INCBIN(041swav, "../game_english/data/Wave/041.swav");
+INCBIN(042swav, "../game_english/data/Wave/042.swav");
+INCBIN(043swav, "../game_english/data/Wave/043.swav");
+INCBIN(044swav, "../game_english/data/Wave/044.swav");
+INCBIN(045swav, "../game_english/data/Wave/045.swav");
+INCBIN(046swav, "../game_english/data/Wave/046.swav");
+INCBIN(047swav, "../game_english/data/Wave/047.swav");
+INCBIN(048swav, "../game_english/data/Wave/048.swav");
+INCBIN(049swav, "../game_english/data/Wave/049.swav");
+INCBIN(050swav, "../game_english/data/Wave/050.swav");
+INCBIN(051swav, "../game_english/data/Wave/051.swav");
+INCBIN(052swav, "../game_english/data/Wave/052.swav");
+INCBIN(053swav, "../game_english/data/Wave/053.swav");
+INCBIN(054swav, "../game_english/data/Wave/054.swav");
+INCBIN(055swav, "../game_english/data/Wave/055.swav");
+INCBIN(056swav, "../game_english/data/Wave/056.swav");
+INCBIN(057swav, "../game_english/data/Wave/057.swav");
+INCBIN(058swav, "../game_english/data/Wave/058.swav");
+INCBIN(059swav, "../game_english/data/Wave/059.swav");
+INCBIN(060swav, "../game_english/data/Wave/060.swav");
+INCBIN(061swav, "../game_english/data/Wave/061.swav");
+INCBIN(062swav, "../game_english/data/Wave/062.swav");
+INCBIN(063swav, "../game_english/data/Wave/063.swav");
+INCBIN(064swav, "../game_english/data/Wave/064.swav");
+INCBIN(065swav, "../game_english/data/Wave/065.swav");
+INCBIN(070swav, "../game_english/data/Wave/070.swav");
+INCBIN(071swav, "../game_english/data/Wave/071.swav");
+INCBIN(072swav, "../game_english/data/Wave/072.swav");
+INCBIN(100swav, "../game_english/data/Wave/100.swav");
+INCBIN(101swav, "../game_english/data/Wave/101.swav");
+INCBIN(102swav, "../game_english/data/Wave/102.swav");
+INCBIN(103swav, "../game_english/data/Wave/103.swav");
+INCBIN(104swav, "../game_english/data/Wave/104.swav");
+INCBIN(105swav, "../game_english/data/Wave/105.swav");
+INCBIN(106swav, "../game_english/data/Wave/106.swav");
+INCBIN(107swav, "../game_english/data/Wave/107.swav");
+INCBIN(108swav, "../game_english/data/Wave/108.swav");
+INCBIN(109swav, "../game_english/data/Wave/109.swav");
+INCBIN(110swav, "../game_english/data/Wave/110.swav");
+INCBIN(111swav, "../game_english/data/Wave/111.swav");
+INCBIN(112swav, "../game_english/data/Wave/112.swav");
+INCBIN(113swav, "../game_english/data/Wave/113.swav");
+INCBIN(114swav, "../game_english/data/Wave/114.swav");
+INCBIN(115swav, "../game_english/data/Wave/115.swav");
+INCBIN(116swav, "../game_english/data/Wave/116.swav");
+INCBIN(117swav, "../game_english/data/Wave/117.swav");
+INCBIN(150swav, "../game_english/data/Wave/150.swav");
+INCBIN(151swav, "../game_english/data/Wave/151.swav");
+INCBIN(152swav, "../game_english/data/Wave/152.swav");
+INCBIN(153swav, "../game_english/data/Wave/153.swav");
+INCBIN(154swav, "../game_english/data/Wave/154.swav");
+INCBIN(155swav, "../game_english/data/Wave/155.swav");
+INCBIN(156swav, "../game_english/data/Wave/156.swav");
+INCBIN(157swav, "../game_english/data/Wave/157.swav");
 INCBIN(0pxa, "../game_english/data/Stage/0.pxa");
 INCBIN(0pxe, "../game_english/data/Stage/0.pxe");
 INCBIN(0pxm, "../game_english/data/Stage/0.pxm");
@@ -656,93 +656,93 @@ const FILEREF files[] = {
 	{gCREDIT18pngData, gCREDIT18pngSize, "data/BITMAP/CREDIT18.png"},
 	{gPIXELpngData, gPIXELpngSize, "data/BITMAP/PIXEL.png"},
 	{gPIXEL_JPpngData, gPIXEL_JPpngSize, "data/BITMAP/PIXEL_JP.png"},
-	{g001rawData, g001rawSize, "data/Wave/001.raw"},
-	{g002rawData, g002rawSize, "data/Wave/002.raw"},
-	{g003rawData, g003rawSize, "data/Wave/003.raw"},
-	{g004rawData, g004rawSize, "data/Wave/004.raw"},
-	{g005rawData, g005rawSize, "data/Wave/005.raw"},
-	{g006rawData, g006rawSize, "data/Wave/006.raw"},
-	{g011rawData, g011rawSize, "data/Wave/011.raw"},
-	{g012rawData, g012rawSize, "data/Wave/012.raw"},
-	{g014rawData, g014rawSize, "data/Wave/014.raw"},
-	{g015rawData, g015rawSize, "data/Wave/015.raw"},
-	{g016rawData, g016rawSize, "data/Wave/016.raw"},
-	{g017rawData, g017rawSize, "data/Wave/017.raw"},
-	{g018rawData, g018rawSize, "data/Wave/018.raw"},
-	{g020rawData, g020rawSize, "data/Wave/020.raw"},
-	{g021rawData, g021rawSize, "data/Wave/021.raw"},
-	{g022rawData, g022rawSize, "data/Wave/022.raw"},
-	{g023rawData, g023rawSize, "data/Wave/023.raw"},
-	{g024rawData, g024rawSize, "data/Wave/024.raw"},
-	{g025rawData, g025rawSize, "data/Wave/025.raw"},
-	{g026rawData, g026rawSize, "data/Wave/026.raw"},
-	{g027rawData, g027rawSize, "data/Wave/027.raw"},
-	{g028rawData, g028rawSize, "data/Wave/028.raw"},
-	{g029rawData, g029rawSize, "data/Wave/029.raw"},
-	{g030rawData, g030rawSize, "data/Wave/030.raw"},
-	{g031rawData, g031rawSize, "data/Wave/031.raw"},
-	{g032rawData, g032rawSize, "data/Wave/032.raw"},
-	{g033rawData, g033rawSize, "data/Wave/033.raw"},
-	{g034rawData, g034rawSize, "data/Wave/034.raw"},
-	{g035rawData, g035rawSize, "data/Wave/035.raw"},
-	{g037rawData, g037rawSize, "data/Wave/037.raw"},
-	{g038rawData, g038rawSize, "data/Wave/038.raw"},
-	{g039rawData, g039rawSize, "data/Wave/039.raw"},
-	{g040rawData, g040rawSize, "data/Wave/040.raw"},
-	{g041rawData, g041rawSize, "data/Wave/041.raw"},
-	{g042rawData, g042rawSize, "data/Wave/042.raw"},
-	{g043rawData, g043rawSize, "data/Wave/043.raw"},
-	{g044rawData, g044rawSize, "data/Wave/044.raw"},
-	{g045rawData, g045rawSize, "data/Wave/045.raw"},
-	{g046rawData, g046rawSize, "data/Wave/046.raw"},
-	{g047rawData, g047rawSize, "data/Wave/047.raw"},
-	{g048rawData, g048rawSize, "data/Wave/048.raw"},
-	{g049rawData, g049rawSize, "data/Wave/049.raw"},
-	{g050rawData, g050rawSize, "data/Wave/050.raw"},
-	{g051rawData, g051rawSize, "data/Wave/051.raw"},
-	{g052rawData, g052rawSize, "data/Wave/052.raw"},
-	{g053rawData, g053rawSize, "data/Wave/053.raw"},
-	{g054rawData, g054rawSize, "data/Wave/054.raw"},
-	{g055rawData, g055rawSize, "data/Wave/055.raw"},
-	{g056rawData, g056rawSize, "data/Wave/056.raw"},
-	{g057rawData, g057rawSize, "data/Wave/057.raw"},
-	{g058rawData, g058rawSize, "data/Wave/058.raw"},
-	{g059rawData, g059rawSize, "data/Wave/059.raw"},
-	{g060rawData, g060rawSize, "data/Wave/060.raw"},
-	{g061rawData, g061rawSize, "data/Wave/061.raw"},
-	{g062rawData, g062rawSize, "data/Wave/062.raw"},
-	{g063rawData, g063rawSize, "data/Wave/063.raw"},
-	{g064rawData, g064rawSize, "data/Wave/064.raw"},
-	{g065rawData, g065rawSize, "data/Wave/065.raw"},
-	{g070rawData, g070rawSize, "data/Wave/070.raw"},
-	{g071rawData, g071rawSize, "data/Wave/071.raw"},
-	{g072rawData, g072rawSize, "data/Wave/072.raw"},
-	{g100rawData, g100rawSize, "data/Wave/100.raw"},
-	{g101rawData, g101rawSize, "data/Wave/101.raw"},
-	{g102rawData, g102rawSize, "data/Wave/102.raw"},
-	{g103rawData, g103rawSize, "data/Wave/103.raw"},
-	{g104rawData, g104rawSize, "data/Wave/104.raw"},
-	{g105rawData, g105rawSize, "data/Wave/105.raw"},
-	{g106rawData, g106rawSize, "data/Wave/106.raw"},
-	{g107rawData, g107rawSize, "data/Wave/107.raw"},
-	{g108rawData, g108rawSize, "data/Wave/108.raw"},
-	{g109rawData, g109rawSize, "data/Wave/109.raw"},
-	{g110rawData, g110rawSize, "data/Wave/110.raw"},
-	{g111rawData, g111rawSize, "data/Wave/111.raw"},
-	{g112rawData, g112rawSize, "data/Wave/112.raw"},
-	{g113rawData, g113rawSize, "data/Wave/113.raw"},
-	{g114rawData, g114rawSize, "data/Wave/114.raw"},
-	{g115rawData, g115rawSize, "data/Wave/115.raw"},
-	{g116rawData, g116rawSize, "data/Wave/116.raw"},
-	{g117rawData, g117rawSize, "data/Wave/117.raw"},
-	{g150rawData, g150rawSize, "data/Wave/150.raw"},
-	{g151rawData, g151rawSize, "data/Wave/151.raw"},
-	{g152rawData, g152rawSize, "data/Wave/152.raw"},
-	{g153rawData, g153rawSize, "data/Wave/153.raw"},
-	{g154rawData, g154rawSize, "data/Wave/154.raw"},
-	{g155rawData, g155rawSize, "data/Wave/155.raw"},
-	{g156rawData, g156rawSize, "data/Wave/156.raw"},
-	{g157rawData, g157rawSize, "data/Wave/157.raw"},
+	{g001swavData, g001swavSize, "data/Wave/001.swav"},
+	{g002swavData, g002swavSize, "data/Wave/002.swav"},
+	{g003swavData, g003swavSize, "data/Wave/003.swav"},
+	{g004swavData, g004swavSize, "data/Wave/004.swav"},
+	{g005swavData, g005swavSize, "data/Wave/005.swav"},
+	{g006swavData, g006swavSize, "data/Wave/006.swav"},
+	{g011swavData, g011swavSize, "data/Wave/011.swav"},
+	{g012swavData, g012swavSize, "data/Wave/012.swav"},
+	{g014swavData, g014swavSize, "data/Wave/014.swav"},
+	{g015swavData, g015swavSize, "data/Wave/015.swav"},
+	{g016swavData, g016swavSize, "data/Wave/016.swav"},
+	{g017swavData, g017swavSize, "data/Wave/017.swav"},
+	{g018swavData, g018swavSize, "data/Wave/018.swav"},
+	{g020swavData, g020swavSize, "data/Wave/020.swav"},
+	{g021swavData, g021swavSize, "data/Wave/021.swav"},
+	{g022swavData, g022swavSize, "data/Wave/022.swav"},
+	{g023swavData, g023swavSize, "data/Wave/023.swav"},
+	{g024swavData, g024swavSize, "data/Wave/024.swav"},
+	{g025swavData, g025swavSize, "data/Wave/025.swav"},
+	{g026swavData, g026swavSize, "data/Wave/026.swav"},
+	{g027swavData, g027swavSize, "data/Wave/027.swav"},
+	{g028swavData, g028swavSize, "data/Wave/028.swav"},
+	{g029swavData, g029swavSize, "data/Wave/029.swav"},
+	{g030swavData, g030swavSize, "data/Wave/030.swav"},
+	{g031swavData, g031swavSize, "data/Wave/031.swav"},
+	{g032swavData, g032swavSize, "data/Wave/032.swav"},
+	{g033swavData, g033swavSize, "data/Wave/033.swav"},
+	{g034swavData, g034swavSize, "data/Wave/034.swav"},
+	{g035swavData, g035swavSize, "data/Wave/035.swav"},
+	{g037swavData, g037swavSize, "data/Wave/037.swav"},
+	{g038swavData, g038swavSize, "data/Wave/038.swav"},
+	{g039swavData, g039swavSize, "data/Wave/039.swav"},
+	{g040swavData, g040swavSize, "data/Wave/040.swav"},
+	{g041swavData, g041swavSize, "data/Wave/041.swav"},
+	{g042swavData, g042swavSize, "data/Wave/042.swav"},
+	{g043swavData, g043swavSize, "data/Wave/043.swav"},
+	{g044swavData, g044swavSize, "data/Wave/044.swav"},
+	{g045swavData, g045swavSize, "data/Wave/045.swav"},
+	{g046swavData, g046swavSize, "data/Wave/046.swav"},
+	{g047swavData, g047swavSize, "data/Wave/047.swav"},
+	{g048swavData, g048swavSize, "data/Wave/048.swav"},
+	{g049swavData, g049swavSize, "data/Wave/049.swav"},
+	{g050swavData, g050swavSize, "data/Wave/050.swav"},
+	{g051swavData, g051swavSize, "data/Wave/051.swav"},
+	{g052swavData, g052swavSize, "data/Wave/052.swav"},
+	{g053swavData, g053swavSize, "data/Wave/053.swav"},
+	{g054swavData, g054swavSize, "data/Wave/054.swav"},
+	{g055swavData, g055swavSize, "data/Wave/055.swav"},
+	{g056swavData, g056swavSize, "data/Wave/056.swav"},
+	{g057swavData, g057swavSize, "data/Wave/057.swav"},
+	{g058swavData, g058swavSize, "data/Wave/058.swav"},
+	{g059swavData, g059swavSize, "data/Wave/059.swav"},
+	{g060swavData, g060swavSize, "data/Wave/060.swav"},
+	{g061swavData, g061swavSize, "data/Wave/061.swav"},
+	{g062swavData, g062swavSize, "data/Wave/062.swav"},
+	{g063swavData, g063swavSize, "data/Wave/063.swav"},
+	{g064swavData, g064swavSize, "data/Wave/064.swav"},
+	{g065swavData, g065swavSize, "data/Wave/065.swav"},
+	{g070swavData, g070swavSize, "data/Wave/070.swav"},
+	{g071swavData, g071swavSize, "data/Wave/071.swav"},
+	{g072swavData, g072swavSize, "data/Wave/072.swav"},
+	{g100swavData, g100swavSize, "data/Wave/100.swav"},
+	{g101swavData, g101swavSize, "data/Wave/101.swav"},
+	{g102swavData, g102swavSize, "data/Wave/102.swav"},
+	{g103swavData, g103swavSize, "data/Wave/103.swav"},
+	{g104swavData, g104swavSize, "data/Wave/104.swav"},
+	{g105swavData, g105swavSize, "data/Wave/105.swav"},
+	{g106swavData, g106swavSize, "data/Wave/106.swav"},
+	{g107swavData, g107swavSize, "data/Wave/107.swav"},
+	{g108swavData, g108swavSize, "data/Wave/108.swav"},
+	{g109swavData, g109swavSize, "data/Wave/109.swav"},
+	{g110swavData, g110swavSize, "data/Wave/110.swav"},
+	{g111swavData, g111swavSize, "data/Wave/111.swav"},
+	{g112swavData, g112swavSize, "data/Wave/112.swav"},
+	{g113swavData, g113swavSize, "data/Wave/113.swav"},
+	{g114swavData, g114swavSize, "data/Wave/114.swav"},
+	{g115swavData, g115swavSize, "data/Wave/115.swav"},
+	{g116swavData, g116swavSize, "data/Wave/116.swav"},
+	{g117swavData, g117swavSize, "data/Wave/117.swav"},
+	{g150swavData, g150swavSize, "data/Wave/150.swav"},
+	{g151swavData, g151swavSize, "data/Wave/151.swav"},
+	{g152swavData, g152swavSize, "data/Wave/152.swav"},
+	{g153swavData, g153swavSize, "data/Wave/153.swav"},
+	{g154swavData, g154swavSize, "data/Wave/154.swav"},
+	{g155swavData, g155swavSize, "data/Wave/155.swav"},
+	{g156swavData, g156swavSize, "data/Wave/156.swav"},
+	{g157swavData, g157swavSize, "data/Wave/157.swav"},
 	{g0pxaData, g0pxaSize, "data/Stage/0.pxa"},
 	{g0pxeData, g0pxeSize, "data/Stage/0.pxe"},
 	{g0pxmData, g0pxmSize, "data/Stage/0.pxm"},

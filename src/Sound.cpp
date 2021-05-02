@@ -112,6 +112,7 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize, const void* data_ptr)
 	pan = 63;
 	samplePosition = 0;
 	channelId = -1;
+	adpcm = false;
 	
 	//Create waveform buffer
 	if(!data_ptr)
@@ -121,7 +122,11 @@ SOUNDBUFFER::SOUNDBUFFER(size_t bufSize, const void* data_ptr)
 	}
 	else
 	{
-		data = (s8*)data_ptr;
+		// skip swav header
+		int padding = 36;
+		data = (s8*)data_ptr+padding;
+		size = size - padding;
+		adpcm = true;
 	}
 	
 	//Add to buffer list
@@ -236,10 +241,10 @@ void SOUNDBUFFER::Play(bool bLooping)
 	channelStates[channelId] = this;
 
 	//printf() pan
-
-	soundPlaySampleC(data, SoundFormat_8Bit, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
+	SoundFormat format = (adpcm ? SoundFormat_ADPCM : SoundFormat_8Bit);
+	soundPlaySampleC(data, format, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
 	timer = 0;
-	endTimer = size / (frequency / 63);
+	endTimer = size * (adpcm?2:1) / (frequency / 63);
 }
 
 void SOUNDBUFFER::Stop()
@@ -463,7 +468,7 @@ BOOL ReadSound(int no)
 {
     //Get file path
     char path[MAX_PATH];
-    sprintf(path, "%s/Wave/%03d.raw", gDataPath, no);
+    sprintf(path, "%s/Wave/%03d.swav", gDataPath, no);
     
     //Open file
     FILE_e *fp = fopen_embed(path, "rb");

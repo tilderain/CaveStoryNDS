@@ -60,6 +60,8 @@ class SOUNDBUFFER
 		int samplePosition;
 
 		signed char channelId;
+
+		bool adpcm;
 };
 
 enum SoundEffectNames
