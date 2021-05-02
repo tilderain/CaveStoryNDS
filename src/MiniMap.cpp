@@ -159,7 +159,7 @@ void WriteMiniMapLine()
 			}
 		}
 	}
-	RECT rect = {0, 0, gMap.width*2, gMap.length};
+	RECT rect = {0, 0, gMap.width+16, gMap.length};
 	CopyDataToTexture(surf[SURFACE_ID_MAP].paletteType, surf[SURFACE_ID_MAP].textureid, SURFACE_ID_MAP, 
 		surf[SURFACE_ID_MAP].xoffset, surf[SURFACE_ID_MAP].yoffset, &rect);
 }
