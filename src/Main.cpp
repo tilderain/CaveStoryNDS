@@ -34,7 +34,7 @@
 
 #include "nds.h"
 #include <filesystem.h>
-#include "../srccommon/csFifo.h"
+//#include "../srccommon/csFifo.h"
 #include "nds/fifocommon.h"
 
 #ifdef CYG_PROFILER
@@ -84,7 +84,7 @@ unsigned long GetFramePerSecound(void)
 
 void fifoDataHandler(int bytes, void *user_data) 
 {
-	CSFIFOMessage msg;
+	/*CSFIFOMessage msg;
 	int val;
 
 	val = fifoGetDatamsg(FIFO_USER_01, bytes, (u8*)&msg);
@@ -95,7 +95,7 @@ void fifoDataHandler(int bytes, void *user_data)
 	{
 		printf(msg.printData);
 		//printf("%p\n", msg.printData);
-	}
+	}*/
 }
  int hblanks = 0;
 #ifdef CYG_PROFILER

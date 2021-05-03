@@ -32,7 +32,7 @@
 #include <nds/fifocommon.h>
 #include <nds/fifomessages.h>
 #include <nds/system.h>
-#include "../../srccommon/csFifo.h"
+//#include "../../srccommon/csFifo.h"
 #include "audio.h"
 
 //---------------------------------------------------------------------------------
