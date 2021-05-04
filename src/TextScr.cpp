@@ -83,8 +83,8 @@ BOOL InitTextScript2(void)
 		MakeSurface_Generic(gRect_line.right, gRect_line.bottom, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 
 #ifdef JAPANESE
-		surf[SURFACE_ID_TEXT_LINE1 + i].xoffset = 256;
-		surf[SURFACE_ID_TEXT_LINE1 + i].yoffset = 416 + (i * gRect_line.bottom);
+		surf[SURFACE_ID_TEXT_LINE1 + i].xoffset = 480;
+		surf[SURFACE_ID_TEXT_LINE1 + i].yoffset = 432 + (i * gRect_line.bottom);
 		surf[SURFACE_ID_TEXT_LINE1 + i].palette = surf[SURFACE_ID_FONT].palette;
 		surf[SURFACE_ID_TEXT_LINE1 + i].paletteAddress = surf[SURFACE_ID_FONT].paletteAddress;
 		surf[SURFACE_ID_TEXT_LINE1 + i].paletteOffset = surf[SURFACE_ID_FONT].paletteOffset;
@@ -1447,14 +1447,14 @@ int TextScriptProc(void)
 
 
 						// Print text
-						if (c[0] == '=')
-						{
+						//if (c[0] == '=')
+						//{
 							//Surface2Surface(gTS.p_write * 6, 2, &rcSymbol, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)), SURFACE_ID_TEXT_BOX);
-						}
-						else
-						{
+						//}
+						//else
+						//{
 							PutText2(gTS.p_space, 0, c, RGB(0xFF, 0xFF, 0xFE), (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)));
-						}
+						//}
 
 						strcat(text[gTS.line % 4], c);
 						PlaySoundObject(2, 1);

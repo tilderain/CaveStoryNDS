@@ -1609,7 +1609,7 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 				if(v == '=' - 0x20)
 				{
 					//RECT rcSymbol = {64, 48, 72, 56};
-					SetFontSymbol(x, y, surf_no);
+					SetFontSymbol(x-1, y+2, surf_no);
 					x += font_space[v];
 				}
 				else
