@@ -347,6 +347,7 @@ BOOL JumpTextScript(int no)
 	g_GameFlags |= 4;
 	gTS.line = 0;
 	gTS.p_write = 0;
+	gTS.p_space = 0;	
 	gTS.wait = 4;
 	gTS.wait_beam = 0;
 
@@ -455,7 +456,7 @@ void SetNumberTextScript(int index)
 	str[offset + 1] = '\0';
 
 	// Append number to line
-	PutText2(gTS.p_write * 6, 0, str, RGB(0xFF, 0xFF, 0xFE), (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)));
+	PutText2(gTS.p_space, 0, str, RGB(0xFF, 0xFF, 0xFE), (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)));
 	strcat(text[gTS.line % 4], str);
 
 	// Play sound and reset blinking cursor
@@ -464,9 +465,10 @@ void SetNumberTextScript(int index)
 
 	// Check if should move to next line (prevent a memory overflow, come on guys, this isn't a leftover of pixel trying to make text wrapping)
 	gTS.p_write += (int)strlen(str);
-
+	gTS.p_space += GetTextSpacing(str);
 	if (gTS.p_write >= 35)
 	{
+		gTS.p_space = 0;
 		gTS.p_write = 0;
 		++gTS.line;
 		CheckNewLine();
@@ -480,6 +482,7 @@ void ClearTextLine(void)
 
 	gTS.line = 0;
 	gTS.p_write = 0;
+	gTS.p_space = 0;
 	gTS.offsetY = 0;
 
 	for (i = 0; i < 4; ++i)
@@ -1382,6 +1385,7 @@ int TextScriptProc(void)
 						// Go to new-line
 						gTS.p_read += 2;
 						gTS.p_write = 0;
+						gTS.p_space = 0;
 
 						if (gTS.flags & 1)
 						{
@@ -1449,7 +1453,7 @@ int TextScriptProc(void)
 						}
 						else
 						{
-							PutText2(gTS.p_write * 6, 0, c, RGB(0xFF, 0xFF, 0xFE), (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)));
+							PutText2(gTS.p_space, 0, c, RGB(0xFF, 0xFF, 0xFE), (SurfaceID)(SURFACE_ID_TEXT_LINE1 + (gTS.line % 4)));
 						}
 
 						strcat(text[gTS.line % 4], c);
@@ -1468,10 +1472,13 @@ int TextScriptProc(void)
 							gTS.p_write += 1;
 						}
 
+						gTS.p_space += GetTextSpacing(c);
+
 						if (gTS.p_write >= 35)
 						{
 							CheckNewLine();
 							gTS.p_write = 0;
+							gTS.p_space = 0;
 							++gTS.line;
 							CheckNewLine();
 						}

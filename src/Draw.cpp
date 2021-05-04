@@ -764,8 +764,11 @@ BOOL StartDirectDraw()
 	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
 	scanKeys();
 	if(keysHeld() & KEY_SELECT)
+	{
 		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
 		gConsoleInited = TRUE;
+	}
+
 #endif
 	
 	
@@ -1334,28 +1337,26 @@ static void SetFontChar(int dx, int dy, int sx, int sy, int surf_no)
 		memcpy(&surf[surf_no].data[dx/2 + height2], 
 			&surf[SURFACE_ID_FONT].data[(startx/2 + height)],
 			12/2);	
-		//int level0Color = GetSurfPixel(startx+(j*2), starty+k, SURFACE_ID_FONT);
-		//int level1Color = GetSurfPixel(startx+(j*2+1), starty+k, SURFACE_ID_FONT);
-		//	SetSurf2Pixels(dx + j*2, k, surf_no, (level0Color | level1Color << 4));
-		
 	}
-
-
-		//color = (bitmap_pixels[pos*2] | bitmap_pixels[pos*2+1] << 4);
-	
-	/*int height = (sy * 13 * surf[SURFACE_ID_FONT].w) / 2;
-	int height2 = (surf[surf_no].w) / 2;
-	
-	for(int k=0;k<13;k++)
-	{
-		memcpy( &surf[surf_no].data[dx/2 + (k*height2)],
-			&surf[SURFACE_ID_FONT].data[(sx*12/2 + height) +(height * k)],
-			12/2);
-		//printf("%d", surf[SURFACE_ID_FONT].data[(sx*13/2 + height) +(height * k)]);
-	}*/
-	
-
 }
+
+static void SetFontSymbol(int dx, int dy, int surf_no)
+{
+	RECT rcSymbol = {64, 48, 72, 56};	
+	int startx = 64;
+	int starty = 48;
+
+	for(int k=0;k<56-48;k++)
+	{	
+		int height = ((starty + k) * surf[SURFACE_ID_TEXT_BOX].w) / 2;
+		int height2 = ((dy + k) * surf[surf_no].w) / 2;
+		memcpy(&surf[surf_no].data[dx/2 + height2], 
+			&surf[SURFACE_ID_TEXT_BOX].data[(startx/2 + height)],
+			(72-64)/2);	
+	}
+}
+
+
 #endif
 
 
@@ -1447,7 +1448,7 @@ void InitTextObject()
 	MakeSurface_File("smalfont", SURFACE_ID_FONT);
 }
 
-/*static RECT GetFontRect(char character)
+static RECT GetFontRect(char character)
 {
 	RECT rect;
 	bool found = false;
@@ -1467,9 +1468,10 @@ void InitTextObject()
 	rect = {k*6, j*12, k*6+6, j*12+12};
 	return rect;
 }
-*/
+
 int GetTextSpacing(const char *text)
 {
+#ifndef JAPANESE
 	int spacing = 0;
 	char v;
 	while (v = *text++)
@@ -1480,6 +1482,49 @@ int GetTextSpacing(const char *text)
 	    }
 	}
 	return spacing;
+#else
+
+	int spacing = 0;
+	int i = 0;
+	while(text[i] != NULL)
+	{
+		if(text[i] & 0x80)
+		{
+			//hardcode this fucking character   ･
+			if(text[i] == 0xa5)
+			{
+				spacing += font_space[17 + (6+3*32)];
+				i++; continue;
+			}
+			bool found = false;
+			for(int yy=0; yy<33;yy++)
+			{
+				for(int xx=0; xx<32; xx++)
+				{
+					if(text[i] == font_letters_shift_jis[xx*2 + (yy*32*2)] && text[i+1] == font_letters_shift_jis[xx*2 + (yy*32*2)+1])
+					{
+						spacing += font_space[xx +((yy+3)*32)];
+						found = true;
+						break;
+					}
+					
+				}
+				if(found) break;
+			}
+			i+=2;
+		}
+		else
+		{
+			char v = text[i];
+	    	if ((v -= 0x20) >= 0x00 && v <= 0x60)
+	    	{
+	    	    spacing += font_space[v];
+	    	}
+			i++;
+		}
+	}
+	return spacing;
+#endif
 }
 
 void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
@@ -1501,7 +1546,7 @@ void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
 			if(v == '=' - 0x20)
 			{
 				RECT rcSymbol = {64, 48, 72, 56};
-				PutBitmap3(rcView, x, y + 2, &rcSymbol, SURFACE_ID_TEXT_BOX);
+				//PutBitmap3(rcView, x, y + 2, &rcSymbol, SURFACE_ID_TEXT_BOX);
 				x += font_space[v];
 			}
 			else
@@ -1533,7 +1578,7 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 			if(text[i] == 0xa5)
 			{
 				SetFontChar(x, y, 17, 6+3, surf_no);
-				x += 12;
+				x += font_space[17 + (6+3*32)];
 				i++; continue;
 			}
 			bool found = false;
@@ -1545,7 +1590,7 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 					{
 						//printf("%x%x\n", font_letters_shift_jis[xx*2 + (yy*32*2)], font_letters_shift_jis[xx*2 + (yy*32*2)+1]);
 						SetFontChar(x, y, xx, yy+3, surf_no);
-						x += 12;
+						x += font_space[xx +((yy+3)*32)];
 						found = true;
 						break;
 					}
@@ -1563,14 +1608,13 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
         	{
 				if(v == '=' - 0x20)
 				{
-					RECT rcSymbol = {64, 48, 72, 56};
-					//PutBitmap3(rcGame, x, y + 2, &rcSymbol, SURFACE_ID_TEXT_BOX);
+					//RECT rcSymbol = {64, 48, 72, 56};
+					SetFontSymbol(x, y, surf_no);
 					x += font_space[v];
 				}
 				else
 				{
-					RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
-        	    	SetFontChar(x, y, rect.left, rect.top, surf_no);
+        	    	SetFontChar(x, y, (v-1)%33, (v-1)/33, surf_no);
         	    	x += font_space[v];
 				}
 

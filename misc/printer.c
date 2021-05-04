@@ -27664,21 +27664,21 @@ int main(int argc, char *argv[])
         for (int x = 0; x < 32; x++)
         {
             uint32_t *pix = (uint32_t*)gimp_image.pixel_data;
-            pix += 384 * y * 13;
+            pix += 383 * y * 13;
             pix += x * 12;
             
             int right = 0;
             for (int sy = 0; sy < 13; sy++)
             {
-                for (int sx = 0; sx < 11; sx++)
+                for (int sx = 0; sx < 12; sx++)
                 {
-                    if ((*pix++ & 0xFFFFFF) && sx > right)
+                    if ((*pix++ & 0xFFFFFF) && sx > right && sx != 11)
                         right = sx;
                 }
-                pix += 384 - 12;
+                pix += 383 - 12;
             }
             
-            printf("%d,",right+2);
+            printf("%d,",right+3);
         }
 		printf("\n");
     }
