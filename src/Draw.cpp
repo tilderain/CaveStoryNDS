@@ -1115,7 +1115,7 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 int gFaceNo = -1;
 int gFaceNoCurrent = -1;
 
-bool TextLinesDirty[4] = {0};
+bool TextLinesDirty[5] = {0};
 
 void CopyFaceTexture()
 {
@@ -1134,12 +1134,21 @@ void CopyFaceTexture()
 void CopyDirtyText()
 {
 	RECT rect = {0, 0, surf[SURFACE_ID_TEXT_LINE1].w, surf[SURFACE_ID_TEXT_LINE1].h};
-	for(int i=0;i<4;i++)
+	for(int i=0;i<5;i++)
 	{
 		if(!TextLinesDirty[i]) continue;
 		TextLinesDirty[i] = false;
-		CopyDataToTexture(surf[30 + i].paletteType, surf[30 + i].textureid, 30 + i, 
-		surf[30 + i].xoffset, surf[30 + i].yoffset, &rect);
+		if(i != 4)
+		{
+			CopyDataToTexture(surf[30 + i].paletteType, surf[30 + i].textureid, 30 + i, 
+			surf[30 + i].xoffset, surf[30 + i].yoffset, &rect);
+		}
+		else
+		{
+			CopyDataToTexture(surf[SURFACE_ID_ROOM_NAME].paletteType, surf[SURFACE_ID_ROOM_NAME].textureid, SURFACE_ID_ROOM_NAME, 
+			surf[SURFACE_ID_ROOM_NAME].xoffset, surf[SURFACE_ID_ROOM_NAME].yoffset, &rect);
+		}
+		
 	}
 
 }
@@ -1330,13 +1339,37 @@ static void SetFontChar(int dx, int dy, int sx, int sy, int surf_no)
 	int startx = sx * 12;
 	int starty = sy * 13;
 
+	bool odd = false;
+	if(dx % 2 == 1) odd = true;
+
 	for(int k=0;k<13;k++)
-	{	
-		int height = ((starty + k) * surf[SURFACE_ID_FONT].w) / 2;
-		int height2 = ((dy + k) * surf[surf_no].w) / 2;
-		memcpy(&surf[surf_no].data[dx/2 + height2], 
-			&surf[SURFACE_ID_FONT].data[(startx/2 + height)],
-			12/2);	
+	{
+		if(!odd)
+		{
+			int height = ((starty + k) * surf[SURFACE_ID_FONT].w) / 2;
+			int height2 = ((dy + k) * surf[surf_no].w) / 2;
+			memcpy(&surf[surf_no].data[dx/2 + height2], 
+				&surf[SURFACE_ID_FONT].data[(startx/2 + height)],
+				12/2);	
+		}
+		else
+		{
+			for(int j=0;j<6;j++)
+			{
+
+				if(j==0)
+				{
+					int level0Color = GetSurfPixel(startx+(j*2), starty+k, SURFACE_ID_FONT);
+					SetSurf2Pixels(dx + j*2, k, surf_no, (level0Color << 4));
+				}
+				else
+				{
+					int level0Color = GetSurfPixel(startx+(j*2-1), starty+k, SURFACE_ID_FONT);
+					int level1Color = GetSurfPixel(startx+(j*2), starty+k, SURFACE_ID_FONT);
+					SetSurf2Pixels(dx + j*2, k, surf_no, (level0Color | level1Color << 4));
+				}
+			}
+		}
 	}
 }
 
@@ -1439,7 +1472,8 @@ void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)
 		if(surf_no == SURFACE_ID_TEXT_LINE1) TextLinesDirty[0] = true;
 		if(surf_no == SURFACE_ID_TEXT_LINE2) TextLinesDirty[1] = true;
 		if(surf_no == SURFACE_ID_TEXT_LINE3) TextLinesDirty[2] = true;
-		if(surf_no == SURFACE_ID_TEXT_LINE4) TextLinesDirty[3] = true;						
+		if(surf_no == SURFACE_ID_TEXT_LINE4) TextLinesDirty[3] = true;	
+		if(surf_no == SURFACE_ID_ROOM_NAME) TextLinesDirty[4] = true;						
 	}
 }
 
@@ -1610,19 +1644,24 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 				{
 					//RECT rcSymbol = {64, 48, 72, 56};
 					SetFontSymbol(x-1, y+2, surf_no);
-					x += font_space[v];
 				}
 				else
 				{
-        	    	SetFontChar(x, y, (v-1)%33, (v-1)/33, surf_no);
-        	    	x += font_space[v];
+        	    	SetFontChar(x, y, (v)%32, (v)/32, surf_no);
 				}
+		    	x += font_space[v];
 
         	}
 			i++;
 		}
 	}
-	TextLinesDirty[surf_no - 30] = true;
+	if(surf_no != SURFACE_ID_ROOM_NAME)
+		TextLinesDirty[surf_no - 30] = true;
+	else
+	{
+		TextLinesDirty[4] = true;
+	}
+	
 
 #endif
 }

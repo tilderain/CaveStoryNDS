@@ -27678,7 +27678,7 @@ int main(int argc, char *argv[])
                 pix += 383 - 12;
             }
             
-            printf("%d,",right+3);
+            printf("%d,",right+2);
         }
 		printf("\n");
     }
