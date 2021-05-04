@@ -8,6 +8,8 @@ Acquire devKitPro and libnds, then run make. Sound will probably be broken on mo
 
 There are a few compile flags. 
 
+-DJAPANESE will compile for Japanese language.
+
 -DTWO_SCREENS will enable the broken two screen mode.
 
 -DREAD_FROM_SD will disable incbin for files and instead read from the data folder on the SD card.

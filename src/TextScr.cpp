@@ -79,7 +79,36 @@ BOOL InitTextScript2(void)
 
 	// Create line surfaces
 	for (i = 0; i < 4; ++i)
+	{
 		MakeSurface_Generic(gRect_line.right, gRect_line.bottom, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+
+#ifdef JAPANESE
+		surf[SURFACE_ID_TEXT_LINE1 + i].xoffset = 256;
+		surf[SURFACE_ID_TEXT_LINE1 + i].yoffset = 416 + (i * gRect_line.bottom);
+		surf[SURFACE_ID_TEXT_LINE1 + i].palette = surf[SURFACE_ID_FONT].palette;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteAddress = surf[SURFACE_ID_FONT].paletteAddress;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteOffset = surf[SURFACE_ID_FONT].paletteOffset;
+		surf[SURFACE_ID_TEXT_LINE1 + i].palettesize = surf[SURFACE_ID_FONT].palettesize;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteType = surf[SURFACE_ID_FONT].paletteType;
+		surf[SURFACE_ID_TEXT_LINE1 + i].textureid = gAtlas16Color1;
+		surf[SURFACE_ID_TEXT_LINE1 + i].data = (BUFFER_PIXEL*)malloc(gRect_line.right * gRect_line.bottom * sizeof(BUFFER_PIXEL));
+		memset(surf[SURFACE_ID_TEXT_LINE1 + i].data, 0, gRect_line.right * gRect_line.bottom * sizeof(BUFFER_PIXEL));
+/*
+		surf[SURFACE_ID_TEXT_LINE1 + i].xoffset = 487;
+		surf[SURFACE_ID_TEXT_LINE1 + i].yoffset = 432 + (i * gRect_line.bottom);
+		surf[SURFACE_ID_TEXT_LINE1 + i].palette = surf[SURFACE_ID_FONT].palette;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteAddress = surf[SURFACE_ID_FONT].paletteAddress;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteOffset = surf[SURFACE_ID_FONT].paletteOffset;
+		surf[SURFACE_ID_TEXT_LINE1 + i].palettesize = surf[SURFACE_ID_FONT].palettesize;
+		surf[SURFACE_ID_TEXT_LINE1 + i].paletteType = surf[SURFACE_ID_FONT].paletteType;
+		surf[SURFACE_ID_TEXT_LINE1 + i].textureid = gAtlas16Color1;
+		surf[SURFACE_ID_TEXT_LINE1 + i].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_TEXT_LINE1 + i].w * surf[SURFACE_ID_TEXT_LINE1 + i].h * sizeof(BUFFER_PIXEL));
+*/
+		//CopyDataToTexture(surf[SURFACE_ID_TEXT_LINE1 + i].paletteType, surf[SURFACE_ID_TEXT_LINE1 + i].textureid, SURFACE_ID_NPC_SYM,
+		//surf[SURFACE_ID_NPC_REGU + i].xoffset, surf[SURFACE_ID_NPC_REGU + i].yoffset, &gRect_line);
+#endif
+	}
+
 
 	// Clear text
 	memset(text, 0, sizeof(text));
@@ -456,7 +485,7 @@ void ClearTextLine(void)
 	for (i = 0; i < 4; ++i)
 	{
 		gTS.ypos_line[i] = i * 16;
-		//CortBox2(&gRect_line, 0x000000, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+		CortBox2(&gRect_line, 0x000000, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
 		memset(text[i], 0, sizeof(text[0]));
 	}
 }
@@ -544,8 +573,13 @@ void PutTextScript(void)
 		text_offset = 0;
 
 	for (i = 0; i < 4; ++i)
+	{
+#ifndef JAPANESE
 		PutText(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, text[i], RGB(0xFF, 0xFF, 0xFE));
-	//PutBitmap3(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, &gRect_line, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+#else
+		PutBitmap3(&gTS.rcText, TEXT_LEFT + text_offset, gTS.offsetY + gTS.ypos_line[i] + gTS.rcText.top, &gRect_line, (SurfaceID)(SURFACE_ID_TEXT_LINE1 + i));
+#endif
+	}
 
 	// Draw NOD cursor
 	if ((gTS.wait_beam++ % 20 > 12) && gTS.mode == 2)

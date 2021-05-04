@@ -135,7 +135,9 @@ void StartMapName(void)
 
 void RestoreMapName(void)
 {
+#ifndef JAPANESE
 	return;
+#endif
 	int a = (int)strlen(gMapName.name);
 
 	CortBox2(&rc, 0, SURFACE_ID_ROOM_NAME);

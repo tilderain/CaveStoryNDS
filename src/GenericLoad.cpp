@@ -202,6 +202,20 @@ bool LoadGenericData()
 		MakeSurface_Generic(WINDOW_WIDTH, WINDOW_HEIGHT, SURFACE_ID_CASTS);
 		MakeSurface_Generic(256, 256, SURFACE_ID_LEVEL_TILESET);
 		MakeSurface_Generic(160, 16, SURFACE_ID_ROOM_NAME);
+
+#ifdef JAPANESE
+		surf[SURFACE_ID_ROOM_NAME].xoffset = 768;
+		surf[SURFACE_ID_ROOM_NAME].yoffset = 496;
+		surf[SURFACE_ID_ROOM_NAME].palette = surf[SURFACE_ID_FONT].palette;
+		surf[SURFACE_ID_ROOM_NAME].paletteAddress = surf[SURFACE_ID_FONT].paletteAddress;
+		surf[SURFACE_ID_ROOM_NAME].paletteOffset = surf[SURFACE_ID_FONT].paletteOffset;
+		surf[SURFACE_ID_ROOM_NAME].palettesize = surf[SURFACE_ID_FONT].palettesize;
+		surf[SURFACE_ID_ROOM_NAME].paletteType = surf[SURFACE_ID_FONT].paletteType;
+		surf[SURFACE_ID_ROOM_NAME].textureid =  gAtlas16Color1;
+		surf[SURFACE_ID_ROOM_NAME].data = (BUFFER_PIXEL*)malloc(surf[SURFACE_ID_ROOM_NAME].w * surf[SURFACE_ID_ROOM_NAME].h * sizeof(BUFFER_PIXEL));
+#endif
+
+
 		MakeSurface_Generic(40, 240, SURFACE_ID_VALUE_VIEW);
 		MakeSurface_Generic(320, 240, SURFACE_ID_LEVEL_SPRITESET_1);
 		MakeSurface_Generic(320, 240, SURFACE_ID_LEVEL_SPRITESET_2);

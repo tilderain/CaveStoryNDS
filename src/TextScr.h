@@ -28,6 +28,8 @@ typedef struct TEXT_SCRIPT
 	int p_read;
 	int p_write;
 
+	int p_space;
+
 	// Current line to write to
 	int line;
 
