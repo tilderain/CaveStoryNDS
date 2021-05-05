@@ -963,11 +963,11 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		{SURFACE_ID_STAGE_ITEM, gAtlas16Color1, 256, 496},
 		{SURFACE_ID_FADE, gAtlas16Color1, 0, 480},
 		{SURFACE_ID_NPC_REGU, gAtlas256Color, 0, 0},
-		{SURFACE_ID_FACE, gAtlas16Color2, 888, 196},
+		{SURFACE_ID_FACE, gAtlas16Color2, 888, 168},
 		{SURFACE_ID_LEVEL_BACKGROUND, gAtlas16Color1, 640, 0},
 		{SURFACE_ID_CARET, gAtlas16Color2, 320,0},
-		{SURFACE_ID_TEXT_BOX, gAtlas16Color2, 640, 112},
-		{SURFACE_ID_FONT, gAtlas16Color2, 640, 64},
+		{SURFACE_ID_TEXT_BOX, gAtlas16Color2, 640, 64},
+		{SURFACE_ID_FONT, gAtlas16Color2, 640, 216},
 		{SURFACE_ID_MY_CHAR, gAtlas16Color2, 640, 0},
 	};
 	bool found = false;
@@ -1001,7 +1001,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 
 #ifdef JAPANESE
 	if(surf_no == SURFACE_ID_FONT)
-		goto facejump;
+		{datarect.right = 384; datarect.bottom = 39;}
 #endif
 
 	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
@@ -1585,7 +1585,11 @@ void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
 			}
 			else
 			{
+#ifndef JAPANESE				
 				RECT rect = {(v & 0x1F) << 3, (v / 32) * 12, ((v & 0x1F) + 1) << 3, ((v / 32) + 1) * 12};
+#else
+				RECT rect = {(v & 0x1F) * 12, (v / 32) * 13, ((v & 0x1F) + 1) *12, ((v / 32) + 1) * 13};
+#endif
             	PutBitmap3(rcView, x, y, &rect, SURFACE_ID_FONT);
             	x += font_space[v];
 			}
