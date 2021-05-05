@@ -93,8 +93,10 @@ void ReadyMapName(const char *str)
 	}
 
 	// Copy map's name to the global map name
+	
 	strcpy(gMapName.name, str);
 #ifdef JAPANESE
+	CortBox2(&rc, 0, SURFACE_ID_ROOM_NAME);
 	PutText2(0, 0, str, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_ROOM_NAME);
 #endif
 }
@@ -104,9 +106,7 @@ void PutMapName(BOOL bMini)
 {
 	// 'unused_rect' isn't the original name. The Linux port optimised this out, so there's no known name for it.
 	RECT unused_rect = {0, 0, 160, 16};
-#ifndef JAPANESE
 	int spacing = GetTextSpacing(gMapName.name);
-#endif
 	if (bMini)
 	{
 		// Map system
@@ -121,7 +121,7 @@ void PutMapName(BOOL bMini)
 		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 12, gMapName.name, RGB(0x11, 0x00, 0x22));
 		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 11, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 #else
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 86, 10, &rc, SURFACE_ID_ROOM_NAME);
+		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 10, &rc, SURFACE_ID_ROOM_NAME);
 #endif
 	}
 	else if (gMapName.flag)
@@ -131,8 +131,15 @@ void PutMapName(BOOL bMini)
 		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, gMapName.name, RGB(0x11, 0x00, 0x22));
 		PutText(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, gMapName.name, RGB(0xFF, 0xFF, 0xFE));
 #else
-	
-		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 86, (WINDOW_HEIGHT / 2) - 40, &rc, SURFACE_ID_ROOM_NAME);
+		int colour = RGB(0x11, 0x00, 0x22);
+		const unsigned char col_red = colour & 0x0000FF;
+		const unsigned char col_green = (colour & 0x00FF00) >> 8;
+		const unsigned char col_blue = (colour & 0xFF0000) >> 16;
+		colour = RGB15(col_red / 8, col_green / 8, col_blue / 8);
+		glColor(colour);
+		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, &rc, SURFACE_ID_ROOM_NAME);
+		glColor(0x7fff);
+		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, &rc, SURFACE_ID_ROOM_NAME);
 #endif
 		if (++gMapName.wait > 160)
 			gMapName.flag = FALSE;
