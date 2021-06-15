@@ -317,6 +317,31 @@ int MiniMapLoop(void)
 
 			++line;
 		}
+
+		if (gKey & CEY_LEFT)
+		{
+			rcView.left -= 1;
+			rcView.right -= 1;
+		}
+		if (gKey & CEY_RIGHT)
+		{
+			rcView.left += 1;
+			rcView.right += 1;
+		}
+
+		if (gKey & CEY_UP)
+		{
+			rcView.top -= 1;
+			rcView.bottom -= 1;
+		}
+		if (gKey & CEY_DOWN)
+		{
+			rcView.top += 1;
+			rcView.bottom += 1;
+		}
+			
+			
+				
 		rcMiniMap.bottom = line;
 		PutBitmap3(&grcGame, rcView.left + 1, rcView.top + 1, &rcMiniMap, SURFACE_ID_MAP);
 

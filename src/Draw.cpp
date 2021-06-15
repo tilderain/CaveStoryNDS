@@ -1120,6 +1120,7 @@ bool TextLinesDirty[6] = {0};
 
 void CopyFaceTexture()
 {
+	if(gInMinimap) return;
 	if(gFaceNoCurrent == gFaceNo) return;
 	gFaceNoCurrent = gFaceNo;
 	int face = gFaceNoCurrent;
