@@ -8,15 +8,8 @@ move old libnds fifo sync code to here
 look into npc shock not displaying
 
 
-Shift boss bar a bit?
-Reposition /y/n jpn?
-
-minimap movement code
-
 
 * npc tbl?
-
-japanese language
 
 vram viewer?
 
@@ -24,4 +17,4 @@ local multiplayer??
 
 gzip fopen
 
-resize item screen
+

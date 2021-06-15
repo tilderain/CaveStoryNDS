@@ -86,6 +86,8 @@ BOOL AddItemData(long code);
 BOOL SubItemData(long code);
 
 
+extern bool gInCamp;
+
 /// Inventory loop. Returns mode.
 int CampLoop(void);
 

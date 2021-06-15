@@ -530,14 +530,16 @@ void PutTextScript(void)
 
 		if(gbTransparency)
 		{
-			PutBitmap3(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX);
+			if(!gInCamp)
+				PutBitmap3(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX);
 			for (i = 1; i < 7; ++i)
 				PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame2, SURFACE_ID_TEXT_BOX);
 			PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX);
 		}
 		else
 		{
-			PutBitmap3Transparent(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX, alpha);
+			if(!gInCamp)
+				PutBitmap3Transparent(&grcFull, WINDOW_WIDTH / 2 - 122, gTS.rcText.top - 10, &rcFrame1, SURFACE_ID_TEXT_BOX, alpha);
 			for (i = 1; i < 7; ++i)
 				PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame2, SURFACE_ID_TEXT_BOX, alpha);
 			PutBitmap3Transparent(&grcFull, (WINDOW_WIDTH / 2) - 122, (i * 8) + gTS.rcText.top - 10, &rcFrame3, SURFACE_ID_TEXT_BOX, alpha);
@@ -667,10 +669,17 @@ void PutTextScript(void)
 			i = (WINDOW_HEIGHT - 96) + (2 - gTS.wait) * 4;
 		else
 			i = WINDOW_HEIGHT - 96;
-
+#ifndef JAPANESE
 		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 56, i, &rect_yesno, SURFACE_ID_TEXT_BOX);
+#else
+		PutBitmap3(&grcFull, (WINDOW_WIDTH / 2) + 46, i, &rect_yesno, SURFACE_ID_TEXT_BOX);
+#endif
 		if (gTS.wait == 16)
+#ifndef JAPANESE
 			PutBitmap3(&grcFull, (gTS.select * 41) + (WINDOW_WIDTH / 2) + 51, WINDOW_HEIGHT - 86, &rect_cur, SURFACE_ID_TEXT_BOX);
+#else
+			PutBitmap3(&grcFull, (gTS.select * 41) + (WINDOW_WIDTH / 2) + 41, WINDOW_HEIGHT - 86, &rect_cur, SURFACE_ID_TEXT_BOX);
+#endif
 	}
 }
 

@@ -663,16 +663,18 @@ int ModeAction(void)
 			if (gKeyTrg & gKeyItem)
 			{
 				BackupSurface(SURFACE_ID_SCREEN_GRAB, &grcGame);
-
+				gInCamp = true;
 				switch (CampLoop())
 				{
 					case enum_ESCRETURN_exit:
+						gInCamp = false;
 						return 0;
 
 					case enum_ESCRETURN_restart:
+						gInCamp = false;
 						return 1;
 				}
-
+				gInCamp = false;
 				gMC.cond &= ~1;
 			}
 			else if (gMC.equip & 2 && gKeyTrg & gKeyMap)
