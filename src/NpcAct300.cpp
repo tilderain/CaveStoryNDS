@@ -155,9 +155,9 @@ void ActNpc302(NPCHAR *npc)
 			{
 				for (n = 0xAA; n < 0x200; ++n)
 				{
-					if (gNPC[n].cond & 0x80 && gNPC[n].code_event == npc->direct)
+					if (gNPC[n]->cond & 0x80 && gNPC[n]->code_event == npc->direct)
 					{
-						npc->pNpc = &gNPC[n];
+						npc->pNpc = gNPC[n];
 						break;
 					}
 				}

@@ -282,7 +282,7 @@ void ActNpc042(NPCHAR *npc)
 			npc->act_no = 14;
 
 			for (n = 0; n < 0x200; ++n)
-				if (gNPC[n].code_event == 501)
+				if (gNPC[n]->code_event == 501)
 					break;
 
 			if (n == 0x200)
@@ -291,7 +291,7 @@ void ActNpc042(NPCHAR *npc)
 				break;
 			}
 
-			npc->pNpc = &gNPC[n];
+			npc->pNpc = gNPC[n];
 			// Fallthrough
 		case 14:
 			if (npc->pNpc->direct == 0)

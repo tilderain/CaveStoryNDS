@@ -985,13 +985,13 @@ void SetMyCharDirect(unsigned char dir)
 		else
 		{
 			for (i = 0; i < NPC_MAX; ++i)
-				if (gNPC[i].code_event == dir)
+				if (gNPC[i]->code_event == dir)
 					break;
 
 			if (i == NPC_MAX)
 				return;
 
-			if (gMC.x > gNPC[i].x)
+			if (gMC.x > gNPC[i]->x)
 				gMC.direct = 0;
 			else
 				gMC.direct = 2;

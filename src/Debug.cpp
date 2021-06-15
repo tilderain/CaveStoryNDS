@@ -370,13 +370,13 @@ static void PutHitboxes(void)
 
 	for (int n = 0; n < NPC_MAX; ++n)
 	{
-		if (gNPC[n].cond & 0x80)
+		if (gNPC[n]->cond & 0x80)
 		{
-			if(gNPC[n].damage)
+			if(gNPC[n]->damage)
 			{
 				color = red_color;
 			}
-			else if(gNPC[n].bits & (NPC_EVENT_WHEN_TOUCHED | NPC_INTERACTABLE))
+			else if(gNPC[n]->bits & (NPC_EVENT_WHEN_TOUCHED | NPC_INTERACTABLE))
 			{
 				color = green_color;
 			}
@@ -385,37 +385,37 @@ static void PutHitboxes(void)
 				color = white_color;
 			}
 			
-			back = gNPC[n].hit.back;
-			front = gNPC[n].hit.front;
+			back = gNPC[n]->hit.back;
+			front = gNPC[n]->hit.front;
 
-			if (gNPC[n].bits & (NPC_SOLID_SOFT | NPC_SOLID_HARD))
+			if (gNPC[n]->bits & (NPC_SOLID_SOFT | NPC_SOLID_HARD))
 			{
-				front = gNPC[n].hit.back;
+				front = gNPC[n]->hit.back;
 			}
 
-			if (gNPC[n].direct == 0)
+			if (gNPC[n]->direct == 0)
 			{
 				temp = front;
 				front = back;
 				back = temp;
 			}
 
-			rect.left = SubpixelToScreenCoord(gNPC[n].x) - SubpixelToScreenCoord(back) - SubpixelToScreenCoord(fx);
-			rect.top = SubpixelToScreenCoord(gNPC[n].y) - SubpixelToScreenCoord(gNPC[n].hit.top) - SubpixelToScreenCoord(fy);
-			rect.right = SubpixelToScreenCoord(gNPC[n].x) + SubpixelToScreenCoord(front) - SubpixelToScreenCoord(fx);
-			rect.bottom = SubpixelToScreenCoord(gNPC[n].y) + SubpixelToScreenCoord(gNPC[n].hit.bottom) - SubpixelToScreenCoord(fy);
+			rect.left = SubpixelToScreenCoord(gNPC[n]->x) - SubpixelToScreenCoord(back) - SubpixelToScreenCoord(fx);
+			rect.top = SubpixelToScreenCoord(gNPC[n]->y) - SubpixelToScreenCoord(gNPC[n]->hit.top) - SubpixelToScreenCoord(fy);
+			rect.right = SubpixelToScreenCoord(gNPC[n]->x) + SubpixelToScreenCoord(front) - SubpixelToScreenCoord(fx);
+			rect.bottom = SubpixelToScreenCoord(gNPC[n]->y) + SubpixelToScreenCoord(gNPC[n]->hit.bottom) - SubpixelToScreenCoord(fy);
 
 			PutSquare(rect, color);
 
-			/*if (gNPC[n].direct == 0)
-				side = gNPC[n].view.front;
+			/*if (gNPC[n]->direct == 0)
+				side = gNPC[n]->view.front;
 			else
-				side = gNPC[n].view.back;
+				side = gNPC[n]->view.back;
 
-			rect.left = SubpixelToScreenCoord(gNPC[n].x) - SubpixelToScreenCoord(side) - SubpixelToScreenCoord(fx);
-			rect.top = SubpixelToScreenCoord(gNPC[n].y) - SubpixelToScreenCoord(gNPC[n].view.top) - SubpixelToScreenCoord(fy);
-			rect.right = SubpixelToScreenCoord(gNPC[n].x) + SubpixelToScreenCoord(side) - SubpixelToScreenCoord(fx);
-			rect.bottom = SubpixelToScreenCoord(gNPC[n].y) + SubpixelToScreenCoord(gNPC[n].view.bottom) - SubpixelToScreenCoord(fy);
+			rect.left = SubpixelToScreenCoord(gNPC[n]->x) - SubpixelToScreenCoord(side) - SubpixelToScreenCoord(fx);
+			rect.top = SubpixelToScreenCoord(gNPC[n]->y) - SubpixelToScreenCoord(gNPC[n]->view.top) - SubpixelToScreenCoord(fy);
+			rect.right = SubpixelToScreenCoord(gNPC[n]->x) + SubpixelToScreenCoord(side) - SubpixelToScreenCoord(fx);
+			rect.bottom = SubpixelToScreenCoord(gNPC[n]->y) + SubpixelToScreenCoord(gNPC[n]->view.bottom) - SubpixelToScreenCoord(fy);
 
 			PutSquare(rect, color);
 			*/

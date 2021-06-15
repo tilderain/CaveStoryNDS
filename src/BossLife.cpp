@@ -31,16 +31,16 @@ void InitBossLife(void)
 BOOL StartBossLife(int code_event)
 {
 	int i = 0;
-	while (i < 0x200 && gNPC[i].code_event != code_event)
+	while (i < 0x200 && gNPC[i]->code_event != code_event)
 		++i;
 
 	if (i == 0x200)
 		return FALSE;
 
 	gBL.flag = TRUE;
-	gBL.max = gNPC[i].life;
-	gBL.br = gNPC[i].life;
-	gBL.pLife = &gNPC[i].life;
+	gBL.max = gNPC[i]->life;
+	gBL.br = gNPC[i]->life;
+	gBL.pLife = &gNPC[i]->life;
 	return TRUE;
 }
 

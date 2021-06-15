@@ -832,14 +832,14 @@ void ActNpc066(NPCHAR *npc)
 		case 0:
 			int a;
 			for (a = 0; a < 0x200; ++a)
-				if (gNPC[a].code_event == 1000)
+				if (gNPC[a]->code_event == 1000)
 					break;
 
 			if (a == 0x200)
 				break;
 
-			npc->tgt_x = gNPC[a].x;
-			npc->tgt_y = gNPC[a].y;
+			npc->tgt_x = gNPC[a]->x;
+			npc->tgt_y = gNPC[a]->y;
 			npc->count1 = a;
 
 			unsigned char deg;
@@ -863,7 +863,7 @@ void ActNpc066(NPCHAR *npc)
 			{
 				npc->act_no = 2;
 				npc->ani_no = 2;
-				gNPC[npc->count1].cond = 0;
+				gNPC[npc->count1]->cond = 0;
 				PlaySoundObject(21, 1);
 			}
 

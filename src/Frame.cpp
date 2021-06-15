@@ -282,14 +282,14 @@ void SetFrameTargetNpChar(int event, int wait)
 {
 	int i;
 	for (i = 0; i < NPC_MAX; ++i)
-		if (gNPC[i].code_event == event)
+		if (gNPC[i]->code_event == event)
 			break;
 
 	if (i == NPC_MAX)
 		return;
 
-	gFrame.tgt_x = &gNPC[i].x;
-	gFrame.tgt_y = &gNPC[i].y;
+	gFrame.tgt_x = &gNPC[i]->x;
+	gFrame.tgt_y = &gNPC[i]->y;
 	gFrame.wait = wait;
 }
 

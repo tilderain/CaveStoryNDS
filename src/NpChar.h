@@ -118,7 +118,7 @@ struct EVENT
 	unsigned short bits;
 };
 
-extern NPCHAR gNPC[NPC_MAX];
+extern NPCHAR* gNPC[NPC_MAX];
 extern NPCHAR* gActiveNPC[NPC_MAX];
 extern int gActiveNPCCount;
 
