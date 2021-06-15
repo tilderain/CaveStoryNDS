@@ -678,15 +678,18 @@ int ModeAction(void)
 			else if (gMC.equip & 2 && gKeyTrg & gKeyMap)
 			{
 				BackupSurface(SURFACE_ID_SCREEN_GRAB, &grcGame);
-
+				gInMinimap = true;
 				switch (MiniMapLoop())
 				{
 					case enum_ESCRETURN_exit:
+						gInMinimap = false;
 						return 0;
 
 					case enum_ESCRETURN_restart:
+						gInMinimap = false;
 						return 1;
 				}
+				gInMinimap = false;
 			}
 		}
 

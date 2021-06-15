@@ -11,6 +11,8 @@
 
 extern char gMapping[0x80];
 
+extern bool gInMinimap;
+
 int MiniMapLoop(void);
 BOOL IsMapping(void);
 void StartMapping(void);

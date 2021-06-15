@@ -1159,14 +1159,18 @@ int TextScriptProc(void)
 						gTS.p_read += 4;
 						bExit = TRUE;
 
+						gInMinimap = true;
 						switch (MiniMapLoop())
 						{
 							case enum_ESCRETURN_exit:
+								gInMinimap = false;
 								return enum_ESCRETURN_exit;
 
 							case enum_ESCRETURN_restart:
+								gInMinimap = false;
 								return enum_ESCRETURN_restart;
 						}
+						gInMinimap = false;
 					}
 					else if (IS_COMMAND('S','L','P'))
 					{

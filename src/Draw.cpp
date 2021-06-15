@@ -41,6 +41,7 @@
 #include "fopen.h"
 
 #include "Sound.h"
+#include "MiniMap.h"
 
 struct VramSlot
 {
@@ -1133,7 +1134,7 @@ void CopyFaceTexture()
 
 void CopyDirtyText()
 {
-
+	if(gInMinimap) return;
 	for(int i=0;i<6;i++)
 	{
 		if(!TextLinesDirty[i]) continue;

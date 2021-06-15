@@ -63,6 +63,8 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+bool gInMinimap = false;
+
 void WriteMiniMapLine()
 {
 	int x;
@@ -255,7 +257,7 @@ int MiniMapLoop(void)
 
 	rcView.right = --rcView.left + gMap.width + 2;
 	rcView.bottom = --rcView.top + gMap.length + 2;
-	CortBox2(&rcMiniMap, 0, SURFACE_ID_MAP);
+	//CortBox2(&rcMiniMap, 0, SURFACE_ID_MAP);
 
 	line = 0;
 	my_wait = 0;
