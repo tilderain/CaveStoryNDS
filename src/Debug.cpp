@@ -870,12 +870,12 @@ static int Callback_Level(OptionsMenu *parent_menu, size_t this_option, Callback
 Option options_pc[] = {
 	{"Noclip", Callback_Noclip, NULL, NULL, 0, FALSE},
 	{"Transfer stage", Callback_Stage, NULL, NULL, 0, FALSE},
+	{"Run event", Callback_Event, NULL, NULL, 0, FALSE},	
 	{"Invincibility", Callback_God, NULL, NULL, 0, FALSE},
 	{"Fast Forward", Callback_FF, NULL, NULL, 0, FALSE},
 	{"Give item", Callback_Item, NULL, NULL, 0, FALSE},
 	{"Give weapon", Callback_Weapon, NULL, NULL, 0, FALSE},
 	{"Set level", Callback_Level, NULL, NULL, 0, FALSE},
-	{"Run event", Callback_Event, NULL, NULL, 0, FALSE},
 	{"Show hitboxes", Callback_Hit, NULL, NULL, 0, FALSE},
 };
 OptionsMenu options_menu = {
