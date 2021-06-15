@@ -1,13 +1,32 @@
 
 fix credit bitmapreload
 
+fix credit jpn caret zzz
+
 move old libnds fifo sync code to here
 
+look into npc shock not displaying
+
+
+Save failed for JPN
+camera for shelt and heli ending
+
+camera for Hell?
+
+Shift boss bar a bit?
+Reposition /y/n jpn?
+
+fix minimap jpn
+
+
+* npc tbl?
 
 japanese language
 
 vram viewer?
 
 local multiplayer??
+
+gzip fopen
 
 resize item screen

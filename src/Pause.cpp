@@ -893,7 +893,7 @@ int Call_Pause(void)
 	Option options_pc[] = {
 		{"Control Config", Callback_ControlsKeyboard, &conf, NULL, 0, FALSE},
 		{"Display screen", Callback_Screen, &conf, NULL, 0, FALSE},
-		{"Transparent box", Callback_Transparency, &conf, NULL, 0, FALSE},
+		{"Transparent boxes", Callback_Transparency, &conf, NULL, 0, FALSE},
 		{"Framerate", Callback_Fps, &conf, NULL, 0, FALSE},
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},

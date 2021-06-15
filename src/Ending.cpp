@@ -58,7 +58,7 @@ void PutStripper(void)
 		{
 			// Draw text
 			rc.left = 0;
-			rc.right = 320;
+			rc.right = 128;
 			rc.top = s * 16;
 			rc.bottom = rc.top + 16;
 
@@ -66,7 +66,11 @@ void PutStripper(void)
 			if(x <= 32) x = 32;
 
 			//PutText(&grcFull, (Strip[s].x / 0x200) + ((WINDOW_WIDTH - 320) / 2), (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
+#ifndef JAPANESE
 			PutText(&grcFull, x, (Strip[s].y / 0x200), Strip[s].str, RGB(0xFF, 0xFF, 0xFE));
+#else
+			PutBitmap3(&grcFull,x, (Strip[s].y / 0x200), &rc, SURFACE_ID_CREDIT_CAST);
+#endif
 
 			// Draw character
 			rc.left = (Strip[s].cast % 13) * 24;
@@ -103,12 +107,14 @@ void SetStripper(int x, int y, const char *text, int cast)
 
 	// Draw text
 	rc.left = 0;
-	rc.right = 320;
+	rc.right = 128;
 	rc.top = s * 16;
 	rc.bottom = rc.top + 16;
 
 	CortBox2(&rc, 0, SURFACE_ID_CREDIT_CAST);
-	//PutText2(0, rc.top, text, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_CREDIT_CAST);
+	#ifdef JAPANESE
+		PutText2(0, rc.top, text, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_CREDIT_CAST);
+	#endif
 }
 
 // Regenerate cast text
@@ -122,7 +128,7 @@ void RestoreStripper(void)
 		if (Strip[s].flag & 0x80)
 		{
 			rc.left = 0;
-			rc.right = 320;
+			rc.right = 128;
 			rc.top = s * 16;
 			rc.bottom = rc.top + 16;
 

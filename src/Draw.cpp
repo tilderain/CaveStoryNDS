@@ -1115,7 +1115,7 @@ void BackupSurface(SurfaceID surf_no, RECT *rect)
 int gFaceNo = -1;
 int gFaceNoCurrent = -1;
 
-bool TextLinesDirty[5] = {0};
+bool TextLinesDirty[6] = {0};
 
 void CopyFaceTexture()
 {
@@ -1133,20 +1133,29 @@ void CopyFaceTexture()
 
 void CopyDirtyText()
 {
-	RECT rect = {0, 0, surf[SURFACE_ID_TEXT_LINE1].w, surf[SURFACE_ID_TEXT_LINE1].h};
-	for(int i=0;i<5;i++)
+
+	for(int i=0;i<6;i++)
 	{
 		if(!TextLinesDirty[i]) continue;
 		TextLinesDirty[i] = false;
-		if(i != 4)
+		if(i == 4)
 		{
-			CopyDataToTexture(surf[30 + i].paletteType, surf[30 + i].textureid, 30 + i, 
-			surf[30 + i].xoffset, surf[30 + i].yoffset, &rect);
+			RECT rect = {0, 0, surf[SURFACE_ID_ROOM_NAME].w, surf[SURFACE_ID_ROOM_NAME].h};
+			CopyDataToTexture(surf[SURFACE_ID_ROOM_NAME].paletteType, surf[SURFACE_ID_ROOM_NAME].textureid, SURFACE_ID_ROOM_NAME, 
+			surf[SURFACE_ID_ROOM_NAME].xoffset, surf[SURFACE_ID_ROOM_NAME].yoffset, &rect);
+
+		}
+		else if (i == 5)
+		{
+			RECT rect = {0, 0, surf[SURFACE_ID_CREDIT_CAST].w, surf[SURFACE_ID_CREDIT_CAST].h};
+			CopyDataToTexture(surf[SURFACE_ID_CREDIT_CAST].paletteType, surf[SURFACE_ID_CREDIT_CAST].textureid, SURFACE_ID_CREDIT_CAST, 
+			surf[SURFACE_ID_CREDIT_CAST].xoffset, surf[SURFACE_ID_CREDIT_CAST].yoffset, &rect);
 		}
 		else
 		{
-			CopyDataToTexture(surf[SURFACE_ID_ROOM_NAME].paletteType, surf[SURFACE_ID_ROOM_NAME].textureid, SURFACE_ID_ROOM_NAME, 
-			surf[SURFACE_ID_ROOM_NAME].xoffset, surf[SURFACE_ID_ROOM_NAME].yoffset, &rect);
+			RECT rect = {0, 0, surf[SURFACE_ID_TEXT_LINE1].w, surf[SURFACE_ID_TEXT_LINE1].h};
+			CopyDataToTexture(surf[30 + i].paletteType, surf[30 + i].textureid, 30 + i, 
+			surf[30 + i].xoffset, surf[30 + i].yoffset, &rect);
 		}
 		
 	}
@@ -1356,17 +1365,16 @@ static void SetFontChar(int dx, int dy, int sx, int sy, int surf_no)
 		{
 			for(int j=0;j<6;j++)
 			{
-
 				if(j==0)
 				{
 					int level0Color = GetSurfPixel(startx+(j*2), starty+k, SURFACE_ID_FONT);
-					SetSurf2Pixels(dx + j*2, k, surf_no, (level0Color << 4));
+					SetSurf2Pixels(dx + j*2, k + dy, surf_no, (level0Color << 4));
 				}
 				else
 				{
 					int level0Color = GetSurfPixel(startx+(j*2-1), starty+k, SURFACE_ID_FONT);
 					int level1Color = GetSurfPixel(startx+(j*2), starty+k, SURFACE_ID_FONT);
-					SetSurf2Pixels(dx + j*2, k, surf_no, (level0Color | level1Color << 4));
+					SetSurf2Pixels(dx + j*2, k + dy, surf_no, (level0Color | level1Color << 4));
 				}
 			}
 		}
@@ -1468,12 +1476,20 @@ void CortBox2(RECT *rect, uint32_t col, SurfaceID surf_no)
 {
 	if (surf[surf_no].data)
 	{
-		memset(surf[surf_no].data, col, rect->right * rect->bottom * sizeof(BUFFER_PIXEL));
+		int width = (rect->right - rect->left)/2;
+		int height = rect->bottom - rect->top;
+		int sW = surf[surf_no].w/2;
+		for(int i=0;i<height;i++)
+		{
+			memset(&surf[surf_no].data[rect->left/2 + (((rect->top + i) * sW))], col, width * sizeof(BUFFER_PIXEL));
+		}
+		
 		if(surf_no == SURFACE_ID_TEXT_LINE1) TextLinesDirty[0] = true;
 		if(surf_no == SURFACE_ID_TEXT_LINE2) TextLinesDirty[1] = true;
 		if(surf_no == SURFACE_ID_TEXT_LINE3) TextLinesDirty[2] = true;
 		if(surf_no == SURFACE_ID_TEXT_LINE4) TextLinesDirty[3] = true;	
-		if(surf_no == SURFACE_ID_ROOM_NAME) TextLinesDirty[4] = true;						
+		if(surf_no == SURFACE_ID_ROOM_NAME) TextLinesDirty[4] = true;		
+		if(surf_no == SURFACE_ID_CREDIT_CAST) TextLinesDirty[5] = true;
 	}
 }
 
@@ -1659,12 +1675,19 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 			i++;
 		}
 	}
-	if(surf_no != SURFACE_ID_ROOM_NAME)
-		TextLinesDirty[surf_no - 30] = true;
-	else
+	if(surf_no == SURFACE_ID_ROOM_NAME)
 	{
 		TextLinesDirty[4] = true;
 	}
+	else if (surf_no == SURFACE_ID_CREDIT_CAST)
+	{
+		TextLinesDirty[5] = true;
+	}
+	else
+	{
+		TextLinesDirty[surf_no - 30] = true;
+	}
+	
 	
 
 #endif

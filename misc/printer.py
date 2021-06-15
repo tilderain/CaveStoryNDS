@@ -72,6 +72,7 @@ for chara in charas:
 	print()
 '''
 i = 0
+j = 0
 for chara in charas:
 	for rows in chara:
 		right = 0
@@ -83,13 +84,15 @@ for chara in charas:
 				#print(4 if row[i] == 4 else ".", end="")
 				
 			#print()
-		print(str(right+3) + ",", end="")
+		add = 3 if j > 2 else 2
+		print(str(right+add) + ",", end="")
 		#print()
 		#print()
 	i+=1
 	if i == 12:
 		print("")
 		i=0
+		j += 1
 
 
 
