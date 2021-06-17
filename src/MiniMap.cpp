@@ -318,23 +318,23 @@ int MiniMapLoop(void)
 			++line;
 		}
 
-		if (gKey & CEY_LEFT)
+		if (gKey & CEY_RIGHT)
 		{
 			rcView.left -= 1;
 			rcView.right -= 1;
 		}
-		if (gKey & CEY_RIGHT)
+		if (gKey & CEY_LEFT)
 		{
 			rcView.left += 1;
 			rcView.right += 1;
 		}
 
-		if (gKey & CEY_UP)
+		if (gKey & CEY_DOWN)
 		{
 			rcView.top -= 1;
 			rcView.bottom -= 1;
 		}
-		if (gKey & CEY_DOWN)
+		if (gKey & CEY_UP)
 		{
 			rcView.top += 1;
 			rcView.bottom += 1;

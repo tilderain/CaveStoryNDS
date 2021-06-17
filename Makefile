@@ -44,7 +44,7 @@ ARCH	:=	-mthumb -mthumb-interwork
 
 CFLAGS	:= -g -Wall -Os\
  		 -mcpu=arm946e-s -march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-		-ffast-math -DFIX_BUGS -DJAPANESE \
+		-ffast-math -DFIX_BUGS  \
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9 -DLODEPNG_NO_COMPILE_ANCILLARY_CHUNKS -DLODEPNG_NO_COMPILE_ENCODER -DLODEPNG_NO_COMPILE_DISK -DLODEPNG_NO_COMPILE_ERROR_TEXT -DLODEPNG_NO_COMPILE_CPP

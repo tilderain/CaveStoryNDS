@@ -1598,9 +1598,9 @@ void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
 			if(v == '=' - 0x20)
 			{
 				RECT rcSymbol = {64, 48, 72, 56};
-				#ifndef JAPANESE
+#ifndef JAPANESE
 				PutBitmap3(rcView, x, y + 2, &rcSymbol, SURFACE_ID_TEXT_BOX);
-				#endif
+#endif
 				x += font_space[v];
 			}
 			else
