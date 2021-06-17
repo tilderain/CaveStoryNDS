@@ -13,7 +13,7 @@ Controls:
 
 Additional notes
 	On 3DS or DSi you will need the DSi version to run. (though if you're on a 3DS you probably want to play Clownacy's 3DS port)
-	If it fails to run, you can try launching it with nds-hb-menu 0.4.0 or TWiLight Menu.
+	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
 
 	Config.dat and Profile.dat will be saved to the root of the SD card.
 
