@@ -12,7 +12,7 @@ There are a few compile flags.
 
 -DTWO_SCREENS will enable the broken two screen mode.
 
--DREAD_FROM_SD will disable incbin for files and instead read from the data folder on the SD card.
+-DREAD_FROM_SD will disable incbin for files and instead read from the data folder on the SD card. (I think it fails to read files half the time though)
 
 -DCYG_PROFILER will enable the profiler, needing -DREAD_FROM_SD flag and -finstrument-functions. 
 
