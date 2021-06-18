@@ -10,7 +10,9 @@ enum
 };
 
 void nifiHostMenu();
+void nifiHostWait();
 void nifiClientMenu();
+void nifiClientWait();
 
 
 

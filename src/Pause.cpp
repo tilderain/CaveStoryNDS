@@ -195,6 +195,9 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 
 	for (;;)
 	{
+
+		if(nifiIsHost()) nifiHostWait();
+		if(nifiIsClient()) nifiClientWait();
 		// Get pressed keys
 		GetTrg();
 
@@ -958,18 +961,31 @@ static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackA
 	if (action != ACTION_OK)
 		return CALLBACK_CONTINUE;
 
-	int return_value = PromptAreYouSure();
+	int return_value = CALLBACK_CONTINUE;
 
-	switch (return_value)
-	{
-		case 0:
-			return_value = CALLBACK_CONTINUE;	// Go back to previous menu
-			break;
+	return return_value;
+}
 
-		case 1:
-			return_value = CALLBACK_EXIT;	// Exit game
-			break;
-	}
+static int Callback_MultiConnectTick(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	int return_value = CALLBACK_CONTINUE;
+
+	return return_value;
+}
+
+static int Callback_MultiHostTick(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	int return_value = CALLBACK_CONTINUE;
 
 	return return_value;
 }
@@ -982,7 +998,7 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 		return CALLBACK_CONTINUE;
 
 	Option options_pc[] = {
-		{"Start game", Callback_Stub, NULL, NULL, 0, TRUE},
+		{"Start game", Callback_MultiHostTick, NULL, NULL, 0, TRUE},
 		{"Start game (new file)", Callback_Stub, NULL, NULL, 0, TRUE},
 	};
 
@@ -997,9 +1013,7 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
 
-	gMultiplayerState = MULTISTATE_HOST;
 	nifiHostMenu();
-
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
@@ -1015,7 +1029,7 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 		return CALLBACK_CONTINUE;
 
 	Option options_pc[] = {
-		{"Searching for game...", Callback_Stub, NULL, NULL, 0, TRUE},
+		{"Searching for game...", Callback_MultiConnectTick, NULL, NULL, 0, TRUE},
 	};
 
 	OptionsMenu options_menu = {
@@ -1027,13 +1041,9 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 		TRUE
 	};
 
-	gMultiplayerState = MULTISTATE_CONNECTED;
-	//enableNifi();
-
 	nifiClientMenu();
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
-
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);

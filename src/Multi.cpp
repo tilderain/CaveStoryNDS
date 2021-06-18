@@ -14,19 +14,10 @@
 
 #include "Game.h"
 
+#include "Sound.h"
+
 
 int gMultiplayerState = MULTISTATE_NONE;
-
-void StartHost()
-{
-
-}
-
-void StartConnect()
-{
-	
-}
-
 
 void nifiLinkTypeMenu();
 void nifiHostMenu();
@@ -525,10 +516,9 @@ int nifiStartLink() {
     if (nifiLinkType == LINK_CABLE) {
         printf("Start Gb2\n");
        // mgr_startGb2(NULL);
-        if (loadOtherRom() != 0) {
-            printf("Error loading \"%s\".\n");
-            return 1;
-        }
+    //    if (loadOtherRom() != 0) {
+    //        printf("Error loading \"%s\".\n");
+    //        return 1;
     }
 
     if (isHost) {
@@ -537,8 +527,8 @@ int nifiStartLink() {
 
         // Fill in first few frames of client's input
         for (int i=0; i<CLIENT_FRAME_LAG; i++) {
-            receivedInputReady[i] = true;
-            receivedInput[i] = 0xff;
+        //    receivedInputReady[i] = true;
+        //    receivedInput[i] = 0xff;
         }
 
         // Set input destinations
@@ -598,8 +588,8 @@ int nifiStartLink() {
             nifiSendSram();
     }
 
-    nifiConsecutiveWaitingFrames = 0;
-    return 0;*/
+    nifiConsecutiveWaitingFrames = 0;*/
+    return 0;
 }
 
 void nifiHostMenu() {
@@ -614,124 +604,69 @@ void nifiHostMenu() {
 
     printf("Waiting for client...\n");
     printf("Host ID: %d\n\n", hostId);
-    printf("Press B to give up.\n\n");
-
-    bool willConnect=false;
-    while (!foundClient) {
-        swiWaitForVBlank();
-        swiWaitForVBlank();
-        swiWaitForVBlank();
-        //inputUpdateVBlank();
-        if (keyJustPressed(KEY_B))
-            break;
-
-        //const char* filename = gameboy->getRomFile()->getFilename();
-        int bufferSize = 8 + 20 + 1;
-        u8 buffer[bufferSize];
-
-        buffer[0] = nifiLinkType;
-        //strcpy((char*)(buffer+8), filename);
-        //strcpy((char*)(buffer+8+strlen(filename)+1), gameboy->getRomFile()->getRomTitle());
-        nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
-    }
-
-    if (foundClient) {
-        printf("Found client.\n");
-        status = HOST_CONNECTED;
-        willConnect = true;
-    }
-    else {
-        isHost = false;
-        status = 0;
-        printf("Couldn't find client.\n");
-        willConnect = false;
-    }
-    
-    if (willConnect) {
-        if (nifiStartLink() != 0)
-            printf("Link failed.\n");
-        else
-            printf("Starting link.\n");
-    }
-
-    for (int i=0; i<90; i++) swiWaitForVBlank();
 }
 
 void nifiClientMenu() {
     enableNifi();
     consoleClear();
     printf("Waiting for host...\n\n");
-    printf("Press B to give up.\n\n");
 
     foundHost = false;
     isClient = true;
     isHost = false;
     status = CLIENT_WAITING;
+}
 
-    while (!foundHost) {
+void nifiHostWait()
+{
+	if (!foundClient) {
+	 	swiWaitForVBlank();
         swiWaitForVBlank();
-        swiWaitForVBlank();
-        swiWaitForVBlank();
-      //  inputUpdateVBlank();
-        if (keyJustPressed(KEY_B))
-            break;
+
+        int bufferSize = 8 + 20 + 1;
+        u8 buffer[bufferSize];
+
+        buffer[0] = nifiLinkType;
+        nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
     }
 
-    bool willConnect = false;
-    if (foundHost) {
-        printf("Found host.\n\n");
-        printf("Host ROM: \"%s\"\n", linkedRomTitle);
-      //  printf("Filename: \"%s\"\n", linkedFilename);
-        printf("Link Type: ");
-        if (nifiLinkType == LINK_CABLE)
-            printf("Cable Link\n\n");
-        else if (nifiLinkType == LINK_SGB)
-            printf("SGB Multiplayer\n\n");
-        printf("Press A to connect, B to cancel.\n\n");
+	if (foundClient && status != HOST_CONNECTED) {
+        printf("Found client.\n");
+        status = HOST_CONNECTED;
 
-        while (true) {
-            swiWaitForVBlank();
-          //  inputUpdateVBlank();
+	if (nifiStartLink() != 0)
+        printf("Link failed.\n");
+    else
+        printf("Starting link.\n");
 
-            if (keyJustPressed(KEY_A)) {
-               /* const char* filename = gameboy->getRomFile()->getFilename();
-                int bufferSize = 8 + 20 + strlen(filename) + 1;
-                u8 buffer[bufferSize];
+   		for (int i=0; i<90; i++) swiWaitForVBlank();
 
-                strcpy((char*)(buffer+8), filename);
-                strcpy((char*)(buffer+8+strlen(filename)+1), gameboy->getRomFile()->getRomTitle());
-                nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, false);
-
-                willConnect = true;
-
-                printf("Connected to host.\nHost Id: %d\n", hostId);
-                status = CLIENT_CONNECTED;
-
-                memset((void*)receivedInputReady, 0, sizeof(receivedInputReady));*/     //TODO::::
-                break;
-            }
-            else if (keyJustPressed(KEY_B)) {
-                willConnect = false;
-                printf("Connection cancelled.\n");
-                break;
-            }
-        }
+		PlaySoundObject(61, 1);
     }
-    else {
-        isClient = false;
-        status = 0;
-        printf("Couldn't find host.\n");
-        nifiStop();
-    }
-    
-    if (willConnect) {
-        if (nifiStartLink() != 0)
+
+
+}
+
+void nifiClientWait()
+{
+	if (foundHost && status != CLIENT_CONNECTED) {
+        swiWaitForVBlank();
+
+		int bufferSize = 8 + 20 + 1;
+        u8 buffer[bufferSize];
+
+        nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, false);
+
+        printf("Connected to host.\nHost Id: %d\n", hostId);
+        status = CLIENT_CONNECTED;
+		if (nifiStartLink() != 0)
             printf("Link failed.\n");
         else
             printf("Starting link.\n");
-    }
+		for (int i=0; i<90; i++) swiWaitForVBlank();
 
-    for (int i=0; i<90; i++) swiWaitForVBlank();
+		PlaySoundObject(61, 1);
+    }
 }
 
 bool nifiIsHost() { return isHost; }
@@ -896,4 +831,5 @@ int Wifi_RawTxFrameNIFI(u16 datalen, u16 rate, u16 * data) {
 	}
 	if(synchandler) synchandler();
 	return 0;*/
+	return 0;
 }
