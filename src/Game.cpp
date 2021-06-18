@@ -394,7 +394,18 @@ int ModeTitle(void)
 					}
 					continue;
 				}
+				if(gCursorPos == 3)
+				{
+					switch (Call_Multi())
+					{
+						case enum_ESCRETURN_exit:
+							return 0;
 
+						case enum_ESCRETURN_restart:
+							return 1;
+					}
+					continue;
+				}
 
 				PlaySoundObject(18, 1);
 				break;
@@ -421,12 +432,12 @@ int ModeTitle(void)
 			if (gKeyTrg & gKeyUp)
 			{
 				gCursorPos -= 1;
-				if (gCursorPos < 0) gCursorPos = 2;
+				if (gCursorPos < 0) gCursorPos = 3;
 			}
 			else
 			{
 				gCursorPos += 1;
-				if (gCursorPos > 2) gCursorPos = 0;
+				if (gCursorPos > 3) gCursorPos = 0;
 			}
 		}
 
@@ -453,9 +464,10 @@ int ModeTitle(void)
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 72, 40, &rcTitle, SURFACE_ID_TITLE);
 		//PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + -8, &rcNew, SURFACE_ID_TITLE);
 		//PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 24, (WINDOW_HEIGHT / 2) + 28 - 8 - 8, &rcContinue, SURFACE_ID_TITLE);
-		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) - 4, "New", RGB(0xf7, 0xf7, 0xea));
-		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 - 8 - 8, "Continue", RGB(0xf7, 0xf7, 0xea));
-		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 , "Config", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) - 4 - 10, "New", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 - 8 - 8 - 10, "Continue", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 - 10, "Config", RGB(0xf7, 0xf7, 0xea));
+		PutText(&grcGame, (WINDOW_WIDTH / 2) - 22,  (WINDOW_HEIGHT / 2) + 28 + 8 + 8 - 10, "Multiplayer", RGB(0xf7, 0xf7, 0xea));
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 80, WINDOW_HEIGHT - 48, &rcPixel, SURFACE_ID_PIXEL);
 
 		// Draw character cursor
@@ -484,12 +496,13 @@ int ModeTitle(void)
 		}
 
 		if (gCursorPos == 0)
-			char_y = (WINDOW_HEIGHT / 2) + - 7;
+			char_y = (WINDOW_HEIGHT / 2) + - 7 - 10;
 		else if (gCursorPos == 1)
-			char_y = (WINDOW_HEIGHT / 2) + 27 - 18;
+			char_y = (WINDOW_HEIGHT / 2) + 27 - 18 - 10;
 		else if (gCursorPos == 2)
-			char_y = (WINDOW_HEIGHT / 2) + 27 - 4;
-
+			char_y = (WINDOW_HEIGHT / 2) + 27 - 4 - 8;
+		else if (gCursorPos == 3)
+			char_y = (WINDOW_HEIGHT / 2) + 27 + 10 - 6;
 		// Pixel being redundant
 		//if (!bContinue)
 		//	PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - 44, char_y, &char_rc, char_surf);

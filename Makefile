@@ -44,7 +44,7 @@ ARCH	:=	-mthumb -mthumb-interwork
 
 CFLAGS	:= -g -Wall -Os\
  		 -mcpu=arm946e-s -march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-		-ffast-math -DFIX_BUGS  \
+		-ffast-math -DFIX_BUGS \
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9 -DLODEPNG_NO_COMPILE_ANCILLARY_CHUNKS -DLODEPNG_NO_COMPILE_ENCODER -DLODEPNG_NO_COMPILE_DISK -DLODEPNG_NO_COMPILE_ERROR_TEXT -DLODEPNG_NO_COMPILE_CPP
@@ -58,7 +58,7 @@ LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) -L$(SDL_LIB)
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project (order is important)
 #---------------------------------------------------------------------------------
-LIBS	:= 	-lfilesystem -lfat -lnds9 -lmm9
+LIBS	:= 	-lfilesystem -lfat -ldswifi9 -lnds9 
  
  
 #---------------------------------------------------------------------------------
@@ -125,6 +125,7 @@ $(BUILD):
 clean:
 	@echo clean ...
 	@rm -f $(BUILD)/* $(TARGET).elf $(TARGET).nds
+	@make -C srcarm7 clean
 
 #---------------------------------------------------------------------------------
 else

@@ -23,6 +23,9 @@
 
 #include "nds.h"
 
+#include "Multi.h"
+#include "nifi.h"
+
 #define MAX_OPTIONS ((WINDOW_HEIGHT / 20) - 2)	// The maximum number of options we can fit on-screen at once
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -187,6 +190,9 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 	for (size_t i = 0; i < options_menu->total_options; ++i)
 		options_menu->options[i].callback(options_menu, i, ACTION_INIT);
 
+	int dots = 0;
+	int dotstimer = 0;
+
 	for (;;)
 	{
 		// Get pressed keys
@@ -278,7 +284,21 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 
 		// Draw subtitle
 		if (options_menu->subtitle != NULL)
-			PutText(&grcGame, (WINDOW_WIDTH / 2) - ((strlen(options_menu->subtitle) * 5) / 2), y + 14, options_menu->subtitle, RGB(0xFF, 0xFF, 0xFF));
+		{
+			if(options_menu->subtitle[strlen(options_menu->subtitle)-1] == '.')
+			{
+				int spacing = GetTextSpacing(options_menu->subtitle);
+				int spacingDot = GetTextSpacing(".");
+				if(dotstimer++ > 40){dots++; dotstimer=0;}
+				if(dots > 2) dots = 0;
+				for (size_t i = 0; i < dots; i++)
+				{
+					PutText(&grcGame, (WINDOW_WIDTH / 2) - ((strlen(options_menu->subtitle) * 5) / 2) + spacing + (spacingDot*i), y + 18, ".", RGB(0xFF, 0xFF, 0xFF));
+				}
+				
+			}
+			PutText(&grcGame, (WINDOW_WIDTH / 2) - ((strlen(options_menu->subtitle) * 5) / 2), y + 18, options_menu->subtitle, RGB(0xFF, 0xFF, 0xFF));
+		}
 
 		y += 40;
 
@@ -926,6 +946,144 @@ int Call_Pause(void)
 	Flip_SystemTask();
 
 	SaveConfigData(&conf);
+
+	return return_value;
+}
+
+
+static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	int return_value = PromptAreYouSure();
+
+	switch (return_value)
+	{
+		case 0:
+			return_value = CALLBACK_CONTINUE;	// Go back to previous menu
+			break;
+
+		case 1:
+			return_value = CALLBACK_EXIT;	// Exit game
+			break;
+	}
+
+	return return_value;
+}
+
+static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	Option options_pc[] = {
+		{"Start game", Callback_Stub, NULL, NULL, 0, TRUE},
+		{"Start game (new file)", Callback_Stub, NULL, NULL, 0, TRUE},
+	};
+
+	OptionsMenu options_menu = {
+		"Host",
+		"Waiting.",
+		options_pc,
+		sizeof(options_pc) / sizeof(options_pc[0]),
+		-60,
+		TRUE
+	};
+
+	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	gMultiplayerState = MULTISTATE_HOST;
+	nifiHostMenu();
+
+	const int return_value = EnterOptionsMenu(&options_menu, 0);
+
+	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	return return_value;
+}
+
+static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	Option options_pc[] = {
+		{"Searching for game...", Callback_Stub, NULL, NULL, 0, TRUE},
+	};
+
+	OptionsMenu options_menu = {
+		"Connect",
+		NULL,
+		options_pc,
+		sizeof(options_pc) / sizeof(options_pc[0]),
+		-70,
+		TRUE
+	};
+
+	gMultiplayerState = MULTISTATE_CONNECTED;
+	//enableNifi();
+
+	nifiClientMenu();
+
+	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	const int return_value = EnterOptionsMenu(&options_menu, 0);
+
+	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	return return_value;
+}
+
+int Call_Multi(void)
+{
+	//(void)parent_menu;
+
+	//if (action != ACTION_OK)
+	//	return CALLBACK_CONTINUE;
+
+	// Make the options match the configuration data
+
+	BOOL is_console = false;
+
+	Option options_console[] = {
+
+	};
+
+	Option options_pc[] = {
+		{"Host", Callback_MultiHost, NULL, NULL, 0, FALSE},
+		{"Connect", Callback_MultiConnect, NULL, NULL, 0, FALSE},
+	};
+
+	OptionsMenu options_menu = {
+		"Local Multiplayer",
+		restart_required ? "RESTART REQUIRED" : NULL,
+		is_console ? options_console : options_pc,
+		is_console ? (sizeof(options_console) / sizeof(options_console[0])) : (sizeof(options_pc) / sizeof(options_pc[0])),
+		is_console ? -60 : -60,
+		TRUE
+	};
+
+	ChangeMusic(MUS_WHITE);
+
+	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	const int return_value = EnterOptionsMenu(&options_menu, 0);
+
+	//PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	// Save our changes to the configuration file
+
+	const size_t visible_options = MIN(MAX_OPTIONS, options_menu.total_options);
+
+	int y = (WINDOW_HEIGHT / 2) - ((visible_options * 20) / 2) - (40 / 2);
+	Flip_SystemTask();
 
 	return return_value;
 }

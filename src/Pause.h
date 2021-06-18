@@ -42,5 +42,6 @@ typedef struct OptionsMenu
 } OptionsMenu;
 
 int Call_Pause(void);
+int Call_Multi(void);
 int EnterOptionsMenuIngame(OptionsMenu *options_menu);
 

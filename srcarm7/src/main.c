@@ -80,7 +80,7 @@ int main() {
 	fifoInit();
 	touchInit();
 
-	mmInstall(FIFO_MAXMOD);
+	//mmInstall(FIFO_MAXMOD);
 
 	SetYtrigger(80);
 

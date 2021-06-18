@@ -588,6 +588,8 @@ int CampLoop(void)
 
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;	// Quit game
+
+		gCounter++;
 	}
 
 	// Resume original script

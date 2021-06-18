@@ -401,7 +401,7 @@ void PutMyAir(int x, int y)
 	}
 }
 
-int time_count;
+int time_count_;
 
 void PutTimeCounter(int x, int y)
 {
@@ -416,10 +416,10 @@ void PutTimeCounter(int x, int y)
 		// Draw clock and increase time
 		if (g_GameFlags & 2)
 		{
-			if (time_count < 100 * 60 * 50)	// 100 minutes
-				++time_count;
+			if (time_count_ < 100 * 60 * 50)	// 100 minutes
+				++time_count_;
 
-			if (time_count % 30 > 10)
+			if (time_count_ % 30 > 10)
 				PutBitmap3(&grcGame, x, y, &rcTime[0], SURFACE_ID_TEXT_BOX);
 			else
 				PutBitmap3(&grcGame, x, y, &rcTime[1], SURFACE_ID_TEXT_BOX);
@@ -430,14 +430,14 @@ void PutTimeCounter(int x, int y)
 		}
 
 		// Draw time
-		PutNumber4(x,		y, time_count / (60 * 50),	FALSE);
-		PutNumber4(x + 20,	y, time_count / 50 % 60,	TRUE);
-		PutNumber4(x + 32,	y, time_count / 5 % 10,		FALSE);
+		PutNumber4(x,		y, time_count_ / (60 * 50),	FALSE);
+		PutNumber4(x + 20,	y, time_count_ / 50 % 60,	TRUE);
+		PutNumber4(x + 32,	y, time_count_ / 5 % 10,		FALSE);
 		PutBitmap3(&grcGame, x + 30, y, &rcTime[2], SURFACE_ID_TEXT_BOX);
 	}
 	else
 	{
-		time_count = 0;
+		time_count_ = 0;
 	}
 }
 
@@ -478,14 +478,14 @@ BOOL SaveTimeCounter(void)
 		rec.counter[0] = p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
 
 		// If this is faster than our new time, quit
-		if (rec.counter[0] < time_count)
+		if (rec.counter[0] < time_count_)
 			return TRUE;
 	}
 
 	// Save new time
 	for (i = 0; i < 4; ++i)
 	{
-		rec.counter[i] = time_count;
+		rec.counter[i] = time_count_;
 		rec.random[i] = Random(0, 250) + i;
 
 		p[0] = (unsigned char)(rec.counter[i] + rec.random[i]);
@@ -553,10 +553,10 @@ int LoadTimeCounter(void)
 	// Verify checksum's result
 	if (rec.counter[0] != rec.counter[1] || rec.counter[0] != rec.counter[2])
 	{
-		time_count = 0;
+		time_count_ = 0;
 		return 0;
 	}
 
-	time_count = rec.counter[0];
-	return time_count;
+	time_count_ = rec.counter[0];
+	return time_count_;
 }

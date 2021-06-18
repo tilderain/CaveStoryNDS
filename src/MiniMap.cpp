@@ -20,6 +20,7 @@
 #include "MapName.h"
 #include "MyChar.h"
 #include "Stage.h"
+#include "Game.h"
 
 
 
@@ -248,6 +249,8 @@ int MiniMapLoop(void)
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
+
+		gCounter++;
 	}
 
 	rcMiniMap.left = 0;
@@ -353,6 +356,9 @@ int MiniMapLoop(void)
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
+
+		
+		gCounter++;
 	}
 
 	for (f = 8; f >= -1; --f)
@@ -406,6 +412,9 @@ int MiniMapLoop(void)
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
+
+
+		gCounter++;
 	}
 		int frame_x;
 		int frame_y;
