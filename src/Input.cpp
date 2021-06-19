@@ -22,6 +22,8 @@
 
 #include "nds.h"
 
+#include "nifi.h"
+
 #define STICK_DEADZONE 0x20
 #define STICK_DEADSML  -STICK_DEADZONE
 #define STICK_DEADBIG   STICK_DEADZONE
@@ -65,5 +67,17 @@ bool UpdateInput()
 	{
 		gKey |= CEY_ESCAPE;
 	}
+
+	int status = nifiGetStatus();
+	if(status == HOST_INGAME || status == CLIENT_INGAME)
+	{
+		nifiUpdateInput();
+		while(nifiPaused)
+		{
+			nifiUpdateInput();
+			swiWaitForVBlank();
+		}
+	}
+
 	return true;
 }

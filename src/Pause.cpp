@@ -21,10 +21,14 @@
 #include "Sound.h"
 #include "Stage.h"
 
+#include "Game.h"
+
 #include "nds.h"
 
 #include "Multi.h"
 #include "nifi.h"
+
+#include "Random.h"
 
 #define MAX_OPTIONS ((WINDOW_HEIGHT / 20) - 2)	// The maximum number of options we can fit on-screen at once
 
@@ -197,11 +201,12 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 
 	for (;;)
 	{
-
-		if(nifiIsHost()) nifiHostWait();
-		if(nifiIsClient()) nifiClientWait();
-
 		int status = nifiGetStatus();
+
+		if(nifiIsHost() && status != HOST_INGAME) nifiHostWait();
+		if(nifiIsClient() && status != CLIENT_INGAME) nifiClientWait();
+
+
 		if(status == HOST_CONNECTED)
 		{
 			options_menu->options[0].disabled = false;
@@ -340,6 +345,12 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 		}
 
 		PutFramePerSecound();
+
+		if(gStartingNetplay) 
+		{
+			return_value = CALLBACK_CONTINUE;
+			break;
+		}
 
 		if (!Flip_SystemTask())
 		{
@@ -980,29 +991,53 @@ static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackA
 	return return_value;
 }
 
-static int Callback_MultiConnectTick(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+static void hostStartNetplay()
+{
+	int bufferSize = 8 + 20 + 1;
+    u8 buffer[bufferSize];
+
+    nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, false);
+	nifiSetStatus(HOST_INGAME);
+	gStartingNetplay = true;
+	gCounter = 0;
+	msvc_srand(0);
+	printf("Host: starting netplay\n");
+}
+
+static int Callback_HostStartGame(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
 	(void)parent_menu;
 
 	if (action != ACTION_OK)
 		return CALLBACK_CONTINUE;
 
+	if (action == ACTION_OK)
+	{
+		hostStartNetplay();
+	}
+
 	int return_value = CALLBACK_CONTINUE;
 
 	return return_value;
 }
 
-static int Callback_MultiHostTick(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+static int Callback_HostStartNewFile(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
 	(void)parent_menu;
 
 	if (action != ACTION_OK)
 		return CALLBACK_CONTINUE;
 
+	if (action == ACTION_OK)
+	{
+		hostStartNetplay();
+	}
+
 	int return_value = CALLBACK_CONTINUE;
 
 	return return_value;
 }
+
 
 static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
@@ -1012,8 +1047,8 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 		return CALLBACK_CONTINUE;
 
 	Option options_pc[] = {
-		{"Start game", Callback_MultiHostTick, NULL, NULL, 0, TRUE},
-		{"Start game (new file)", Callback_Stub, NULL, NULL, 0, TRUE},
+		{"Start game", Callback_HostStartGame, NULL, NULL, 0, TRUE},
+		{"Start game (new file)", Callback_HostStartNewFile, NULL, NULL, 0, TRUE},
 	};
 
 	OptionsMenu options_menu = {
@@ -1027,7 +1062,9 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
 
-	nifiHostMenu();
+	int status = nifiGetStatus();
+	if(status != HOST_WAITING && status != HOST_CONNECTED && status != HOST_INGAME)
+		nifiHostMenu();
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
 	if(!gStartingNetplay) nifiStop();
@@ -1045,7 +1082,7 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 		return CALLBACK_CONTINUE;
 
 	Option options_pc[] = {
-		{"Searching for game...", Callback_MultiConnectTick, NULL, NULL, 0, TRUE},
+		{"Searching for game...", Callback_Stub, NULL, NULL, 0, TRUE},
 	};
 
 	OptionsMenu options_menu = {
@@ -1111,7 +1148,7 @@ int Call_Multi(void)
 	const size_t visible_options = MIN(MAX_OPTIONS, options_menu.total_options);
 
 	int y = (WINDOW_HEIGHT / 2) - ((visible_options * 20) / 2) - (40 / 2);
-	Flip_SystemTask();
+	//Flip_SystemTask();
 
 	return return_value;
 }

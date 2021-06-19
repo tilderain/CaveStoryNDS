@@ -53,6 +53,8 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+#include "Multi.h"
+
 int g_GameFlags;
 int gCounter;
 
@@ -403,6 +405,11 @@ int ModeTitle(void)
 
 						case enum_ESCRETURN_restart:
 							return 1;
+					}
+					if(gStartingNetplay)
+					{
+						gCursorPos = 0;
+						break;
 					}
 					continue;
 				}

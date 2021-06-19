@@ -1,6 +1,6 @@
 // THIS IS DECOMPILED PROPRIETARY CODE - USE AT YOUR OWN RISK.
 //
-// The original code belongs to Daisuke "Pixel" Amaya.
+// The original code beints to Daisuke "Pixel" Amaya.
 //
 // Modifications and custom code are under the MIT licence.
 // See LICENCE.txt for details.
@@ -22,41 +22,29 @@ enum KeyBind
 	//Left and right weapon switch keys
 	CEY_ARMS =      0x00000080,
 	CEY_ARMSREV =   0x00000100,
-	//Unused?
-	CEY_SHIFT =     0x00000200,
-	//Function keys
-	CEY_F1 =        0x00000400,
-	CEY_F2 =        0x00000800,
 	//Inventory
-	CEY_ITEM =      0x00001000,
-	//Escape key
-	CEY_ESCAPE =	0x00008000,
-	//The alt movement keys go in the order of left, up, right and down
-	CEY_ALT_LEFT =  0x00010000,
-	CEY_ALT_DOWN =  0x00020000,
-	CEY_ALT_RIGHT = 0x00040000,
-	CEY_ALT_UP =    0x00180000,
-	//Alt up actually has 2 seperate keys, but they're kind of merged together
-	CEY_L =         0x00080000,
-	CEY_PLUS =      0x00100000
+	CEY_ITEM =      0x00000200,
+	CEY_ESCAPE =	0x00000400,
 };
 
-extern long gKey;
-extern long gKeyTrg;
+extern int gKey;
+extern int gKeyTrg;
+extern int gKeyP2;
+extern int gKeyTrgP2;
 
-extern long gKeyJump;
-extern long gKeyShot;
-extern long gKeyArms;
-extern long gKeyArmsRev;
-extern long gKeyItem;
-extern long gKeyMap;
+extern int gKeyJump;
+extern int gKeyShot;
+extern int gKeyArms;
+extern int gKeyArmsRev;
+extern int gKeyItem;
+extern int gKeyMap;
 
-extern long gKeyOk;
-extern long gKeyCancel;
+extern int gKeyOk;
+extern int gKeyCancel;
 
-extern long gKeyLeft;
-extern long gKeyUp;
-extern long gKeyRight;
-extern long gKeyDown;
+extern int gKeyLeft;
+extern int gKeyUp;
+extern int gKeyRight;
+extern int gKeyDown;
 
 void GetTrg(void);

@@ -35,7 +35,7 @@ int Call_Escape(void)
 			gKeyTrg = 0;
 			return enum_ESCRETURN_exit;
 		}*/
-		if (gKeyTrg & CEY_F1) // F1 is pressed, continue
+		/*if (gKeyTrg & CEY_F1) // F1 is pressed, continue
 		{
 			gKeyTrg = 0;
 			return enum_ESCRETURN_continue;
@@ -44,7 +44,7 @@ int Call_Escape(void)
 		{
 			gKeyTrg = 0;
 			return enum_ESCRETURN_restart;
-		}
+		}*/
 
 		if (gKeyTrg & gKeyLeft)
 		{

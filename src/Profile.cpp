@@ -29,6 +29,10 @@
 #include "Star.h"
 #include "ValueView.h"
 
+#include "nifi.h"
+#include "Random.h"
+#include "Multi.h"
+
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
 PROFILE profile;
@@ -262,6 +266,8 @@ BOOL InitializeGame(void)
 	gSelectedArms = 0;
 	gSelectedItem = 0;
 	gCounter = 0;
+	if(gStartingNetplay) msvc_srand(0);
+	gStartingNetplay = false;
 	ClearArmsData();
 	ClearItemData();
 	ClearPermitStage();

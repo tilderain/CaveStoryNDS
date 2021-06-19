@@ -7,23 +7,36 @@
 
 #include "KeyControl.h"
 
-long gKey;
-long gKeyTrg;
+#include "stdio.h"
 
-long gKeyJump = CEY_Z;
-long gKeyShot = CEY_X;
-long gKeyArms = CEY_ARMS;
-long gKeyArmsRev = CEY_ARMSREV;
-long gKeyItem = CEY_ITEM;
-long gKeyMap = CEY_MAP;
+int gKey;
+int gKeyTrg;
 
-long gKeyOk = CEY_Z;
-long gKeyCancel = CEY_X;
+int gKeyP2;
+int gKeyTrgP2;
 
-long gKeyLeft = CEY_LEFT;
-long gKeyUp = CEY_UP;
-long gKeyRight = CEY_RIGHT;
-long gKeyDown = CEY_DOWN;
+int gKeyJump = CEY_Z;
+int gKeyShot = CEY_X;
+int gKeyArms = CEY_ARMS;
+int gKeyArmsRev = CEY_ARMSREV;
+int gKeyItem = CEY_ITEM;
+int gKeyMap = CEY_MAP;
+
+int gKeyOk = CEY_Z;
+int gKeyCancel = CEY_X;
+
+int gKeyLeft = CEY_LEFT;
+int gKeyUp = CEY_UP;
+int gKeyRight = CEY_RIGHT;
+int gKeyDown = CEY_DOWN;
+
+static void GetTrgOther(void)
+{
+	static int CEY_old_other;
+	gKeyTrgP2 = gKeyP2 ^ CEY_old_other;
+	gKeyTrgP2 = gKeyP2 & gKeyTrgP2;
+	CEY_old_other = gKeyP2;
+}
 
 void GetTrg(void)
 {
@@ -31,4 +44,7 @@ void GetTrg(void)
 	gKeyTrg = gKey ^ CEY_old;
 	gKeyTrg = gKey & gKeyTrg;
 	CEY_old = gKey;
+
+	GetTrgOther();
 }
+

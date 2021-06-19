@@ -16,6 +16,7 @@
 
 #include "Sound.h"
 
+#include "KeyControl.h"
 
 char magic1 = 'Y';
 char magic2 = 'O';
@@ -40,16 +41,6 @@ enum LinkType {
     LINK_CABLE=0,
     LINK_SGB
 };
-enum NifiCmd {
-    NIFI_CMD_HOST=0,
-    NIFI_CMD_CLIENT,
-    NIFI_CMD_ACKNOWLEDGE,
-    NIFI_CMD_INPUT,
-    NIFI_CMD_TRANSFER_SRAM,
-
-    NIFI_CMD_FRAGMENT
-};
-
 enum {
     HEADER_HOSTID       = 0x04, // u32
     HEADER_DATASIZE     = 0x08, // u32
@@ -80,8 +71,10 @@ int nifiFrameCounter;
 int nifiLinkType;
 volatile bool receivedSram;
 
-u8* nifiInputDest;      // Where input for this DS goes
-u8* nifiOtherInputDest; // Where input from other DS goes
+bool nifiPaused = false;
+
+int* nifiInputDest;      // Where input for this DS goes
+int* nifiOtherInputDest; // Where input from other DS goes
 
 int nifiConsecutiveWaitingFrames = 0;
 
@@ -91,10 +84,10 @@ volatile u32 hostId;
 //char linkedFilename[MAX_FILENAME_LEN];
 char linkedRomTitle[20];
 
-volatile u8 receivedInput[32];
+volatile int receivedInput[32];
 volatile bool receivedInputReady[32];
 
-u8 oldInputs[OLD_INPUTS_BUFFER_SIZE];
+int oldInputs[OLD_INPUTS_BUFFER_SIZE];
 
 u8 nifiGetChecksum(u8* data, u32 dataLen) {
     u8 checksum = 0;
@@ -268,12 +261,12 @@ void handlePacketCommand(int command, u8* data) {
 
                     if (frame >= gCounter) {
                         if (receivedInputReady[frame&31]) {
-                            if (receivedInput[frame&31] != data[5+i])
-                                printf("MISMATCH %x\n", frame);
+                            if (receivedInput[frame&31] != INT_AT(data+5+(i*4)))
+                                printf("MISMATCH %x, %d, %d\n", frame, receivedInput[frame&31], INT_AT(data+5+(i*4)));
                         }
                         else {
                             receivedInputReady[frame&31] = true;
-                            receivedInput[frame&31] = data[5+i];
+                            receivedInput[frame&31] = INT_AT(data+5+(i*4));
                         }
                     }
                 }
@@ -293,6 +286,15 @@ void handlePacketCommand(int command, u8* data) {
             break;
 
             // A command broken up into multiple packets
+
+		case NIFI_CMD_HOST_START_GAME:
+			if(isClient && status == CLIENT_CONNECTED){
+				status = CLIENT_INGAME;
+				gStartingNetplay = true;
+				gCounter = 0;
+				printf("Client: starting netplay\n");
+			}
+			break;
         case NIFI_CMD_FRAGMENT:
             {
                 u32 totalSize = INT_AT(data);
@@ -521,8 +523,8 @@ int nifiStartLink() {
 
         // Fill in first few frames of client's input
         for (int i=0; i<CLIENT_FRAME_LAG; i++) {
-        //    receivedInputReady[i] = true;
-        //    receivedInput[i] = 0xff;
+            receivedInputReady[i] = true;
+            receivedInput[i] = 0xff;
         }
 
         // Set input destinations
@@ -535,10 +537,11 @@ int nifiStartLink() {
             nifiOtherInputDest = &gb2->controllers[0];
         }*/
 
+        nifiInputDest = &gKey;
+        nifiOtherInputDest = &gKeyP2;
+
         // Sram transfers
         sendSram = true;
-        if (nifiLinkType == LINK_CABLE)
-            waitForSram = true;
     }
     else if (isClient) {
        // if (nifiLinkType == LINK_CABLE)
@@ -558,8 +561,10 @@ int nifiStartLink() {
       //      nifiOtherInputDest = &gb2->controllers[0];
 	    // }
 
+		nifiInputDest = &gKeyP2;
+        nifiOtherInputDest = &gKey;
         // Sram transfers
-    //    waitForSram = true;
+        waitForSram = true;
     //    if (nifiLinkType == LINK_CABLE)
     //        sendSram = true;
     }
@@ -624,17 +629,17 @@ void nifiHostWait()
         nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
     }
 
-	if (foundClient && status != HOST_CONNECTED) {
+	if (foundClient && status != HOST_CONNECTED && status != HOST_INGAME) {
         printf("Found client.\n");
         status = HOST_CONNECTED;
 
-	if (nifiStartLink() != 0)
-        printf("Link failed.\n");
-    else
-        printf("Starting link.\n");
+		if (nifiStartLink() != 0)
+       		printf("Link failed.\n");
+    	else
+        	printf("Starting link.\n");
 
-   		for (int i=0; i<90; i++) swiWaitForVBlank();
-		PlaySoundObject(65, 1);
+   			for (int i=0; i<90; i++) swiWaitForVBlank();
+			PlaySoundObject(65, 1);
 
     }
 
@@ -643,7 +648,7 @@ void nifiHostWait()
 
 void nifiClientWait()
 {
-	if (foundHost && status != CLIENT_CONNECTED) {
+	if (foundHost && status != CLIENT_CONNECTED && status != CLIENT_INGAME) {
         swiWaitForVBlank();
 
 		int bufferSize = 8 + 20 + 1;
@@ -660,7 +665,7 @@ void nifiClientWait()
 
 		for (int i=0; i<90; i++) swiWaitForVBlank();
 		PlaySoundObject(65, 1);
-		
+
     }
 }
 
@@ -673,29 +678,36 @@ int nifiGetStatus()
 	return status;
 }
 
+void nifiSetStatus(int stat)
+{
+	status = stat;
+}
+
 int nifiWasPaused = -1;
 void nifiPause() {
     /*if (nifiWasPaused == -1) {
         nifiWasPaused = mgr_isPaused();
     }
     mgr_pause();*/
+	nifiPaused = true;
 }
 void nifiUnpause() {
    /* if (nifiWasPaused == -1 || !nifiWasPaused) {
         mgr_unpause();
     }
     nifiWasPaused = -1;*/
+	nifiPaused = false;
 }
 
 void nifiUpdateInput() {
-    u8* inputDest;
-    u8* otherInputDest = nifiOtherInputDest;
-    //if (nifiIsLinked()) ///TODO
-    //    inputDest = nifiInputDest;
-    //else
-    //    inputDest = &gameboy->controllers[0];
+    int* inputDest;
+    int* otherInputDest = nifiOtherInputDest;
+    if (nifiIsLinked()) ///TODO
+        inputDest = nifiInputDest;
+    else
+        inputDest = &gKey;
 
-    u32 bfr[4];
+    u32 bfr[4*4];
     u8* buffer = (u8*)bfr;
 
     u32 actualFrame = gCounter;
@@ -716,15 +728,15 @@ void nifiUpdateInput() {
         if (frameHasPassed) {
             for (int i=0; i<OLD_INPUTS_BUFFER_SIZE-1; i++)
                 oldInputs[i] = oldInputs[i+1];
-       //     oldInputs[OLD_INPUTS_BUFFER_SIZE-1] = buttonsPressed; //TODO
+            oldInputs[OLD_INPUTS_BUFFER_SIZE-1] = gKey; //TODO
         }
 
         // Send input to other ds
         INT_TO(buffer+1, inputFrame-OLD_INPUTS_BUFFER_SIZE+1);
         for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++)
-            buffer[5+i] = oldInputs[i];
+            INT_TO(buffer+5+(i*4), oldInputs[i]);
         buffer[0] = OLD_INPUTS_BUFFER_SIZE;
-        nifiSendPacket(NIFI_CMD_INPUT, buffer, 5+OLD_INPUTS_BUFFER_SIZE, false);
+        nifiSendPacket(NIFI_CMD_INPUT, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 
         // Set other controller's input
         if (receivedInputReady[actualFrame&31]) {
@@ -746,7 +758,7 @@ void nifiUpdateInput() {
     }
 
     if (!nifiIsLinked() || nifiIsHost()) {
-    //    *inputDest = buttonsPressed;     /////TODO
+        *inputDest = gKey;     /////TODO
     }
     else if (nifiIsClient()) {
         *inputDest = olderInput;
