@@ -43,6 +43,8 @@
 #include "Sound.h"
 #include "MiniMap.h"
 
+#include "nifi.h"
+
 struct VramSlot
 {
 	SurfaceID id;
@@ -682,7 +684,18 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
-		swiWaitForVBlank();
+		if(!nifiIsLinked())
+			swiWaitForVBlank();
+		else
+		{
+			if(nifiConsecutiveWaitingFramesPrev <= 400)
+			{
+				swiWaitForVBlank();
+				nifiConsecutiveWaitingFramesPrev = 0;
+			}
+
+		}
+		
 		if(gb50Fps && gVBlankCounter % 5 == 0) swiWaitForVBlank();
 		
 		glBegin2D();

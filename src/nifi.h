@@ -9,6 +9,8 @@ extern volatile int nifiSendid;
 extern bool nifiEnabled;
 extern bool nifiPaused;
 
+extern int nifiConsecutiveWaitingFramesPrev;
+
 void enableNifi();
 void disableNifi();
 //void sendPacketByte(u8 command, u8 data);

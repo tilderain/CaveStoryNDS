@@ -72,11 +72,6 @@ bool UpdateInput()
 	if(status == HOST_INGAME || status == CLIENT_INGAME)
 	{
 		nifiUpdateInput();
-		while(nifiPaused)
-		{
-			nifiUpdateInput();
-			swiWaitForVBlank();
-		}
 	}
 
 	return true;

@@ -18,6 +18,8 @@
 
 #include "KeyControl.h"
 
+#include "Draw.h"
+
 char magic1 = 'Y';
 char magic2 = 'O';
 char magic3 = 'B';
@@ -50,7 +52,7 @@ enum {
 };
 const int PACKET_HEADER_SIZE = 0x10;
 
-const int CLIENT_FRAME_LAG = 4;
+const int CLIENT_FRAME_LAG = 2;
 const int FRAGMENT_SIZE = 0x200;
 
 const int OLD_INPUTS_BUFFER_SIZE = CLIENT_FRAME_LAG + 2;
@@ -77,6 +79,7 @@ int* nifiInputDest;      // Where input for this DS goes
 int* nifiOtherInputDest; // Where input from other DS goes
 
 int nifiConsecutiveWaitingFrames = 0;
+int nifiConsecutiveWaitingFramesPrev = 0;
 
 volatile int status = 0;
 volatile u32 hostId;
@@ -254,7 +257,7 @@ void handlePacketCommand(int command, u8* data) {
                 int num = data[0];
                 int frame1 = INT_AT(data+1);
 
-                if (nifiConsecutiveWaitingFrames >= 60)
+                if (nifiConsecutiveWaitingFrames >= (1000 / 60))
                     printf("Received packet: %x\n", frame1);
 
                 for (int i=0; i<num; i++) {
@@ -639,7 +642,7 @@ void nifiHostWait()
     	else
         	printf("Starting link.\n");
 
-   			//for (int i=0; i<90; i++) swiWaitForVBlank();
+   			for (int i=0; i<10; i++) swiWaitForVBlank();
 			PlaySoundObject(65, 1);
 
     }
@@ -664,7 +667,7 @@ void nifiClientWait()
         else
             printf("Starting link.\n");
 
-		//for (int i=0; i<90; i++) swiWaitForVBlank();
+		for (int i=0; i<10; i++) swiWaitForVBlank();
 		PlaySoundObject(65, 1);
 
     }
@@ -741,22 +744,49 @@ void nifiUpdateInput() {
         nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 
         // Set other controller's input
-        if (receivedInputReady[actualFrame&31]) {
-            *otherInputDest = receivedInput[actualFrame&31];
-            nifiUnpause();
-            nifiConsecutiveWaitingFrames = 0;
-        }
-        else {
-            nifiConsecutiveWaitingFrames++;
-            printf("NIFI NOT READY %x\n", nifiFrameCounter);
-            nifiPause();
-        }
-        if (nifiConsecutiveWaitingFrames >= 120) {
-            nifiConsecutiveWaitingFrames = 0;
-            printf("Connection lost!\n");
-            nifiStop();
-            printf("Nifi turned off.\n");
-        }
+		while (!receivedInputReady[actualFrame&31])
+		{
+			swiDelay(10000);
+			nifiConsecutiveWaitingFrames++;
+			if(nifiConsecutiveWaitingFrames % (4000 / 60) == 0)
+			{
+				printf("NIFI NOT READY %x\n", nifiFrameCounter);
+			}
+			if(nifiConsecutiveWaitingFrames >= 7 * 1000)
+			{
+				char* Text = "No input recieved for a while.";
+				char* Text2 = "Please wait or press L+R+START to disconnect.";
+				PutText(&grcGame, 0, WINDOW_HEIGHT - 40, Text, RGB(255, 255, 255));
+				PutText(&grcGame, 0, WINDOW_HEIGHT - 16, Text2, RGB(255, 255, 255));
+				glEnd2D();
+				glFlush(0);
+				swiWaitForVBlank();
+				glBegin2D();
+				scanKeys();
+				int keys = keysHeld();
+				if (keys & KEY_L && keys & KEY_R && keys & KEY_START) 
+				{
+            		nifiConsecutiveWaitingFrames = 0;
+            		printf("Connection lost!\n");
+           	 		nifiStop();
+           			printf("Nifi turned off.\n");
+					break;
+        		}
+			}
+
+			if(nifiConsecutiveWaitingFrames % 100 == 0)
+			{
+				nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
+			}
+
+		}
+		
+        *otherInputDest = receivedInput[actualFrame&31];
+        nifiUnpause();
+		nifiConsecutiveWaitingFramesPrev = nifiConsecutiveWaitingFrames;
+        nifiConsecutiveWaitingFrames = 0;
+        
+
     }
 
     if (!nifiIsLinked() || nifiIsHost()) {

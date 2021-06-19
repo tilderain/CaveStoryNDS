@@ -15,6 +15,8 @@
 #include "MyChar.h"
 #include "NpChar.h"
 
+#include "nifi.h"
+
 FRAME gFrame;
 
 void MoveFrame3(void)
@@ -276,6 +278,14 @@ void SetFrameTargetMyChar(int wait)
 	gFrame.tgt_x = &gMC.tgt_x;
 	gFrame.tgt_y = &gMC.tgt_y;
 	gFrame.wait = wait;
+	if(nifiIsLinked())
+	{
+		if(nifiIsClient())
+		{
+			gFrame.tgt_x = &gMCP2.tgt_x;
+			gFrame.tgt_y = &gMCP2.tgt_y;
+		}
+	}
 }
 
 void SetFrameTargetNpChar(int event, int wait)
