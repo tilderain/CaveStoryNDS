@@ -1,18 +1,11 @@
 #ifndef _multi_nesds__
 #define _multi_nesds__
 
-extern int gMultiplayerState;
-enum
-{
-	MULTISTATE_NONE,
-	MULTISTATE_HOST,
-	MULTISTATE_CONNECTED
-};
-
 void nifiHostMenu();
 void nifiHostWait();
 void nifiClientMenu();
 void nifiClientWait();
+
 
 
 

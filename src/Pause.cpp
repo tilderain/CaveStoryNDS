@@ -35,6 +35,8 @@ static BOOL restart_required;
 
 RECT rect_cur = {112, 88, 128, 104};
 
+bool gStartingNetplay = false;
+
 
 char* GetKeyName(int key)
 {
@@ -198,6 +200,18 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 
 		if(nifiIsHost()) nifiHostWait();
 		if(nifiIsClient()) nifiClientWait();
+
+		int status = nifiGetStatus();
+		if(status == HOST_CONNECTED)
+		{
+			options_menu->options[0].disabled = false;
+			options_menu->options[1].disabled = false;
+			options_menu->subtitle = "Connected!";
+		}
+		if(status == CLIENT_CONNECTED)
+		{
+			options_menu->options[0].name = "Connected! Waiting for host...";
+		}
 		// Get pressed keys
 		GetTrg();
 
@@ -1016,6 +1030,8 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 	nifiHostMenu();
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
+	if(!gStartingNetplay) nifiStop();
+
 	PlaySoundObject(5, SOUND_MODE_PLAY);
 
 	return return_value;
@@ -1047,6 +1063,8 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
+
+	if(!gStartingNetplay) nifiStop();
 
 	return return_value;
 }

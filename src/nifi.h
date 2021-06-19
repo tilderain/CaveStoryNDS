@@ -22,6 +22,22 @@ bool nifiIsHost();
 bool nifiIsClient();
 bool nifiIsLinked();
 
+
+enum ClientStatus {
+	CLIENT_NONE=0,
+    CLIENT_IDLE=1,
+    CLIENT_WAITING,
+    CLIENT_CONNECTING,
+    CLIENT_CONNECTED
+};
+enum HostStatus {
+    HOST_IDLE=5,
+    HOST_WAITING,
+    HOST_CONNECTED
+};
+
+int nifiGetStatus();
+
 void nifiPause();
 void nifiUnpause();
 

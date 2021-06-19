@@ -17,7 +17,10 @@
 #include "Sound.h"
 
 
-int gMultiplayerState = MULTISTATE_NONE;
+char magic1 = 'Y';
+char magic2 = 'O';
+char magic3 = 'B';
+char magic4 = 'P';
 
 void nifiLinkTypeMenu();
 void nifiHostMenu();
@@ -33,17 +36,6 @@ inline void INT_TO(u8* ptr, int i) {
     *(ptr+3) = (i>>24)&0xff;
 }
 
-enum ClientStatus {
-    CLIENT_IDLE=0,
-    CLIENT_WAITING,
-    CLIENT_CONNECTING,
-    CLIENT_CONNECTED
-};
-enum HostStatus {
-    HOST_IDLE=0,
-    HOST_WAITING,
-    HOST_CONNECTED
-};
 enum LinkType {
     LINK_CABLE=0,
     LINK_SGB
@@ -134,10 +126,10 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
             return 1;
         }
 
-        buffer[0] = 'Y';
-        buffer[1] = 'O';
-        buffer[2] = 'B';
-        buffer[3] = 'P';
+        buffer[0] = magic1;
+        buffer[1] = magic2;
+        buffer[2] = magic3;
+        buffer[3] = magic4;
 
         INT_TO(buffer+HEADER_HOSTID, hostId);
         buffer[HEADER_COMMAND] = command;
@@ -221,10 +213,10 @@ u32 packetHostId(u8* packet) {
 }
 bool verifyPacket(u8* packet, int len) {
     if (len >= 32+PACKET_HEADER_SIZE &&
-            packet[32+0] == 'Y' &&
-            packet[32+1] == 'O' &&
-            packet[32+2] == 'B' &&
-            packet[32+3] == 'P' &&
+            packet[32+0] == magic1 &&
+            packet[32+1] == magic2 &&
+            packet[32+2] == magic3 &&
+            packet[32+3] == magic4 &&
             ((isClient && status == CLIENT_WAITING) ||
              packetHostId(packet) == hostId)) {
 
@@ -452,6 +444,8 @@ void disableNifi() {
 
     Wifi_DisableWifi();
     nifiInitialized = false;
+
+	status = CLIENT_NONE;
 }
 
 void nifiInterLinkMenu() {
@@ -640,8 +634,8 @@ void nifiHostWait()
         printf("Starting link.\n");
 
    		for (int i=0; i<90; i++) swiWaitForVBlank();
+		PlaySoundObject(65, 1);
 
-		PlaySoundObject(61, 1);
     }
 
 
@@ -663,15 +657,21 @@ void nifiClientWait()
             printf("Link failed.\n");
         else
             printf("Starting link.\n");
-		for (int i=0; i<90; i++) swiWaitForVBlank();
 
-		PlaySoundObject(61, 1);
+		for (int i=0; i<90; i++) swiWaitForVBlank();
+		PlaySoundObject(65, 1);
+		
     }
 }
 
 bool nifiIsHost() { return isHost; }
 bool nifiIsClient() { return isClient; }
 bool nifiIsLinked() { return isHost || isClient; }
+
+int nifiGetStatus()
+{
+	return status;
+}
 
 int nifiWasPaused = -1;
 void nifiPause() {
