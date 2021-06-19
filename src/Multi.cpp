@@ -639,7 +639,7 @@ void nifiHostWait()
     	else
         	printf("Starting link.\n");
 
-   			for (int i=0; i<90; i++) swiWaitForVBlank();
+   			//for (int i=0; i<90; i++) swiWaitForVBlank();
 			PlaySoundObject(65, 1);
 
     }
@@ -664,7 +664,7 @@ void nifiClientWait()
         else
             printf("Starting link.\n");
 
-		for (int i=0; i<90; i++) swiWaitForVBlank();
+		//for (int i=0; i<90; i++) swiWaitForVBlank();
 		PlaySoundObject(65, 1);
 
     }

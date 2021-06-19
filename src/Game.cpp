@@ -565,6 +565,13 @@ int ModeAction(void)
 
 	// Initialize everything
 	InitMyChar();
+	if(SwapMyChar())
+	{
+		InitMyChar();
+		SwapMyChar();
+	}
+
+
 	InitNpChar();
 	InitBullet();
 	InitCaret();
@@ -616,26 +623,61 @@ int ModeAction(void)
 		if (swPlay % 2 && g_GameFlags & 1)	// The "swPlay % 2" part is always true
 		{
 			if (g_GameFlags & 2)
-				ActMyChar(TRUE);
+			{
+				ActMyChar(TRUE, gKey, gKeyTrg);
+				if(SwapMyChar())
+				{
+					ActMyChar(TRUE, gKeyP2, gKeyTrgP2);
+					SwapMyChar();
+				}
+
+			}
 			else
-				ActMyChar(FALSE);
+			{
+				ActMyChar(FALSE, gKeyP2, gKeyTrgP2);
+				if(SwapMyChar())
+				{
+					ActMyChar(FALSE, gKeyP2, gKeyTrgP2);
+					SwapMyChar();
+				}
+			
+			}
 
 			ActStar();
 			ActNpChar();
 			ActBossChar();
 			ActValueView();
 			ActBack();
+			
 			ResetMyCharFlag();
 			HitMyCharMap();
 			HitMyCharNpChar();
 			HitMyCharBoss();
+
+			if(SwapMyChar())
+			{
+				ResetMyCharFlag();
+				HitMyCharMap();
+				HitMyCharNpChar();
+				HitMyCharBoss();
+				SwapMyChar();
+			}
 			HitNpCharMap();
 			HitBossMap();
 			HitBulletMap();
 			HitNpCharBullet();
 			HitBossBullet();
 			if (g_GameFlags & 2)
-				ShootBullet();
+			{
+				ShootBullet(gKey, gKeyTrg);
+				if (SwapMyChar())
+				{
+					ShootBullet(gKeyP2, gKeyTrgP2);
+					SwapMyChar();
+				}
+			
+			}
+
 			ActBullet();
 			ActCaret();
 			MoveFrame3();
@@ -646,9 +688,27 @@ int ModeAction(void)
 			ActFlash(frame_x, frame_y);
 
 			if (g_GameFlags & 2)
-				AnimationMyChar(TRUE);
+			{
+				AnimationMyChar(TRUE, gKey, gKeyTrg);
+				if(SwapMyChar())
+				{
+					AnimationMyChar(TRUE, gKeyP2, gKeyTrgP2);
+					SwapMyChar();
+				}
+
+			}
+
 			else
-				AnimationMyChar(FALSE);
+			{
+				AnimationMyChar(FALSE, gKey, gKeyTrg);
+				if(SwapMyChar())
+				{
+					AnimationMyChar(FALSE, gKeyP2, gKeyTrgP2);
+					SwapMyChar();
+				}
+
+			}
+
 		}
 
 		if (g_GameFlags & 8)
@@ -667,6 +727,13 @@ int ModeAction(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
+
+		
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);

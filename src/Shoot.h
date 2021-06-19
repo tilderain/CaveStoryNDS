@@ -8,4 +8,4 @@
 #pragma once
 
 void ResetSpurCharge(void);
-void ShootBullet(void);
+void ShootBullet(int gKey, int gKeyTrg);

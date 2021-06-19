@@ -25,7 +25,33 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+#include "nifi.h"
+
 MYCHAR gMC;
+MYCHAR gMCP1;
+MYCHAR gMCP2;
+
+int gCurMyChar = 0;
+
+bool SwapMyChar(void)
+{
+	if(!nifiIsLinked()) return false;
+
+	if(gCurMyChar == 0)
+	{
+		gMCP1 = gMC;
+		gCurMyChar = 1;
+		gMC = gMCP2;
+
+	}
+	else
+	{
+		gMCP2 = gMC;
+		gCurMyChar = 0;
+		gMC = gMCP1;
+	}
+	return true;
+}
 
 void InitMyChar(void)
 {
@@ -46,9 +72,46 @@ void InitMyChar(void)
 	gMC.life = 3;
 	gMC.max_life = 3;
 	gMC.unit = 0;
+
+	memset(&gMCP1, 0, sizeof(MYCHAR));
+	gMCP1.cond = 0x80;
+	gMCP1.direct = 2;
+
+	gMCP1.view.back = 8 * 0x200;
+	gMCP1.view.top = 8 * 0x200;
+	gMCP1.view.front = 8 * 0x200;
+	gMCP1.view.bottom = 8 * 0x200;
+
+	gMCP1.hit.back = 5 * 0x200;
+	gMCP1.hit.top = 8 * 0x200;
+	gMCP1.hit.front = 5 * 0x200;
+	gMCP1.hit.bottom = 8 * 0x200;
+
+	gMCP1.life = 3;
+	gMCP1.max_life = 3;
+	gMCP1.unit = 0;
+
+	memset(&gMCP2, 0, sizeof(MYCHAR));
+	gMCP2.cond = 0x80;
+	gMCP2.direct = 2;
+
+	gMCP2.view.back = 8 * 0x200;
+	gMCP2.view.top = 8 * 0x200;
+	gMCP2.view.front = 8 * 0x200;
+	gMCP2.view.bottom = 8 * 0x200;
+
+	gMCP2.hit.back = 5 * 0x200;
+	gMCP2.hit.top = 8 * 0x200;
+	gMCP2.hit.front = 5 * 0x200;
+	gMCP2.hit.bottom = 8 * 0x200;
+
+	gMCP2.life = 3;
+	gMCP2.max_life = 3;
+	gMCP2.unit = 0;
+	
 }
 
-void AnimationMyChar(BOOL bKey)
+void AnimationMyChar(BOOL bKey, int gKey, int gKeyTrg)
 {
 	RECT rcLeft[12] = {
 		{0, 0, 16, 16},
@@ -164,6 +227,15 @@ void ShowMyChar(BOOL bShow)
 		gMC.cond &= ~2;
 	else
 		gMC.cond |= 2;
+
+	if(nifiIsLinked())
+	{
+		if (bShow)
+			gMCP2.cond &= ~2;
+		else
+			gMCP2.cond |= 2;
+
+	}
 }
 
 void PutMyChar(int fx, int fy)
@@ -246,7 +318,7 @@ void PutMyChar(int fx, int fy)
 		PutBitmap3(&grcGame, (gMC.x / 0x200) - 12 - (fx / 0x200), (gMC.y / 0x200) - 12 - (fy / 0x200), &rcBubble[gMC.bubble / 2 % 2], SURFACE_ID_CARET);
 }
 
-void ActMyChar_Normal(BOOL bKey)
+void ActMyChar_Normal(BOOL bKey, int gKey, int gKeyTrg)
 {
 	// Get speeds and accelerations
 	int max_move;	// Unused
@@ -726,7 +798,7 @@ void ActMyChar_Normal(BOOL bKey)
 	gMC.y += gMC.ym;
 }
 
-void ActMyChar_Stream(BOOL bKey)
+void ActMyChar_Stream(BOOL bKey, int gKey, int gKeyTrg)
 {
 	gMC.up = FALSE;
 	gMC.down = FALSE;
@@ -895,7 +967,7 @@ void AirProcess(void)
 	}
 }
 
-void ActMyChar(BOOL bKey)
+void ActMyChar(BOOL bKey, int gKey, int gKeyTrg)
 {
 	if (!(gMC.cond & 0x80))
 		return;
@@ -919,11 +991,11 @@ void ActMyChar(BOOL bKey)
 			if (!(g_GameFlags & 4) && bKey)
 				AirProcess();
 
-			ActMyChar_Normal(bKey);
+			ActMyChar_Normal(bKey, gKey, gKeyTrg);
 			break;
 
 		case 1:
-			ActMyChar_Stream(bKey);
+			ActMyChar_Stream(bKey, gKey, gKeyTrg);
 			break;
 	}
 
@@ -948,12 +1020,30 @@ void SetMyCharPosition(int x, int y)
 	gMC.ym = 0;
 	gMC.cond &= ~1;
 	InitStar();
+
+	if (nifiIsLinked)
+	{
+		gMCP2.x = x;
+		gMCP2.y = y;
+		gMCP2.tgt_x = gMCP2.x;
+		gMCP2.tgt_y = gMCP2.y;
+		gMCP2.index_x = 0;
+		gMCP2.index_y = 0;
+		gMCP2.xm = 0;
+		gMCP2.ym = 0;
+		gMCP2.cond &= ~1;
+	}
 }
 
 void MoveMyChar(int x, int y)
 {
 	gMC.x = x;
 	gMC.y = y;
+	if(nifiIsLinked)
+	{
+		gMCP2.x = x;
+		gMCP2.y = y;
+	}
 }
 
 void ZeroMyCharXMove(void)
@@ -999,7 +1089,7 @@ void SetMyCharDirect(unsigned char dir)
 	}
 
 	gMC.xm = 0;
-	AnimationMyChar(FALSE);
+	AnimationMyChar(FALSE, gKey, gKeyTrg);
 }
 
 void ChangeMyUnit(unsigned char a)

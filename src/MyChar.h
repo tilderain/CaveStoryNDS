@@ -69,13 +69,19 @@ typedef struct MYCHAR
 } MYCHAR;
 
 extern MYCHAR gMC;
+extern MYCHAR gMCP1;
+extern MYCHAR gMCP2;
+
+extern int gCurMyChar;
+
+bool SwapMyChar(void);
 
 void InitMyChar(void);
-void AnimationMyChar(BOOL bKey);
+void AnimationMyChar(BOOL bKey, int gKey, int gKeyTrg);
 void ShowMyChar(BOOL bShow);
 void PutMyChar(int fx, int fy);
-void ActMyChar_Normal(BOOL bKey);
-void ActMyChar(BOOL bKey);
+void ActMyChar_Normal(BOOL bKey, int gKey, int gKeyTrg);
+void ActMyChar(BOOL bKey, int gKey, int gKeyTrg);
 void GetMyCharPosition(int *x, int *y);
 void SetMyCharPosition(int x, int y);
 void MoveMyChar(int x, int y);
