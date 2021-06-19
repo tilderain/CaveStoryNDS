@@ -248,8 +248,9 @@ void handlePacketCommand(int command, u8* data) {
             }
             break;
 
-        case NIFI_CMD_INPUT:
-            if (true || isClient) {
+        case NIFI_CMD_INPUT_FOR_CLIENT:
+		case NIFI_CMD_INPUT_FOR_HOST:
+            if ((isHost && command == NIFI_CMD_INPUT_FOR_HOST) || (isClient && command == NIFI_CMD_INPUT_FOR_CLIENT)) {
                 int num = data[0];
                 int frame1 = INT_AT(data+1);
 
@@ -736,7 +737,8 @@ void nifiUpdateInput() {
         for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++)
             INT_TO(buffer+5+(i*4), oldInputs[i]);
         buffer[0] = OLD_INPUTS_BUFFER_SIZE;
-        nifiSendPacket(NIFI_CMD_INPUT, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
+		u8 type = isHost ? NIFI_CMD_INPUT_FOR_CLIENT : NIFI_CMD_INPUT_FOR_HOST;
+        nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 
         // Set other controller's input
         if (receivedInputReady[actualFrame&31]) {

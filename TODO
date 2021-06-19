@@ -13,6 +13,7 @@ look into npc shock not displaying
 vram viewer?
 
 local multiplayer??
+	--fix lid close // disconnect time is 2 secs instead of 20
 
 gzip fopen
 
