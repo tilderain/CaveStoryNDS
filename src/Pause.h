@@ -11,6 +11,13 @@ enum
 	CALLBACK_EXIT = -4,
 };
 
+enum
+{
+	NETPLAY_START_NONE = 0,
+	NETPLAY_START_NORMAL = 1,
+	NETPLAY_START_LOAD = 2,
+};
+
 typedef enum CallbackAction
 {
 	ACTION_INIT,

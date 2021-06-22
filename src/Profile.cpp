@@ -32,6 +32,7 @@
 #include "nifi.h"
 #include "Random.h"
 #include "Multi.h"
+#include "Pause.h"
 
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
@@ -91,6 +92,7 @@ BOOL SaveProfile(const char *name)
 	memcpy(profile.permit_mapping, gMapping, sizeof(profile.permit_mapping));
 	memcpy(profile.flags, gFlagNPC, sizeof(profile.flags));
 
+	if(nifiIsClient()) return TRUE;
 	// Open file
 	fp = fopen(path, "wb");
 	if (fp == NULL)
@@ -167,6 +169,18 @@ static BOOL LoadProfileReal()
 	gMC.x = profile.x;
 	gMC.y = profile.y;
 
+	gMCP2.equip = profile.equip;
+	gMCP2.unit = profile.unit;
+	gMCP2.direct = profile.direct;
+	gMCP2.max_life = profile.max_life;
+	gMCP2.life = profile.life;
+	gMCP2.star = profile.star;
+	gMCP2.cond = 0x80;
+	gMCP2.air = 1000;
+	gMCP2.lifeBr = profile.life;
+	gMCP2.x = profile.x;
+	gMCP2.y = profile.y;
+
 	gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
 	gMC.rect_arms.right = gMC.rect_arms.left + 24;
 	gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
@@ -198,9 +212,10 @@ BOOL LoadProfile(const char *name)
 
 	// Open file
 	fp = fopen(path, "rb");
-	if (fp == NULL)
+	if (fp == NULL || gStartingNetplay == NETPLAY_START_LOAD || (nifiIsClient()))
 	{
-		if (memcmp(profile.code, gProfileCode, 8) == 0)
+		fclose(fp);
+		if (memcmp(profile.code, gProfileCode, 8) == 0) //couldn't read, read from RAM
 			return LoadProfileReal();
 		return FALSE;
 	}
@@ -266,8 +281,6 @@ BOOL InitializeGame(void)
 	gSelectedArms = 0;
 	gSelectedItem = 0;
 	gCounter = 0;
-	if(gStartingNetplay) msvc_srand(0);
-	gStartingNetplay = false;
 	ClearArmsData();
 	ClearItemData();
 	ClearPermitStage();

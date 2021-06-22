@@ -35,6 +35,9 @@ local multiplayer??
 	--vblank rand
 	--blink wifi
 -thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
+-If you experience lag, try selecting another channel.
+-Please note that the client does not write the profile to card.
+-Moved input processing to beginning of frame, saving 1 frame of input lag.
 
 gzip fopen
 

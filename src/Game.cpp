@@ -54,6 +54,7 @@
 #include "ValueView.h"
 
 #include "Multi.h"
+#include "nifi.h"
 
 int g_GameFlags;
 int gCounter;
@@ -406,9 +407,14 @@ int ModeTitle(void)
 						case enum_ESCRETURN_restart:
 							return 1;
 					}
-					if(gStartingNetplay)
+					if(gStartingNetplay == NETPLAY_START_NORMAL)
 					{
 						gCursorPos = 0;
+						break;
+					}
+					if(gStartingNetplay == NETPLAY_START_LOAD)
+					{
+						gCursorPos = 1;
 						break;
 					}
 					continue;
@@ -597,6 +603,12 @@ int ModeAction(void)
 		if (!InitializeGame())
 			return 0;
 	}
+	if(nifiIsLinked())
+	{
+		msvc_srand(0);
+		gCounter = gStartingNetplay = 0;
+	}
+
 
 	while (1)
 	{

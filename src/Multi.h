@@ -6,7 +6,7 @@ void nifiHostWait();
 void nifiClientMenu();
 void nifiClientWait();
 
-extern bool gStartingNetplay;
+extern char gStartingNetplay;
 
 
 

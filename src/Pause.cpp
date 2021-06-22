@@ -30,6 +30,8 @@
 
 #include "Random.h"
 
+#include "Profile.h"
+
 #define MAX_OPTIONS ((WINDOW_HEIGHT / 20) - 2)	// The maximum number of options we can fit on-screen at once
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -39,7 +41,7 @@ static BOOL restart_required;
 
 RECT rect_cur = {112, 88, 128, 104};
 
-bool gStartingNetplay = false;
+char gStartingNetplay = false;
 
 
 char* GetKeyName(int key)
@@ -995,10 +997,13 @@ static void hostStartNetplay()
 {
 	int bufferSize = 8 + 20 + 1;
     u8 buffer[bufferSize];
-
+	if(gStartingNetplay == NETPLAY_START_LOAD)
+	{
+		nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, (u8*)&profile, sizeof(profile), false);
+		printf("Sent SRAM.\n");
+	}
     nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, false);
 	nifiSetStatus(HOST_INGAME);
-	gStartingNetplay = true;
 	gCounter = 0;
 	msvc_srand(0);
 	printf("Host: starting netplay\n");
@@ -1013,6 +1018,8 @@ static int Callback_HostStartGame(OptionsMenu *parent_menu, size_t this_option, 
 
 	if (action == ACTION_OK)
 	{
+		LoadProfile(NULL);
+		gStartingNetplay = NETPLAY_START_LOAD;
 		hostStartNetplay();
 	}
 
@@ -1030,6 +1037,7 @@ static int Callback_HostStartNewFile(OptionsMenu *parent_menu, size_t this_optio
 
 	if (action == ACTION_OK)
 	{
+		gStartingNetplay = NETPLAY_START_NORMAL;
 		hostStartNetplay();
 	}
 

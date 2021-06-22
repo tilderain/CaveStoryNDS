@@ -42,6 +42,9 @@
 
 #include "fopen.h"
 
+#include "nifi.h"
+#include "Multi.h"
+
 #ifdef CYG_PROFILER
 #define __cplusplus
 #include "cyg-profile.h"
@@ -1312,7 +1315,11 @@ int TextScriptProc(void)
 						#endif
 						z = GetTextScriptNo(gTS.p_read + 4);
 						if(!SaveProfile(NULL))
-							JumpTextScript(z);
+						{
+							if(!nifiIsLinked())
+								JumpTextScript(z);
+						}
+
 
 						gTS.p_read += 8;
 					}

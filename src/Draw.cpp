@@ -659,10 +659,6 @@ void initSubSprites(void){
 BOOL Flip_SystemTask()
 {
 	//Update inputs
-	UpdateInput();
-	
-
-
 
 	if(gDebug.bFastForward)
 	{
@@ -723,6 +719,7 @@ BOOL Flip_SystemTask()
 		}
 #endif
 
+	UpdateInput();
 	
 	return TRUE;
 }

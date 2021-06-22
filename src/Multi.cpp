@@ -20,6 +20,10 @@
 
 #include "Draw.h"
 
+#include "Profile.h"
+
+#include "Pause.h"
+
 char magic1 = 'Y';
 char magic2 = 'O';
 char magic3 = 'B';
@@ -257,7 +261,7 @@ void handlePacketCommand(int command, u8* data) {
                 int num = data[0];
                 int frame1 = INT_AT(data+1);
 
-                if (nifiConsecutiveWaitingFrames >= (1000 / 60))
+                if (nifiConsecutiveWaitingFrames >= (10000 / 60))
                     printf("Received packet: %x\n", frame1);
 
                 for (int i=0; i<num; i++) {
@@ -280,12 +284,14 @@ void handlePacketCommand(int command, u8* data) {
             {
                 /*if (nifiLinkType == LINK_SGB)
                     memcpy(gameboy->externRam, data, gameboy->getNumSramBanks()*0x2000);
-                else if (gb2)
+               	else if (gb2)
                     memcpy(gb2->externRam, data, gb2->getNumSramBanks()*0x2000);
                 else
                     printf("GB2 NOT INITIALIZED!\n");*/
+				memcpy(&profile, data, sizeof(profile));
                 printf("Received SRAM.\n");
                 receivedSram = true;
+				
             }
             break;
 
@@ -294,7 +300,7 @@ void handlePacketCommand(int command, u8* data) {
 		case NIFI_CMD_HOST_START_GAME:
 			if(isClient && status == CLIENT_CONNECTED){
 				status = CLIENT_INGAME;
-				gStartingNetplay = true;
+				gStartingNetplay = (receivedSram ? NETPLAY_START_LOAD : NETPLAY_START_NORMAL);
 				gCounter = 0;
 				printf("Client: starting netplay\n");
 			}
@@ -442,6 +448,7 @@ void enableNifi()
 	Wifi_EnableWifi();
 
     nifiInitialized = true;
+	receivedSram = false;
 }
 
 void disableNifi() {
@@ -456,9 +463,6 @@ void disableNifi() {
 
 void nifiInterLinkMenu() {
     int selection = 0;
-    receivedSram = false;
-
-    
 }
 
 void nifiLinkTypeMenu() {
@@ -468,7 +472,7 @@ void nifiLinkTypeMenu() {
 
 void nifiSendSram() {
     //nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, gameboy->externRam,
-            //gameboy->getNumSramBanks()*0x2000, false);
+    //        gameboy->getNumSramBanks()*0x2000, false);
     printf("Sent SRAM.\n");
 }
 
@@ -511,6 +515,10 @@ int nifiStartLink() {
     bool sendSram = false;
 
     nifiFrameCounter = -1;
+
+	memset(oldInputs, 0, sizeof(oldInputs));
+	memset((void*)&receivedInputReady, 0, sizeof(receivedInputReady));
+	memset((void*)&receivedInput, 0, sizeof(receivedInput));
 
    // mgr_reset();
     if (nifiLinkType == LINK_CABLE) {
@@ -746,13 +754,13 @@ void nifiUpdateInput() {
         // Set other controller's input
 		while (!receivedInputReady[actualFrame&31])
 		{
-			swiDelay(10000);
+			swiDelay(1000);
 			nifiConsecutiveWaitingFrames++;
-			if(nifiConsecutiveWaitingFrames % (4000 / 60) == 0)
+			if(nifiConsecutiveWaitingFrames % (40000 / 60) == 0)
 			{
 				printf("NIFI NOT READY %x\n", nifiFrameCounter);
 			}
-			if(nifiConsecutiveWaitingFrames >= 7 * 1000)
+			if(nifiConsecutiveWaitingFrames >= 70 * 1000)
 			{
 				char* Text = "No input recieved for a while.";
 				char* Text2 = "Please wait or press L+R+START to disconnect.";
@@ -774,7 +782,7 @@ void nifiUpdateInput() {
         		}
 			}
 
-			if(nifiConsecutiveWaitingFrames % 50 == 0)
+			if(nifiConsecutiveWaitingFrames % 500 == 0)
 			{
 				nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 			}
