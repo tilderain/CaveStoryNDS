@@ -701,7 +701,7 @@ int TextScriptProc(void)
 			// Type out (faster if ok or cancel are held)
 			++gTS.wait;
 
-			if (!(g_GameFlags & 2) && gKey & (gKeyOk | gKeyCancel))
+			if (!(g_GameFlags & 2) && (gKey & (gKeyOk | gKeyCancel) || gKeyP2 & (gKeyOk | gKeyCancel)))
 				gTS.wait += 4;
 
 			if (gTS.wait < 4)
@@ -1503,7 +1503,7 @@ int TextScriptProc(void)
 			break;
 
 		case 2: // NOD
-			if (gKeyTrg & (gKeyOk | gKeyCancel))
+			if (gKeyTrg & (gKeyOk | gKeyCancel) || gKeyTrgP2 & (gKeyOk | gKeyCancel))
 				gTS.mode = 1;
 			break;
 
@@ -1558,7 +1558,7 @@ int TextScriptProc(void)
 			else
 			{
 				// Select option
-				if (gKeyTrg & gKeyOk)
+				if (gKeyTrg & gKeyOk || gKeyTrgP2 & gKeyOk)
 				{
 					PlaySoundObject(18, 1);
 
@@ -1573,13 +1573,13 @@ int TextScriptProc(void)
 					}
 				}
 				// Yes
-				else if (gKeyTrg & gKeyLeft)
+				else if (gKeyTrg & gKeyLeft || gKeyTrgP2 & gKeyLeft)
 				{
 					gTS.select = 0;
 					PlaySoundObject(1, 1);
 				}
 				// No
-				else if (gKeyTrg & gKeyRight)
+				else if (gKeyTrg & gKeyRight || gKeyTrgP2 & gKeyRight)
 				{
 					gTS.select = 1;
 					PlaySoundObject(1, 1);

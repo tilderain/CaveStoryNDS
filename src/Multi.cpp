@@ -622,15 +622,15 @@ void nifiClientMenu() {
 
 void nifiHostWait()
 {
+	static int count = 0;
 	if (!foundClient) {
-	 	swiWaitForVBlank();
-        swiWaitForVBlank();
 
         int bufferSize = 8 + 20 + 1;
         u8 buffer[bufferSize];
 
         buffer[0] = nifiLinkType;
-        nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
+		if(count++ % 5 == 0)
+        	nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
     }
 
 	if (foundClient && status != HOST_CONNECTED && status != HOST_INGAME) {
@@ -774,7 +774,7 @@ void nifiUpdateInput() {
         		}
 			}
 
-			if(nifiConsecutiveWaitingFrames % 100 == 0)
+			if(nifiConsecutiveWaitingFrames % 50 == 0)
 			{
 				nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 			}

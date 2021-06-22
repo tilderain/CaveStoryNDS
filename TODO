@@ -13,7 +13,28 @@ look into npc shock not displaying
 vram viewer?
 
 local multiplayer??
-	--fix lid close // disconnect time is 2 secs instead of 20
+	--Enemy HP multiplier
+	--tsc initiator
+	--tsc p2 down triggering
+	--teleport p to initator on MOV?
+	-on BSL
+	-on CMP
+	--putmychar
+	--unsync change weapon?
+	--send sram
+	--npc nearest mychar
+	--gbul
+	--garmsdata
+	--cheat menu
+	--gmc equip
+	--escape confirm
+	--map 2p blink
+	--valueview
+	--disconnected msg
+	--send fps
+	--vblank rand
+	--blink wifi
+-thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
 
 gzip fopen
 
