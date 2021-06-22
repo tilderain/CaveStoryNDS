@@ -24,6 +24,8 @@
 
 #include "nifi.h"
 
+#include "Draw.h"
+
 #define STICK_DEADZONE 0x20
 #define STICK_DEADSML  -STICK_DEADZONE
 #define STICK_DEADBIG   STICK_DEADZONE
@@ -39,6 +41,8 @@ bool InitDirectInput()
 	//PAD_Init();
 	return true;
 }
+
+int gDisconnectTimer = 0;
 
 bool UpdateInput()
 {

@@ -13,6 +13,8 @@ extern int nifiConsecutiveWaitingFramesPrev;
 
 extern int nifiChannel;
 
+extern int gDisconnectTimer;
+
 void enableNifi();
 void disableNifi();
 //void sendPacketByte(u8 command, u8 data);

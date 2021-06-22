@@ -19,11 +19,29 @@
 
 #include "Pause.h"
 
+#include "nifi.h"
+
 int Call_Escape(void)
 {
 	RECT rc = {0, 128, 208, 144};
 
 	int cursorPos = 1;
+
+	if(nifiIsLinked() && gDisconnectTimer == 0)
+	{
+		gDisconnectTimer = 202;
+		return enum_ESCRETURN_continue;
+	}
+	else if(nifiIsLinked() && gDisconnectTimer > 0)
+	{
+		if(gKeyTrg & CEY_ESCAPE)
+		{
+			nifiStop();
+			gKey |= CEY_ESCAPE;
+			gDisconnectTimer = 150;
+		}
+		return enum_ESCRETURN_continue;
+	}
 
 	while (1)
 	{

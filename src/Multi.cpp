@@ -24,6 +24,9 @@
 
 #include "Pause.h"
 
+#include "MyChar.h"
+#include "Frame.h"
+
 char magic1 = 'Y';
 char magic2 = 'O';
 char magic3 = 'B';
@@ -403,10 +406,13 @@ void Timer_10ms(void) {
 }
 
 void nifiStop() {
+
     isClient = false;
     isHost = false;
     disableNifi();
     nifiUnpause();
+
+	SetFrameTargetMyChar(gFrame.wait);
 }
 
 static int wifiInited = false;

@@ -660,6 +660,15 @@ BOOL Flip_SystemTask()
 {
 	//Update inputs
 
+	if(nifiIsLinked() && gDisconnectTimer > 0)
+		PutText(&grcGame, 16, WINDOW_HEIGHT - 16, "Press again to disconnect", RGB(255, 255, 255));
+	else if (gDisconnectTimer >= 1)
+	{
+		PutText(&grcGame, 16, WINDOW_HEIGHT - 16, "Disconnected from netplay.", RGB(255, 255, 255));
+	}
+
+	if(gDisconnectTimer) gDisconnectTimer--;
+
 	if(gDebug.bFastForward)
 	{
 
