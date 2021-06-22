@@ -11,6 +11,8 @@ extern bool nifiPaused;
 
 extern int nifiConsecutiveWaitingFramesPrev;
 
+extern int nifiChannel;
+
 void enableNifi();
 void disableNifi();
 //void sendPacketByte(u8 command, u8 data);

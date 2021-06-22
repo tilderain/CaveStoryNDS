@@ -382,6 +382,9 @@ void packetHandler(int packetID, int readlength)
                 foundHost = true;
                 hostId = packetHostId(packet);
                 nifiLinkType = data[0];
+				nifiChannel = data[4];
+
+				Wifi_SetChannel(nifiChannel);
 
                 char* filename = (char*)(data+8);
                 char* romTitle = (char*)(data+8+strlen(filename)+1);
@@ -406,6 +409,8 @@ void nifiStop() {
     nifiUnpause();
 }
 
+static int wifiInited = false;
+
 void enableNifi()
 {
     if (nifiInitialized)
@@ -413,7 +418,9 @@ void enableNifi()
 
 	//Wifi_SetRawPacketMode(PACKET_MODE_NIFI);
 
-	Wifi_InitDefault(false);
+	if(!wifiInited)
+		Wifi_InitDefault(false);
+	wifiInited = true;
 
 // Wifi_SetPromiscuousMode: Allows the DS to enter or leave a "promsicuous" mode, in which 
 //   all data that can be received is forwarded to the arm9 for user processing.
@@ -429,7 +436,7 @@ void enableNifi()
 // Wifi_SetChannel: If the wifi system is not connected or connecting to an access point, instruct
 //   the chipset to change channel
 //  int channel: the channel to change to, in the range of 1-13
-	Wifi_SetChannel(10);
+	Wifi_SetChannel(nifiChannel);
 
 	if(1) {
 		//for secial configuration for wifi
@@ -611,6 +618,7 @@ void nifiHostMenu() {
     isHost = true;
     isClient = false;
     status = HOST_WAITING;
+	srand(gVBlankCounter);
     hostId = rand();
 
     printf("Waiting for client...\n");
@@ -637,6 +645,7 @@ void nifiHostWait()
         u8 buffer[bufferSize];
 
         buffer[0] = nifiLinkType;
+		buffer[4] = nifiChannel;
 		if(count++ % 5 == 0)
         	nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
     }
@@ -669,6 +678,7 @@ void nifiClientWait()
         nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, false);
 
         printf("Connected to host.\nHost Id: %d\n", hostId);
+		printf("Channel: %d\n", nifiChannel);
         status = CLIENT_CONNECTED;
 		if (nifiStartLink() != 0)
             printf("Link failed.\n");

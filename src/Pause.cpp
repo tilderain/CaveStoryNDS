@@ -32,6 +32,8 @@
 
 #include "Profile.h"
 
+#include "dswifi9.h"
+
 #define MAX_OPTIONS ((WINDOW_HEIGHT / 20) - 2)	// The maximum number of options we can fit on-screen at once
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -42,6 +44,7 @@ static BOOL restart_required;
 RECT rect_cur = {112, 88, 128, 104};
 
 char gStartingNetplay = false;
+int nifiChannel = 11;
 
 
 char* GetKeyName(int key)
@@ -213,11 +216,13 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 		{
 			options_menu->options[0].disabled = false;
 			options_menu->options[1].disabled = false;
+			options_menu->options[2].disabled = true;
 			options_menu->subtitle = "Connected!";
 		}
 		if(status == CLIENT_CONNECTED)
 		{
 			options_menu->options[0].name = "Connected! Waiting for host...";
+			options_menu->options[1].disabled = true;
 		}
 		// Get pressed keys
 		GetTrg();
@@ -1046,6 +1051,56 @@ static int Callback_HostStartNewFile(OptionsMenu *parent_menu, size_t this_optio
 	return return_value;
 }
 
+static int Callback_ChangeChannel(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"1", "6", "11"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = nifiChannel;
+			for(int i=0;i<3;i++)
+			{
+				if(atoi(strings[i]) == nifiChannel)
+					parent_menu->options[this_option].value_string = strings[i];
+			}
+
+			Wifi_SetChannel(nifiChannel);
+
+			break;
+
+		case ACTION_DEINIT:
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			if(parent_menu->options[this_option].value == 1) parent_menu->options[this_option].value = 6;
+			else if(parent_menu->options[this_option].value == 6) parent_menu->options[this_option].value = 11;
+			else if(parent_menu->options[this_option].value == 11) parent_menu->options[this_option].value = 1;
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			nifiChannel = parent_menu->options[this_option].value;
+			for(int i=0;i<3;i++)
+			{
+				if(atoi(strings[i]) == nifiChannel)
+					parent_menu->options[this_option].value_string = strings[i];
+			}
+
+			Wifi_SetChannel(nifiChannel);
+			
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
 
 static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
@@ -1057,6 +1112,7 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 	Option options_pc[] = {
 		{"Start game", Callback_HostStartGame, NULL, NULL, 0, TRUE},
 		{"Start game (new file)", Callback_HostStartNewFile, NULL, NULL, 0, TRUE},
+		{"Channel:", Callback_ChangeChannel, NULL, NULL, 0, FALSE},
 	};
 
 	OptionsMenu options_menu = {
@@ -1091,6 +1147,7 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 
 	Option options_pc[] = {
 		{"Searching for game...", Callback_Stub, NULL, NULL, 0, TRUE},
+		{"Channel:", Callback_ChangeChannel, NULL, NULL, 0, FALSE},
 	};
 
 	OptionsMenu options_menu = {
