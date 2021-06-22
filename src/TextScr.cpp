@@ -1387,6 +1387,7 @@ int TextScriptProc(void)
 					}
 					else if (IS_COMMAND('E','S','C'))
 					{
+						disableNifi();
 						return enum_ESCRETURN_restart;
 					}
 					else
