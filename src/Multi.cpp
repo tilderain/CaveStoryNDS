@@ -794,6 +794,7 @@ void nifiUpdateInput() {
             		printf("Connection lost!\n");
            	 		nifiStop();
            			printf("Nifi turned off.\n");
+					gDisconnectTimer = 180;
 					break;
         		}
 			}

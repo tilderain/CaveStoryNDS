@@ -659,12 +659,13 @@ void initSubSprites(void){
 BOOL Flip_SystemTask()
 {
 	//Update inputs
-
+	char* text1 = "Press again to disconnect";
+	char* text2 = "Disconnected from netplay.";
 	if(nifiIsLinked() && gDisconnectTimer > 0)
-		PutText(&grcGame, 16, WINDOW_HEIGHT - 16, "Press again to disconnect", RGB(255, 255, 255));
+		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text1), 16, text1, RGB(255, 255, 255));
 	else if (gDisconnectTimer >= 1)
 	{
-		PutText(&grcGame, 16, WINDOW_HEIGHT - 16, "Disconnected from netplay.", RGB(255, 255, 255));
+		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text2), 16, text2, RGB(255, 255, 255));
 	}
 
 	if(gDisconnectTimer) gDisconnectTimer--;
