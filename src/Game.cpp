@@ -819,10 +819,14 @@ int ModeAction(void)
 
 		if (g_GameFlags & 2)
 		{
+			if(gCurMyChar == 0 && nifiIsClient())
+				SwapMyChar();
 			PutMyLife(TRUE);
 			PutArmsEnergy(TRUE);
 			PutMyAir((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 16);
 			PutActiveArmsList();
+			if(nifiIsClient())
+				SwapMyChar();
 		}
 
 		if (g_GameFlags & 8)
