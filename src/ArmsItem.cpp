@@ -62,9 +62,13 @@
 #include "ValueView.h"
 
 ARMS gArmsData[ARMS_MAX];
+ARMS gArmsDataP1[ARMS_MAX];
+ARMS gArmsDataP2[ARMS_MAX];
+
 ITEM gItemData[ITEM_MAX];
 
 int gSelectedArms;
+int gSelectedArmsP2;
 int gSelectedItem;
 
 static int gCampTitleY;
@@ -82,9 +86,12 @@ void ClearArmsData(void)
 {
 #ifdef FIX_BUGS
 	gSelectedArms = 0; // Should probably be done in order to avoid potential problems with the selected weapon being invalid (like is done in SubArmsData)
+	gSelectedArmsP2 = 0;
 #endif
 	gArmsEnergyX = 32;
 	memset(gArmsData, 0, sizeof(gArmsData));
+	memset(gArmsDataP1, 0, sizeof(gArmsDataP1));
+	memset(gArmsDataP2, 0, sizeof(gArmsDataP2));
 }
 
 void ClearItemData(void)
@@ -126,6 +133,22 @@ BOOL AddArmsData(long code, long max_num)
 	if (gArmsData[i].num > gArmsData[i].max_num)
 		gArmsData[i].num = gArmsData[i].max_num;
 
+	if (gArmsDataP2[i].code == 0)
+	{
+		// Initialize new weapon
+		memset(&gArmsDataP2[i], 0, sizeof(ARMS));
+		gArmsDataP2[i].level = 1;
+	}
+
+	// Set weapon and ammo
+	gArmsDataP2[i].code = code;
+	gArmsDataP2[i].max_num += max_num;
+	gArmsDataP2[i].num += max_num;
+
+	// Cap the amount of current ammo to the maximum amount of ammo
+	if (gArmsDataP2[i].num > gArmsDataP2[i].max_num)
+		gArmsDataP2[i].num = gArmsDataP2[i].max_num;
+
 	return TRUE;
 }
 
@@ -144,6 +167,7 @@ BOOL SubArmsData(long code)
 #endif
 		return FALSE;	// Not found
 
+	int old_i = i;
 	// Shift all arms from the right to the left
 	for (++i; i < ARMS_MAX; ++i)
 		gArmsData[i - 1] = gArmsData[i];
@@ -151,6 +175,13 @@ BOOL SubArmsData(long code)
 	// Clear farthest weapon and select first
 	gArmsData[i - 1].code = 0;
 	gSelectedArms = 0;
+
+	for (++old_i; old_i < ARMS_MAX; ++i)
+		gArmsDataP2[old_i - 1] = gArmsDataP2[i];
+
+	// Clear farthest weapon and select first
+	gArmsDataP2[old_i - 1].code = 0;
+	gSelectedArmsP2= 0;
 
 	return TRUE;
 }
@@ -176,6 +207,12 @@ BOOL TradeArms(long code1, long code2, long max_num)
 	gArmsData[i].max_num += max_num;
 	gArmsData[i].num += max_num;
 	gArmsData[i].exp = 0;
+
+	gArmsDataP2[i].level = 1;
+	gArmsDataP2[i].code = code2;
+	gArmsDataP2[i].max_num += max_num;
+	gArmsDataP2[i].num += max_num;
+	gArmsDataP2[i].exp = 0;
 
 	return TRUE;
 }
@@ -672,18 +709,36 @@ int RotationArms(void)
 	ResetSpurCharge();
 
 	// Select next valid weapon
-	++gSelectedArms;
+	if(gCurMyChar == 0)
+		++gSelectedArms;
+	else
+	{
+		++gSelectedArmsP2;
+	}
+	
 
 	while (gSelectedArms < arms_num)
 	{
 		if (gArmsData[gSelectedArms].code)
 			break;
 
-		++gSelectedArms;
+		if(gCurMyChar == 0)
+			++gSelectedArms;
+		else
+		{
+			++gSelectedArmsP2;
+		}
 	}
 
 	if (gSelectedArms == arms_num)
+	{
+		if(gCurMyChar == 0)
 		gSelectedArms = 0;
+	else
+		gSelectedArmsP2 = 0;
+	}
+
+		
 
 	gArmsEnergyX = 32;
 	PlaySoundObject(SND_SWITCH_WEAPON, 1);
@@ -704,17 +759,36 @@ int RotationArmsRev(void)
 	ResetSpurCharge();
 
 	// Select previous valid weapon
-	--gSelectedArms;
+	if(gCurMyChar == 0)
+		--gSelectedArms;
+	else
+	{
+		--gSelectedArmsP2;
+	}
+	
 
 	if (gSelectedArms < 0)
+	{	if(gCurMyChar == 0)
 		gSelectedArms = arms_num - 1;
+		else
+		gSelectedArmsP2 = arms_num - 1;
+		
+	}
+
 
 	while (gSelectedArms < arms_num)
 	{
 		if (gArmsData[gSelectedArms].code)
 			break;
 
-		--gSelectedArms;
+			// Select previous valid weapon
+		if(gCurMyChar == 0)
+			--gSelectedArms;
+		else
+		{
+			--gSelectedArmsP2;
+		}
+	
 	}
 
 	gArmsEnergyX = 0;

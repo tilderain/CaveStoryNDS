@@ -77,11 +77,11 @@ extern int gCurMyChar;
 bool SwapMyChar(void);
 
 void InitMyChar(void);
-void AnimationMyChar(BOOL bKey, int gKey, int gKeyTrg);
+void AnimationMyChar(BOOL bKey);
 void ShowMyChar(BOOL bShow);
 void PutMyChar(int fx, int fy);
-void ActMyChar_Normal(BOOL bKey, int gKey, int gKeyTrg);
-void ActMyChar(BOOL bKey, int gKey, int gKeyTrg);
+void ActMyChar_Normal(BOOL bKey);
+void ActMyChar(BOOL bKey);
 void GetMyCharPosition(int *x, int *y);
 void SetMyCharPosition(int x, int y);
 void MoveMyChar(int x, int y);

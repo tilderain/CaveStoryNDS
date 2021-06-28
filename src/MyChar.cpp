@@ -40,15 +40,26 @@ bool SwapMyChar(void)
 	if(gCurMyChar == 0)
 	{
 		gMCP1 = gMC;
+		gKeyTrgP1 = gKeyTrg;
+		gKeyP1 = gKey;
+		memcpy(gArmsDataP1, gArmsData, sizeof(gArmsData));
 		gCurMyChar = 1;
 		gMC = gMCP2;
-
+		gKeyTrg = gKeyTrgP2;
+		gKey = gKeyP2;
+		memcpy(gArmsData, gArmsDataP2, sizeof(gArmsData));
 	}
 	else
 	{
 		gMCP2 = gMC;
+		gKeyTrgP2 = gKeyTrg;
+		gKeyP2 = gKey;
+		memcpy(gArmsDataP2, gArmsData, sizeof(gArmsData));
 		gCurMyChar = 0;
 		gMC = gMCP1;
+		gKeyTrg = gKeyTrgP1;
+		gKey = gKeyP1;
+		memcpy(gArmsData, gArmsDataP1, sizeof(gArmsData));
 	}
 	return true;
 }
@@ -111,7 +122,7 @@ void InitMyChar(void)
 	
 }
 
-void AnimationMyChar(BOOL bKey, int gKey, int gKeyTrg)
+void AnimationMyChar(BOOL bKey)
 {
 	RECT rcLeft[12] = {
 		{0, 0, 16, 16},
@@ -318,7 +329,7 @@ void PutMyChar(int fx, int fy)
 		PutBitmap3(&grcGame, (gMC.x / 0x200) - 12 - (fx / 0x200), (gMC.y / 0x200) - 12 - (fy / 0x200), &rcBubble[gMC.bubble / 2 % 2], SURFACE_ID_CARET);
 }
 
-void ActMyChar_Normal(BOOL bKey, int gKey, int gKeyTrg)
+void ActMyChar_Normal(BOOL bKey)
 {
 	// Get speeds and accelerations
 	int max_move;	// Unused
@@ -798,7 +809,7 @@ void ActMyChar_Normal(BOOL bKey, int gKey, int gKeyTrg)
 	gMC.y += gMC.ym;
 }
 
-void ActMyChar_Stream(BOOL bKey, int gKey, int gKeyTrg)
+void ActMyChar_Stream(BOOL bKey)
 {
 	gMC.up = FALSE;
 	gMC.down = FALSE;
@@ -967,7 +978,7 @@ void AirProcess(void)
 	}
 }
 
-void ActMyChar(BOOL bKey, int gKey, int gKeyTrg)
+void ActMyChar(BOOL bKey)
 {
 	if (!(gMC.cond & 0x80))
 		return;
@@ -991,11 +1002,11 @@ void ActMyChar(BOOL bKey, int gKey, int gKeyTrg)
 			if (!(g_GameFlags & 4) && bKey)
 				AirProcess();
 
-			ActMyChar_Normal(bKey, gKey, gKeyTrg);
+			ActMyChar_Normal(bKey);
 			break;
 
 		case 1:
-			ActMyChar_Stream(bKey, gKey, gKeyTrg);
+			ActMyChar_Stream(bKey);
 			break;
 	}
 
@@ -1089,7 +1100,7 @@ void SetMyCharDirect(unsigned char dir)
 	}
 
 	gMC.xm = 0;
-	AnimationMyChar(FALSE, gKey, gKeyTrg);
+	AnimationMyChar(FALSE);
 }
 
 void ChangeMyUnit(unsigned char a)

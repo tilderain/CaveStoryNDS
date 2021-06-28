@@ -141,10 +141,14 @@ static BOOL LoadProfileReal()
 {
 
 	gSelectedArms = profile.select_arms;
+	gSelectedArmsP2 = profile.select_arms;
+	
 	gSelectedItem = profile.select_item;
 	gCounter = profile.counter;
 
 	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
+	memcpy(gArmsDataP2, profile.arms, sizeof(gArmsDataP2));
+
 	memcpy(gItemData, profile.items, sizeof(gItemData));
 	memcpy(gPermitStage, profile.permitstage, sizeof(gPermitStage));
 	memcpy(gMapping, profile.permit_mapping, sizeof(gMapping));

@@ -50,12 +50,15 @@ extern int gArmsEnergyX;
 
 /// Currently selected weapon
 extern int gSelectedArms;
+extern int gSelectedArmsP2;
 
 // Currently selected item
 extern int gSelectedItem;
 
 /// Contains data for all the weapons the character currently has
 extern ARMS gArmsData[ARMS_MAX];
+extern ARMS gArmsDataP1[ARMS_MAX];
+extern ARMS gArmsDataP2[ARMS_MAX];
 
 /// Contains data for all the items the character currently has
 extern ITEM gItemData[ITEM_MAX];

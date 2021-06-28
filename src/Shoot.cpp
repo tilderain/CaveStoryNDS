@@ -1064,7 +1064,7 @@ void ShootBullet_Spur(int level)
 	}
 }
 
-void ShootBullet(int gKey, int gKeyTrg)
+void ShootBullet(void)
 {
 	static int soft_rensha;	// 'rensha' is Japanese for 'rapid-fire', apparently
 

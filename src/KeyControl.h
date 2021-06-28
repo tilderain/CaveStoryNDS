@@ -29,6 +29,8 @@ enum KeyBind
 
 extern int gKey;
 extern int gKeyTrg;
+extern int gKeyP1;
+extern int gKeyTrgP1;
 extern int gKeyP2;
 extern int gKeyTrgP2;
 

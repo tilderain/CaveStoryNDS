@@ -12,6 +12,8 @@
 int gKey;
 int gKeyTrg;
 
+int gKeyP1;
+int gKeyTrgP1;
 int gKeyP2;
 int gKeyTrgP2;
 

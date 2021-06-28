@@ -636,20 +636,20 @@ int ModeAction(void)
 		{
 			if (g_GameFlags & 2)
 			{
-				ActMyChar(TRUE, gKey, gKeyTrg);
+				ActMyChar(TRUE);
 				if(SwapMyChar())
 				{
-					ActMyChar(TRUE, gKeyP2, gKeyTrgP2);
+					ActMyChar(TRUE);
 					SwapMyChar();
 				}
 
 			}
 			else
 			{
-				ActMyChar(FALSE, gKeyP2, gKeyTrgP2);
+				ActMyChar(FALSE);
 				if(SwapMyChar())
 				{
-					ActMyChar(FALSE, gKeyP2, gKeyTrgP2);
+					ActMyChar(FALSE);
 					SwapMyChar();
 				}
 			
@@ -681,10 +681,10 @@ int ModeAction(void)
 			HitBossBullet();
 			if (g_GameFlags & 2)
 			{
-				ShootBullet(gKey, gKeyTrg);
+				ShootBullet();
 				if (SwapMyChar())
 				{
-					ShootBullet(gKeyP2, gKeyTrgP2);
+					ShootBullet();
 					SwapMyChar();
 				}
 			
@@ -701,10 +701,10 @@ int ModeAction(void)
 
 			if (g_GameFlags & 2)
 			{
-				AnimationMyChar(TRUE, gKey, gKeyTrg);
+				AnimationMyChar(TRUE);
 				if(SwapMyChar())
 				{
-					AnimationMyChar(TRUE, gKeyP2, gKeyTrgP2);
+					AnimationMyChar(TRUE);
 					SwapMyChar();
 				}
 
@@ -712,10 +712,10 @@ int ModeAction(void)
 
 			else
 			{
-				AnimationMyChar(FALSE, gKey, gKeyTrg);
+				AnimationMyChar(FALSE);
 				if(SwapMyChar())
 				{
-					AnimationMyChar(FALSE, gKeyP2, gKeyTrgP2);
+					AnimationMyChar(FALSE);
 					SwapMyChar();
 				}
 
