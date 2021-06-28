@@ -18,15 +18,16 @@
 #include "MyChar.h"
 #include "NpChar.h"
 #include "Sound.h"
+#include "nifi.h"
 
-BULLET gBul[BULLET_MAX];
+BULLET gBul[BULLET_MAX2P];
 
 void InitBullet(void)
 {
 	// Identical to ClearBullet
 	int i;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < BULLET_MAX2P; ++i)
 		gBul[i].cond = 0;
 }
 
@@ -35,7 +36,7 @@ int CountArmsBullet(int arms_code)
 	int i;
 	int count = 0;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == arms_code)
 			++count;
 
@@ -47,10 +48,10 @@ int CountBulletNum(int bullet_code)
 	int i;
 	int count = 0;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 		if (gBul[i].cond & 0x80 && gBul[i].code_bullet == bullet_code)
 			++count;
-
+	if(nifiIsLinked()) count /= 2;
 	return count;
 }
 
@@ -59,7 +60,7 @@ void DeleteBullet(int code)
 	int i;
 	int count = 0;	// Guessed name. This is unused, and was optimised out of the Linux port.
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == code)
 				gBul[i].cond = 0;
 }
@@ -69,7 +70,7 @@ void ClearBullet(void)
 	// Identical to InitBullet
 	int i;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 		gBul[i].cond = 0;
 }
 
@@ -78,7 +79,7 @@ void PutBullet(int fx, int fy)
 	int i;
 	int x, y;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 	{
 		if (gBul[i].cond & 0x80)
 		{
@@ -160,10 +161,10 @@ BULLET_TABLE gBulTbl[46] =
 void SetBullet(int no, int x, int y, int dir)
 {
 	int i = 0;
-	while (i < BULLET_MAX && gBul[i].cond & 0x80)
+	while (i < GetMaxBullet() && gBul[i].cond & 0x80)
 		++i;
 
-	if (i >= BULLET_MAX)
+	if (i >= GetMaxBullet())
 		return;
 
 	memset(&gBul[i], 0, sizeof(BULLET));
@@ -2253,7 +2254,7 @@ void ActBullet(void)
 {
 	int i;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 	{
 		if (gBul[i].cond & 0x80)
 		{
@@ -2405,11 +2406,17 @@ void ActBullet(void)
 	}
 }
 
+int GetMaxBullet(void)
+{
+	if(nifiIsLinked()) return BULLET_MAX2P;
+	return BULLET_MAX;
+}
+
 BOOL IsActiveSomeBullet(void)
 {
 	int i;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 	{
 		if (gBul[i].cond & 0x80)
 		{

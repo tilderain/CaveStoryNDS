@@ -459,7 +459,7 @@ static void PutHitboxes(void)
 	}
 
 
-	for (int n = 0; n < BULLET_MAX; ++n)
+	for (int n = 0; n < GetMaxBullet(); ++n)
 	{
 		if (gBul[n].cond & 0x80)
 		{

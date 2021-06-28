@@ -577,7 +577,7 @@ void HitNpCharBullet(void)
 {
 	//int n, b;
 	//BOOL bHit;
-	for (int b = 0; b < BULLET_MAX; ++b)
+	for (int b = 0; b < GetMaxBullet(); ++b)
 	{
 		if (!(gBul[b].cond & 0x80))
 			continue;

@@ -98,7 +98,7 @@ void HitBossBullet(void)
 		if (!(gBoss[bos].cond & 0x80))
 			continue;
 
-		for (bul = 0; bul < BULLET_MAX; ++bul)
+		for (bul = 0; bul < GetMaxBullet(); ++bul)
 		{
 			if (!(gBul[bul].cond & 0x80))
 				continue;

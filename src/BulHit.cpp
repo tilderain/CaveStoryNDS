@@ -336,7 +336,7 @@ void HitBulletMap(void)
 
 	int i, j;
 
-	for (i = 0; i < BULLET_MAX; ++i)
+	for (i = 0; i < GetMaxBullet(); ++i)
 	{
 		int offx[4];
 		int offy[4];
