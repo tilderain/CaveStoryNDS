@@ -50,6 +50,7 @@ extern int gArmsEnergyX;
 
 /// Currently selected weapon
 extern int gSelectedArms;
+extern int gSelectedArmsP1;
 extern int gSelectedArmsP2;
 
 // Currently selected item

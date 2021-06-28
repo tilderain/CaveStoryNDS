@@ -16,24 +16,19 @@ local multiplayer??
 	--Enemy HP multiplier
 	--tsc initiator
 	--tsc p2 down triggering
-	--teleport p to initator on MOV?
-	-on BSL
-	-on CMP
-	--putmychar
+		--teleport p to initator on MOV?
+		-on BSL
+		-on CMP
 	--unsync change weapon?
-	--send sram
 	--npc nearest mychar
-	--gbul
-	--garmsdata
 	--cheat menu
 	--gmc equip
-	--escape confirm
 	--map 2p blink
 	--valueview
-	--disconnected msg
 	--send fps
-	--vblank rand
 	--blink wifi
+	--death health share?
+	--send sram confirm
 -thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
 -If you experience lag, try selecting another channel.
 -Please note that the client does not write the profile to card.

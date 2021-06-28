@@ -68,6 +68,7 @@ ARMS gArmsDataP2[ARMS_MAX];
 ITEM gItemData[ITEM_MAX];
 
 int gSelectedArms;
+int gSelectedArmsP1;
 int gSelectedArmsP2;
 int gSelectedItem;
 
@@ -709,33 +710,19 @@ int RotationArms(void)
 	ResetSpurCharge();
 
 	// Select next valid weapon
-	if(gCurMyChar == 0)
-		++gSelectedArms;
-	else
-	{
-		++gSelectedArmsP2;
-	}
-	
+	++gSelectedArms;
 
 	while (gSelectedArms < arms_num)
 	{
 		if (gArmsData[gSelectedArms].code)
 			break;
 
-		if(gCurMyChar == 0)
-			++gSelectedArms;
-		else
-		{
-			++gSelectedArmsP2;
-		}
+		++gSelectedArms;
 	}
 
 	if (gSelectedArms == arms_num)
 	{
-		if(gCurMyChar == 0)
 		gSelectedArms = 0;
-	else
-		gSelectedArmsP2 = 0;
 	}
 
 		
@@ -759,20 +746,12 @@ int RotationArmsRev(void)
 	ResetSpurCharge();
 
 	// Select previous valid weapon
-	if(gCurMyChar == 0)
-		--gSelectedArms;
-	else
-	{
-		--gSelectedArmsP2;
-	}
+	--gSelectedArms;
 	
 
 	if (gSelectedArms < 0)
-	{	if(gCurMyChar == 0)
+	{	
 		gSelectedArms = arms_num - 1;
-		else
-		gSelectedArmsP2 = arms_num - 1;
-		
 	}
 
 
@@ -782,13 +761,7 @@ int RotationArmsRev(void)
 			break;
 
 			// Select previous valid weapon
-		if(gCurMyChar == 0)
-			--gSelectedArms;
-		else
-		{
-			--gSelectedArmsP2;
-		}
-	
+		--gSelectedArms;
 	}
 
 	gArmsEnergyX = 0;

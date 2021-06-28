@@ -796,10 +796,19 @@ int ModeAction(void)
 
 		if (g_GameFlags & 2)
 		{
+
 			if (gKeyTrg & gKeyArms)
 				RotationArms();
 			else if (gKeyTrg & gKeyArmsRev)
 				RotationArmsRev();
+			if(SwapMyChar())
+			{
+				if (gKeyTrg & gKeyArms)
+					RotationArms();
+				else if (gKeyTrg & gKeyArmsRev)
+					RotationArmsRev();
+				SwapMyChar();
+			}
 		}
 
 		if (swPlay % 2)	// This is always true

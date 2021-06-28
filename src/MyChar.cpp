@@ -40,6 +40,7 @@ bool SwapMyChar(void)
 	if(gCurMyChar == 0)
 	{
 		gMCP1 = gMC;
+		gSelectedArmsP1 = gSelectedArms;
 		gKeyTrgP1 = gKeyTrg;
 		gKeyP1 = gKey;
 		memcpy(gArmsDataP1, gArmsData, sizeof(gArmsData));
@@ -47,6 +48,7 @@ bool SwapMyChar(void)
 		gMC = gMCP2;
 		gKeyTrg = gKeyTrgP2;
 		gKey = gKeyP2;
+		gSelectedArms = gSelectedArmsP2;
 		memcpy(gArmsData, gArmsDataP2, sizeof(gArmsData));
 	}
 	else
@@ -54,11 +56,13 @@ bool SwapMyChar(void)
 		gMCP2 = gMC;
 		gKeyTrgP2 = gKeyTrg;
 		gKeyP2 = gKey;
+		gSelectedArmsP2 = gSelectedArms;
 		memcpy(gArmsDataP2, gArmsData, sizeof(gArmsData));
 		gCurMyChar = 0;
 		gMC = gMCP1;
 		gKeyTrg = gKeyTrgP1;
 		gKey = gKeyP1;
+		gSelectedArms = gSelectedArmsP1;
 		memcpy(gArmsData, gArmsDataP1, sizeof(gArmsData));
 	}
 	return true;
