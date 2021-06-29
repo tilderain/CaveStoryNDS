@@ -547,10 +547,10 @@ int nifiStartLink() {
        //     mgr_setInternalClockGb(gameboy);
 
         // Fill in first few frames of client's input
-        for (int i=0; i<CLIENT_FRAME_LAG; i++) {
+        /*for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++) {
             receivedInputReady[i] = true;
             receivedInput[i] = 0xff;
-        }
+        }*/
 
         // Set input destinations
        /* if (nifiLinkType == LINK_SGB) {
@@ -573,8 +573,8 @@ int nifiStartLink() {
          //   mgr_setInternalClockGb(gb2);
 
         // First few frames of input are skipped, so fill them in
-        for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++)
-            oldInputs[i] = 0xff;
+        //for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++)
+        //    oldInputs[i] = 0xff;
 
         // Set input destinations
        // if (nifiLinkType == LINK_SGB) {

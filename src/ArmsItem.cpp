@@ -177,8 +177,8 @@ BOOL SubArmsData(long code)
 	gArmsData[i - 1].code = 0;
 	gSelectedArms = 0;
 
-	for (++old_i; old_i < ARMS_MAX; ++i)
-		gArmsDataP2[old_i - 1] = gArmsDataP2[i];
+	for (++old_i; old_i < ARMS_MAX; ++old_i)
+		gArmsDataP2[old_i - 1] = gArmsDataP2[old_i];
 
 	// Clear farthest weapon and select first
 	gArmsDataP2[old_i - 1].code = 0;
