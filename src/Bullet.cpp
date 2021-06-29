@@ -39,7 +39,7 @@ int CountArmsBullet(int arms_code)
 	for (i = 0; i < GetMaxBullet(); ++i)
 		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == arms_code)
 			++count;
-
+	if(nifiIsLinked()) count /= 2;
 	return count;
 }
 
