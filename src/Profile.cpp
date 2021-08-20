@@ -144,8 +144,11 @@ static BOOL LoadProfileReal()
 	gSelectedArmsP2 = profile.select_arms;
 	
 	gSelectedItem = profile.select_item;
+
 	gCounter = profile.counter;
 
+	if(nifiIsLinked)
+		gCounter = 0;
 	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
 	memcpy(gArmsDataP2, profile.arms, sizeof(gArmsDataP2));
 
