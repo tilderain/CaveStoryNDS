@@ -148,7 +148,11 @@ static BOOL LoadProfileReal()
 	gCounter = profile.counter;
 
 	if(nifiIsLinked)
+	{
+		msvc_srand(0);
 		gCounter = 0;
+	}
+
 	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
 	memcpy(gArmsDataP2, profile.arms, sizeof(gArmsDataP2));
 

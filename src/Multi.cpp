@@ -104,7 +104,7 @@ char curAckSeq = 0;
 
 bool WaitForDisconnect()
 {
-	char* Text = "No input recieved for a while.";
+	char* Text = "No data recieved for a while.";
 	char* Text2 = "Please wait or press L+R+START to disconnect.";
 	PutText(&grcGame, 0, WINDOW_HEIGHT - 40, Text, RGB(255, 255, 255));
 	PutText(&grcGame, 0, WINDOW_HEIGHT - 16, Text2, RGB(255, 255, 255));
