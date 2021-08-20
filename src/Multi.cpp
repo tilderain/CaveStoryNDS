@@ -98,6 +98,32 @@ volatile int receivedInput[32];
 volatile bool receivedInputReady[32];
 
 int oldInputs[OLD_INPUTS_BUFFER_SIZE];
+char curChecksum = 0;
+
+
+bool WaitForDisconnect()
+{
+	char* Text = "No input recieved for a while.";
+	char* Text2 = "Please wait or press L+R+START to disconnect.";
+	PutText(&grcGame, 0, WINDOW_HEIGHT - 40, Text, RGB(255, 255, 255));
+	PutText(&grcGame, 0, WINDOW_HEIGHT - 16, Text2, RGB(255, 255, 255));
+	glEnd2D();
+	glFlush(0);
+	swiWaitForVBlank();
+	glBegin2D();
+	scanKeys();
+	int keys = keysHeld();
+	if (keys & KEY_L && keys & KEY_R && keys & KEY_START) 
+	{
+   		nifiConsecutiveWaitingFrames = 0;
+   		printf("Connection lost!\n");
+   		nifiStop();
+   		printf("Nifi turned off.\n");
+		gDisconnectTimer = 180;
+		return true;
+   }
+	return false;
+}
 
 u8 nifiGetChecksum(u8* data, u32 dataLen) {
     u8 checksum = 0;
@@ -140,8 +166,9 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
         buffer[HEADER_ACKNOWLEDGE] = (acknowledge ? 1 : 0);
 
         memcpy(buffer+PACKET_HEADER_SIZE, data, dataLen);
-
-        buffer[HEADER_CHECKSUM] = nifiGetChecksum(buffer, dataLen);
+		char chk = nifiGetChecksum(buffer, dataLen);
+		curChecksum = chk;
+        buffer[HEADER_CHECKSUM] = chk;
 
         packetAcknowledged = false;
         if (Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014, (unsigned short *)buffer) != 0) {
@@ -157,15 +184,11 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
                     frameCounter++;
                 }
                 if (!packetAcknowledged) {
-                    if (attemptCounter > 10) {
-                        errcode = 1;
-                        printf("Connection lost.\n");
-                        nifiStop();
-                        break;
+                    if (attemptCounter > 20) {
+                        if(WaitForDisconnect()) break;
                     }
-                    else
-                        Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014,
-                                (unsigned short *)buffer);
+                    Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014,
+                        (unsigned short *)buffer);
                 }
                 attemptCounter++;
             }
@@ -242,7 +265,8 @@ u8* packetData(u8* packet) {
 void handlePacketCommand(int command, u8* data) {
     switch(command) {
         case NIFI_CMD_ACKNOWLEDGE:
-            packetAcknowledged = true;
+			if (data[0] == curChecksum)
+            	packetAcknowledged = true;
             break;
         case NIFI_CMD_CLIENT:
             if (isHost && status == HOST_WAITING) {
@@ -285,16 +309,17 @@ void handlePacketCommand(int command, u8* data) {
             break;
         case NIFI_CMD_TRANSFER_SRAM:
             {
+				if(isClient){
                 /*if (nifiLinkType == LINK_SGB)
                     memcpy(gameboy->externRam, data, gameboy->getNumSramBanks()*0x2000);
                	else if (gb2)
                     memcpy(gb2->externRam, data, gb2->getNumSramBanks()*0x2000);
                 else
                     printf("GB2 NOT INITIALIZED!\n");*/
-				memcpy(&profile, data, sizeof(profile));
-                printf("Received SRAM.\n");
-                receivedSram = true;
-				
+					memcpy(&profile, data, sizeof(profile));
+               		printf("Received SRAM.\n");
+                	receivedSram = true;
+				}
             }
             break;
 
@@ -377,7 +402,7 @@ void packetHandler(int packetID, int readlength)
 	
     if (verifyPacket(packet, readlength)) {
         if (*(packet+32+HEADER_ACKNOWLEDGE))
-            nifiSendPacket(NIFI_CMD_ACKNOWLEDGE, 0, 0, false);
+            nifiSendPacket(NIFI_CMD_ACKNOWLEDGE, packet+32+HEADER_CHECKSUM, 1, false);
         u8* data = packetData(packet);
 
         if (packetCommand(packet) == NIFI_CMD_HOST) {
@@ -411,6 +436,7 @@ void nifiStop() {
     isHost = false;
     disableNifi();
     nifiUnpause();
+	gStartingNetplay = 0;
 
 	SetFrameTargetMyChar(gFrame.wait);
 }
@@ -626,6 +652,7 @@ void nifiHostMenu() {
     status = HOST_WAITING;
 	srand(gVBlankCounter);
     hostId = rand();
+	gStartingNetplay = 0;
 
     printf("Waiting for client...\n");
     printf("Host ID: %d\n\n", hostId);
@@ -636,6 +663,7 @@ void nifiClientMenu() {
     consoleClear();
     printf("Waiting for host...\n\n");
 
+	gStartingNetplay = 0;
     foundHost = false;
     isClient = true;
     isHost = false;
@@ -665,7 +693,6 @@ void nifiHostWait()
     	else
         	printf("Starting link.\n");
 
-   			for (int i=0; i<10; i++) swiWaitForVBlank();
 			PlaySoundObject(65, 1);
 
     }
@@ -681,7 +708,7 @@ void nifiClientWait()
 		int bufferSize = 8 + 20 + 1;
         u8 buffer[bufferSize];
 
-        nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, false);
+        nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, true);
 
         printf("Connected to host.\nHost Id: %d\n", hostId);
 		printf("Channel: %d\n", nifiChannel);
@@ -691,7 +718,6 @@ void nifiClientWait()
         else
             printf("Starting link.\n");
 
-		for (int i=0; i<10; i++) swiWaitForVBlank();
 		PlaySoundObject(65, 1);
 
     }
@@ -778,25 +804,7 @@ void nifiUpdateInput() {
 			}
 			if(nifiConsecutiveWaitingFrames >= 70 * 1000)
 			{
-				char* Text = "No input recieved for a while.";
-				char* Text2 = "Please wait or press L+R+START to disconnect.";
-				PutText(&grcGame, 0, WINDOW_HEIGHT - 40, Text, RGB(255, 255, 255));
-				PutText(&grcGame, 0, WINDOW_HEIGHT - 16, Text2, RGB(255, 255, 255));
-				glEnd2D();
-				glFlush(0);
-				swiWaitForVBlank();
-				glBegin2D();
-				scanKeys();
-				int keys = keysHeld();
-				if (keys & KEY_L && keys & KEY_R && keys & KEY_START) 
-				{
-            		nifiConsecutiveWaitingFrames = 0;
-            		printf("Connection lost!\n");
-           	 		nifiStop();
-           			printf("Nifi turned off.\n");
-					gDisconnectTimer = 180;
-					break;
-        		}
+				if(WaitForDisconnect()) break;
 			}
 
 			if(nifiConsecutiveWaitingFrames % 500 == 0)

@@ -1004,10 +1004,10 @@ static void hostStartNetplay()
     u8 buffer[bufferSize];
 	if(gStartingNetplay == NETPLAY_START_LOAD)
 	{
-		nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, (u8*)&profile, sizeof(profile), false);
+		nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, (u8*)&profile, sizeof(profile), true);
 		printf("Sent SRAM.\n");
 	}
-    nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, false);
+    nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, true);
 	nifiSetStatus(HOST_INGAME);
 	gCounter = 0;
 	msvc_srand(0);
@@ -1199,7 +1199,7 @@ int Call_Multi(void)
 		is_console ? -60 : -60,
 		TRUE
 	};
-
+	gStartingNetplay = 0;
 	ChangeMusic(MUS_WHITE);
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
