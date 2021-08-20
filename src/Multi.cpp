@@ -56,6 +56,7 @@ enum {
     HEADER_COMMAND      = 0x0c, // u8
     HEADER_CHECKSUM     = 0x0d, // u8
     HEADER_ACKNOWLEDGE  = 0x0e, // u8
+	HEADER_ACK_SEQ		= 0x0f, // u8
 };
 const int PACKET_HEADER_SIZE = 0x10;
 
@@ -98,7 +99,7 @@ volatile int receivedInput[32];
 volatile bool receivedInputReady[32];
 
 int oldInputs[OLD_INPUTS_BUFFER_SIZE];
-char curChecksum = 0;
+char curAckSeq = 0;
 
 
 bool WaitForDisconnect()
@@ -164,11 +165,12 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
         buffer[HEADER_COMMAND] = command;
         INT_TO(buffer+HEADER_DATASIZE, dataLen);
         buffer[HEADER_ACKNOWLEDGE] = (acknowledge ? 1 : 0);
+		if(acknowledge) buffer[HEADER_ACK_SEQ] = ++curAckSeq;
 
         memcpy(buffer+PACKET_HEADER_SIZE, data, dataLen);
-		char chk = nifiGetChecksum(buffer, dataLen);
-		curChecksum = chk;
-        buffer[HEADER_CHECKSUM] = chk;
+        buffer[HEADER_CHECKSUM] = nifiGetChecksum(buffer, dataLen);
+
+
 
         packetAcknowledged = false;
         if (Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014, (unsigned short *)buffer) != 0) {
@@ -265,7 +267,7 @@ u8* packetData(u8* packet) {
 void handlePacketCommand(int command, u8* data) {
     switch(command) {
         case NIFI_CMD_ACKNOWLEDGE:
-			if (data[0] == curChecksum)
+			if(curAckSeq == data[0])
             	packetAcknowledged = true;
             break;
         case NIFI_CMD_CLIENT:
@@ -402,7 +404,7 @@ void packetHandler(int packetID, int readlength)
 	
     if (verifyPacket(packet, readlength)) {
         if (*(packet+32+HEADER_ACKNOWLEDGE))
-            nifiSendPacket(NIFI_CMD_ACKNOWLEDGE, packet+32+HEADER_CHECKSUM, 1, false);
+            nifiSendPacket(NIFI_CMD_ACKNOWLEDGE, packet+32+HEADER_ACK_SEQ, 1, false);
         u8* data = packetData(packet);
 
         if (packetCommand(packet) == NIFI_CMD_HOST) {
