@@ -16,6 +16,7 @@
 #include "Draw.h"
 #include "Escape.h"
 #include "Flags.h"
+#include "Game.h"
 #include "Generic.h"
 #include "KeyControl.h"
 #include "Main.h"
@@ -553,6 +554,7 @@ int Scene_DownIsland(int mode)
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
+		++gCounter;
 	}
 
 	return enum_ESCRETURN_continue;

@@ -36,6 +36,7 @@
 #include "Flags.h"
 #include "Flash.h"
 #include "Frame.h"
+#include "Game.h"
 #include "Generic.h"
 #include "GenericLoad.h"
 #include "KeyControl.h"
@@ -291,6 +292,8 @@ int StageSelectLoop(int *p_event)
 
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
+
+		++gCounter;
 	}
 
 	LoadTextScript_Stage(old_script_path);
