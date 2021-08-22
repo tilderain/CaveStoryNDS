@@ -768,6 +768,14 @@ void nifiUpdateInput() {
 
     u32 actualFrame = gCounter;
     u32 inputFrame = gCounter;
+
+	if(gCounter==0)
+	{
+		nifiFrameCounter = -1;
+		memset(oldInputs, 0, sizeof(oldInputs));
+		memset((void*)&receivedInputReady, 0, sizeof(receivedInputReady));
+		memset((void*)&receivedInput, 0, sizeof(receivedInput));
+	}
     bool frameHasPassed = nifiFrameCounter != gCounter;
     if (nifiFrameCounter == -1)
         printf("Start at %d", gCounter);
