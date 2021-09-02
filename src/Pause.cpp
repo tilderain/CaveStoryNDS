@@ -1177,8 +1177,8 @@ static int Callback_ChangeEnemyDamage(OptionsMenu *parent_menu, size_t this_opti
 			if(action == ACTION_LEFT) gEnemyDamageMultiplier--;
 			else gEnemyDamageMultiplier++;
 
-			if(gEnemyDamageMultiplier < 0) gEnemyDamageMultiplier = 4;
-			if(gEnemyDamageMultiplier > 4) gEnemyDamageMultiplier = 0;
+			if(gEnemyDamageMultiplier < 0) gEnemyDamageMultiplier = 2;
+			if(gEnemyDamageMultiplier > 2) gEnemyDamageMultiplier = 0;
 			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
 
 			parent_menu->options[this_option].value = gEnemyDamageMultiplier;
