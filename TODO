@@ -13,7 +13,6 @@ GActiveNpc -- memcpy instead of swap
 vram viewer?
 
 local multiplayer??
-	--Enemy HP multiplier
 	--tsc initiator
 	--tsc p2 down triggering
 		--teleport p to initator on MOV?
@@ -24,7 +23,6 @@ local multiplayer??
 		---noc cam cur player
 	--cheat menu
 	--gmc equip
-	--arms change 2p
 	--disconnect packet
 	--map 2p blink
 	--valueview

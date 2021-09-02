@@ -62,7 +62,7 @@ enum {
 };
 const int PACKET_HEADER_SIZE = 0x10;
 
-const int CLIENT_FRAME_LAG = 2;
+const int CLIENT_FRAME_LAG = 1;
 const int FRAGMENT_SIZE = 0x200;
 
 const int OLD_INPUTS_BUFFER_SIZE = CLIENT_FRAME_LAG + 2;

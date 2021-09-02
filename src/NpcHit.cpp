@@ -16,6 +16,9 @@
 #include "Game.h"
 #include "Map.h"
 #include "MyChar.h"
+#include "Multi.h"
+#include <math.h>
+#include "nifi.h"
 #include "NpChar.h"
 #include "Sound.h"
 #include "TextScr.h"
@@ -524,7 +527,23 @@ static BOOL DamageNpchar(int n, int b)
 	// Damage NPC
 	if (gActiveNPC[n]->bits & NPC_SHOOTABLE)
 	{
-		gActiveNPC[n]->life -= gBul[b].damage;
+		if(!nifiIsLinked() || gEnemyHPMultiplier == 0)
+			gActiveNPC[n]->life -= gBul[b].damage;
+		else
+		{
+			float dmg = (float)gBul[b].damage;
+			if(gEnemyHPMultiplier == 1) dmg *= 0.6666666666666; //1.5x hp
+			if(gEnemyHPMultiplier == 2) dmg *= 0.5; //2.0x
+			if(gEnemyHPMultiplier == 3) dmg *= 0.4; //2.5x hp
+			if(gEnemyHPMultiplier == 4) dmg *= 0.3333333333333; //3.0x hp
+
+			float fracpart, intpart;
+			fracpart = modf(gActiveNPC[n]->life_part + dmg, &intpart);
+			gActiveNPC[n]->life -= int(intpart);
+			gActiveNPC[n]->life_part = fracpart;
+			
+		}
+		
 
 		if (gActiveNPC[n]->life < 1)
 		{

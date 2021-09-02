@@ -77,6 +77,7 @@ typedef struct NPCHAR
 	int hit_voice;
 	int destroy_voice;
 	int life;
+	float life_part;
 	int exp;
 	int size;
 	int direct;

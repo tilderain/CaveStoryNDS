@@ -47,7 +47,7 @@ char gStartingNetplay = false;
 int nifiChannel = 11;
 
 signed char gEnemyHPMultiplier = 2;
-signed char gEnemyDamageMultiplier = 2;
+signed char gEnemyDamageMultiplier = 0;
 char gRespawnEnabled = true;
 
 char* GetKeyName(int key)
@@ -1017,7 +1017,7 @@ static void hostStartNetplay()
 	buffer[2] = gRespawnEnabled;
 	buffer[3] = gEnemyHPMultiplier;
 	buffer[4] = gEnemyDamageMultiplier;
-	
+
     nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, true);
 	nifiSetStatus(HOST_INGAME);
 	gCounter = 0;
@@ -1156,7 +1156,7 @@ static int Callback_ChangeEnemyHP(OptionsMenu *parent_menu, size_t this_option, 
 
 static int Callback_ChangeEnemyDamage(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
-	char *strings[] = {"1x", "1.5x", "2x", "2.5x", "3x"};
+	char *strings[] = {"1x", "2x", "3x"};
 
 	switch (action)
 	{

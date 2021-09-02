@@ -20,6 +20,8 @@
 #include "Game.h"
 #include "Main.h"
 #include "MyChar.h"
+#include "Multi.h"
+#include "nifi.h"
 #include "NpChar.h"
 #include "Sound.h"
 #include "TextScr.h"
@@ -143,7 +145,9 @@ void DamageMyChar(int damage)
 	{
 		gMC.ym = -0x400;
 	}
-
+	
+	if(nifiIsLinked() && gEnemyDamageMultiplier > 0)
+		damage = damage * (gEnemyDamageMultiplier + 1);
 	gMC.life -= (short)damage;
 
 	// Lose a whimsical star
