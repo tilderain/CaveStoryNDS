@@ -340,7 +340,7 @@ void handlePacketCommand(int command, u8* data) {
 				gRespawnEnabled = data[2];
 				gEnemyHPMultiplier = data[3];
 				gEnemyDamageMultiplier = data[4];
-				
+
 				printf("\ndebug enabled: %d\n", gDebug.bEnabled);
 				printf("50fps: %d\n", gb50Fps);
 				printf("respawn: %d\n", gRespawnEnabled);
@@ -772,7 +772,7 @@ void nifiUnpause() {
 void nifiUpdateInput() {
     int* inputDest;
     int* otherInputDest = nifiOtherInputDest;
-    if (nifiIsLinked()) ///TODO
+    if (nifiIsLinked())
         inputDest = nifiInputDest;
     else
         inputDest = &gKey;
@@ -800,13 +800,13 @@ void nifiUpdateInput() {
     if (nifiIsClient())
         inputFrame += CLIENT_FRAME_LAG;
 
-    u8 olderInput = oldInputs[OLD_INPUTS_BUFFER_SIZE-CLIENT_FRAME_LAG];
+    int olderInput = oldInputs[OLD_INPUTS_BUFFER_SIZE-CLIENT_FRAME_LAG];
 
     if (nifiIsLinked()) {
         if (frameHasPassed) {
             for (int i=0; i<OLD_INPUTS_BUFFER_SIZE-1; i++)
                 oldInputs[i] = oldInputs[i+1];
-            oldInputs[OLD_INPUTS_BUFFER_SIZE-1] = gKey; //TODO
+            oldInputs[OLD_INPUTS_BUFFER_SIZE-1] = gKey;
         }
 
         // Send input to other ds
@@ -847,7 +847,7 @@ void nifiUpdateInput() {
     }
 
     if (!nifiIsLinked() || nifiIsHost()) {
-        *inputDest = gKey;     /////TODO
+        *inputDest = gKey;     
     }
     else if (nifiIsClient()) {
         *inputDest = olderInput;

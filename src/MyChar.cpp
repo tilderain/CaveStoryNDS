@@ -36,7 +36,7 @@ int gCurMyChar = 0;
 bool SwapMyChar(void)
 {
 	if(!nifiIsLinked()) return false;
-
+	//have mercy
 	if(gCurMyChar == 0)
 	{
 		gMCP1 = gMC;
