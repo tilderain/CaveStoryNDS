@@ -25,6 +25,7 @@ INCBIN(Fadepng, "../game_english/data/Fade.png");
 INCBIN(ItemImagepng, "../game_english/data/ItemImage.png");
 INCBIN(Loadingpng, "../game_english/data/Loading.png");
 INCBIN(MyCharpng, "../game_english/data/MyChar.png");
+INCBIN(MyChar2png, "../game_english/data/MyChar2.png");
 INCBIN(StageImagepng, "../game_english/data/StageImage.png");
 INCBIN(bk0png, "../game_english/data/bk0.png");
 INCBIN(bkBlackpng, "../game_english/data/bkBlack.png");
@@ -693,6 +694,7 @@ const FILEREF files[] = {
 	{gItemImagepngData, gItemImagepngSize, "data/ItemImage.png"},
 	{gLoadingpngData, gLoadingpngSize, "data/Loading.png"},
 	{gMyCharpngData, gMyCharpngSize, "data/MyChar.png"},
+	{gMyChar2pngData, gMyChar2pngSize, "data/MyChar2.png"},	
 	{gStageImagepngData, gStageImagepngSize, "data/StageImage.png"},
 	{gStageSelecttscData, gStageSelecttscSize, "data/StageSelect.tsc"},
 	{gTextBoxpngData, gTextBoxpngSize, "data/TextBox.png"},

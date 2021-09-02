@@ -318,8 +318,8 @@ void PutMyChar(int fx, int fy)
 		rect.top += 32;
 		rect.bottom += 32;
 	}
-
-	PutBitmap3(&grcGame, ((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200), ((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200), &rect, SURFACE_ID_MY_CHAR);
+	SurfaceID id = (gCurMyChar ? SURFACE_ID_MY_CHAR2 : SURFACE_ID_MY_CHAR);
+	PutBitmap3(&grcGame, ((gMC.x - gMC.view.front) / 0x200) - (fx / 0x200), ((gMC.y - gMC.view.top) / 0x200) - (fy / 0x200), &rect, id);
 
 	// Draw air tank
 	RECT rcBubble[2] = {

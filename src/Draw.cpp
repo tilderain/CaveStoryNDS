@@ -834,7 +834,8 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
 		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_LOADING\
 		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_NPC_REGU\
-		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_CREDITS_IMAGE)
+		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_CREDITS_IMAGE\
+		|| surf_no == SURFACE_ID_MY_CHAR2)
 	{
 
 	}
@@ -990,6 +991,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		{SURFACE_ID_TEXT_BOX, gAtlas16Color2, 640, 64},
 		{SURFACE_ID_FONT, gAtlas16Color2, 640, 216},
 		{SURFACE_ID_MY_CHAR, gAtlas16Color2, 640, 0},
+		{SURFACE_ID_MY_CHAR2, gAtlas16Color2, 640, 0},
 	};
 	bool found = false;
 	for (size_t i = 0; i < sizeof(table)/sizeof(table[0]); i++)

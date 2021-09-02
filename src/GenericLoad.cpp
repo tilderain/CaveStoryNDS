@@ -164,6 +164,8 @@ bool LoadGenericData()
 {
 	printf("loading generic data\n");
 	bool bError = false;
+	if (!MakeSurface_File("MyChar2", SURFACE_ID_MY_CHAR2))
+		bError = true;	
 	if (!MakeSurface_File("MyChar", SURFACE_ID_MY_CHAR))
 		bError = true;
 	if (!MakeSurface_File("ArmsImage", SURFACE_ID_ARMS_IMAGE))
