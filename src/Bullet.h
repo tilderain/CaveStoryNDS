@@ -8,6 +8,7 @@
 #pragma once
 
 #include "WindowsWrapper.h"
+#include "MyChar.h"
 
 typedef struct BULLET
 {
@@ -43,6 +44,7 @@ typedef struct BULLET
 		int back;
 		int bottom;
 	} view;
+	char owner;
 } BULLET;
 
 typedef struct BULLET_TABLE
@@ -74,7 +76,7 @@ int CountBulletNum(int bullet_code);
 void DeleteBullet(int code);
 void ClearBullet(void);
 void PutBullet(int fx, int fy);
-void SetBullet(int no, int x, int y, int dir);
+void SetBullet(int no, int x, int y, int dir, signed char owner=gCurMyChar);
 void ActBullet(void);
 
 int GetMaxBullet(void);

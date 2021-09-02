@@ -37,9 +37,9 @@ int CountArmsBullet(int arms_code)
 	int count = 0;
 
 	for (i = 0; i < GetMaxBullet(); ++i)
-		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == arms_code)
+		if (gBul[i].cond & 0x80 && (gBul[i].code_bullet + 2) / 3 == arms_code && gBul[i].owner == gCurMyChar)
 			++count;
-	if(nifiIsLinked()) count /= 2;
+	
 	return count;
 }
 
@@ -51,7 +51,6 @@ int CountBulletNum(int bullet_code)
 	for (i = 0; i < GetMaxBullet(); ++i)
 		if (gBul[i].cond & 0x80 && gBul[i].code_bullet == bullet_code)
 			++count;
-	if(nifiIsLinked()) count /= 2;
 	return count;
 }
 
@@ -158,7 +157,7 @@ BULLET_TABLE gBulTbl[46] =
 	{1, 1, 1, 36, 1, 1, 1, 1, {1, 1, 1, 1}}
 };
 
-void SetBullet(int no, int x, int y, int dir)
+void SetBullet(int no, int x, int y, int dir, signed char owner)
 {
 	int i = 0;
 	while (i < GetMaxBullet() && gBul[i].cond & 0x80)
@@ -185,6 +184,7 @@ void SetBullet(int no, int x, int y, int dir)
 	gBul[i].view.bottom = gBulTbl[no].view.bottom * 0x200;
 	gBul[i].x = x;
 	gBul[i].y = y;
+	gBul[i].owner = owner;
 }
 
 void ActBullet_Frontia1(BULLET *bul)
@@ -2253,8 +2253,8 @@ void ActBullet_Star(BULLET *bul)
 void ActBullet(void)
 {
 	int i;
-
-	for (i = 0; i < GetMaxBullet(); ++i)
+	int max = GetMaxBullet();
+	for (i = 0; i < max; ++i)
 	{
 		if (gBul[i].cond & 0x80)
 		{
