@@ -1037,7 +1037,7 @@ void SetMyCharPosition(int x, int y)
 	gMC.cond &= ~1;
 	InitStar();
 
-	if (nifiIsLinked)
+	if (nifiIsLinked())
 	{
 		gMCP2.x = x;
 		gMCP2.y = y;
@@ -1055,7 +1055,7 @@ void MoveMyChar(int x, int y)
 {
 	gMC.x = x;
 	gMC.y = y;
-	if(nifiIsLinked)
+	if(nifiIsLinked())
 	{
 		gMCP2.x = x;
 		gMCP2.y = y;

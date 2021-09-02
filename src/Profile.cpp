@@ -147,7 +147,7 @@ static BOOL LoadProfileReal()
 
 	gCounter = profile.counter;
 
-	if(nifiIsLinked)
+	if(nifiIsLinked())
 	{
 		msvc_srand(0);
 		gCounter = 0;
