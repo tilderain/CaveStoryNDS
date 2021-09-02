@@ -36,6 +36,8 @@ int Call_Escape(void)
 	{
 		if(gKeyTrg & CEY_ESCAPE)
 		{
+			u8 buffer = 0;
+			nifiSendPacket(NIFI_CMD_DISCONNECT, &buffer, 1, true);
 			nifiStop();
 			gKey |= CEY_ESCAPE;
 			gDisconnectTimer = 150;

@@ -350,6 +350,13 @@ void handlePacketCommand(int command, u8* data) {
 				printf("Client: starting netplay\n");
 			}
 			break;
+
+		case NIFI_CMD_DISCONNECT:
+			if(isClient)
+			{
+				nifiStop();
+				gDisconnectTimer = 180;
+			}
         case NIFI_CMD_FRAGMENT:
             {
                 u32 totalSize = INT_AT(data);
@@ -835,7 +842,7 @@ void nifiUpdateInput() {
 			{
 				nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
 			}
-
+			if(!nifiIsLinked())	break;
 		}
 		
         *otherInputDest = receivedInput[actualFrame&31];

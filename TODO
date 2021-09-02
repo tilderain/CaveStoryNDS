@@ -21,9 +21,9 @@ local multiplayer??
 	--unsync change weapon?
 	--npc nearest mychar
 		---noc cam cur player
+		--else things that operate directly on gMC
 	--cheat menu
 	--gmc equip
-	--disconnect packet
 	--map 2p blink
 	--valueview
 	--blink wifi
