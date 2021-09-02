@@ -16,6 +16,7 @@ Additional notes
 	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
 
 	Config.dat and Profile.dat will be saved to the root of the SD card.
+	You can press Select during boot to see console output.
 
 Known issues:
 	The game will rarely crash when closing the lid.
@@ -31,6 +32,9 @@ Thanks to:
 
 	devKitPro
 	gl2D
+
+	Drenn1- wifi code
+	cotodevel- wifi code
 
 	Ravenworks- Inspiring the port
 

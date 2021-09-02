@@ -46,6 +46,9 @@ RECT rect_cur = {112, 88, 128, 104};
 char gStartingNetplay = false;
 int nifiChannel = 11;
 
+signed char gEnemyHPMultiplier = 2;
+signed char gEnemyDamageMultiplier = 2;
+char gRespawnEnabled = true;
 
 char* GetKeyName(int key)
 {
@@ -1000,13 +1003,21 @@ static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackA
 
 static void hostStartNetplay()
 {
-	int bufferSize = 8 + 20 + 1;
-    u8 buffer[bufferSize];
+
 	if(gStartingNetplay == NETPLAY_START_LOAD)
 	{
 		nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, (u8*)&profile, sizeof(profile), true);
 		printf("Sent SRAM.\n");
 	}
+	int bufferSize = 8;
+    u8 buffer[bufferSize];
+
+	buffer[0] = gb50Fps;
+	buffer[1] = gDebug.bEnabled;
+	buffer[2] = gRespawnEnabled;
+	buffer[3] = gEnemyHPMultiplier;
+	buffer[4] = gEnemyDamageMultiplier;
+	
     nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, true);
 	nifiSetStatus(HOST_INGAME);
 	gCounter = 0;
@@ -1102,6 +1113,121 @@ static int Callback_ChangeChannel(OptionsMenu *parent_menu, size_t this_option, 
 }
 
 
+
+static int Callback_ChangeEnemyHP(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"1x", "1.5x", "2x", "2.5x", "3x"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gEnemyHPMultiplier;
+			parent_menu->options[this_option].value_string = strings[gEnemyHPMultiplier];
+
+			break;
+
+		case ACTION_DEINIT:
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			if(action == ACTION_LEFT) gEnemyHPMultiplier--;
+			else gEnemyHPMultiplier++;
+
+			if(gEnemyHPMultiplier < 0) gEnemyHPMultiplier = 4;
+			if(gEnemyHPMultiplier > 4) gEnemyHPMultiplier = 0;
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value = gEnemyHPMultiplier;
+			parent_menu->options[this_option].value_string = strings[gEnemyHPMultiplier];
+			
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+
+static int Callback_ChangeEnemyDamage(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"1x", "1.5x", "2x", "2.5x", "3x"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gEnemyDamageMultiplier;
+			parent_menu->options[this_option].value_string = strings[gEnemyDamageMultiplier];
+
+			break;
+
+		case ACTION_DEINIT:
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+
+			// Increment value (with wrapping)
+			if(action == ACTION_LEFT) gEnemyDamageMultiplier--;
+			else gEnemyDamageMultiplier++;
+
+			if(gEnemyDamageMultiplier < 0) gEnemyDamageMultiplier = 4;
+			if(gEnemyDamageMultiplier > 4) gEnemyDamageMultiplier = 0;
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			parent_menu->options[this_option].value = gEnemyDamageMultiplier;
+			parent_menu->options[this_option].value_string = strings[gEnemyDamageMultiplier];
+			
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+
+static int Callback_ChangeRespawn(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	char *strings[] = {"No", "Yes"};
+
+	switch (action)
+	{
+		case ACTION_INIT:
+			parent_menu->options[this_option].value = gRespawnEnabled;
+			parent_menu->options[this_option].value_string = strings[gRespawnEnabled];
+			break;
+
+		case ACTION_DEINIT:
+			break;
+
+		case ACTION_OK:
+		case ACTION_LEFT:
+		case ACTION_RIGHT:
+			parent_menu->options[this_option].value ^= 1;
+
+			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
+
+			gRespawnEnabled = parent_menu->options[this_option].value;
+			parent_menu->options[this_option].value_string = strings[gRespawnEnabled];
+			
+			break;
+
+		case ACTION_UPDATE:
+			break;
+	}
+
+	return CALLBACK_CONTINUE;
+}
+
+
 static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
 {
 	(void)parent_menu;
@@ -1113,6 +1239,9 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 		{"Start game", Callback_HostStartGame, NULL, NULL, 0, TRUE},
 		{"Start game (new file)", Callback_HostStartNewFile, NULL, NULL, 0, TRUE},
 		{"Channel:", Callback_ChangeChannel, NULL, NULL, 0, FALSE},
+		{"Respawning:", Callback_ChangeRespawn, NULL, NULL, 0, FALSE},
+		{"Enemy HP:", Callback_ChangeEnemyHP, NULL, NULL, 0, FALSE},
+		{"Enemy DMG:", Callback_ChangeEnemyDamage, NULL, NULL, 0, FALSE},
 	};
 
 	OptionsMenu options_menu = {

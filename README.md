@@ -5,6 +5,7 @@ You can find a technical writeup of the port's development here (TODO, lol).
 
 ## Compilation
 Acquire devKitPro and libnds, then run make. Sound will probably be broken on most flashcarts, in this case you can use a compatible hbmenu, or compile it with libnds commit 62c8ffd.
+For wifi to work you need to change dswifi's Wifi_RawTxFrame function. See https://github.com/CTurt/dsgmDSWiFi/blob/2080f4ab16781ad0165e1924ed83569513dcfb2e/arm9/source/wifi_arm9.c#L354 for details.
 
 There are a few compile flags. 
 

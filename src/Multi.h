@@ -8,6 +8,9 @@ void nifiClientWait();
 
 extern char gStartingNetplay;
 
+extern signed char gEnemyHPMultiplier;
+extern signed char gEnemyDamageMultiplier;
+extern char gRespawnEnabled;
 
 
 //#include "../srccommon/wifi_shared.h"

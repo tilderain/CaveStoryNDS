@@ -25,6 +25,8 @@
 #include "Pause.h"
 
 #include "MyChar.h"
+#include "Main.h"
+#include "Debug.h"
 #include "Frame.h"
 
 char magic1 = 'Y';
@@ -332,6 +334,19 @@ void handlePacketCommand(int command, u8* data) {
 				status = CLIENT_INGAME;
 				gStartingNetplay = (receivedSram ? NETPLAY_START_LOAD : NETPLAY_START_NORMAL);
 				gCounter = 0;
+
+				gb50Fps = data[0];
+				gDebug.bEnabled = data[1];
+				gRespawnEnabled = data[2];
+				gEnemyHPMultiplier = data[3];
+				gEnemyDamageMultiplier = data[4];
+				
+				printf("\ndebug enabled: %d\n", gDebug.bEnabled);
+				printf("50fps: %d\n", gb50Fps);
+				printf("respawn: %d\n", gRespawnEnabled);
+				printf("HP: %d\n", gEnemyHPMultiplier);
+				printf("DMG: %d\n\n", gEnemyDamageMultiplier);
+
 				printf("Client: starting netplay\n");
 			}
 			break;
@@ -411,15 +426,12 @@ void packetHandler(int packetID, int readlength)
             if (isClient && status == CLIENT_WAITING) {
                 foundHost = true;
                 hostId = packetHostId(packet);
+
                 nifiLinkType = data[0];
 				nifiChannel = data[4];
 
 				Wifi_SetChannel(nifiChannel);
 
-                char* filename = (char*)(data+8);
-                char* romTitle = (char*)(data+8+strlen(filename)+1);
-              //  strcpy(linkedFilename, filename);
-                strcpy(linkedRomTitle, romTitle);
             }
         }
         else
@@ -677,11 +689,12 @@ void nifiHostWait()
 	static int count = 0;
 	if (!foundClient) {
 
-        int bufferSize = 8 + 20 + 1;
+        int bufferSize = 8;
         u8 buffer[bufferSize];
 
         buffer[0] = nifiLinkType;
 		buffer[4] = nifiChannel;
+
 		if(count++ % 5 == 0)
         	nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
     }
@@ -707,13 +720,14 @@ void nifiClientWait()
 	if (foundHost && status != CLIENT_CONNECTED && status != CLIENT_INGAME) {
         swiWaitForVBlank();
 
-		int bufferSize = 8 + 20 + 1;
+		int bufferSize = 8;
         u8 buffer[bufferSize];
 
         nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, true);
 
         printf("Connected to host.\nHost Id: %d\n", hostId);
 		printf("Channel: %d\n", nifiChannel);
+
         status = CLIENT_CONNECTED;
 		if (nifiStartLink() != 0)
             printf("Link failed.\n");
