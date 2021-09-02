@@ -35,7 +35,7 @@ int gCurMyChar = 0;
 
 bool SwapMyChar(void)
 {
-	if(!nifiIsLinked()) return false;
+	if(!nifiIsLinked()) {gCurMyChar = 0; return false;}
 	//have mercy
 	if(gCurMyChar == 0)
 	{
@@ -124,6 +124,7 @@ void InitMyChar(void)
 	gMCP2.max_life = 3;
 	gMCP2.unit = 0;
 	
+	gCurMyChar = 0;
 }
 
 void AnimationMyChar(BOOL bKey)
