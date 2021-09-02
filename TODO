@@ -14,6 +14,7 @@ vram viewer?
 
 local multiplayer??
 	--tsc initiator
+		--save profile pos
 	--tsc p2 down triggering
 		--teleport p to initator on MOV?
 		-on BSL
@@ -24,15 +25,17 @@ local multiplayer??
 		--else things that operate directly on gMC
 	--cheat menu
 	--gmc equip
-	--map 2p blink
+		--other mycparam
 	--valueview
-	--blink wifi
 	--death health share?
 	--2p escape
 	--inv mychar
 	--armsenergyX
 	--move vector
 	--beta quote palette
+	--star 2p
+
+	--blink wifi
 thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
 If you experience lag, try selecting another channel.
 Please note that the client does not write the profile to card (you can use one flashcart to play with both DSes).

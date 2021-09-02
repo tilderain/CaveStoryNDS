@@ -47,6 +47,7 @@
 #include "Map.h"
 #include "MapName.h"
 #include "MiniMap.h"
+#include "nifi.h"
 #include "MyChar.h"
 #include "MycHit.h"
 #include "MycParam.h"
@@ -173,13 +174,16 @@ int MiniMapLoop(void)
 	RECT rcView;
 	RECT rcMiniMap;
 
-	int my_x;
-	int my_y;
+	int my_x, my_x2;
+	int my_y, my_y2;
 	unsigned char my_wait;
 	RECT my_rect = {0, 57, 1, 58};
 
 	my_x = ((gMC.x / 0x200) + 8) / 16;
 	my_y = ((gMC.y / 0x200) + 8) / 16;
+
+	my_x2 = ((gMCP2.x / 0x200) + 8) / 16;
+	my_y2 = ((gMCP2.y / 0x200) + 8) / 16;
 
 	if(gMap.length > 80)
 	{
@@ -228,6 +232,11 @@ int MiniMapLoop(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);
@@ -296,6 +305,11 @@ int MiniMapLoop(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);
@@ -353,6 +367,9 @@ int MiniMapLoop(void)
 		if (++my_wait / 8 % 2)
 			PutBitmap3(&grcGame, my_x + rcView.left + 1, my_y + rcView.top + 1, &my_rect, SURFACE_ID_TEXT_BOX);
 
+		if (my_wait / 8 % 2 && nifiIsLinked())
+			PutBitmap3(&grcGame, my_x2 + rcView.left + 1, my_y2 + rcView.top + 1, &my_rect, SURFACE_ID_TEXT_BOX);
+
 		PutFramePerSecound();
 		if (!Flip_SystemTask())
 			return enum_ESCRETURN_exit;
@@ -391,6 +408,11 @@ int MiniMapLoop(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);
@@ -429,6 +451,11 @@ int MiniMapLoop(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);

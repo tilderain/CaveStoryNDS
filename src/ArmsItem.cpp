@@ -592,6 +592,11 @@ int CampLoop(void)
 		PutNpChar(frame_x, frame_y);
 		PutBullet(frame_x, frame_y);
 		PutMyChar(frame_x, frame_y);
+		if(SwapMyChar())
+		{
+			PutMyChar(frame_x, frame_y);
+			SwapMyChar();
+		}
 		PutStar(frame_x, frame_y);
 		PutMapDataVector(frame_x, frame_y);
 		PutStage_Front(frame_x, frame_y);
