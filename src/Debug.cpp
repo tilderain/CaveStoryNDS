@@ -896,17 +896,15 @@ void PutConsole(void)
 
 	PutHitboxes();
 
-	int keys = keysHeld();
-	int keysD = keysDown();
 	if(gDebug.bEnabled)
 	{
-		if (keys & KEY_L && keysD & KEY_UP ||
-		   keys & KEY_UP && keysD & KEY_L)
+		if(gKeyTrg & CEY_CHEAT || gKeyTrgP2 & CEY_CHEAT)
 		{
 			gDebug.cheatVisible ^= true;
 			for (size_t i = 0; i < options_menu.total_options; ++i)
 				options_menu.options[i].callback(&options_menu, i, (gDebug.cheatVisible ? ACTION_INIT : ACTION_DEINIT));
 			gKey = gKeyTrg = 0;
+			gKeyP2 = gKeyTrgP2 = 0;
 		}
 	}
 	if(gDebug.cheatVisible)
@@ -933,4 +931,19 @@ void InitConsole(void)
 	gDebug.cursorPos = 0;
 	gDebug.cheatScroll = 0;
 
+}
+
+void ResetDebugOptions(void)
+{
+	strcpy(stageString, "0\0");
+	strcpy(weaponString, "1\0");
+	strcpy(itemString, "1\0");
+	strcpy(levelString, "1\0");
+	strcpy(eventString, "0\0");
+
+	itemVal = 1;
+	eventVal = 0;
+	weaponVal = 1;
+	stageVal = 0;
+	levelVal = 1;
 }

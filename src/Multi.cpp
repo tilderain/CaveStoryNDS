@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include "dswifi9.h"
 
+
+#include "Debug.h"
+
 #include "nds.h"
 
 #include "Game.h"
@@ -352,6 +355,8 @@ void handlePacketCommand(int command, u8* data) {
 				printf("DMG: %d\n\n", gEnemyDamageMultiplier);
 
 				printf("Client: starting netplay\n");
+
+				ResetDebugOptions();
 			}
 			break;
 

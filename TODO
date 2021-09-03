@@ -7,7 +7,8 @@ move old libnds fifo sync code to here
 GActiveNpc -- memcpy instead of swap
 
 
-
+framestep
+fastforward on R
 
 
 vram viewer?
@@ -23,7 +24,6 @@ local multiplayer??
 	--npc nearest mychar
 		---noc cam cur player
 		--else things that operate directly on gMC
-	--cheat menu
 	--gmc equip
 		--other mycparam
 	--valueview

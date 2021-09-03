@@ -110,7 +110,7 @@ int EnterOptionsMenuIngame(OptionsMenu *options_menu)
 	}
 */
 	// Go back one submenu when the 'cancel' button is pressed
-	if (gKeyTrg & gKeyCancel)
+	if (gKeyTrg & gKeyCancel || gKeyTrgP2 & gKeyCancel)
 	{
 		return_value = CALLBACK_CONTINUE;
 		gDebug.cheatVisible = false;
@@ -120,15 +120,15 @@ int EnterOptionsMenuIngame(OptionsMenu *options_menu)
 	}
 
 	// Handling up/down input
-	if (gKeyTrg & (gKeyUp | gKeyDown))
+	if (gKeyTrg & (gKeyUp | gKeyDown) || gKeyTrgP2 & (gKeyUp | gKeyDown))
 	{
 		const size_t old_selection = gDebug.cursorPos;
 
-		if (gKeyTrg & gKeyDown)
+		if (gKeyTrg & gKeyDown || gKeyTrgP2 & gKeyDown)
 			if (gDebug.cursorPos++ == options_menu->total_options - 1)
 				gDebug.cursorPos = 0;
 
-		if (gKeyTrg & gKeyUp)
+		if (gKeyTrg & gKeyUp || gKeyTrgP2 & gKeyUp)
 			if (gDebug.cursorPos-- == 0)
 				gDebug.cursorPos = options_menu->total_options - 1;
 
@@ -151,14 +151,16 @@ int EnterOptionsMenuIngame(OptionsMenu *options_menu)
 
 			if (i == gDebug.cursorPos)
 			{
-				if (gKeyTrg & gKeyOk)
+				if (gKeyTrg & gKeyOk || gKeyTrgP2 & gKeyOk)
 					action = ACTION_OK;
-				else if (gKeyTrg & gKeyLeft || (gKey & gKeyLeft && autoRepeatTimer++ > 20))
+				else if (gKeyTrg & gKeyLeft || (gKey & gKeyLeft && autoRepeatTimer++ > 20)\
+					|| gKeyTrgP2 & gKeyLeft || (gKeyP2 & gKeyLeft && autoRepeatTimer++ > 20))
 					action = ACTION_LEFT;
-				else if (gKeyTrg & gKeyRight || (gKey & gKeyRight && autoRepeatTimer++ > 20))
+				else if (gKeyTrg & gKeyRight || (gKey & gKeyRight && autoRepeatTimer++ > 20)\
+					|| gKeyTrgP2 & gKeyRight || (gKeyTrgP2 & gKeyRight && autoRepeatTimer++ > 20))
 					action = ACTION_RIGHT;
 
-				if(gKey & gKeyLeft || gKey & gKeyRight)
+				if((gKey & gKeyLeft || gKey & gKeyRight) || (gKeyP2 & gKeyLeft || gKeyP2 & gKeyRight))
 				{}
 				else
 				{autoRepeatTimer = 0;}
@@ -1029,6 +1031,8 @@ static void hostStartNetplay()
 	gCounter = 0;
 	msvc_srand(0);
 	printf("Host: starting netplay\n");
+	
+	ResetDebugOptions();
 }
 
 static int Callback_HostStartGame(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)

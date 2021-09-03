@@ -25,6 +25,7 @@ enum KeyBind
 	//Inventory
 	CEY_ITEM =      0x00000200,
 	CEY_ESCAPE =	0x00000400,
+	CEY_CHEAT =     0x00000800,
 };
 
 extern int gKey;

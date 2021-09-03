@@ -5,6 +5,8 @@
 void PutConsole(void);
 void InitConsole(void);
 
+void ResetDebugOptions();
+
 struct DebugVars
 {
 	bool bEnabled;
