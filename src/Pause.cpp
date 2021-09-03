@@ -23,6 +23,8 @@
 
 #include "Game.h"
 
+#include "Flags.h"
+
 #include "nds.h"
 
 #include "Multi.h"
@@ -49,6 +51,20 @@ int nifiChannel = 11;
 signed char gEnemyHPMultiplier = 2;
 signed char gEnemyDamageMultiplier = 0;
 char gRespawnEnabled = true;
+
+
+static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
+{
+	(void)parent_menu;
+
+	if (action != ACTION_OK)
+		return CALLBACK_CONTINUE;
+
+	int return_value = CALLBACK_CONTINUE;
+
+	return return_value;
+}
+
 
 char* GetKeyName(int key)
 {
@@ -956,6 +972,7 @@ int Call_Pause(void)
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
 		{"Play sound", Callback_Sound, NULL, NULL, 0, FALSE},
+		{"CSE2 for NDS", Callback_Stub, NULL, "= v0.4 =", 0, TRUE},
 	};
 
 	OptionsMenu options_menu = {
@@ -989,18 +1006,6 @@ int Call_Pause(void)
 }
 
 
-static int Callback_Stub(OptionsMenu *parent_menu, size_t this_option, CallbackAction action)
-{
-	(void)parent_menu;
-
-	if (action != ACTION_OK)
-		return CALLBACK_CONTINUE;
-
-	int return_value = CALLBACK_CONTINUE;
-
-	return return_value;
-}
-
 static void hostStartNetplay()
 {
 
@@ -1009,7 +1014,7 @@ static void hostStartNetplay()
 		nifiSendPacket(NIFI_CMD_TRANSFER_SRAM, (u8*)&profile, sizeof(profile), true);
 		printf("Sent SRAM.\n");
 	}
-	int bufferSize = 8;
+	int bufferSize = 20;
     u8 buffer[bufferSize];
 
 	buffer[0] = gb50Fps;
@@ -1017,6 +1022,7 @@ static void hostStartNetplay()
 	buffer[2] = gRespawnEnabled;
 	buffer[3] = gEnemyHPMultiplier;
 	buffer[4] = gEnemyDamageMultiplier;
+	memcpy(&buffer[5], gSkipFlag, sizeof(gSkipFlag));
 
     nifiSendPacket(NIFI_CMD_HOST_START_GAME, buffer, bufferSize, true);
 	nifiSetStatus(HOST_INGAME);

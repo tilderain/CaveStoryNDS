@@ -29,6 +29,8 @@
 #include "Debug.h"
 #include "Frame.h"
 
+#include "Flags.h"
+
 char magic1 = 'Y';
 char magic2 = 'O';
 char magic3 = 'B';
@@ -340,6 +342,8 @@ void handlePacketCommand(int command, u8* data) {
 				gRespawnEnabled = data[2];
 				gEnemyHPMultiplier = data[3];
 				gEnemyDamageMultiplier = data[4];
+
+				memcpy(&gSkipFlag, &data[5], sizeof(gSkipFlag));
 
 				printf("\ndebug enabled: %d\n", gDebug.bEnabled);
 				printf("50fps: %d\n", gb50Fps);
