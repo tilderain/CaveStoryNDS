@@ -295,6 +295,7 @@ BOOL StartTextScript(int no)
 	gTS.offsetY = 0;
 
 	gMC.shock = 0;
+	gMCP2.shock = 0;	
 
 	gTS.rcText.left = TEXT_LEFT;
 	gTS.rcText.top = WINDOW_HEIGHT - 56;
@@ -723,6 +724,7 @@ int TextScriptProc(void)
 					{
 						gTS.mode = 0;
 						gMC.cond &= ~1;
+						gMCP2.cond &= ~1;	
 						g_GameFlags |= 3;
 						gTS.face = 0;
 						bExit = TRUE;
@@ -888,12 +890,15 @@ int TextScriptProc(void)
 						g_GameFlags |= 1;
 						gMC.up = FALSE;
 						gMC.shock = 0;
+						gMCP2.up = FALSE;
+						gMCP2.shock = 0;						
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('P','R','I'))
 					{
 						g_GameFlags &= ~3;
 						gMC.shock = 0;
+						gMCP2.shock = 0;							
 						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('F','R','E'))
@@ -1551,7 +1556,7 @@ int TextScriptProc(void)
 			break;
 
 		case 7: // WAS
-			if ((gMC.flag & 8) == 0)
+			if (((gMC.flag | gMCP2.flag) & 8) == 0)
 				break;
 
 			gTS.mode = 1;
