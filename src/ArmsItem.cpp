@@ -286,19 +286,19 @@ void MoveCampCursor(void)
 	if (!gCampActive)
 	{
 		// Handle selected weapon
-		if (gKeyTrg & gKeyLeft)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyLeft)
 		{
 			--gSelectedArms;
 			bChange = TRUE;
 		}
 
-		if (gKeyTrg & gKeyRight)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyRight)
 		{
 			++gSelectedArms;
 			bChange = TRUE;
 		}
 
-		if (gKeyTrg & (gKeyUp | gKeyDown))
+		if ((gKeyTrg | gKeyTrgP2) & (gKeyUp | gKeyDown))
 		{
 			// If there are any items, we're changing to the items section, since the weapons section has only 1 row
 			if (item_num != 0)
@@ -317,7 +317,7 @@ void MoveCampCursor(void)
 	else
 	{
 		// Handle selected item
-		if (gKeyTrg & gKeyLeft)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyLeft)
 		{
 			if (gSelectedItem % gRowSize == 0)
 				gSelectedItem += gRowSize - 1;
@@ -327,7 +327,7 @@ void MoveCampCursor(void)
 			bChange = TRUE;
 		}
 
-		if (gKeyTrg & gKeyRight)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyRight)
 		{
 			if (gSelectedItem == item_num - 1)
 				gSelectedItem = (gSelectedItem / gRowSize) * gRowSize;	// Round down to multiple of 6
@@ -339,7 +339,7 @@ void MoveCampCursor(void)
 			bChange = TRUE;
 		}
 
-		if (gKeyTrg & gKeyUp)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyUp)
 		{
 			if (gSelectedItem / gRowSize == 0)
 				gCampActive = FALSE;	// We're on the first row, transition to weapons
@@ -349,7 +349,7 @@ void MoveCampCursor(void)
 			bChange = TRUE;
 		}
 
-		if (gKeyTrg & gKeyDown)
+		if ((gKeyTrg | gKeyTrgP2) & gKeyDown)
 		{
 			if (gSelectedItem / gRowSize == (item_num - 1) / gRowSize)
 				gCampActive = FALSE;	// We're on the last row, transition to weapons
@@ -362,7 +362,7 @@ void MoveCampCursor(void)
 		if (gSelectedItem >= item_num)
 			gSelectedItem = item_num - 1;	// Don't allow selecting a non-existing item
 
-		if (gCampActive && gKeyTrg & gKeyOk)
+		if (gCampActive && (gKeyTrg | gKeyTrgP2) & gKeyOk)
 			StartTextScript(6000 + gItemData[gSelectedItem].code);
 	}
 
@@ -616,7 +616,7 @@ int CampLoop(void)
 		// Check whether we're getting out of the loop
 		if (gCampActive)
 		{
-			if (g_GameFlags & GAME_FLAG_IS_CONTROL_ENABLED && gKeyTrg & (gKeyCancel | gKeyItem))
+			if (g_GameFlags & GAME_FLAG_IS_CONTROL_ENABLED && (gKeyTrg | gKeyTrgP2) & (gKeyCancel | gKeyItem))
 			{
 				StopTextScript();
 				break;
@@ -624,7 +624,7 @@ int CampLoop(void)
 		}
 		else
 		{
-			if (gKeyTrg & (gKeyOk | gKeyCancel | gKeyItem))
+			if ((gKeyTrg | gKeyTrgP2) & (gKeyOk | gKeyCancel | gKeyItem))
 			{
 				StopTextScript();
 				break;

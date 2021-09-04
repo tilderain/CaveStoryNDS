@@ -22,7 +22,6 @@ local multiplayer??
 		--teleport p to initator on MOV?
 		-on BSL
 		-on CMP
-	--inv 2p
 	--unsync change weapon?
 	--npc nearest mychar
 		---noc cam cur player
