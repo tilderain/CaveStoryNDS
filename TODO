@@ -22,6 +22,7 @@ local multiplayer??
 		--teleport p to initator on MOV?
 		-on BSL
 		-on CMP
+	--inv 2p
 	--unsync change weapon?
 	--npc nearest mychar
 		---noc cam cur player
@@ -29,8 +30,6 @@ local multiplayer??
 	--gmc equip
 		--other mycparam
 	--death health share?
-	--2p escape
-	--inv mychar
 	--move vector
 	--star 2p
 

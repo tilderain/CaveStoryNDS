@@ -556,7 +556,7 @@ int CampLoop(void)
 		GetTrg();
 
 		// Handle ESC
-		if (gKeyTrg & CEY_ESCAPE)
+		if ((gKeyTrg | gKeyTrgP2) & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{

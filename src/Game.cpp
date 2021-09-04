@@ -174,7 +174,7 @@ int ModeOpening(void)
 		GetTrg();
 
 		// Escape menu
-		if (gKey & CEY_ESCAPE)
+		if ((gKeyTrg | gKeyTrgP2) & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -425,7 +425,7 @@ int ModeTitle(void)
 			}
 		}
 
-		if (gKey & CEY_ESCAPE)
+		if ((gKeyTrg | gKeyTrgP2) & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
@@ -620,7 +620,7 @@ int ModeAction(void)
 			gKeyTrg = gKey = 0;
 
 		// Escape menu
-		if (gKey & CEY_ESCAPE)
+		if ((gKeyTrg | gKeyTrgP2) & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{

@@ -499,7 +499,7 @@ int Scene_DownIsland(int mode)
 		GetTrg();
 
 		// Escape menu
-		if (gKey & CEY_ESCAPE)
+		if ((gKeyTrg | gKeyTrgP2) & CEY_ESCAPE)
 		{
 			switch (Call_Escape())
 			{
