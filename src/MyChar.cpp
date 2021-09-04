@@ -997,7 +997,10 @@ void ActMyChar(BOOL bKey)
 	}
 	else if (gMC.exp_count != 0)
 	{
-		SetValueView(&gMC.x, &gMC.y, gMC.exp_count);
+		if(gCurMyChar == 0)
+			SetValueView(&gMC.x, &gMC.y, gMC.exp_count);
+		else
+			SetValueView(&gMCP2.x, &gMCP2.y, gMC.exp_count);
 		gMC.exp_count = 0;
 	}
 

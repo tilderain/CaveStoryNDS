@@ -2,6 +2,8 @@
 fix credit bitmapreload
 fix credit jpn caret zzz
 
+fix bk0
+
 move old libnds fifo sync code to here
 
 GActiveNpc -- memcpy instead of swap
@@ -26,11 +28,9 @@ local multiplayer??
 		--else things that operate directly on gMC
 	--gmc equip
 		--other mycparam
-	--valueview
 	--death health share?
 	--2p escape
 	--inv mychar
-	--armsenergyX
 	--move vector
 	--star 2p
 
@@ -41,6 +41,7 @@ Please note that the client does not write the profile to card (you can use one 
 -Moved input processing to beginning of frame, saving 1 frame of input lag.
 -Fixed bosses damage frames not appearing half the time.
 -Fix camera position in H**l ending event.
+-Tile 0 is no longer rendered.
 
 gzip fopen
 

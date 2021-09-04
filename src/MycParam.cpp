@@ -181,7 +181,11 @@ void DamageMyChar(int damage)
 	}
 
 	// Tell player how much damage was taken
-	SetValueView(&gMC.x, &gMC.y, -damage);
+	if(gCurMyChar == 0)
+		SetValueView(&gMC.x, &gMC.y, -damage);
+	else
+		SetValueView(&gMCP2.x, &gMCP2.y, -damage);
+	
 
 	// Death
 	if (gMC.life <= 0)
