@@ -163,7 +163,7 @@ void PutStage_Back(int fx, int fy)
 			int offset = (j * gMap.width) + i;
 			int atrb = GetAttribute(i, j);
 
-			if (atrb >= 0x20)
+			if (atrb >= 0x20 || atrb == 0)
 				continue;
 
 			// Draw tile
