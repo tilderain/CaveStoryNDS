@@ -46,6 +46,7 @@ typedef struct ITEM
 
 /// X coordinate for the weapons HUD section. Set it to 32 for the forward weapon rotation "animation", 0 for the reverse weapon rotation "animation" and 16 to immobilise it
 extern int gArmsEnergyX;
+extern int gArmsEnergyXP2;
 
 
 /// Currently selected weapon

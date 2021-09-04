@@ -254,31 +254,44 @@ void PutArmsEnergy(BOOL flash)
 	RECT rcLv = {80, 80, 96, 88};
 	RECT rcView = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 	RECT rcNone = {80, 48, 96, 56};
+	int gArmsEnergyXx;
+	if(gCurMyChar == 0)
+		gArmsEnergyXx = gArmsEnergyX;
+	else
+		gArmsEnergyXx = gArmsEnergyXP2;
+	
+	
 
-	if (gArmsEnergyX > 16)
-		gArmsEnergyX -= 2;
-	if (gArmsEnergyX < 16)
-		gArmsEnergyX += 2;
+	if (gArmsEnergyXx > 16)
+		gArmsEnergyXx -= 2;
+	if (gArmsEnergyXx < 16)
+		gArmsEnergyXx += 2;
+
+	if(gCurMyChar == 0)
+		gArmsEnergyX = gArmsEnergyXx;
+	else
+		gArmsEnergyXP2 = gArmsEnergyXx;
+	
 
 	// Draw max ammo
 	if (gArmsData[gSelectedArms].max_num)
 	{
-		PutNumber4(gArmsEnergyX + 32, 16, gArmsData[gSelectedArms].num, FALSE);
-		PutNumber4(gArmsEnergyX + 32, 24, gArmsData[gSelectedArms].max_num, FALSE);
+		PutNumber4(gArmsEnergyXx + 32, 16, gArmsData[gSelectedArms].num, FALSE);
+		PutNumber4(gArmsEnergyXx + 32, 24, gArmsData[gSelectedArms].max_num, FALSE);
 	}
 	else
 	{
-		PutBitmap3(&rcView, gArmsEnergyX + 48, 16, &rcNone, SURFACE_ID_TEXT_BOX);
-		PutBitmap3(&rcView, gArmsEnergyX + 48, 24, &rcNone, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, gArmsEnergyXx + 48, 16, &rcNone, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, gArmsEnergyXx + 48, 24, &rcNone, SURFACE_ID_TEXT_BOX);
 	}
 
 	// Draw experience and ammo
 	if (flash == TRUE && (gMC.shock / 2) % 2)
 		return;
 
-	PutBitmap3(&rcView, gArmsEnergyX + 32, 24, &rcPer, SURFACE_ID_TEXT_BOX);
-	PutBitmap3(&rcView, gArmsEnergyX, 32, &rcLv, SURFACE_ID_TEXT_BOX);
-	PutNumber4(gArmsEnergyX - 8, 32, gArmsData[gSelectedArms].level, FALSE);
+	PutBitmap3(&rcView, gArmsEnergyXx + 32, 24, &rcPer, SURFACE_ID_TEXT_BOX);
+	PutBitmap3(&rcView, gArmsEnergyXx, 32, &rcLv, SURFACE_ID_TEXT_BOX);
+	PutNumber4(gArmsEnergyXx - 8, 32, gArmsData[gSelectedArms].level, FALSE);
 
 	RECT rcExpBox = {0, 72, 40, 80};
 	RECT rcExpVal = {0, 80, 0, 88};
@@ -290,11 +303,11 @@ void PutArmsEnergy(BOOL flash)
 	int exp_now = gArmsData[gSelectedArms].exp;
 	int exp_next = gArmsLevelTable[arms_code].exp[lv];
 
-	PutBitmap3(&rcView, gArmsEnergyX + 24, 32, &rcExpBox, SURFACE_ID_TEXT_BOX);
+	PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpBox, SURFACE_ID_TEXT_BOX);
 
 	if (lv == 2 && gArmsData[gSelectedArms].exp == gArmsLevelTable[arms_code].exp[lv])
 	{
-		PutBitmap3(&rcView, gArmsEnergyX + 24, 32, &rcExpMax, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpMax, SURFACE_ID_TEXT_BOX);
 	}
 	else
 	{
@@ -303,11 +316,11 @@ void PutArmsEnergy(BOOL flash)
 		else
 			rcExpVal.right = 0;
 
-		PutBitmap3(&rcView, gArmsEnergyX + 24, 32, &rcExpVal, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpVal, SURFACE_ID_TEXT_BOX);
 	}
 
 	if (gMC.exp_wait && ((add_flash++ / 2) % 2))
-		PutBitmap3(&rcView, gArmsEnergyX + 24, 32, &rcExpFlash, SURFACE_ID_TEXT_BOX);
+		PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpFlash, SURFACE_ID_TEXT_BOX);
 }
 
 void PutActiveArmsList(void)
@@ -315,6 +328,12 @@ void PutActiveArmsList(void)
 	int x;
 	int a;
 	RECT rect = {0, 0, 0, 16};
+
+	int gArmsEnergyXx;
+	if(gCurMyChar == 0)
+		gArmsEnergyXx = gArmsEnergyX;
+	else
+		gArmsEnergyXx = gArmsEnergyXP2;
 
 	int arms_num = 0;
 	while (gArmsData[arms_num].code != 0)
@@ -326,7 +345,7 @@ void PutActiveArmsList(void)
 	for (a = 0; a < arms_num; ++a)
 	{
 		// Get X position to draw at
-		x = ((a - gSelectedArms) * 16) + gArmsEnergyX;
+		x = ((a - gSelectedArms) * 16) + gArmsEnergyXx;
 
 		if (x < 8)
 			x += 48 + (arms_num * 16);

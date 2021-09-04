@@ -80,6 +80,7 @@ int gRowSize = 7;
 static BOOL gCampActive;
 
 int gArmsEnergyX = 16;
+int gArmsEnergyXP2 = 16;
 
 bool gInCamp = false;
 
@@ -90,6 +91,7 @@ void ClearArmsData(void)
 	gSelectedArmsP2 = 0;
 #endif
 	gArmsEnergyX = 32;
+	gArmsEnergyXP2 = 32;	
 	memset(gArmsData, 0, sizeof(gArmsData));
 	memset(gArmsDataP1, 0, sizeof(gArmsDataP1));
 	memset(gArmsDataP2, 0, sizeof(gArmsDataP2));
@@ -638,6 +640,7 @@ int CampLoop(void)
 	// Resume original script
 	LoadTextScript_Stage(old_script_path);
 	gArmsEnergyX = 32; // Displays weapon rotation animation in case the weapon was changed
+	gArmsEnergyXP2 = 32;
 	return enum_ESCRETURN_continue;	// Go to game
 }
 
@@ -732,7 +735,12 @@ int RotationArms(void)
 
 		
 
-	gArmsEnergyX = 32;
+	if(gCurMyChar == 0)
+		gArmsEnergyX = 32;
+	else
+		gArmsEnergyXP2 = 32;
+	
+	
 	PlaySoundObject(SND_SWITCH_WEAPON, 1);
 
 	return gArmsData[gSelectedArms].code;
@@ -769,7 +777,11 @@ int RotationArmsRev(void)
 		--gSelectedArms;
 	}
 
-	gArmsEnergyX = 0;
+	if(gCurMyChar == 0)
+		gArmsEnergyX = 0;
+	else
+		gArmsEnergyXP2 = 0;
+	
 	PlaySoundObject(SND_SWITCH_WEAPON, 1);
 
 	return gArmsData[gSelectedArms].code;
