@@ -749,7 +749,7 @@ int TextScriptProc(void)
 						AddMaxLifeMyChar(z);
 						if(SwapMyChar())
 						{
-							AddLifeMyChar(x);
+							AddMaxLifeMyChar(z);
 							SwapMyChar();
 						}
 						gTS.p_read += 8;
