@@ -61,6 +61,8 @@ TEXT_SCRIPT gTS;
 
 char text[4][0x40];
 
+char gTextScriptInitiator = 0;
+
 RECT gRect_line = {0, 0, 216, 16};
 
 #ifdef FIX_BUGS
@@ -278,7 +280,7 @@ int GetTextScriptNo(int a)
 }
 
 // Start TSC event
-BOOL StartTextScript(int no)
+BOOL StartTextScript(int no, int initiator)
 {
 	//int i;
 
@@ -293,6 +295,7 @@ BOOL StartTextScript(int no)
 	gTS.face = 0;
 	gTS.item = 0;
 	gTS.offsetY = 0;
+	gTextScriptInitiator = initiator;
 
 	gMC.shock = 0;
 	gMCP2.shock = 0;	
@@ -1289,6 +1292,16 @@ int TextScriptProc(void)
 						else
 							StartBossLife2();
 
+						if(gTextScriptInitiator == 0)
+						{
+							gMCP2.x = gMC.x; gMCP2.y = gMC.y;
+							
+						}
+						else
+						{
+							gMC.x = gMCP2.x; gMC.y = gMCP2.y;
+						}
+						
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('M','Y','D'))

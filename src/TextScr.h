@@ -8,6 +8,9 @@
 #pragma once
 
 #include "WindowsWrapper.h"
+#include "MyChar.h"
+
+extern char gTextScriptInitiator;
 
 typedef struct TEXT_SCRIPT
 {
@@ -68,7 +71,7 @@ void EncryptionBinaryData2(unsigned char *pData, long size);
 BOOL LoadTextScript2(const char *name);
 BOOL LoadTextScript_Stage(const char *name);
 void GetTextScriptPath(char *path);
-BOOL StartTextScript(int no);
+BOOL StartTextScript(int no, int initiator=gCurMyChar);
 void StopTextScript(void);
 void PutTextScript(void);
 int TextScriptProc(void);

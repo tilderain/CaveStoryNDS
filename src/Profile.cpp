@@ -34,6 +34,8 @@
 #include "Multi.h"
 #include "Pause.h"
 
+#include "TextScr.h"
+
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
 PROFILE profile;
@@ -69,6 +71,8 @@ BOOL SaveProfile(const char *name)
 	else
 		sprintf(path, "%s/%s", gModulePath, gDefaultName);
 
+	if(gTextScriptInitiator != 0)
+		SwapMyChar();
 	// Set up profile
 	memset(&profile, 0, sizeof(PROFILE));
 	memcpy(profile.code, gProfileCode, sizeof(profile.code));
@@ -92,6 +96,9 @@ BOOL SaveProfile(const char *name)
 	memcpy(profile.permit_mapping, gMapping, sizeof(profile.permit_mapping));
 	memcpy(profile.flags, gFlagNPC, sizeof(profile.flags));
 
+	if(gTextScriptInitiator != 0)
+		SwapMyChar();
+		
 	if(nifiIsClient()) return TRUE;
 	// Open file
 	fp = fopen(path, "wb");

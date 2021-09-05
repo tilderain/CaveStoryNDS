@@ -278,13 +278,10 @@ void SetFrameTargetMyChar(int wait)
 	gFrame.tgt_x = &gMC.tgt_x;
 	gFrame.tgt_y = &gMC.tgt_y;
 	gFrame.wait = wait;
-	if(nifiIsLinked())
+	if(nifiIsClient())
 	{
-		if(nifiIsClient())
-		{
-			gFrame.tgt_x = &gMCP2.tgt_x;
-			gFrame.tgt_y = &gMCP2.tgt_y;
-		}
+		gFrame.tgt_x = &gMCP2.tgt_x;
+		gFrame.tgt_y = &gMCP2.tgt_y;
 	}
 }
 

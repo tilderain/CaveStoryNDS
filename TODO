@@ -16,12 +16,6 @@ fastforward on R
 vram viewer?
 
 local multiplayer??
-	--tsc initiator
-		--save profile pos
-	--tsc p2 down triggering
-		--teleport p to initator on MOV?
-		-on BSL
-		-on CMP
 	--unsync change weapon?
 	--npc nearest mychar
 		---noc cam cur player
