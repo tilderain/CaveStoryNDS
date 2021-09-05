@@ -1329,6 +1329,12 @@ int TextScriptProc(void)
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
 						BackStepMyChar(z);
+						if(SwapMyChar())
+						{
+							BackStepMyChar(z);
+							SwapMyChar();
+						}
+
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('M','M','0'))
