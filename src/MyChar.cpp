@@ -1072,6 +1072,7 @@ void MoveMyChar(int x, int y)
 void ZeroMyCharXMove(void)
 {
 	gMC.xm = 0;
+	gMCP2.xm = 0;
 }
 
 int GetUnitMyChar(void)
@@ -1118,6 +1119,7 @@ void SetMyCharDirect(unsigned char dir)
 void ChangeMyUnit(unsigned char a)
 {
 	gMC.unit = a;
+	gMCP2.unit = a;
 }
 
 void PitMyChar(void)
@@ -1131,6 +1133,10 @@ void EquipItem(int flag, BOOL b)
 		gMC.equip |= flag;
 	else
 		gMC.equip &= ~flag;
+	if (b)
+		gMCP2.equip |= flag;
+	else
+		gMCP2.equip &= ~flag;
 }
 
 void ResetCheck(void)

@@ -205,6 +205,9 @@ void ZeroArmsEnergy_All(void)
 	{
 		gArmsData[a].level = 1;
 		gArmsData[a].exp = 0;
+
+		gArmsDataP2[a].level = 1;
+		gArmsDataP2[a].exp = 0;
 	}
 }
 

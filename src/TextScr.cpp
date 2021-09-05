@@ -736,12 +736,22 @@ int TextScriptProc(void)
 					{
 						x = GetTextScriptNo(gTS.p_read + 4);
 						AddLifeMyChar(x);
+						if(SwapMyChar())
+						{
+							AddLifeMyChar(x);
+							SwapMyChar();
+						}
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('M','L','+'))
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
 						AddMaxLifeMyChar(z);
+						if(SwapMyChar())
+						{
+							AddLifeMyChar(x);
+							SwapMyChar();
+						}
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('A','E','+'))
@@ -1308,6 +1318,11 @@ int TextScriptProc(void)
 					{
 						z = GetTextScriptNo(gTS.p_read + 4);
 						SetMyCharDirect(z);
+						if(SwapMyChar())
+						{
+							SetMyCharDirect(z);
+							SwapMyChar();
+						}
 						gTS.p_read += 8;
 					}
 					else if (IS_COMMAND('M','Y','B'))

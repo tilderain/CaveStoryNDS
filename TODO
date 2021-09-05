@@ -19,11 +19,9 @@ local multiplayer??
 	--npc nearest mychar
 		---noc cam cur player
 		--else things that operate directly on gMC
-	--gmc equip
-		--other mycparam
+	--npc damagemychar
 	--death health share?
 	--move vector
-	--star 2p
 
 	--blink wifi
 thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
