@@ -16,7 +16,6 @@ fastforward on R
 vram viewer?
 
 local multiplayer??
-	--unsync change weapon?
 	--npc nearest mychar
 		---noc cam cur player
 		--else things that operate directly on gMC
@@ -25,7 +24,8 @@ local multiplayer??
 	--death health share?
 	--move vector
 	--star 2p
-
+	--spur
+	
 	--blink wifi
 thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
 If you experience lag, try selecting another channel.

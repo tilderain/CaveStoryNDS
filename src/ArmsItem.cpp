@@ -288,13 +288,20 @@ void MoveCampCursor(void)
 		// Handle selected weapon
 		if ((gKeyTrg | gKeyTrgP2) & gKeyLeft)
 		{
-			--gSelectedArms;
+			if(gTextScriptInitiator == 0)
+				--gSelectedArms;
+			else
+				--gSelectedArmsP2;
+			
 			bChange = TRUE;
 		}
 
 		if ((gKeyTrg | gKeyTrgP2) & gKeyRight)
 		{
-			++gSelectedArms;
+			if(gTextScriptInitiator == 0)
+				++gSelectedArms;
+			else
+				++gSelectedArmsP2;
 			bChange = TRUE;
 		}
 
@@ -308,11 +315,24 @@ void MoveCampCursor(void)
 		}
 
 		// Loop around gSelectedArms if needed
-		if (gSelectedArms < 0)
-			gSelectedArms = arms_num - 1;
 
-		if (gSelectedArms > arms_num - 1)
-			gSelectedArms = 0;
+		if(gTextScriptInitiator == 0)
+		{
+			if (gSelectedArms < 0)
+				gSelectedArms = arms_num - 1;
+
+			if (gSelectedArms > arms_num - 1)
+				gSelectedArms = 0;
+		}
+		else
+		{
+			if (gSelectedArmsP2 < 0)
+				gSelectedArmsP2 = arms_num - 1;
+
+			if (gSelectedArmsP2 > arms_num - 1)
+				gSelectedArmsP2 = 0;
+		}
+		
 	}
 	else
 	{
@@ -363,7 +383,7 @@ void MoveCampCursor(void)
 			gSelectedItem = item_num - 1;	// Don't allow selecting a non-existing item
 
 		if (gCampActive && (gKeyTrg | gKeyTrgP2) & gKeyOk)
-			StartTextScript(6000 + gItemData[gSelectedItem].code);
+			StartTextScript(6000 + gItemData[gSelectedItem].code, gTextScriptInitiator);
 	}
 
 	if (bChange)
@@ -374,9 +394,14 @@ void MoveCampCursor(void)
 			PlaySoundObject(SND_SWITCH_WEAPON, 1);
 
 			if (arms_num != 0)
-				StartTextScript(1000 + gArmsData[gSelectedArms].code);
+			{
+				if(gTextScriptInitiator == 0)
+					StartTextScript(1000 + gArmsData[gSelectedArms].code, gTextScriptInitiator);
+				else
+					StartTextScript(1000 + gArmsData[gSelectedArmsP2].code, gTextScriptInitiator);
+			}
 			else
-				StartTextScript(1000);
+				StartTextScript(1000, gTextScriptInitiator);
 		}
 		else
 		{
@@ -384,9 +409,9 @@ void MoveCampCursor(void)
 			PlaySoundObject(SND_YES_NO_CHANGE_CHOICE, 1);
 
 			if (item_num != 0)
-				StartTextScript(5000 + gItemData[gSelectedItem].code);
+				StartTextScript(5000 + gItemData[gSelectedItem].code, gTextScriptInitiator);
 			else
-				StartTextScript(5000);
+				StartTextScript(5000, gTextScriptInitiator);
 		}
 	}
 }
@@ -464,12 +489,21 @@ void PutCampObject(void)
 
 	// Draw arms cursor
 	++flash;
-
-	if (gCampActive == FALSE)
-		PutBitmap3(&rcView, (gSelectedArms * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[(flash / 2) % 2], SURFACE_ID_TEXT_BOX);
+	if(gTextScriptInitiator == 0)
+	{
+		if (gCampActive == FALSE)
+			PutBitmap3(&rcView, (gSelectedArms * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[(flash / 2) % 2], SURFACE_ID_TEXT_BOX);
+		else	
+			PutBitmap3(&rcView, (gSelectedArms * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[1], SURFACE_ID_TEXT_BOX);
+	}
 	else
-		PutBitmap3(&rcView, (gSelectedArms * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[1], SURFACE_ID_TEXT_BOX);
-
+	{
+		if (gCampActive == FALSE)
+			PutBitmap3(&rcView, (gSelectedArmsP2 * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[(flash / 2) % 2], SURFACE_ID_TEXT_BOX);
+		else
+			PutBitmap3(&rcView, (gSelectedArmsP2 * 40) + (WINDOW_WIDTH / 2) - 112, height3, &rcCur1[1], SURFACE_ID_TEXT_BOX);
+	}
+	
 	// Draw weapons
 	for (i = 0; i < ARMS_MAX; ++i)
 	{
@@ -541,15 +575,18 @@ int CampLoop(void)
 	gCampActive = FALSE;
 	gSelectedItem = 0;
 
+	if(gTextScriptInitiator != 0)
+		gSelectedArms = gSelectedArmsP2;
+
 	// Compute current amount of weapons
 	int arms_num = 0;
 	while (gArmsData[arms_num].code != 0)
 		++arms_num;
 
 	if (arms_num != 0)
-		StartTextScript(1000 + gArmsData[gSelectedArms].code);
+		StartTextScript(1000 + gArmsData[gSelectedArms].code,gTextScriptInitiator);
 	else
-		StartTextScript(5000 + gItemData[gSelectedItem].code);
+		StartTextScript(5000 + gItemData[gSelectedItem].code,gTextScriptInitiator);
 
 	for (;;)
 	{

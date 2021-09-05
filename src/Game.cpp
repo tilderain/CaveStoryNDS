@@ -761,6 +761,10 @@ int ModeAction(void)
 			// Open inventory
 			if ((gKeyTrg | gKeyTrgP2) & gKeyItem)
 			{
+				if(gKeyTrg & gKeyItem)
+					gTextScriptInitiator = 0;
+				if(gKeyTrgP2 & gKeyItem)
+					gTextScriptInitiator = 1;
 				BackupSurface(SURFACE_ID_SCREEN_GRAB, &grcGame);
 				gInCamp = true;
 				switch (CampLoop())
