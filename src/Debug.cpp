@@ -854,7 +854,11 @@ static int Callback_Level(OptionsMenu *parent_menu, size_t this_option, Callback
 			}
 
 			if(action == ACTION_OK)
+			{
 				gArmsData[gSelectedArms].level = parent_menu->options[this_option].value;
+				gArmsDataP2[gSelectedArmsP2].level = parent_menu->options[this_option].value;
+			}
+
 
 			itoa(parent_menu->options[this_option].value, parent_menu->options[this_option].value_string, 10);
 

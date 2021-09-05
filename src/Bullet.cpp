@@ -1537,9 +1537,9 @@ void ActBullet_Sword3(BULLET *bul)
 				PlaySoundObject(106, 1);
 
 				if (++bul->count1 % 2)
-					SetBullet(23, bul->x, bul->y, 0);
+					SetBullet(23, bul->x, bul->y, 0, bul->owner);
 				else
-					SetBullet(23, bul->x, bul->y, 2);
+					SetBullet(23, bul->x, bul->y, 2, bul->owner);
 			}
 
 			if (++bul->count1 == 5)
@@ -1564,9 +1564,9 @@ void ActBullet_Sword3(BULLET *bul)
 				PlaySoundObject(106, 1);
 
 				if (Random(0, 1) % 2)
-					SetBullet(23, bul->x + (Random(-0x40, 0x40) * 0x200), bul->y + (Random(-0x40, 0x40) * 0x200), 0);
+					SetBullet(23, bul->x + (Random(-0x40, 0x40) * 0x200), bul->y + (Random(-0x40, 0x40) * 0x200), 0, bul->owner);
 				else
-					SetBullet(23, bul->x + (Random(-0x40, 0x40) * 0x200), bul->y + (Random(-0x40, 0x40) * 0x200), 2);
+					SetBullet(23, bul->x + (Random(-0x40, 0x40) * 0x200), bul->y + (Random(-0x40, 0x40) * 0x200), 2, bul->owner);
 			}
 
 			if (bul->act_wait > 50)
@@ -2153,7 +2153,7 @@ void ActBullet_Spur(BULLET *bul, int level)
 			break;
 	}
 
-	SetBullet(39 + level, bul->x, bul->y, bul->direct);
+	SetBullet(39 + level, bul->x, bul->y, bul->direct, bul->owner);
 }
 
 void ActBullet_SpurTail(BULLET *bul, int level)

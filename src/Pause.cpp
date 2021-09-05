@@ -157,10 +157,10 @@ int EnterOptionsMenuIngame(OptionsMenu *options_menu)
 					|| gKeyTrgP2 & gKeyLeft || (gKeyP2 & gKeyLeft && autoRepeatTimer++ > 20))
 					action = ACTION_LEFT;
 				else if (gKeyTrg & gKeyRight || (gKey & gKeyRight && autoRepeatTimer++ > 20)\
-					|| gKeyTrgP2 & gKeyRight || (gKeyTrgP2 & gKeyRight && autoRepeatTimer++ > 20))
+					|| gKeyTrgP2 & gKeyRight || (gKeyP2 & gKeyRight && autoRepeatTimer++ > 20))
 					action = ACTION_RIGHT;
 
-				if((gKey & gKeyLeft || gKey & gKeyRight) || (gKeyP2 & gKeyLeft || gKeyP2 & gKeyRight))
+				if(gKey & gKeyLeft || gKey & gKeyRight || gKeyP2 & gKeyLeft || gKeyP2 & gKeyRight)
 				{}
 				else
 				{autoRepeatTimer = 0;}
@@ -1031,7 +1031,7 @@ static void hostStartNetplay()
 	gCounter = 0;
 	msvc_srand(0);
 	printf("Host: starting netplay\n");
-	
+
 	ResetDebugOptions();
 }
 

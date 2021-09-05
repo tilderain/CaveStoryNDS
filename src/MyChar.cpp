@@ -25,6 +25,8 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+#include "Shoot.h"
+
 #include "nifi.h"
 
 MYCHAR gMC;
@@ -44,6 +46,7 @@ bool SwapMyChar(void)
 		gKeyTrgP1 = gKeyTrg;
 		gKeyP1 = gKey;
 		memcpy(gArmsDataP1, gArmsData, sizeof(gArmsData));
+
 		gCurMyChar = 1;
 		gMC = gMCP2;
 		gKeyTrg = gKeyTrgP2;
@@ -58,6 +61,7 @@ bool SwapMyChar(void)
 		gKeyP2 = gKey;
 		gSelectedArmsP2 = gSelectedArms;
 		memcpy(gArmsDataP2, gArmsData, sizeof(gArmsData));
+
 		gCurMyChar = 0;
 		gMC = gMCP1;
 		gKeyTrg = gKeyTrgP1;
