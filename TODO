@@ -19,22 +19,14 @@ spatial partitioning
 
 gzip fopen
 
-local multiplayer??
-	--update code for jp/ending
-	--ver 0.3
-	--restore intro scr
-	--disable console output
+synchronize org timer on hang?
 
-	--blink wifi
-Local multiplayer is here! Explore the caves with a friend over wireless.
-Thanks to drenn1's wonderful Nifi code from GameYob, and cotodevel NesDS
-If you experience lag, try selecting another channel.
-Please note that the client does not write the profile to the SD card (you can use one flashcart to play with both DSes).
-Take care not to fire the Spur in a big area.
--Moved input processing to beginning of frame, saving 1 frame of input lag.
--Fixed bosses damage frames not appearing half the time.
--Fix camera position in H**l ending event.
--Tile 0 is no longer rendered.
+make wifi blink better
+
+
+3D mode
+
+
 
 
 

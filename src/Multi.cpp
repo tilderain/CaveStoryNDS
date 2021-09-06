@@ -34,10 +34,17 @@
 
 #include "Flags.h"
 
-char magic1 = 'Y';
-char magic2 = 'O';
-char magic3 = 'B';
-char magic4 = 'P';
+#ifndef JAPANESE
+char magic1 = 'C';
+char magic2 = 'D';
+char magic3 = 'E';
+char magic4 = '1';
+#else
+char magic1 = 'C';
+char magic2 = 'D';
+char magic3 = 'J';
+char magic4 = '1';
+#endif
 
 void nifiLinkTypeMenu();
 void nifiHostMenu();

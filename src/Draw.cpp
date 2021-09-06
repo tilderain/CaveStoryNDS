@@ -784,7 +784,7 @@ BOOL StartDirectDraw()
 	videoSetModeSub( MODE_0_2D  );
 	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
 	scanKeys();
-	if(keysHeld() & KEY_SELECT || true)
+	if(keysHeld() & KEY_SELECT)
 	{
 		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
 		gConsoleInited = TRUE;

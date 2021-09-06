@@ -1,4 +1,4 @@
-Cave Story DS homebrew release v0.2 by rain - play Cave Story on your DS after 15 years
+Cave Story DS homebrew release v0.3 by rain - play Cave Story on your DS after 15 years
 
 Controls:
 	Press L+R+Start to access the escape menu.
@@ -20,7 +20,7 @@ Additional notes
 
 Known issues:
 	The game will rarely crash when closing the lid.
-	The game will slow down when hitting a missile in the Plantation and Sand Zone.
+	The game will slow down when hitting a missile or using the Spur in the Plantation and Sand Zone.
 	There may be a loud noise during stage transition.
 
 Thanks to:
@@ -34,13 +34,25 @@ Thanks to:
 	gl2D
 
 	Drenn1- wifi code
-	cotodevel- wifi code
+	huiminghao- wifi code
 
 	Ravenworks- Inspiring the port
 
 	Pixel
 
 Changelog:
+v0.3:
+	Local multiplayer is here! Explore the caves with a friend over wireless.
+	Thanks to Drenn1 and huiminghao's wonderful Nifi code from GameYob and NesDS respectively.
+	If you experience lag, try selecting another channel.
+	Note that the client will not write the profile to the SD card during netplay
+	(so you can take out the flashcart after loading on one console, and put it in the other to play with only one flashcart for both DSes).
+	Take care not to fire the Spur in a big area.
+
+	-Moved input processing to beginning of frame, saving 1 frame of input lag.
+	-Fixed bosses damage frames not appearing half the time.
+	-Fix camera position in H**l ending event.
+	-Tile 0 is no longer rendered.
 v0.2:
 	-Japanese language support!
 	-Reduced filesize, so it can run on more flashcarts. (ADPCM sound with waveconv.exe)
