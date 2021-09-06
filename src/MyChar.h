@@ -66,6 +66,7 @@ typedef struct MYCHAR
 	signed char ques;   // Same for this variable as well
 	signed char boost_sw;
 	int boost_cnt;
+	int respawnTimer;
 } MYCHAR;
 
 extern MYCHAR gMC;

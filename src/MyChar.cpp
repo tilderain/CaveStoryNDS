@@ -32,6 +32,8 @@
 
 #include "Multi.h"
 
+#include "Frame.h"
+
 MYCHAR gMC;
 MYCHAR gMCP1;
 MYCHAR gMCP2;
@@ -1010,14 +1012,44 @@ void AirProcess(void)
 				else
 				{
 					// Drown
-					StartTextScript(41);
+					if(!nifiIsLinked() || nifiIsLinked() && !gRespawnEnabled)
+					{
+						StartTextScript(41);
 
-					if (gMC.direct == 0)
-						SetCaret(gMC.x, gMC.y, 8, 0);
+						if (gMC.direct == 0)
+							SetCaret(gMC.x, gMC.y, 8, 0);
+						else
+							SetCaret(gMC.x, gMC.y, 8, 2);
+
+						gMC.cond &= ~0x80;
+					}
 					else
-						SetCaret(gMC.x, gMC.y, 8, 2);
+					{
+						if(gCurMyChar == 0 && gMCP2.respawnTimer)
+						{
+							StartTextScript(41);
 
-					gMC.cond &= ~0x80;
+							if (gMC.direct == 0)
+								SetCaret(gMC.x, gMC.y, 8, 0);
+							else
+								SetCaret(gMC.x, gMC.y, 8, 2);
+						}
+						else if(gCurMyChar==1 && gMCP1.respawnTimer)
+						{
+							StartTextScript(41);
+
+							if (gMC.direct == 0)
+								SetCaret(gMC.x, gMC.y, 8, 0);
+							else
+								SetCaret(gMC.x, gMC.y, 8, 2);
+						}
+						else
+						{
+							gMC.respawnTimer = 120;
+						}
+						gMC.cond &= ~0x80;
+					}
+					
 				}
 			}
 		}
@@ -1036,6 +1068,67 @@ void AirProcess(void)
 
 void ActMyChar(BOOL bKey)
 {
+	if(gMC.respawnTimer > 0)
+	{
+		gMC.respawnTimer--;
+		if(gMC.respawnTimer==1)
+		{
+			if(gCurMyChar==0)
+			{
+				gMC.x = gMCP2.x;
+				gMC.y = gMCP2.y;
+				if(gMCP2.life <= 1)
+				{
+					gMC.respawnTimer++;
+					if(nifiIsHost())
+					{
+						gFrame.x = gMCP2.x - (WINDOW_WIDTH * 0x200 / 2);
+						gFrame.y = gMCP2.y - (WINDOW_HEIGHT * 0x200 / 2);
+					}
+				}
+
+		
+			}
+			else
+			{
+				gMC.x = gMCP1.x;
+				gMC.y = gMCP1.y;
+				if(gMCP1.life <= 1)
+				{
+					gMC.respawnTimer++;
+					if(nifiIsClient())
+					{
+						gFrame.x = gMCP1.x - (WINDOW_WIDTH * 0x200 / 2);
+						gFrame.y = gMCP1.y - (WINDOW_HEIGHT * 0x200 / 2);
+					}
+
+				}
+
+			}
+
+		}
+		if(gMC.respawnTimer==0)
+		{
+			gMC.shock = 150;
+			gMC.cond = 0x80;
+			gMC.air = 1000;
+			if(gCurMyChar==0)
+			{
+				gMC.x = gMCP2.x;
+				gMC.y = gMCP2.y;
+				gMC.life = gMCP2.life / 2;
+				gMCP2.life /= 2;
+			}
+			else
+			{
+				gMC.x = gMCP1.x;
+				gMC.y = gMCP1.y;
+				gMC.life = gMCP1.life / 2;
+				gMCP1.life /= 2;
+			}
+			
+		}
+	}
 	if (!(gMC.cond & 0x80))
 		return;
 

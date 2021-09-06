@@ -20,9 +20,10 @@ spatial partitioning
 gzip fopen
 
 local multiplayer??
-	--death health share?
 	--update code for jp/ending
 	--ver 0.3
+	--restore intro scr
+	--disable console output
 
 	--blink wifi
 Local multiplayer is here! Explore the caves with a friend over wireless.

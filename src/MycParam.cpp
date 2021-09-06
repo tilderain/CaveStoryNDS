@@ -193,7 +193,24 @@ void DamageMyChar(int damage)
 		PlaySoundObject(17, 1);
 		gMC.cond = 0;
 		SetDestroyNpChar(gMC.x, gMC.y, 0x1400, 0x40);
-		StartTextScript(40);
+		if(!nifiIsLinked() || nifiIsLinked() && !gRespawnEnabled)
+			StartTextScript(40);
+		else
+		{
+			if(gCurMyChar == 0 && gMCP2.respawnTimer)
+			{
+				StartTextScript(40);
+			}
+			else if(gCurMyChar==1 && gMCP1.respawnTimer)
+			{
+				StartTextScript(40);
+			}
+			else
+			{
+				gMC.respawnTimer = 120;
+			}
+		}
+		
 	}
 }
 
