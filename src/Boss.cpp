@@ -31,6 +31,10 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+#include "nifi.h"
+#include "Multi.h"
+#include "math.h"
+
 NPCHAR gBoss[BOSS_MAX];
 
 void InitBossChar(int code)
@@ -131,7 +135,23 @@ void HitBossBullet(void)
 					else
 						bos_ = bos;
 
-					gBoss[bos_].life -= gBul[bul].damage;
+					if(!nifiIsLinked() || gEnemyHPMultiplier == 0)
+						gBoss[bos_].life -= gBul[bul].damage;
+					else
+					{
+						float dmg = (float)gBul[bul].damage;
+						if(gEnemyHPMultiplier == 1) dmg *= 0.6666666666666; //1.5x hp
+						if(gEnemyHPMultiplier == 2) dmg *= 0.5; //2.0x
+						if(gEnemyHPMultiplier == 3) dmg *= 0.4; //2.5x hp
+						if(gEnemyHPMultiplier == 4) dmg *= 0.3333333333333; //3.0x hp
+
+						float fracpart, intpart;
+						fracpart = modf(gBoss[bos_].life_part + dmg, &intpart);
+						gBoss[bos_].life -= int(intpart);
+						gBoss[bos_].life_part = fracpart;
+
+					}
+
 
 					if (gBoss[bos_].life < 1)
 					{
