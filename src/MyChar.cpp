@@ -28,12 +28,55 @@
 #include "Shoot.h"
 
 #include "nifi.h"
+#include "math.h"
+
+#include "Multi.h"
 
 MYCHAR gMC;
 MYCHAR gMCP1;
 MYCHAR gMCP2;
 
 int gCurMyChar = 0;
+
+int cache_x = 0;
+int cache_y = 0;
+int prev_ret = 0;
+
+MYCHAR* GetNearestMyChar(int x, int y)
+{
+	if(!nifiIsLinkedInline()) return &gMC;
+
+	if(x == cache_x && y == cache_y)
+	{
+		if(prev_ret == 0) return &gMC;
+		return &gMCP2;
+	}
+	int p1 = abs(x - gMC.x) + abs(y - gMC.y);
+	int p2 = abs(x - gMCP2.x) + abs(y - gMCP2.y);
+	//printf("%d %d\n", p1, p2);
+	cache_x = x; cache_y = y;
+	if(p1 < p2)	{prev_ret = 0; return &gMC;};
+	prev_ret = 1;
+	return &gMCP2;
+}
+
+int GetNearestMyCharNo(int x, int y)
+{
+	if(!nifiIsLinked()) return 0;
+
+	int p1 = abs(x - gMC.x) + abs(y - gMC.y);
+	int p2 = abs(x - gMCP2.x) + abs(y - gMCP2.y);
+	if(p1 < p2) return 0;
+	return 1;
+}
+
+MYCHAR* GetMyCharNo(int no)
+{
+	if(!nifiIsLinked()) return &gMC;
+
+	if (no == 0) return &gMC;
+	return &gMCP2;
+}
 
 bool SwapMyChar(void)
 {
@@ -129,6 +172,10 @@ void InitMyChar(void)
 	gMCP2.unit = 0;
 	
 	gCurMyChar = 0;
+
+	cache_x = 0;
+	cache_y = 0;
+	prev_ret = 0;
 }
 
 void AnimationMyChar(BOOL bKey)

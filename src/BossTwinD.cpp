@@ -42,7 +42,7 @@ static void ActBossCharT_DragonBody(NPCHAR *npc)
 			npc->y += npc->pNpc->y + (GetSin(deg) * npc->pNpc->tgt_y);
 			// Fallthrough
 		case 10:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -57,7 +57,7 @@ static void ActBossCharT_DragonBody(NPCHAR *npc)
 			npc->x += (npc->tgt_x - npc->x) / 8;
 			npc->y += (npc->tgt_y - npc->y) / 8;
 
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -188,7 +188,7 @@ static void ActBossCharT_DragonHead(NPCHAR *npc)
 
 			if (npc->act_wait % 8 == 1)
 			{
-				deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+				deg = GetArktan(npc->x - GetNearestMyChar(npc->x, npc->y)->x, npc->y - GetNearestMyChar(npc->x, npc->y)->y);
 				deg += (unsigned char)Random(-6, 6);
 				ym = GetSin(deg);
 				xm = GetCos(deg);
@@ -237,7 +237,7 @@ static void ActBossCharT_DragonHead(NPCHAR *npc)
 
 			if (npc->act_wait > 20 && npc->act_wait % 32 == 1)
 			{
-				deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+				deg = GetArktan(npc->x - GetNearestMyChar(npc->x, npc->y)->x, npc->y - GetNearestMyChar(npc->x, npc->y)->y);
 				deg += (unsigned char)Random(-6, 6);
 				ym = GetSin(deg);
 				xm = GetCos(deg);

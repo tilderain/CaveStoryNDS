@@ -262,7 +262,7 @@ void ActNpc104(NPCHAR *npc)
 		if (npc->shock)
 			bJump = TRUE;
 
-		if (npc->x < gMC.x - (160 * 0x200) || npc->x > gMC.x + (160 * 0x200) || npc->y < gMC.y - (64 * 0x200) || npc->y > gMC.y + (64 * 0x200))
+		if (npc->x < GetNearestMyChar(npc->x, npc->y)->x - (160 * 0x200) || npc->x > GetNearestMyChar(npc->x, npc->y)->x + (160 * 0x200) || npc->y < GetNearestMyChar(npc->x, npc->y)->y - (64 * 0x200) || npc->y > GetNearestMyChar(npc->x, npc->y)->y + (64 * 0x200))
 		{
 			// This blank space is needed for the function to produce the same assembly.
 			// Chances are there used to be some commented-out code here.
@@ -276,7 +276,7 @@ void ActNpc104(NPCHAR *npc)
 
 	if (bJump)
 	{
-		if (npc->x < gMC.x)
+		if (npc->x < GetNearestMyChar(npc->x, npc->y)->x)
 			npc->direct = 2;
 		else
 			npc->direct = 0;
@@ -285,7 +285,7 @@ void ActNpc104(NPCHAR *npc)
 		npc->ani_no = 2;
 		npc->ym = -0x5FF;
 
-		if (!(gMC.cond & 2))
+		if (!(GetNearestMyChar(npc->x, npc->y)->cond & 2))
 			PlaySoundObject(30, 1);
 
 		if (npc->direct == 0)
@@ -570,9 +570,9 @@ void ActNpc109(NPCHAR *npc)
 				npc->ani_no = 1;
 			}
 
-			if (npc->x - (32 * 0x200) < gMC.x && npc->x + (32 * 0x200) > gMC.x && npc->y - (32 * 0x200) < gMC.y && npc->y + (16 * 0x200) > gMC.y)
+			if (npc->x - (32 * 0x200) < GetNearestMyChar(npc->x, npc->y)->x && npc->x + (32 * 0x200) > GetNearestMyChar(npc->x, npc->y)->x && npc->y - (32 * 0x200) < GetNearestMyChar(npc->x, npc->y)->y && npc->y + (16 * 0x200) > GetNearestMyChar(npc->x, npc->y)->y)
 			{
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->direct = 0;
 				else
 					npc->direct = 2;
@@ -732,7 +732,7 @@ void ActNpc110(NPCHAR *npc)
 		if (npc->shock)
 			bJump = TRUE;
 
-		if (npc->x < gMC.x - (160 * 0x200) || npc->x > gMC.x + (160 * 0x200) || npc->y < gMC.y - (64 * 0x200) || npc->y > gMC.y + (64 * 0x200))
+		if (npc->x < GetNearestMyChar(npc->x, npc->y)->x - (160 * 0x200) || npc->x > GetNearestMyChar(npc->x, npc->y)->x + (160 * 0x200) || npc->y < GetNearestMyChar(npc->x, npc->y)->y - (64 * 0x200) || npc->y > GetNearestMyChar(npc->x, npc->y)->y + (64 * 0x200))
 		{
 			// This blank space is needed for the function to produce the same assembly.
 			// Chances are there used to be some commented-out code here.
@@ -746,7 +746,7 @@ void ActNpc110(NPCHAR *npc)
 
 	if (bJump)
 	{
-		if (npc->x < gMC.x)
+		if (npc->x < GetNearestMyChar(npc->x, npc->y)->x)
 			npc->direct = 2;
 		else
 			npc->direct = 0;
@@ -849,7 +849,7 @@ void ActNpc111(NPCHAR *npc)
 		npc->rect = rcRight[npc->ani_no];
 
 	// Use a different sprite if the player is wearing the Mimiga Mask
-	if (gMC.equip & 0x40)
+	if (GetNearestMyChar(npc->x, npc->y)->equip & 0x40)
 	{
 		npc->rect.top += 32;
 		npc->rect.bottom += 32;
@@ -926,7 +926,7 @@ void ActNpc112(NPCHAR *npc)
 		npc->rect = rcRight[npc->ani_no];
 
 	// Use a different sprite if the player is wearing the Mimiga Mask
-	if (gMC.equip & 0x40)
+	if (GetNearestMyChar(npc->x, npc->y)->equip & 0x40)
 	{
 		npc->rect.top += 32;
 		npc->rect.bottom += 32;
@@ -1113,7 +1113,7 @@ void ActNpc114(NPCHAR *npc)
 			if (npc->ani_no > 2)
 				npc->ani_no = 2;
 
-			if (gMC.y > npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->y > npc->y)
 			{
 				npc->bits &= ~NPC_SOLID_HARD;
 				npc->damage = 0x7F;
@@ -1185,7 +1185,7 @@ void ActNpc115(NPCHAR *npc)
 			npc->count1 = 0;
 			// Fallthrough
 		case 1:
-			if (gMC.x < npc->x + (96 * 0x200) && gMC.x > npc->x - (96 * 0x200) && gMC.y < npc->y + (32 * 0x200) && gMC.y > npc->y - (96 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x + (96 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (96 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (32 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (96 * 0x200))
 				npc->act_no = 10;
 
 			if (npc->shock)
@@ -1194,7 +1194,7 @@ void ActNpc115(NPCHAR *npc)
 			break;
 
 		case 10:
-			if (gMC.x < npc->x)
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -1221,7 +1221,7 @@ void ActNpc115(NPCHAR *npc)
 
 			if (npc->ani_no > 2)
 			{
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->direct = 0;
 				else
 					npc->direct = 2;
@@ -1260,7 +1260,7 @@ void ActNpc115(NPCHAR *npc)
 				npc->ani_wait = 0;
 				npc->damage = 0;
 
-				if (gMC.x > npc->x + (144 * 0x200) || gMC.x < npc->x - (144 * 0x200) || gMC.y > npc->y + (48 * 0x200) || gMC.y < npc->y - (144 * 0x200))
+				if (GetNearestMyChar(npc->x, npc->y)->x > npc->x + (144 * 0x200) || GetNearestMyChar(npc->x, npc->y)->x < npc->x - (144 * 0x200) || GetNearestMyChar(npc->x, npc->y)->y > npc->y + (48 * 0x200) || GetNearestMyChar(npc->x, npc->y)->y < npc->y - (144 * 0x200))
 					npc->act_no = 0;
 			}
 
@@ -1354,7 +1354,7 @@ void ActNpc117(NPCHAR *npc)
 		case 0:
 			if (npc->direct == 4)
 			{
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->direct = 0;
 				else
 					npc->direct = 2;
@@ -1427,7 +1427,7 @@ void ActNpc117(NPCHAR *npc)
 			npc->ani_no = 1;
 			npc->ani_wait = 0;
 
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -1448,7 +1448,7 @@ void ActNpc117(NPCHAR *npc)
 			else
 				npc->x += 1 * 0x200;
 
-			if (gMC.x < npc->x + (20 * 0x200) && gMC.x > npc->x - (20 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x + (20 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (20 * 0x200))
 				npc->act_no = 0;
 
 			break;
@@ -1556,9 +1556,9 @@ void ActNpc118(NPCHAR *npc)
 
 	bUpper = FALSE;
 
-	if (npc->direct == 0 && npc->x < gMC.x)
+	if (npc->direct == 0 && npc->x < GetNearestMyChar(npc->x, npc->y)->x)
 		bUpper = TRUE;
-	if (npc->direct == 2 && npc->x > gMC.x)
+	if (npc->direct == 2 && npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 		bUpper = TRUE;
 
 	switch (npc->act_no)
@@ -1574,7 +1574,7 @@ void ActNpc118(NPCHAR *npc)
 			npc->act_wait = Random(50, 100);
 			npc->ani_no = 0;
 
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -1595,7 +1595,7 @@ void ActNpc118(NPCHAR *npc)
 			npc->ani_no = 3;
 			npc->act_wait = Random(50, 100);
 
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -1630,7 +1630,7 @@ void ActNpc118(NPCHAR *npc)
 			break;
 
 		case 20:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;

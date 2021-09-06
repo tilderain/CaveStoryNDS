@@ -18,6 +18,8 @@
 #include "Sound.h"
 #include "Triangle.h"
 
+#include "nifi.h"
+
 static void ActBossChar_Core_Face(NPCHAR *npc)
 {
 	RECT rect[4] = {
@@ -196,7 +198,7 @@ static void ActBossChar_Core_Mini(NPCHAR *npc)
 
 			if (npc->act_wait == 1 || npc->act_wait == 3)
 			{
-				deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+				deg = GetArktan(npc->x - GetNearestMyChar(npc->x, npc->y)->x, npc->y - GetNearestMyChar(npc->x, npc->y)->y);
 				deg += (unsigned char)Random(-2, 2);
 				ym = GetSin(deg) * 2;
 				xm = GetCos(deg) * 2;
@@ -357,8 +359,8 @@ void ActBossChar_Core(void)
 			CutNoise();
 			// Fallthrough
 		case 201:
-			npc->tgt_x = gMC.x;
-			npc->tgt_y = gMC.y;
+			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
+			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y;
 
 			++npc->act_wait;
 
@@ -393,8 +395,8 @@ void ActBossChar_Core(void)
 			gBoss[11].bits |= NPC_SHOOTABLE;
 			// Fallthrough
 		case 211:
-			npc->tgt_x = gMC.x;
-			npc->tgt_y = gMC.y;
+			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
+			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y;
 
 			if (npc->shock != 0)
 			{
@@ -451,6 +453,12 @@ void ActBossChar_Core(void)
 			gMC.xm -= 0x20;
 			gMC.cond |= 0x20;
 
+			if(nifiIsLinked())
+			{
+				SetNpChar(199, gMCP2.x + (Random(-50, 150) * 0x200 * 2), gMCP2.y + (Random(-160, 160) * 0x200), 0, 0, 0, NULL, 0x100);
+				gMCP2.xm -= 0x20;
+				gMCP2.cond |= 0x20;
+			}
 			if (npc->shock != 0)
 			{
 				if (++flash / 2 % 2)
@@ -477,6 +485,15 @@ void ActBossChar_Core(void)
 				xm = GetCos(deg) * 3;
 				SetNpChar(218, npc->x - (40 * 0x200), npc->y, xm, ym, 0, NULL, 0x100);
 				PlaySoundObject(101, 1);
+
+				if(nifiIsLinked())
+				{
+					deg = GetArktan(npc->x - gMCP2.x, npc->y - gMCP2.y);
+					ym = GetSin(deg) * 3;
+					xm = GetCos(deg) * 3;
+					SetNpChar(218, npc->x - (40 * 0x200), npc->y, xm, ym, 0, NULL, 0x100);
+					PlaySoundObject(101, 1);
+				}
 			}
 
 			if (npc->act_wait > 400)

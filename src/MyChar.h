@@ -74,7 +74,11 @@ extern MYCHAR gMCP2;
 
 extern int gCurMyChar;
 
+MYCHAR* GetNearestMyChar(int x, int y);
+MYCHAR* GetMyCharNo(int no);
+int GetNearestMyCharNo(int x, int y);
 bool SwapMyChar(void);
+
 
 void InitMyChar(void);
 void AnimationMyChar(BOOL bKey);

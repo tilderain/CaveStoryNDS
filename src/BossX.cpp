@@ -193,7 +193,7 @@ static void ActBossChar03_01(NPCHAR *npc)
 	if ((npc->act_no == 103 || npc->act_no == 203) && npc->act_wait % 4 == 1)
 		PlaySoundObject(111, 1);
 
-	if (npc->act_no >= 100 && gMC.y < npc->y + (4 * 0x200) && gMC.y > npc->y - (4 * 0x200))
+	if (npc->act_no >= 100 && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (4 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (4 * 0x200))
 	{
 		npc->damage = 10;
 		npc->bits |= NPC_REAR_AND_TOP_DONT_HURT;
@@ -403,7 +403,7 @@ static void ActBossChar03_04(NPCHAR *npc)
 				break;
 			}
 
-			deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+			deg = GetArktan(npc->x - GetNearestMyChar(npc->x, npc->y)->x, npc->y - GetNearestMyChar(npc->x, npc->y)->y);
 			deg += (unsigned char)Random(-2, 2);
 			ym = GetSin(deg) * 3;
 			xm = GetCos(deg) * 3;
@@ -647,7 +647,7 @@ void ActBossChar_MonstX(void)
 			{
 				npc->act_wait = 0;
 
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->act_no = 100;
 				else
 					npc->act_no = 200;
@@ -674,7 +674,7 @@ void ActBossChar_MonstX(void)
 
 			if (npc->act_wait > 120 && npc->count1 > 2)
 				npc->act_no = 300;
-			if (npc->act_wait > 121 && gMC.x > npc->x)
+			if (npc->act_wait > 121 && GetNearestMyChar(npc->x, npc->y)->x > npc->x)
 				npc->act_no = 200;
 
 			break;
@@ -698,7 +698,7 @@ void ActBossChar_MonstX(void)
 
 			if (npc->act_wait > 120 && npc->count1 > 2)
 				npc->act_no = 400;
-			if (npc->act_wait > 121 && gMC.x < npc->x)
+			if (npc->act_wait > 121 && GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->act_no = 100;
 
 			break;
@@ -790,7 +790,7 @@ void ActBossChar_MonstX(void)
 
 			if (npc->act_wait > 50)
 			{
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->act_no = 100;
 				else
 					npc->act_no = 200;
@@ -829,7 +829,7 @@ void ActBossChar_MonstX(void)
 
 			if (npc->act_wait > 50)
 			{
-				if (npc->x > gMC.x)
+				if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 					npc->act_no = 100;
 				else
 					npc->act_no = 200;

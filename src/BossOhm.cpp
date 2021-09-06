@@ -422,9 +422,9 @@ void ActBossChar_Omega(void)
 				PlaySoundObject(12, 1);
 				PlaySoundObject(25, 1);
 
-				if (gBoss[0].x < gMC.x)
+				if (gBoss[0].x < GetNearestMyChar(gBoss[0].x, gBoss[0].y)->x)
 					gBoss[0].xm = 0x100;
-				if (gBoss[0].x > gMC.x)
+				if (gBoss[0].x > GetNearestMyChar(gBoss[0].x, gBoss[0].y)->x)
 					gBoss[0].xm = -0x100;
 
 				gBoss[0].damage = 0;
@@ -434,7 +434,7 @@ void ActBossChar_Omega(void)
 			break;
 
 		case 140:
-			if (gMC.flag & 8 && gBoss[0].ym > 0)
+			if (GetNearestMyChar(gBoss[0].x, gBoss[0].y)->flag & 8 && gBoss[0].ym > 0)
 				gBoss[5].damage = 20;
 			else
 				gBoss[5].damage = 0;

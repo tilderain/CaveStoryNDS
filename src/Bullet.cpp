@@ -540,14 +540,14 @@ void ActBullet_FireBall(BULLET *bul, int level)
 				break;
 
 			case 1:
-				bul->xm = gMC.xm;
+				bul->xm = GetMyCharNo(bul->owner)->xm;
 
-				if (gMC.xm < 0)
+				if (GetMyCharNo(bul->owner)->xm < 0)
 					bul->direct = 0;
 				else
 					bul->direct = 2;
 
-				if (gMC.direct == 0)
+				if (GetMyCharNo(bul->owner)->direct == 0)
 					bul->xm -= 0x80;
 				else
 					bul->xm += 0x80;
@@ -560,9 +560,9 @@ void ActBullet_FireBall(BULLET *bul, int level)
 				break;
 
 			case 3:
-				bul->xm = gMC.xm;
+				bul->xm = GetMyCharNo(bul->owner)->xm;
 
-				if (gMC.xm < 0)
+				if (GetMyCharNo(bul->owner)->xm < 0)
 					bul->direct = 0;
 				else
 					bul->direct = 2;
@@ -808,7 +808,7 @@ void ActBullet_Missile(BULLET *bul, int level)
 				{
 					case 0:
 					case 2:
-						if (bul->y > gMC.y)
+						if (bul->y > GetMyCharNo(bul->owner)->y)
 							bul->ym = 0x100;
 						else
 							bul->ym = -0x100;
@@ -818,7 +818,7 @@ void ActBullet_Missile(BULLET *bul, int level)
 
 					case 1:
 					case 3:
-						if (bul->x > gMC.x)
+						if (bul->x > GetMyCharNo(bul->owner)->x)
 							bul->xm = 0x100;
 						else
 							bul->xm = -0x100;
@@ -1182,12 +1182,12 @@ void ActBullet_Bubblin3(BULLET *bul)
 		SetCaret(bul->x, bul->y, 2, 0);
 		PlaySoundObject(100, 1);
 
-		if (gMC.up)
+		if (GetMyCharNo(bul->owner)->up)
 			SetBullet(22, bul->x, bul->y, 1);
-		else if (gMC.down)
+		else if (GetMyCharNo(bul->owner)->down)
 			SetBullet(22, bul->x, bul->y, 3);
 		else
-			SetBullet(22, bul->x, bul->y, gMC.direct);
+			SetBullet(22, bul->x, bul->y, GetMyCharNo(bul->owner)->direct);
 
 		return;
 	}
@@ -1220,14 +1220,14 @@ void ActBullet_Bubblin3(BULLET *bul)
 			break;
 	}
 
-	if (bul->x < gMC.x)
+	if (bul->x < GetMyCharNo(bul->owner)->x)
 		bul->xm += 0x20;
-	if (bul->x > gMC.x)
+	if (bul->x > GetMyCharNo(bul->owner)->x)
 		bul->xm -= 0x20;
 
-	if (bul->y < gMC.y)
+	if (bul->y < GetMyCharNo(bul->owner)->y)
 		bul->ym += 0x20;
-	if (bul->y > gMC.y)
+	if (bul->y > GetMyCharNo(bul->owner)->y)
 		bul->ym -= 0x20;
 
 	if (bul->xm < 0 && bul->flag & 1)
@@ -1734,7 +1734,7 @@ void ActBullet_SuperMissile(BULLET *bul, int level)
 				{
 					case 0:
 					case 2:
-						if (bul->y > gMC.y)
+						if (bul->y > GetMyCharNo(bul->owner)->y)
 							bul->ym = 0x100;
 						else
 							bul->ym = -0x100;
@@ -1744,7 +1744,7 @@ void ActBullet_SuperMissile(BULLET *bul, int level)
 
 					case 1:
 					case 3:
-						if (bul->x > gMC.x)
+						if (bul->x > GetMyCharNo(bul->owner)->x)
 							bul->xm = 0x100;
 						else
 							bul->xm = -0x100;

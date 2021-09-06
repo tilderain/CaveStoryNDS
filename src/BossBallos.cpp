@@ -18,6 +18,8 @@
 #include "NpChar.h"
 #include "Sound.h"
 
+#include "nifi.h"
+
 static void ActBossChar_Eye(NPCHAR *npc)
 {
 	RECT rcLeft[5] = {
@@ -218,6 +220,12 @@ void ActBossChar_Ballos(void)
 			npc->ani_no = 0;
 			npc->x = gMC.x;
 			SetNpChar(333, gMC.x, 304 * 0x200, 0, 0, 2, NULL, 0x100);
+
+			if(nifiIsLinked())
+			{
+				npc->x = gMCP2.x;
+				SetNpChar(333, gMCP2.x, 304 * 0x200, 0, 0, 2, NULL, 0x100);
+			}
 			npc->act_wait = 0;
 			// Fallthrough
 		case 101:
@@ -255,6 +263,19 @@ void ActBossChar_Ballos(void)
 
 				if (gMC.flag & 8)
 					gMC.ym = -0x200;
+
+				if(nifiIsLinked)
+				{
+					if (gMCP2.y > npc->y + (48 * 0x200) && gMCP2.x < npc->x + (24 * 0x200) && gMCP2.x > npc->x - (24 * 0x200))
+					{
+						SwapMyChar();
+						DamageMyChar(16);
+						SwapMyChar();
+					}
+
+					if (gMCP2.flag & 8)
+						gMCP2.ym = -0x200;
+				}
 			}
 
 			break;
@@ -295,7 +316,7 @@ void ActBossChar_Ballos(void)
 				npc->act_no = 204;
 				npc->ym = -0xC00;
 
-				if (npc->x < gMC.x)
+				if (npc->x < GetNearestMyChar(npc->x, npc->y)->x)
 					npc->xm = 0x200;
 				else
 					npc->xm = -0x200;
@@ -328,6 +349,19 @@ void ActBossChar_Ballos(void)
 
 				if (gMC.flag & 8)
 					gMC.ym = -0x200;
+
+				if(nifiIsLinked())
+				{
+					if (gMCP2.y > npc->y + (56 * 0x200))
+					{
+						SwapMyChar();
+						DamageMyChar(16);
+						SwapMyChar();
+					}
+
+					if (gMCP2.flag & 8)
+						gMCP2.ym = -0x200;
+				}
 
 				SetQuake2(30);
 				PlaySoundObject(26, 1);
@@ -378,6 +412,8 @@ void ActBossChar_Ballos(void)
 
 				if (gMC.flag & 8)
 					gMC.ym = -0x200;
+				if (gMCP2.flag & 8)
+					gMCP2.ym = -0x200;
 			}
 
 			break;
@@ -699,8 +735,28 @@ void ActBossChar_Ballos(void)
 		if (npc->act_wait > 300)
 		{
 			npc->act_wait = 0;
-
-			if (gMC.x > npc->x)
+			if(!nifiIsLinked())
+			{
+				if (gMC.x > npc->x)
+				{
+					for (i = 0; i < 8; ++i)
+					{
+						x = ((156 + Random(-4, 4)) * 0x200 * 0x10) / 4;
+						y = (Random(8, 68) * 0x200 * 0x10) / 4;
+						SetNpChar(350, x, y, 0, 0, 0, NULL, 0x100);
+					}
+				}
+				else
+				{
+					for (i = 0; i < 8; ++i)
+					{
+						x = (Random(-4, 4) * 0x200 * 0x10) / 4;
+						y = (Random(8, 68) * 0x200 * 0x10) / 4;
+						SetNpChar(350, x, y, 0, 0, 2, NULL, 0x100);
+					}
+				}
+			}
+			else
 			{
 				for (i = 0; i < 8; ++i)
 				{
@@ -708,9 +764,6 @@ void ActBossChar_Ballos(void)
 					y = (Random(8, 68) * 0x200 * 0x10) / 4;
 					SetNpChar(350, x, y, 0, 0, 0, NULL, 0x100);
 				}
-			}
-			else
-			{
 				for (i = 0; i < 8; ++i)
 				{
 					x = (Random(-4, 4) * 0x200 * 0x10) / 4;
@@ -718,6 +771,8 @@ void ActBossChar_Ballos(void)
 					SetNpChar(350, x, y, 0, 0, 2, NULL, 0x100);
 				}
 			}
+			
+
 		}
 
 		if (npc->act_wait == 270 || npc->act_wait == 280 || npc->act_wait == 290)

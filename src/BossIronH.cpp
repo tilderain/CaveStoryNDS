@@ -72,7 +72,7 @@ void ActBossChar_Ironhead(void)
 			if (npc->direct == 2)
 			{
 				npc->x = 240 * 0x200;
-				npc->y = gMC.y;
+				npc->y = GetNearestMyChar(npc->x, npc->y)->y;
 			}
 			else
 			{
@@ -97,7 +97,7 @@ void ActBossChar_Ironhead(void)
 			{
 				npc->tgt_x -= 1 * 0x200;
 
-				if (npc->tgt_y < gMC.y)
+				if (npc->tgt_y < GetNearestMyChar(npc->x, npc->y)->y)
 					npc->tgt_y += 1 * 0x200;
 				else
 					npc->tgt_y -= 1 * 0x200;

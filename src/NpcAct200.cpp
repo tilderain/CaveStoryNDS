@@ -74,7 +74,7 @@ void ActNpc200(NPCHAR *npc)
 			if (npc->count1)
 				--npc->count1;
 
-			if (npc->count1 == 0 && gMC.x > npc->x - (112 * 0x200) && gMC.x < npc->x + (112 * 0x200))
+			if (npc->count1 == 0 && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (112 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (112 * 0x200))
 				npc->act_no = 20;
 
 			break;
@@ -92,7 +92,7 @@ void ActNpc200(NPCHAR *npc)
 			if (npc->act_wait > 30)
 				npc->act_no = 30;
 
-			if (gMC.x < npc->x)
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -103,8 +103,8 @@ void ActNpc200(NPCHAR *npc)
 			npc->act_no = 31;
 			npc->act_wait = 0;
 			npc->ani_no = 4;
-			npc->tgt_x = gMC.x;
-			npc->tgt_y = gMC.y;
+			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
+			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y;
 			// Fallthrough
 		case 31:
 			if (++npc->act_wait < 40 && npc->act_wait % 8 == 1)
@@ -124,7 +124,7 @@ void ActNpc200(NPCHAR *npc)
 				else
 					SetNpChar(202, npc->x + (14 * 0x200), npc->y, xm, ym, 0, NULL, 0x100);
 
-				if (!(gMC.cond & 2))
+				if (!(GetNearestMyChar(npc->x, npc->y)->cond & 2))
 					PlaySoundObject(33, 1);
 			}
 
@@ -223,12 +223,12 @@ void ActNpc203(NPCHAR *npc)
 			npc->act_no = 1;
 			// Fallthrough
 		case 1:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
 
-			if (npc->act_wait >= 8 && npc->x - (112 * 0x200) < gMC.x && npc->x + (112 * 0x200) > gMC.x && npc->y - (80 * 0x200) < gMC.y && npc->y + (80 * 0x200) > gMC.y)
+			if (npc->act_wait >= 8 && npc->x - (112 * 0x200) < GetNearestMyChar(npc->x, npc->y)->x && npc->x + (112 * 0x200) > GetNearestMyChar(npc->x, npc->y)->x && npc->y - (80 * 0x200) < GetNearestMyChar(npc->x, npc->y)->y && npc->y + (80 * 0x200) > GetNearestMyChar(npc->x, npc->y)->y)
 			{
 				npc->ani_no = 1;
 			}
@@ -247,7 +247,7 @@ void ActNpc203(NPCHAR *npc)
 				npc->act_wait = 0;
 			}
 
-			if (npc->act_wait >= 8 && npc->x - (48 * 0x200) < gMC.x && npc->x + (48 * 0x200) > gMC.x && npc->y - (80 * 0x200) < gMC.y && npc->y + (48 * 0x200) > gMC.y)
+			if (npc->act_wait >= 8 && npc->x - (48 * 0x200) < GetNearestMyChar(npc->x, npc->y)->x && npc->x + (48 * 0x200) > GetNearestMyChar(npc->x, npc->y)->x && npc->y - (80 * 0x200) < GetNearestMyChar(npc->x, npc->y)->y && npc->y + (48 * 0x200) > GetNearestMyChar(npc->x, npc->y)->y)
 			{
 				npc->act_no = 2;
 				npc->ani_no = 0;
@@ -263,7 +263,7 @@ void ActNpc203(NPCHAR *npc)
 				npc->ani_no = 2;
 				npc->ym = -0x5FF;
 
-				if (!(gMC.cond & 2))
+				if (!(GetNearestMyChar(npc->x, npc->y)->cond & 2))
 					PlaySoundObject(30, 1);
 
 				if (npc->direct == 0)
@@ -282,7 +282,7 @@ void ActNpc203(NPCHAR *npc)
 				npc->ani_no = 0;
 				npc->act_no = 1;
 
-				if (!(gMC.cond & 2))
+				if (!(GetNearestMyChar(npc->x, npc->y)->cond & 2))
 					PlaySoundObject(23, 1);
 			}
 
@@ -317,7 +317,7 @@ void ActNpc204(NPCHAR *npc)
 			npc->tgt_x = npc->x;
 			// Fallthrough
 		case 1:
-			if (gMC.x > npc->x - (12 * 0x200) && gMC.x < npc->x + (12 * 0x200) && gMC.y > npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->x > npc->x - (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y)
 				npc->act_no = 2;
 
 			break;
@@ -341,7 +341,7 @@ void ActNpc204(NPCHAR *npc)
 
 			if (npc->flag & 0xFF)
 			{
-				if (!(gMC.cond & 2))
+				if (!(GetNearestMyChar(npc->x, npc->y)->cond & 2))
 					PlaySoundObject(12, 1);
 
 				SetDestroyNpChar(npc->x, npc->y, npc->view.back, 4);
@@ -376,7 +376,7 @@ void ActNpc205(NPCHAR *npc)
 			npc->y += 4 * 0x200;
 			// Fallthrough
 		case 1:
-			if (gMC.x > npc->x - (12 * 0x200) && gMC.x < npc->x + (12 * 0x200) && gMC.y > npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->x > npc->x - (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y)
 				npc->act_no = 2;
 
 			break;
@@ -399,7 +399,7 @@ void ActNpc205(NPCHAR *npc)
 		case 3:
 			npc->ym += 0x20;
 
-			if (gMC.y > npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->y > npc->y)
 			{
 				npc->bits &= ~NPC_SOLID_HARD;
 				npc->damage = 0x7F;
@@ -465,7 +465,7 @@ void ActNpc206(NPCHAR *npc)
 			break;
 
 		case 2:
-			if (gMC.x > npc->x - (80 * 0x200) && gMC.x < npc->x + (80 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x > npc->x - (80 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (80 * 0x200))
 			{
 				npc->act_wait = 0;
 				npc->act_no = 3;
@@ -615,7 +615,7 @@ void ActNpc208(NPCHAR *npc)
 	switch (npc->act_no)
 	{
 		case 0:
-			if (gMC.x < npc->x + (16 * 0x200) && gMC.x > npc->x - (16 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x + (16 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (16 * 0x200))
 			{
 				npc->bits |= NPC_SHOOTABLE;
 				npc->ym = -0x200;
@@ -629,12 +629,12 @@ void ActNpc208(NPCHAR *npc)
 
 				if (npc->direct == 0)
 				{
-					npc->x = gMC.x + (256 * 0x200);
+					npc->x = GetNearestMyChar(npc->x, npc->y)->x + (256 * 0x200);
 					npc->xm = -0x2FF;
 				}
 				else
 				{
-					npc->x = gMC.x - (256 * 0x200);
+					npc->x = GetNearestMyChar(npc->x, npc->y)->x - (256 * 0x200);
 					npc->xm = 0x2FF;
 				}
 
@@ -649,7 +649,7 @@ void ActNpc208(NPCHAR *npc)
 			return;
 
 		case 1:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 			{
 				npc->direct = 0;
 				npc->xm -= 0x10;
@@ -691,7 +691,7 @@ void ActNpc208(NPCHAR *npc)
 				npc->y += npc->ym;
 			}
 
-			if (gMC.x > npc->x + (400 * 0x200) || gMC.x < npc->x - (400 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x > npc->x + (400 * 0x200) || GetNearestMyChar(npc->x, npc->y)->x < npc->x - (400 * 0x200))
 			{
 				npc->act_no = 0;
 				npc->xm = 0;
@@ -712,13 +712,13 @@ void ActNpc208(NPCHAR *npc)
 
 		if (npc->act_wait == 150)
 		{
-			if (++npc->count2 % 8 == 0 && npc->x < gMC.x + (160 * 0x200) && npc->x > gMC.x - (160 * 0x200))
+			if (++npc->count2 % 8 == 0 && npc->x < GetNearestMyChar(npc->x, npc->y)->x + (160 * 0x200) && npc->x > GetNearestMyChar(npc->x, npc->y)->x - (160 * 0x200))
 			{
 				unsigned char deg;
 				int xm;
 				int ym;
 
-				deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+				deg = GetArktan(npc->x - GetNearestMyChar(npc->x, npc->y)->x, npc->y - GetNearestMyChar(npc->x, npc->y)->y);
 				deg += (unsigned char)Random(-6, 6);
 				ym = GetSin(deg) * 3;
 				xm = GetCos(deg) * 3;
@@ -805,7 +805,7 @@ void ActNpc210(NPCHAR *npc)
 	switch (npc->act_no)
 	{
 		case 0:
-			if (gMC.x < npc->x + (16 * 0x200) && gMC.x > npc->x - (16 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x + (16 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (16 * 0x200))
 			{
 				npc->bits |= NPC_SHOOTABLE;
 				npc->ym = -0x200;
@@ -815,12 +815,12 @@ void ActNpc210(NPCHAR *npc)
 
 				if (npc->direct == 0)
 				{
-					npc->x = gMC.x + (256 * 0x200);
+					npc->x = GetNearestMyChar(npc->x, npc->y)->x + (256 * 0x200);
 					npc->xm = -0x2FF;
 				}
 				else
 				{
-					npc->x = gMC.x - (256 * 0x200);
+					npc->x = GetNearestMyChar(npc->x, npc->y)->x - (256 * 0x200);
 					npc->xm = 0x2FF;
 				}
 			}
@@ -837,7 +837,7 @@ void ActNpc210(NPCHAR *npc)
 			break;
 
 		case 1:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 			{
 				npc->direct = 0;
 				npc->xm -= 0x10;
@@ -1007,7 +1007,7 @@ void ActNpc212(NPCHAR *npc)
 	npc->rect = rcRight[npc->ani_no];
 
 	// Use different sprite if player is wearing the Mimiga Mask
-	if (gMC.equip & 0x40)
+	if (GetNearestMyChar(npc->x, npc->y)->equip & 0x40)
 	{
 		if (npc->ani_no > 1)
 		{
@@ -1041,7 +1041,7 @@ void ActNpc213(NPCHAR *npc)
 			npc->tgt_y = npc->y;
 			// Fallthrough
 		case 1:
-			if (gMC.y > npc->y - (8 * 0x200) && gMC.y < npc->y + (8 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->y > npc->y - (8 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (8 * 0x200))
 			{
 				if (npc->direct == 0)
 					npc->y -= 240 * 0x200;
@@ -1145,7 +1145,7 @@ void ActNpc213(NPCHAR *npc)
 			if (npc->ani_no > 6)
 				npc->ani_no = 4;
 
-			if (gMC.y < npc->tgt_y + (240 * 0x200) && gMC.y > npc->tgt_y - (240 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->y < npc->tgt_y + (240 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->tgt_y - (240 * 0x200))
 			{
 				npc->act_no = 20;
 				npc->act_wait = 0;
@@ -1157,7 +1157,7 @@ void ActNpc213(NPCHAR *npc)
 
 	if (npc->act_no >= 10 && npc->act_no <= 30)
 	{
-		if (npc->y < gMC.y)
+		if (npc->y < GetNearestMyChar(npc->x, npc->y)->y)
 			npc->ym += 25;
 		else
 			npc->ym -= 25;
@@ -1177,7 +1177,7 @@ void ActNpc213(NPCHAR *npc)
 		else
 			npc->y += npc->ym;
 
-		if (gMC.y > npc->tgt_y + (240 * 0x200) || gMC.y < npc->tgt_y - (240 * 0x200))
+		if (GetNearestMyChar(npc->x, npc->y)->y > npc->tgt_y + (240 * 0x200) || GetNearestMyChar(npc->x, npc->y)->y < npc->tgt_y - (240 * 0x200))
 			npc->act_no = 40;
 	}
 
@@ -1246,7 +1246,7 @@ void ActNpc215(NPCHAR *npc)
 			npc->bits &= ~NPC_IGNORE_SOLIDITY;
 			// Fallthrough
 		case 1:
-			if (gMC.x > npc->x - (12 * 0x200) && gMC.x < npc->x + (12 * 0x200) && gMC.y > npc->y && gMC.y < npc->y + (8 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x > npc->x - (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (12 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (8 * 0x200))
 			{
 				npc->act_no = 15;
 				npc->act_wait = 0;

@@ -298,13 +298,13 @@ void ActBossChar_Frog(void)
 				boss->view.top = PIXELS_TO_UNITS(48);
 				boss->view.bottom = PIXELS_TO_UNITS(16);
 
-				if (boss->direct == DIR_LEFT && boss->x < gMC.x)
+				if (boss->direct == DIR_LEFT && boss->x < GetNearestMyChar(boss->x, boss->y)->x)
 				{
 					boss->direct = DIR_RIGHT;
 					boss->act_no = BALFROG_INITIALIZE_LAND;
 				}
 
-				if (boss->direct == DIR_RIGHT && boss->x > gMC.x)
+				if (boss->direct == DIR_RIGHT && boss->x > GetNearestMyChar(boss->x, boss->y)->x)
 				{
 					boss->direct = DIR_LEFT;
 					boss->act_no = BALFROG_INITIALIZE_LAND;
@@ -376,9 +376,9 @@ void ActBossChar_Frog(void)
 				--boss->count1;
 
 				if (boss->direct == DIR_LEFT)
-					deg = GetArktan(boss->x - TILES_TO_UNITS(2) - gMC.x, boss->y - PIXELS_TO_UNITS(8) - gMC.y);
+					deg = GetArktan(boss->x - TILES_TO_UNITS(2) - GetNearestMyChar(boss->x, boss->y)->x, boss->y - PIXELS_TO_UNITS(8) - GetNearestMyChar(boss->x, boss->y)->y);
 				else
-					deg = GetArktan(boss->x + TILES_TO_UNITS(2) - gMC.x, boss->y - PIXELS_TO_UNITS(8) - gMC.y);
+					deg = GetArktan(boss->x + TILES_TO_UNITS(2) - GetNearestMyChar(boss->x, boss->y)->x, boss->y - PIXELS_TO_UNITS(8) - GetNearestMyChar(boss->x, boss->y)->y);
 
 				deg += (unsigned char)Random(-0x10, 0x10);
 
@@ -489,13 +489,13 @@ void ActBossChar_Frog(void)
 				for (i = 0; i < 8; ++i)
 					SetNpChar(NPC_SMOKE, boss->x + PIXELS_TO_UNITS(Random(-12, 12)), boss->y + boss->hit.bottom, Random(-341, 341), Random(PIXELS_TO_UNITS(-3), 0), DIR_LEFT, NULL, 0x100);
 
-				if (boss->direct == DIR_LEFT && boss->x < gMC.x)
+				if (boss->direct == DIR_LEFT && boss->x < GetNearestMyChar(boss->x, boss->y)->x)
 				{
 					boss->direct = DIR_RIGHT;
 					boss->act_no = BALFROG_INITIALIZE_LAND;
 				}
 
-				if (boss->direct == DIR_RIGHT && boss->x > gMC.x)
+				if (boss->direct == DIR_RIGHT && boss->x > GetNearestMyChar(boss->x, boss->y)->x)
 				{
 					boss->direct = DIR_LEFT;
 					boss->act_no = BALFROG_INITIALIZE_LAND;

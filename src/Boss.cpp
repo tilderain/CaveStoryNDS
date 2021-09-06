@@ -137,7 +137,7 @@ void HitBossBullet(void)
 					{
 						gBoss[bos_].life = bos_;
 
-						if (gMC.cond & 0x80 && gBoss[bos_].bits & NPC_EVENT_WHEN_KILLED)
+						if ((gMC.cond | gMCP2.cond) & 0x80 && gBoss[bos_].bits & NPC_EVENT_WHEN_KILLED)
 						{
 							StartTextScript(gBoss[bos_].code_event);
 						}

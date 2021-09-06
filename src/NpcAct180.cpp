@@ -56,7 +56,7 @@ void ActNpc180(NPCHAR *npc)
 		{144, 112, 160, 128},
 	};
 
-	if (npc->y < gMC.y - (10 * 0x10 * 0x200))
+	if (npc->y < GetNearestMyChar(npc->x, npc->y)->y - (10 * 0x10 * 0x200))
 	{
 		if (npc->y < 16 * 0x10 * 0x200)
 		{
@@ -78,8 +78,8 @@ void ActNpc180(NPCHAR *npc)
 		}
 		else
 		{
-			npc->tgt_x = gMC.x;
-			npc->tgt_y = gMC.y;
+			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
+			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y;
 		}
 	}
 
@@ -91,8 +91,8 @@ void ActNpc180(NPCHAR *npc)
 	switch (npc->act_no)
 	{
 		case 20:
-			npc->x = gMC.x;
-			npc->y = gMC.y;
+			npc->x = GetNearestMyChar(npc->x, npc->y)->x;
+			npc->y = GetNearestMyChar(npc->x, npc->y)->y;
 			npc->act_no = 100;
 			npc->ani_no = 0;
 			SetNpChar(183, 0, 0, 0, 0, 0, npc, 0x100);
@@ -270,7 +270,7 @@ void ActNpc180(NPCHAR *npc)
 
 	if (npc->act_no >= 100 && npc->act_no < 500)
 	{
-		if (npc->x < gMC.x - (80 * 0x200) || npc->x > gMC.x + (80 * 0x200))
+		if (npc->x < GetNearestMyChar(npc->x, npc->y)->x - (80 * 0x200) || npc->x > GetNearestMyChar(npc->x, npc->y)->x + (80 * 0x200))
 		{
 #ifdef FIX_BUGS
 			if (npc->flag & 5)
@@ -784,7 +784,7 @@ void ActNpc187(NPCHAR *npc)
 		case 2:
 			npc->count1 += 4;
 
-			if (gMC.x < npc->x)
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -858,12 +858,12 @@ void ActNpc188(NPCHAR *npc)
 			break;
 
 		case 10:
-			if (gMC.x < npc->x)
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->xm -= 0x20;
 			else
 				npc->xm += 0x20;
 
-			if (gMC.y < npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->y < npc->y)
 				npc->ym -= 0x20;
 			else
 				npc->ym += 0x20;
@@ -884,7 +884,7 @@ void ActNpc188(NPCHAR *npc)
 			break;
 	}
 
-	if (gMC.x < npc->x)
+	if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 		npc->direct = 0;
 	else
 		npc->direct = 2;
@@ -932,12 +932,12 @@ void ActNpc189(NPCHAR *npc)
 			break;
 
 		case 10:
-			if (gMC.x < npc->x)
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 				npc->xm -= 8;
 			else
 				npc->xm += 8;
 
-			if (gMC.y < npc->y)
+			if (GetNearestMyChar(npc->x, npc->y)->y < npc->y)
 				npc->ym -= 8;
 			else
 				npc->ym += 8;
@@ -958,7 +958,7 @@ void ActNpc189(NPCHAR *npc)
 			break;
 	}
 
-	if (gMC.x < npc->x)
+	if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 		npc->direct = 0;
 	else
 		npc->direct = 2;

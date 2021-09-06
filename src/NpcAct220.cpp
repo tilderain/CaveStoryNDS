@@ -229,9 +229,9 @@ void ActNpc223(NPCHAR *npc)
 			break;
 	}
 
-	if (npc->act_no < 2 && gMC.y < npc->y + (16 * 0x200) && gMC.y > npc->y - (16 * 0x200))
+	if (npc->act_no < 2 && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (16 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (16 * 0x200))
 	{
-		if (gMC.x < npc->x)
+		if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 			npc->direct = 0;
 		else
 			npc->direct = 2;
@@ -283,9 +283,9 @@ void ActNpc224(NPCHAR *npc)
 			break;
 	}
 
-	if (npc->act_no < 2 && gMC.y < npc->y + (16 * 0x200) && gMC.y > npc->y - (16 * 0x200))
+	if (npc->act_no < 2 && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (16 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (16 * 0x200))
 	{
-		if (gMC.x < npc->x)
+		if (GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 			npc->direct = 0;
 		else
 			npc->direct = 2;
@@ -456,7 +456,7 @@ void ActNpc228(NPCHAR *npc)
 			npc->ani_no = 0;
 			// Fallthrough
 		case 2:
-			if (npc->x > gMC.x)
+			if (npc->x > GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 0;
 			else
 				npc->direct = 2;
@@ -631,9 +631,9 @@ void ActNpc231(NPCHAR *npc)
 			if (npc->act_wait % 4 == 1)
 				PlaySoundObject(34, 1);
 
-			if (npc->flag & 2 || gMC.flag & 2 || npc->act_wait > 450)
+			if (npc->flag & 2 || GetNearestMyChar(npc->x, npc->y)->flag & 2 || npc->act_wait > 450)
 			{
-				if (npc->flag & 2 || gMC.flag & 2)
+				if (npc->flag & 2 || GetNearestMyChar(npc->x, npc->y)->flag & 2)
 					npc->ym = 0;
 
 				npc->act_no = 15;
@@ -805,7 +805,7 @@ void ActNpc233(NPCHAR *npc)
 				break;
 			}
 
-			if (npc->x - (8 * 0x200) < gMC.x && npc->x + (8 * 0x200) > gMC.x && npc->y < gMC.y && npc->y + (176 * 0x200) > gMC.y)
+			if (npc->x - (8 * 0x200) < GetNearestMyChar(npc->x, npc->y)->x && npc->x + (8 * 0x200) > GetNearestMyChar(npc->x, npc->y)->x && npc->y < GetNearestMyChar(npc->x, npc->y)->y && npc->y + (176 * 0x200) > GetNearestMyChar(npc->x, npc->y)->y)
 			{
 				npc->xm /= 4;
 				npc->ym = 0;
@@ -1043,12 +1043,12 @@ void ActNpc236(NPCHAR *npc)
 			break;
 
 		case 2:
-			if (npc->x < gMC.x)
+			if (npc->x < GetNearestMyChar(npc->x, npc->y)->x)
 				npc->direct = 2;
 			else
 				npc->direct = 0;
 
-			if (gMC.x < npc->x + (128 * 0x200) && gMC.x > npc->x - (128 * 0x200) && gMC.y < npc->y + (32 * 0x200) && gMC.y > npc->y - (160 * 0x200))
+			if (GetNearestMyChar(npc->x, npc->y)->x < npc->x + (128 * 0x200) && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (128 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (32 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (160 * 0x200))
 				++npc->act_wait;
 
 			if (npc->act_wait > 80)
@@ -1201,14 +1201,14 @@ void ActNpc238(NPCHAR *npc)
 			npc->view.back = 8 * 0x200;
 			// Fallthrough
 		case 1:
-			if (npc->direct == 0 && gMC.x < npc->x && gMC.x > npc->x - (192 * 0x200) && gMC.y > npc->y - (4 * 0x200) && gMC.y < npc->y + (8 * 0x200))
+			if (npc->direct == 0 && GetNearestMyChar(npc->x, npc->y)->x < npc->x && GetNearestMyChar(npc->x, npc->y)->x > npc->x - (192 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (4 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (8 * 0x200))
 			{
 				npc->act_no = 10;
 				npc->act_wait = 0;
 				npc->ani_no = 2;
 			}
 
-			if (npc->direct == 2 && gMC.x > npc->x && gMC.x < npc->x + (192 * 0x200) && gMC.y > npc->y - (4 * 0x200) && gMC.y < npc->y + (8 * 0x200))
+			if (npc->direct == 2 && GetNearestMyChar(npc->x, npc->y)->x > npc->x && GetNearestMyChar(npc->x, npc->y)->x < npc->x + (192 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y > npc->y - (4 * 0x200) && GetNearestMyChar(npc->x, npc->y)->y < npc->y + (8 * 0x200))
 			{
 				npc->act_no = 10;
 				npc->act_wait = 0;
@@ -1269,9 +1269,9 @@ void ActNpc238(NPCHAR *npc)
 			break;
 	}
 
-	if (npc->direct == 0 && gMC.x < npc->x)
+	if (npc->direct == 0 && GetNearestMyChar(npc->x, npc->y)->x < npc->x)
 		npc->hit.back = 16 * 0x200;
-	else if (npc->direct == 2 && gMC.x > npc->x)
+	else if (npc->direct == 2 && GetNearestMyChar(npc->x, npc->y)->x > npc->x)
 		npc->hit.back = 16 * 0x200;
 	else
 		npc->hit.back = 8 * 0x200;
