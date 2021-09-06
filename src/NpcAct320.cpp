@@ -37,65 +37,78 @@ void ActNpc320(NPCHAR *npc)
 		{96, 112, 112, 128},
 	};
 
+	if(npc->pNpc)
+	{
+		SwapMyChar();
+	}
+
 	if (npc->act_no == 0)
 	{
 		npc->act_no = 1;
-		npc->x = GetNearestMyChar(npc->x, npc->y)->x;
-		npc->y = GetNearestMyChar(npc->x, npc->y)->y;
+		npc->x = gMC.x;
+		npc->y = gMC.y;
 		SetNpChar(321, 0, 0, 0, 0, 0, npc, 0x100);
+		if(!npc->pNpc)
+		{
+			SetNpChar(320, 0, 0, 0, 0, 0, npc, 0x100);
+		}
+		if(npc->pNpc)
+		{
+			npc->count1 = 69;
+		}
 	}
 
-	if (GetNearestMyChar(npc->x, npc->y)->flag & 8)
+	if (gMC.flag & 8)
 	{
-		if (GetNearestMyChar(npc->x, npc->y)->up)
+		if (gMC.up)
 		{
-			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
-			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (10 * 0x200);
+			npc->tgt_x = gMC.x;
+			npc->tgt_y = gMC.y - (10 * 0x200);
 			npc->ani_no = 1;
 		}
 		else
 		{
 			npc->ani_no = 0;
 
-			if (GetNearestMyChar(npc->x, npc->y)->direct == 0)
+			if (gMC.direct == 0)
 			{
-				npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x + (7 * 0x200);
-				npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (3 * 0x200);
+				npc->tgt_x = gMC.x + (7 * 0x200);
+				npc->tgt_y = gMC.y - (3 * 0x200);
 			}
 			else
 			{
-				npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x - (7 * 0x200);
-				npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (3 * 0x200);
+				npc->tgt_x = gMC.x - (7 * 0x200);
+				npc->tgt_y = gMC.y - (3 * 0x200);
 			}
 		}
 	}
 	else
 	{
-		if (GetNearestMyChar(npc->x, npc->y)->up)
+		if (gMC.up)
 		{
-			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
-			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y + (8 * 0x200);
+			npc->tgt_x = gMC.x;
+			npc->tgt_y = gMC.y + (8 * 0x200);
 			npc->ani_no = 2;
 		}
-		else if (GetNearestMyChar(npc->x, npc->y)->down)
+		else if (gMC.down)
 		{
-			npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x;
-			npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (8 * 0x200);
+			npc->tgt_x = gMC.x;
+			npc->tgt_y = gMC.y - (8 * 0x200);
 			npc->ani_no = 1;
 		}
 		else
 		{
 			npc->ani_no = 0;
 
-			if (GetNearestMyChar(npc->x, npc->y)->direct == 0)
+			if (gMC.direct == 0)
 			{
-				npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x + (7 * 0x200);
-				npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (3 * 0x200);
+				npc->tgt_x = gMC.x + (7 * 0x200);
+				npc->tgt_y = gMC.y - (3 * 0x200);
 			}
 			else
 			{
-				npc->tgt_x = GetNearestMyChar(npc->x, npc->y)->x - (7 * 0x200);
-				npc->tgt_y = GetNearestMyChar(npc->x, npc->y)->y - (3 * 0x200);
+				npc->tgt_x = gMC.x - (7 * 0x200);
+				npc->tgt_y = gMC.y - (3 * 0x200);
 			}
 		}
 	}
@@ -103,13 +116,18 @@ void ActNpc320(NPCHAR *npc)
 	npc->x += (npc->tgt_x - npc->x) / 2;
 	npc->y += (npc->tgt_y - npc->y) / 2;
 
-	if (GetNearestMyChar(npc->x, npc->y)->ani_no % 2)
+	if (gMC.ani_no % 2)
 		npc->y -= 1 * 0x200;
 
-	if (GetNearestMyChar(npc->x, npc->y)->direct == 0)
+	if (gMC.direct == 0)
 		npc->rect = rcRight[npc->ani_no];
 	else
 		npc->rect = rcLeft[npc->ani_no];
+
+	if(npc->pNpc)
+	{
+		SwapMyChar();
+	}
 }
 
 // Curly's Nemesis
@@ -132,10 +150,15 @@ void ActNpc321(NPCHAR *npc)
 	if (npc->pNpc == NULL)
 		return;
 
+	if(npc->pNpc->count1 == 69)
+	{
+		SwapMyChar();
+	}
+
 	switch (npc->pNpc->ani_no)
 	{
 		case 0:
-			if (GetNearestMyChar(npc->x, npc->y)->direct == 0)
+			if (gMC.direct == 0)
 			{
 				npc->x = npc->pNpc->x + (8 * 0x200);
 				direct = 2;
@@ -150,7 +173,7 @@ void ActNpc321(NPCHAR *npc)
 			break;
 
 		case 1:
-			if (GetNearestMyChar(npc->x, npc->y)->direct == 0)	// Does the same thing whether this is false or true
+			if (gMC.direct == 0)	// Does the same thing whether this is false or true
 				npc->x = npc->pNpc->x;
 			else
 				npc->x = npc->pNpc->x;
@@ -160,7 +183,7 @@ void ActNpc321(NPCHAR *npc)
 			break;
 
 		case 2:
-			if (GetNearestMyChar(npc->x, npc->y)->direct == 0)	// Does the same thing whether this is false or true
+			if (gMC.direct == 0)	// Does the same thing whether this is false or true
 				npc->x = npc->pNpc->x;
 			else
 				npc->x = npc->pNpc->x;
@@ -174,15 +197,20 @@ void ActNpc321(NPCHAR *npc)
 
 	if (g_GameFlags & 2 && CountBulletNum(43) < 2 && gKeyTrg & gKeyShot)
 	{
-		SetBullet(43, npc->pNpc->x, npc->pNpc->y, direct);
+		SetBullet(43, npc->pNpc->x, npc->pNpc->y, direct, gCurMyChar);
 		SetCaret(npc->pNpc->x, npc->pNpc->y, 3, 0);
 		PlaySoundObject(117, 1);
 	}
 
-	if (GetNearestMyChar(npc->x, npc->y)->direct == 0)
+	if (gMC.direct == 0)
 		npc->rect = rcRight[npc->ani_no];
 	else
 		npc->rect = rcLeft[npc->ani_no];
+
+	if(npc->pNpc->count1 == 69)
+	{
+		SwapMyChar();
+	}
 }
 
 // Deleet
