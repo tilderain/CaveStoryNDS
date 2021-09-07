@@ -1239,6 +1239,9 @@ void ShootBullet(void)
 	if (gMC.cond & 2)
 		return;
 
+	if (gMC.respawnTimer)
+		return;
+
 	switch (gArmsData[gSelectedArms].code)
 	{
 		case 1:
