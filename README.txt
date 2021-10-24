@@ -1,4 +1,4 @@
-Cave Story DS homebrew release v0.3 by rain - play Cave Story on your DS after 15 years
+Cave Story DS homebrew release v0.3a by rain - play Cave Story on your DS after 15 years
 
 Controls:
 	Press L+R+Start to access the escape menu.
@@ -41,6 +41,7 @@ Thanks to:
 	Pixel
 
 Changelog:
+
 v0.3:
 	Local multiplayer is here! Explore the caves with a friend over wireless.
 	Thanks to Drenn1 and huiminghao's wonderful Nifi code from GameYob and NesDS respectively.
@@ -53,6 +54,9 @@ v0.3:
 	-Fixed bosses damage frames not appearing half the time.
 	-Fix camera position in H**l ending event.
 	-Tile 0 is no longer rendered.
+	-Added some "fun" ROMs to play.
+	v0.3a:
+		Fix shooting while dead in netplay.
 v0.2:
 	-Japanese language support!
 	-Reduced filesize, so it can run on more flashcarts. (ADPCM sound with waveconv.exe)

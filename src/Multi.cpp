@@ -1,3 +1,9 @@
+
+//The majority of code is taken from here.
+//https://github.com/Drenn1/GameYob/blob/master/platform/ds/arm9/source/nifi.cpp
+//with minor alterations taken from here.
+//https://github.com/RocketRobz/NesDS/blob/master/arm9/source/multi.c
+
 #include "Multi.h"
 
 #include <nds.h>
