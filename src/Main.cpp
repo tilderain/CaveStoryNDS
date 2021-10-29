@@ -138,9 +138,14 @@ int main(int argc, char *argv[])
 	gDebug.bEnabled = conf.bDebug;
 	gb50Fps = conf.bFps;
 	gbTransparency = conf.bTransparency;
-
-	if(conf.bBottomScreen)
+	
+	scanKeys();
+	if(conf.bBottomScreen || keysHeld() & KEY_START)
+	{
+		conf.bBottomScreen = true;
 		lcdMainOnBottom();
+	}
+
 	
 	memcpy(bindings, conf.bindings, sizeof(bindings));
 
