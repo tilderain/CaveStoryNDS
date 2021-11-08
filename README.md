@@ -43,6 +43,8 @@ The PNGs are required to be 16-color palettized, with specific overrides for one
 	devKitPro
 	gl2D
 
+	lvandeve- lodepng
+
 	Drenn1- wifi code
 	huiminghao- wifi code
 

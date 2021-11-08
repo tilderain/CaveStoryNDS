@@ -33,6 +33,8 @@ Thanks to:
 	devKitPro
 	gl2D
 
+	lvandeve- lodepng
+
 	Drenn1- wifi code
 	huiminghao- wifi code
 
