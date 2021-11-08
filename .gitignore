@@ -74,3 +74,6 @@ symbols.txt
 cyglog.txt
 perfdata*.txt
 resolve.pl
+
+*.ml1
+/release*
