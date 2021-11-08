@@ -1,6 +1,9 @@
 
 fix credit bitmapreload
 fix credit jpn caret zzz
+fix ending pic / manually draw them
+
+**fix my wifi lib
 
 fix bk0
 
@@ -23,6 +26,8 @@ synchronize org timer on wifi hang?
 
 make wifi blink better
 
+
+fix tile 0 tiles with content being rendered (egg corridor?)
 
 
 profile Swapmychar // optimize
