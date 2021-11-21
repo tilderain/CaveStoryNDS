@@ -24,8 +24,8 @@ INCLUDES	:=	include
 SPRITES		:=  sprites
 
 GAME_TITLE := Cave Story DS ~ CSE2
-GAME_SUBTITLE1 := github.com/tilderain/CaveStoryDS
-GAME_SUBTITLE2 := 
+GAME_SUBTITLE1 := v0.4
+GAME_SUBTITLE2 := github.com/tilderain/CaveStoryDS
 GAME_ICON := $(CURDIR)/../icon.bmp
 
 
@@ -42,7 +42,7 @@ export SDL_LIB	:=	$(DEVKITPRO)/msys2/usr/lib/SDL
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:= -g -Wall -Os\
+CFLAGS	:= -g -Wall -O3\
  		 -mcpu=arm946e-s -march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
 		-ffast-math -DFIX_BUGS \
 		$(ARCH)
