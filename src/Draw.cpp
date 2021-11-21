@@ -45,6 +45,11 @@
 
 #include "nifi.h"
 
+void Timer_10ms2()
+{
+
+}
+
 struct VramSlot
 {
 	SurfaceID id;
@@ -691,7 +696,15 @@ BOOL Flip_SystemTask()
 		glFlush(0);
 
 		if(!nifiIsLinked())
-			swiWaitForVBlank();
+		{
+			if(!gb50Fps)
+				swiWaitForVBlank();
+			else
+			{
+				swiIntrWait(1, IRQ_TIMER2);
+			}
+		}
+
 		else
 		{
 			if(nifiConsecutiveWaitingFramesPrev <= 400)
@@ -702,8 +715,7 @@ BOOL Flip_SystemTask()
 
 		}
 		
-		if(gb50Fps && gVBlankCounter % 5 == 0) swiWaitForVBlank();
-		
+
 		glBegin2D();
 	}
 	
@@ -791,7 +803,13 @@ BOOL StartDirectDraw()
 	}
 
 #endif
-	
+
+	irqDisable(IRQ_TIMER2);
+	// re-set timer3
+	TIMER2_CR = 0;
+	TIMER2_DATA = -(13106 / 5); // 13106.1 * 256 / 5 cycles = ~20ms;
+	TIMER2_CR = 0x00C2; // enable, irq, 1/256 clock
+	irqEnable(IRQ_TIMER2);
 	
 	return TRUE;
 }
