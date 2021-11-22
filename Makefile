@@ -42,7 +42,7 @@ export SDL_LIB	:=	$(DEVKITPRO)/msys2/usr/lib/SDL
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:= -g -Wall -O3\
+CFLAGS	:= -g -Wall -Os\
  		 -mcpu=arm946e-s -march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
 		-ffast-math -DFIX_BUGS \
 		$(ARCH)
