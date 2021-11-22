@@ -45,7 +45,7 @@
 
 #include "nifi.h"
 
-void Timer_10ms2()
+void Timer_1ms()
 {
 
 }
@@ -701,7 +701,31 @@ BOOL Flip_SystemTask()
 				swiWaitForVBlank();
 			else
 			{
-				swiIntrWait(1, IRQ_TIMER2);
+				static unsigned long timePrev;
+				static unsigned long timeNow;
+
+				while (TRUE)
+				{
+					// Framerate limiter
+					timeNow = timerTicks2msec(cpuGetTiming());
+
+					if (timeNow >= timePrev + 20)
+						break;
+
+					if (timeNow + 10000 < timePrev)
+					{
+						timeNow = timePrev = 0; //Timer overflowed
+						break;
+					}
+
+					swiIntrWait(1, IRQ_TIMER2); //sleep(1)
+				}
+
+				if (timeNow >= timePrev + 100)
+					timePrev = timeNow;	// If the timer is freakishly out of sync, panic and reset it, instead of spamming frames for who-knows how long
+				else
+					timePrev += 20;
+
 			}
 		}
 
@@ -805,11 +829,13 @@ BOOL StartDirectDraw()
 #endif
 
 	irqDisable(IRQ_TIMER2);
-	// re-set timer3
+	// re-set timer2
 	TIMER2_CR = 0;
-	TIMER2_DATA = -(13106 / 5); // 13106.1 * 256 / 5 cycles = ~20ms;
-	TIMER2_CR = 0x00C2; // enable, irq, 1/256 clock
+	TIMER2_DATA = TIMER_FREQ_256(1000); //1000ms
+	TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
 	irqEnable(IRQ_TIMER2);
+
+	cpuStartTiming(0);
 	
 	return TRUE;
 }
