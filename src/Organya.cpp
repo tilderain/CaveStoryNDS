@@ -32,6 +32,8 @@
 #include "NDSSoundSpec.h"
 #include "fopen.h"
 
+#include "errno.h"
+
 #define PANDUMMY 0xFF
 #define VOLDUMMY 0xFF
 #define KEYDUMMY 0xFF
@@ -458,6 +460,7 @@ void LoadOrganya(const char *name)
 	if (!fp)
 	{
 		printf("Failed to open %s\n", name);
+		printf("Error: %d (%s)\n", errno, strerror(errno));
 		return;
 	}
 
@@ -553,7 +556,6 @@ void LoadOrganya(const char *name)
 	}
 
 	fclose_embed(fp);
-	remove(path);
 
 	//Create waves
 	for (int j = 0; j < 8; j++)

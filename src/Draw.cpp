@@ -45,6 +45,8 @@
 
 #include "nifi.h"
 
+#include "errno.h"
+
 void Timer_1ms()
 {
 
@@ -1129,6 +1131,7 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	}
 	ErrorInitConsole();
 	printf("Failed to open file %s\n", name);
+	printf("Error: %d (%s)\n", errno, strerror(errno));
 	return FALSE;
 }
 

@@ -36,6 +36,8 @@
 
 #include "TextScr.h"
 
+#include "errno.h"
+
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
 PROFILE profile;
@@ -308,7 +310,7 @@ BOOL InitializeGame(void)
 	{
 		ErrorInitConsole();
 		printf("Error: Failed to load stage");
-
+		printf("Error: %d (%s)\n", errno, strerror(errno));
 		return FALSE;
 	}
 

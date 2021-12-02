@@ -69,6 +69,8 @@ RECT gRect_line = {0, 0, 216, 16};
 static unsigned long nod_color;
 #endif
 
+#include "errno.h"
+
 // Initialize and end tsc
 BOOL InitTextScript2(void)
 {
@@ -853,6 +855,7 @@ int TextScriptProc(void)
 						{
 							ErrorInitConsole();
 							printf("Error : Failed to load stage");
+							printf("Error: %d (%s)\n", errno, strerror(errno));
 							return enum_ESCRETURN_exit;
 						}
 					}
