@@ -165,7 +165,7 @@ void ActionIllust(void)
 // Draw illustration
 void PutIllust(void)
 {
-	RECT rcIllust = {0, 0, 160, 240};
+	RECT rcIllust = {0, 0, 128, 192};
 #if WINDOW_WIDTH != 320 || WINDOW_HEIGHT != 240
 	// Widescreen edit
 	RECT rcClip = {(WINDOW_WIDTH - 320) / 2, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
