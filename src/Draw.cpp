@@ -1103,7 +1103,8 @@ facejump:
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
 	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET
-		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE || surf_no == SURFACE_ID_NPC_SYM)
+		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE || surf_no == SURFACE_ID_NPC_SYM
+		|| surf_no == SURFACE_ID_ARMS)
 	{
 
 	}
@@ -1722,7 +1723,7 @@ void PutText2(int x, int y, const char *text, unsigned long color, SurfaceID sur
 				}
 				if(found) break;
 			}
-			//if(!found) printf("%x%x wtf\n", text[i], text[i+1]);
+			if(!found) {ErrorInitConsole(); printf("%x%x wtf\n", text[i], text[i+1]);}
 			i+=2;
 		}
 		else

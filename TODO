@@ -1,9 +1,15 @@
 
-fix credit bitmapreload
-fix credit jpn caret zzz
-fix ending pic / manually draw them
 
+fix credit jpn caret zzz
 **fix my wifi lib
+
+
+fix tile 0 tiles with content being rendered (egg corridor?)
+
+fix missing jpn map name
+
+fix missing credit.tsc jpn
+fix credit sripper size jpn
 
 fix bk0
 
@@ -27,13 +33,10 @@ synchronize org timer on wifi hang?
 make wifi blink better
 
 
-fix tile 0 tiles with content being rendered (egg corridor?)
 
 
 profile Swapmychar // optimize
 online wifi
-
-hold start to start bottom screen
 
 troubleshoot fat fs read // sound interrupt
 
