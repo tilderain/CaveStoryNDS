@@ -697,7 +697,7 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
-		if(!nifiIsLinked())
+		if(!nifiIsLinked() || gb50Fps)
 		{
 			if(!gb50Fps)
 				swiWaitForVBlank();
