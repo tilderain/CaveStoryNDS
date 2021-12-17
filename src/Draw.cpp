@@ -1208,6 +1208,7 @@ void CopyDirtyText()
 		}
 		else
 		{
+			if(g_GameFlags & 8) return; //don't ruin credit cast in credits
 			RECT rect = {0, 0, surf[SURFACE_ID_TEXT_LINE1].w, surf[SURFACE_ID_TEXT_LINE1].h};
 			CopyDataToTexture(surf[30 + i].paletteType, surf[30 + i].textureid, 30 + i, 
 			surf[30 + i].xoffset, surf[30 + i].yoffset, &rect);
