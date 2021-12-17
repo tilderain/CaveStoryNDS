@@ -855,7 +855,6 @@ int TextScriptProc(void)
 						{
 							ErrorInitConsole();
 							printf("Error : Failed to load stage");
-							printf("Error: %d (%s)\n", errno, strerror(errno));
 							return enum_ESCRETURN_exit;
 						}
 					}
@@ -1355,8 +1354,8 @@ int TextScriptProc(void)
 						#ifdef CYG_PROFILER
 						cygprofile_end();
 						#endif
-						z = GetTextScriptNo(gTS.p_read + 4);
-						if(!SaveProfile(NULL))
+						z = GetTextScriptNo(gTS.p_read + 4); 
+						if(!SaveProfile(NULL)) //jump to save failed script
 						{
 							if(!nifiIsLinked())
 								JumpTextScript(z);

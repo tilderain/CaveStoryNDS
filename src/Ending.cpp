@@ -59,7 +59,7 @@ void PutStripper(void)
 		{
 			// Draw text
 			rc.left = 0;
-			rc.right = 128;
+			rc.right = 208;
 			rc.top = s * 16;
 			rc.bottom = rc.top + 16;
 
@@ -108,12 +108,13 @@ void SetStripper(int x, int y, const char *text, int cast)
 
 	// Draw text
 	rc.left = 0;
-	rc.right = 128;
+	rc.right = 208;
 	rc.top = s * 16;
 	rc.bottom = rc.top + 16;
 
-	CortBox2(&rc, 0, SURFACE_ID_CREDIT_CAST);
+
 	#ifdef JAPANESE
+		CortBox2(&rc, 0, SURFACE_ID_CREDIT_CAST);
 		PutText2(0, rc.top, text, RGB(0xFF, 0xFF, 0xFE), SURFACE_ID_CREDIT_CAST);
 	#endif
 }

@@ -221,9 +221,9 @@ bool LoadGenericData()
 		MakeSurface_Generic(40, 240, SURFACE_ID_VALUE_VIEW);
 		MakeSurface_Generic(320, 240, SURFACE_ID_LEVEL_SPRITESET_1);
 		MakeSurface_Generic(320, 240, SURFACE_ID_LEVEL_SPRITESET_2);
-		MakeSurface_Generic(160, 16 * MAX_STRIP, SURFACE_ID_CREDIT_CAST);
+		MakeSurface_Generic(208, 16 * MAX_STRIP, SURFACE_ID_CREDIT_CAST);
 #ifdef JAPANESE
-		surf[SURFACE_ID_CREDIT_CAST].xoffset = 320;
+		surf[SURFACE_ID_CREDIT_CAST].xoffset = 272;
 		surf[SURFACE_ID_CREDIT_CAST].yoffset = 0;
 		surf[SURFACE_ID_CREDIT_CAST].palette = surf[SURFACE_ID_FONT].palette;
 		surf[SURFACE_ID_CREDIT_CAST].paletteAddress = surf[SURFACE_ID_FONT].paletteAddress;

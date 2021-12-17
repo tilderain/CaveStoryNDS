@@ -873,23 +873,6 @@ bool npcSymInArmsSlot = false;
 
 BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 {
-	if (surf_no == SURFACE_ID_LEVEL_TILESET || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR \
-		|| surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_BULLET\
-		|| surf_no == SURFACE_ID_NPC_SYM || surf_no == SURFACE_ID_LEVEL_BACKGROUND || surf_no == SURFACE_ID_ITEM_IMAGE\
-	 || surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_FADE\
-		|| surf_no == SURFACE_ID_STAGE_ITEM || surf_no == SURFACE_ID_LEVEL_SPRITESET_2\
-		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_LOADING\
-		|| surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_NPC_REGU\
-		|| surf_no == SURFACE_ID_CASTS || surf_no == SURFACE_ID_FACE || surf_no == SURFACE_ID_CREDITS_IMAGE\
-		|| surf_no == SURFACE_ID_MY_CHAR2)
-	{
-
-	}
-	else
-	{
-		fclose_embed(fp);
-		return TRUE;
-	}
 
 	struct stat file_descriptor;
 	long file_size;
@@ -909,7 +892,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	LodePNGState state;
 	lodepng_state_init(&state);
 
-	if(surf_no == SURFACE_ID_NPC_REGU || surf_no == SURFACE_ID_FACE || !strcmp("Npc/NpcGuest", surf[surf_no].name))
+	if(surf_no == SURFACE_ID_NPC_REGU || surf_no == SURFACE_ID_FACE || !strcmp("Npc/NpcGuest", surf[surf_no].name)) //hardcode 256 color bitmap
 	{
 		state.info_raw.palettesize = 256;
 		state.info_raw.bitdepth = 4;
@@ -925,7 +908,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	state.decoder.color_convert = true;
 	
 	
-	lodepng_decode(&bitmap_pixels, &bitmap_width, &bitmap_height, &state, file_buffer, file_size);
+	lodepng_decode(&bitmap_pixels, &bitmap_width, &bitmap_height, &state, file_buffer, file_size); //if only this worked 100% of the time
 
 	printf("Size %d\n", state.info_png.color.palettesize);
 
@@ -939,7 +922,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	}
 
 	surf[surf_no].palette = (u16*)malloc(palettesize*2);
-	for (int i = 0; i < palettesize; i++)
+	for (int i = 0; i < palettesize; i++) //extract palette
 	{
 		uint8_t r,g,b;
 		r = state.info_png.color.palette[i*4] / 8;
@@ -1104,13 +1087,14 @@ facejump:
 
 BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 {
-	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET
+	// these surfs need to be reloaded again even if they were already loaded... i keep forgetting about this
+	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET 
 		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE || surf_no == SURFACE_ID_NPC_SYM
 		|| surf_no == SURFACE_ID_ARMS)
 	{
 
 	}
-	else if(!strcmp(name, surf[surf_no].name)) return TRUE;
+	else if(!strcmp(name, surf[surf_no].name)) return TRUE; //don't reload surf if it's the same
 	printf("LoadBitmap_File %s\n", name);
 	printf("Memory: %d %d %d\n", mallinfo().arena, mallinfo().uordblks, mallinfo().fordblks);
 	//Attempt to load PNG
