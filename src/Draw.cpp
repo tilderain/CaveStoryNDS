@@ -608,12 +608,12 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 	}
 	int surfStartH = rect->top; 
 	// maybe this will help on hardware?
-	DC_FlushRange(surf[surf_no].data, surf[surf_no].w*surf[surf_no].h);
+	DC_FlushRange(surf[surf_no].data, (surf[surf_no].w*surf[surf_no].h)/texDivi);
 
 	for(int h = 0; h < rectH; h++)
 	{
-	memcpy(tex + (atlasW*h/2) + (atlasW*yoffset/2) + (xoffset/2), //position to copy to	
-			surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf				
+	dmaCopyAsynch(surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf		
+		tex + (atlasW*h/2) + (atlasW*yoffset/2) + (xoffset/2), //position to copy to	
 							(rectW/texDivi)); //how many pixels to copy
 		surfStartH++;
 	}
@@ -696,6 +696,9 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
+		CopyFaceTexture();
+		CopyDirtyText();
+
 		if(!nifiIsLinked() || gb50Fps)
 		{
 			if(!gb50Fps)
@@ -744,8 +747,6 @@ BOOL Flip_SystemTask()
 		glBegin2D();
 	}
 	
-		CopyFaceTexture();
-		CopyDirtyText();
 
 
 	#ifdef TWO_SCREENS
@@ -1089,7 +1090,7 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	// these surfs need to be reloaded again even if they were already loaded... i keep forgetting about this
 	if(surf_no == SURFACE_ID_PIXEL || surf_no == SURFACE_ID_TITLE || surf_no == SURFACE_ID_CARET 
 		|| surf_no == SURFACE_ID_BULLET || surf_no == SURFACE_ID_ITEM_IMAGE || surf_no == SURFACE_ID_NPC_SYM
-		|| surf_no == SURFACE_ID_ARMS)
+		|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_CREDITS_IMAGE || surf_no == SURFACE_ID_CASTS)
 	{
 
 	}
