@@ -538,7 +538,7 @@ int AssignColorPalette(SURFACE* surf, uint16 width, const uint16* table)
 	}
 	
 }
-
+	static int channel = 0;
 // Copy data from surf_no to texture
 BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect)
 {
@@ -610,14 +610,15 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 	// maybe this will help on hardware?
 	DC_FlushRange(surf[surf_no].data, (surf[surf_no].w*surf[surf_no].h)/texDivi);
 
+
 	for(int h = 0; h < rectH; h++)
 	{
-	dmaCopyAsynch(surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf		
+	dmaCopyHalfWordsAsynch(channel, surf[surf_no].data+((rect->left/texDivi) + (surfaceW*surfStartH/texDivi)), //line from the surf		
 		tex + (atlasW*h/2) + (atlasW*yoffset/2) + (xoffset/2), //position to copy to	
 							(rectW/texDivi)); //how many pixels to copy
 		surfStartH++;
 	}
-
+	channel = (channel + 1) % 4;
 	vramRestorePrimaryBanks(vramTemp);
 
 	return TRUE;

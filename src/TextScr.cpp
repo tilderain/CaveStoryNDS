@@ -564,7 +564,7 @@ void PutTextScript(void)
 	rcFace.top = 0;
 	rcFace.right = 48;
 	rcFace.bottom = 48;
-	if(gFaceNoCurrent == gFaceNo)
+	if(gFaceNoCurrent == gFaceNo && gFaceNo != 0)
 	{
 		
 		if (gTS.face_x < (TEXT_LEFT * 0x200))
