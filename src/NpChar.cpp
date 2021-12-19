@@ -26,6 +26,7 @@
 #include "ValueView.h"
 
 #include "fopen.h"
+#include "Stage.h"
 
 NPCHAR* gNPC[NPC_MAX];
 NPCHAR* gActiveNPC[NPC_MAX];
@@ -399,6 +400,46 @@ BOOL RemoveFromActiveNPCList(NPCHAR *npc)
 	return FALSE;
 }
 
+void PutNpCharGlobal(int fx, int fy)
+{
+	//int n;
+	signed char a = 0;
+
+	int side;
+
+	for (int n = 0; n < NPC_MAX; ++n)
+	{
+		if (gNPC[n]->cond & 0x80)
+		{
+			if (gNPC[n]->shock)
+			{
+				a = 2 * ((gNPC[n]->shock / 2) % 2) - 1;
+			}
+			else
+			{
+				a = 0;
+				if (gNPC[n]->bits & NPC_SHOW_DAMAGE && gNPC[n]->damage_view)
+				{
+					SetValueView(&gNPC[n]->x, &gNPC[n]->y, gNPC[n]->damage_view);
+					gNPC[n]->damage_view = 0;
+				}
+			}
+
+			if (gNPC[n]->direct == 0)
+				side = gNPC[n]->view.front;
+			else
+				side = gNPC[n]->view.back;
+
+			PutBitmap3(
+				&grcGame,
+				(gNPC[n]->x - side) / 0x200 - fx / 0x200 + a,
+				(gNPC[n]->y - gNPC[n]->view.top) / 0x200 - fy / 0x200,
+				&gNPC[n]->rect,
+				(SurfaceID)gNPC[n]->surf);
+		}
+	}
+}
+
 __attribute__((hot))
 void PutNpChar(int fx, int fy)
 {
@@ -406,6 +447,13 @@ void PutNpChar(int fx, int fy)
 	signed char a = 0;
 
 	int side;
+
+	//hardcode cloud generator map
+	if(gStageNo == 71 || gStageNo == 78)
+	{	
+		PutNpCharGlobal(fx, fy);
+		return;
+	}
 
 	for (int n = 0; n < gActiveNPCCount; ++n)
 	{
@@ -437,6 +485,7 @@ void PutNpChar(int fx, int fy)
 	
 	}
 }
+
 
 __attribute__((hot))
 void ActNpChar(void)
