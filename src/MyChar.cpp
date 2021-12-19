@@ -70,6 +70,9 @@ int GetNearestMyCharNo(int x, int y)
 {
 	if(!nifiIsLinked()) return 0;
 
+	if(gMC.respawnTimer) return 1;
+	if(gMCP2.respawnTimer) return 0;
+
 	int p1 = abs(x - gMC.x) + abs(y - gMC.y);
 	int p2 = abs(x - gMCP2.x) + abs(y - gMCP2.y);
 	if(p1 < p2) return 0;
