@@ -162,7 +162,7 @@ static BOOL LoadProfileReal()
 		gCounter = 0;
 	}
 
-	memcpy(gArmsData, profile.arms, sizeof(gArmsData));
+	memcpy(gArmsDataP1, profile.arms, sizeof(gArmsDataP1));
 	memcpy(gArmsDataP2, profile.arms, sizeof(gArmsDataP2));
 
 	memcpy(gItemData, profile.items, sizeof(gItemData));
