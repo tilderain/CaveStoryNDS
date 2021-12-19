@@ -53,6 +53,10 @@ MYCHAR* GetNearestMyChar(int x, int y)
 		if(prev_ret == 0) return &gMC;
 		return &gMCP2;
 	}
+
+	if(gMC.respawnTimer) return &gMCP2;
+	if(gMCP2.respawnTimer) return &gMC;
+
 	int p1 = abs(x - gMC.x) + abs(y - gMC.y);
 	int p2 = abs(x - gMCP2.x) + abs(y - gMCP2.y);
 	//printf("%d %d\n", p1, p2);
