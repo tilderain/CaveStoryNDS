@@ -699,10 +699,6 @@ BOOL Flip_SystemTask()
 		glFlush(0);
 
 
-		CopyFaceTexture();
-		CopyDirtyText();
-
-
 		swiWaitForVBlank();
 
 		if(gb50Fps)
@@ -828,7 +824,7 @@ BOOL StartDirectDraw()
 	irqEnable(IRQ_TIMER2);
 
 	cpuStartTiming(0);
-	
+
 	return TRUE;
 }
 

@@ -323,7 +323,7 @@ void SOUNDBUFFER::Mix(long *stream, uint32_t samples)
 SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
 int gVBlankCounter = 0;
-void DoOrganya(void)
+void Vblankhandler(void)
 {
 	gOrgTimer += SND_BUFFERSIZE;
 	
@@ -334,6 +334,9 @@ void DoOrganya(void)
 	}
 	updateChannelStates();
 	gVBlankCounter++;
+
+	CopyFaceTexture();
+	CopyDirtyText();
 }
 
 mm_stream mystream;
@@ -362,7 +365,7 @@ bool InitDirectSound()
 
 	soundEnable();
 	irqEnable(IRQ_VBLANK);
-	irqSet(IRQ_VBLANK, DoOrganya);
+	irqSet(IRQ_VBLANK, Vblankhandler);
 
 	return true;
 }
