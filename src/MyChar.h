@@ -69,7 +69,7 @@ typedef struct MYCHAR
 	int respawnTimer;
 } MYCHAR;
 
-extern MYCHAR gMC;
+extern MYCHAR* gMC;
 extern MYCHAR gMCP1;
 extern MYCHAR gMCP2;
 

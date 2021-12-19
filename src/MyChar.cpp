@@ -46,22 +46,22 @@ int prev_ret = 0;
 
 MYCHAR* GetNearestMyChar(int x, int y)
 {
-	if(!nifiIsLinkedInline()) return &gMC;
+	if(!nifiIsLinkedInline()) return &gMCP1;
 
 	if(x == cache_x && y == cache_y)
 	{
-		if(prev_ret == 0) return &gMC;
+		if(prev_ret == 0) return &gMCP1;
 		return &gMCP2;
 	}
 
-	if(gMC->respawnTimer) return &gMCP2;
-	if(gMCP2.respawnTimer) return &gMC;
+	if(gMCP1.respawnTimer) return &gMCP2;
+	if(gMCP2.respawnTimer) return &gMCP1;
 
 	int p1 = abs(x - gMC->x) + abs(y - gMC->y);
 	int p2 = abs(x - gMCP2.x) + abs(y - gMCP2.y);
 	//printf("%d %d\n", p1, p2);
 	cache_x = x; cache_y = y;
-	if(p1 < p2)	{prev_ret = 0; return &gMC;};
+	if(p1 < p2)	{prev_ret = 0; return &gMCP1;};
 	prev_ret = 1;
 	return &gMCP2;
 }
@@ -81,9 +81,9 @@ int GetNearestMyCharNo(int x, int y)
 
 MYCHAR* GetMyCharNo(int no)
 {
-	if(!nifiIsLinked()) return &gMC;
+	if(!nifiIsLinked()) return &gMCP1;
 
-	if (no == 0) return &gMC;
+	if (no == 0) return &gMCP1;
 	return &gMCP2;
 }
 
@@ -93,14 +93,13 @@ bool SwapMyChar(void)
 	//have mercy
 	if(gCurMyChar == 0)
 	{
-		gMCP1 = gMC;
 		gSelectedArmsP1 = gSelectedArms;
 		gKeyTrgP1 = gKeyTrg;
 		gKeyP1 = gKey;
 		memcpy(gArmsDataP1, gArmsData, sizeof(gArmsData));
 
 		gCurMyChar = 1;
-		gMC = gMCP2;
+		gMC = &gMCP2;
 		gKeyTrg = gKeyTrgP2;
 		gKey = gKeyP2;
 		gSelectedArms = gSelectedArmsP2;
@@ -108,14 +107,13 @@ bool SwapMyChar(void)
 	}
 	else
 	{
-		gMCP2 = gMC;
 		gKeyTrgP2 = gKeyTrg;
 		gKeyP2 = gKey;
 		gSelectedArmsP2 = gSelectedArms;
 		memcpy(gArmsDataP2, gArmsData, sizeof(gArmsData));
 
 		gCurMyChar = 0;
-		gMC = gMCP1;
+		gMC = &gMCP1;
 		gKeyTrg = gKeyTrgP1;
 		gKey = gKeyP1;
 		gSelectedArms = gSelectedArmsP1;
@@ -126,23 +124,7 @@ bool SwapMyChar(void)
 
 void InitMyChar(void)
 {
-	memset(&gMC, 0, sizeof(MYCHAR));
-	gMC->cond = 0x80;
-	gMC->direct = 2;
-
-	gMC->view.back = 8 * 0x200;
-	gMC->view.top = 8 * 0x200;
-	gMC->view.front = 8 * 0x200;
-	gMC->view.bottom = 8 * 0x200;
-
-	gMC->hit.back = 5 * 0x200;
-	gMC->hit.top = 8 * 0x200;
-	gMC->hit.front = 5 * 0x200;
-	gMC->hit.bottom = 8 * 0x200;
-
-	gMC->life = 3;
-	gMC->max_life = 3;
-	gMC->unit = 0;
+	gMC = &gMCP1;
 
 	memset(&gMCP1, 0, sizeof(MYCHAR));
 	gMCP1.cond = 0x80;
