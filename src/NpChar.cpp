@@ -539,7 +539,7 @@ void ChangeNpCharByEvent(int code_event, int code_char, int dir)
 			}
 			else if (dir == 4)
 			{
-				if (gNPC[n]->x < gMC.x)
+				if (gNPC[n]->x < gMC->x)
 					gNPC[n]->direct = 2;
 				else
 					gNPC[n]->direct = 0;
@@ -584,7 +584,7 @@ void ChangeCheckableNpCharByEvent(int code_event, int code_char, int dir)
 			}
 			else if (dir == 4)
 			{
-				if (gNPC[n]->x < gMC.x)
+				if (gNPC[n]->x < gMC->x)
 					gNPC[n]->direct = 2;
 				else
 					gNPC[n]->direct = 0;
@@ -621,7 +621,7 @@ void SetNpCharActionNo(int code_event, int act_no, int dir)
 	}
 	else if (dir == 4)
 	{
-		if (gNPC[n]->x < gMC.x)
+		if (gNPC[n]->x < gMC->x)
 			gNPC[n]->direct = 2;
 		else
 			gNPC[n]->direct = 0;
@@ -655,7 +655,7 @@ void MoveNpChar(int code_event, int x, int y, int dir)
 	}
 	else if (dir == 4)
 	{
-		if (gNPC[n]->x < gMC.x)
+		if (gNPC[n]->x < gMC->x)
 			gNPC[n]->direct = 2;
 		else
 			gNPC[n]->direct = 0;
@@ -670,18 +670,18 @@ void BackStepMyChar(int code_event)
 {
 	int n = 0;
 
-	gMC.cond &= ~1;
-	gMC.ym = -0x200;
+	gMC->cond &= ~1;
+	gMC->ym = -0x200;
 
 	if (code_event == 0)
 	{
-		gMC.direct = 0;
-		gMC.xm = 0x200;
+		gMC->direct = 0;
+		gMC->xm = 0x200;
 	}
 	else if (code_event == 2)
 	{
-		gMC.direct = 2;
-		gMC.xm = -0x200;
+		gMC->direct = 2;
+		gMC->xm = -0x200;
 	}
 	else
 	{
@@ -696,15 +696,15 @@ void BackStepMyChar(int code_event)
 		if (n == NPC_MAX)
 			return;
 
-		if (gNPC[n]->x < gMC.x)
+		if (gNPC[n]->x < gMC->x)
 		{
-			gMC.direct = 0;
-			gMC.xm = 0x200;
+			gMC->direct = 0;
+			gMC->xm = 0x200;
 		}
 		else
 		{
-			gMC.direct = 2;
-			gMC.xm = -0x200;
+			gMC->direct = 2;
+			gMC->xm = -0x200;
 		}
 	}
 }

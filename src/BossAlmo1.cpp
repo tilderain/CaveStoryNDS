@@ -449,9 +449,9 @@ void ActBossChar_Core(void)
 			// Fallthrough
 		case 221:
 			++npc->act_wait;
-			SetNpChar(199, gMC.x + (Random(-50, 150) * 0x200 * 2), gMC.y + (Random(-160, 160) * 0x200), 0, 0, 0, NULL, 0x100);
-			gMC.xm -= 0x20;
-			gMC.cond |= 0x20;
+			SetNpChar(199, gMC->x + (Random(-50, 150) * 0x200 * 2), gMC->y + (Random(-160, 160) * 0x200), 0, 0, 0, NULL, 0x100);
+			gMC->xm -= 0x20;
+			gMC->cond |= 0x20;
 
 			if(nifiIsLinked())
 			{
@@ -480,7 +480,7 @@ void ActBossChar_Core(void)
 
 			if (npc->act_wait == 300 || npc->act_wait == 350 || npc->act_wait == 400)
 			{
-				deg = GetArktan(npc->x - gMC.x, npc->y - gMC.y);
+				deg = GetArktan(npc->x - gMC->x, npc->y - gMC->y);
 				ym = GetSin(deg) * 3;
 				xm = GetCos(deg) * 3;
 				SetNpChar(218, npc->x - (40 * 0x200), npc->y, xm, ym, 0, NULL, 0x100);

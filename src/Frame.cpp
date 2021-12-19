@@ -275,8 +275,8 @@ void SetFrameMyChar(void)
 
 void SetFrameTargetMyChar(int wait)
 {
-	gFrame.tgt_x = &gMC.tgt_x;
-	gFrame.tgt_y = &gMC.tgt_y;
+	gFrame.tgt_x = &gMC->tgt_x;
+	gFrame.tgt_y = &gMC->tgt_y;
 	gFrame.wait = wait;
 	if(nifiIsClient())
 	{

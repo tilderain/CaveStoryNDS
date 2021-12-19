@@ -362,7 +362,7 @@ int ModeTitle(void)
 #endif
 
 	g_GameFlags = 0;
-	gMC.equip |= 0x100;
+	gMC->equip |= 0x100;
 
 	// Start loop
 	wait = 0;
@@ -778,9 +778,9 @@ int ModeAction(void)
 						return 1;
 				}
 				gInCamp = false;
-				gMC.cond &= ~1;
+				gMC->cond &= ~1;
 			}
-			else if (gMC.equip & 2 && gKeyTrg & gKeyMap)
+			else if (gMC->equip & 2 && gKeyTrg & gKeyMap)
 			{
 				BackupSurface(SURFACE_ID_SCREEN_GRAB, &grcGame);
 				gInMinimap = true;

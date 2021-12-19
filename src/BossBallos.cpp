@@ -218,8 +218,8 @@ void ActBossChar_Ballos(void)
 		case 100:
 			npc->act_no = 101;
 			npc->ani_no = 0;
-			npc->x = gMC.x;
-			SetNpChar(333, gMC.x, 304 * 0x200, 0, 0, 2, NULL, 0x100);
+			npc->x = gMC->x;
+			SetNpChar(333, gMC->x, 304 * 0x200, 0, 0, 2, NULL, 0x100);
 
 			if(nifiIsLinked())
 			{
@@ -252,7 +252,7 @@ void ActBossChar_Ballos(void)
 				SetQuake2(30);
 				PlaySoundObject(44, 1);
 
-				if (gMC.y > npc->y + (48 * 0x200) && gMC.x < npc->x + (24 * 0x200) && gMC.x > npc->x - (24 * 0x200))
+				if (gMC->y > npc->y + (48 * 0x200) && gMC->x < npc->x + (24 * 0x200) && gMC->x > npc->x - (24 * 0x200))
 					DamageMyChar(16);
 
 				for (i = 0; i < 0x10; ++i)
@@ -261,8 +261,8 @@ void ActBossChar_Ballos(void)
 					SetNpChar(4, x, npc->y + (40 * 0x200), 0, 0, 0, NULL, 0x100);
 				}
 
-				if (gMC.flag & 8)
-					gMC.ym = -0x200;
+				if (gMC->flag & 8)
+					gMC->ym = -0x200;
 
 				if(nifiIsLinked)
 				{
@@ -344,11 +344,11 @@ void ActBossChar_Ballos(void)
 				npc->act_no = 201;
 				npc->act_wait = 0;
 
-				if (gMC.y > npc->y + (56 * 0x200))
+				if (gMC->y > npc->y + (56 * 0x200))
 					DamageMyChar(16);
 
-				if (gMC.flag & 8)
-					gMC.ym = -0x200;
+				if (gMC->flag & 8)
+					gMC->ym = -0x200;
 
 				if(nifiIsLinked())
 				{
@@ -410,8 +410,8 @@ void ActBossChar_Ballos(void)
 					SetNpChar(4, x, npc->y + (40 * 0x200), 0, 0, 0, NULL, 0x100);
 				}
 
-				if (gMC.flag & 8)
-					gMC.ym = -0x200;
+				if (gMC->flag & 8)
+					gMC->ym = -0x200;
 				if (gMCP2.flag & 8)
 					gMCP2.ym = -0x200;
 			}
@@ -737,7 +737,7 @@ void ActBossChar_Ballos(void)
 			npc->act_wait = 0;
 			if(!nifiIsLinked())
 			{
-				if (gMC.x > npc->x)
+				if (gMC->x > npc->x)
 				{
 					for (i = 0; i < 8; ++i)
 					{

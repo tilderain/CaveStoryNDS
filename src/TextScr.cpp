@@ -299,7 +299,7 @@ BOOL StartTextScript(int no, int initiator)
 	gTS.offsetY = 0;
 	gTextScriptInitiator = initiator;
 
-	gMC.shock = 0;
+	gMC->shock = 0;
 	gMCP2.shock = 0;	
 
 	gTS.rcText.left = TEXT_LEFT;
@@ -728,7 +728,7 @@ int TextScriptProc(void)
 					if (IS_COMMAND('E','N','D'))
 					{
 						gTS.mode = 0;
-						gMC.cond &= ~1;
+						gMC->cond &= ~1;
 						gMCP2.cond &= ~1;	
 						g_GameFlags |= 3;
 						gTS.face = 0;
@@ -903,8 +903,8 @@ int TextScriptProc(void)
 					{
 						g_GameFlags &= ~2;
 						g_GameFlags |= 1;
-						gMC.up = FALSE;
-						gMC.shock = 0;
+						gMC->up = FALSE;
+						gMC->shock = 0;
 						gMCP2.up = FALSE;
 						gMCP2.shock = 0;						
 						gTS.p_read += 4;
@@ -912,7 +912,7 @@ int TextScriptProc(void)
 					else if (IS_COMMAND('P','R','I'))
 					{
 						g_GameFlags &= ~3;
-						gMC.shock = 0;
+						gMC->shock = 0;
 						gMCP2.shock = 0;							
 						gTS.p_read += 4;
 					}
@@ -1306,12 +1306,12 @@ int TextScriptProc(void)
 
 						if(gTextScriptInitiator == 0)
 						{
-							gMCP2.x = gMC.x; gMCP2.y = gMC.y;
+							gMCP2.x = gMC->x; gMCP2.y = gMC->y;
 							
 						}
 						else
 						{
-							gMC.x = gMCP2.x; gMC.y = gMCP2.y;
+							gMC->x = gMCP2.x; gMC->y = gMCP2.y;
 						}
 						
 						gTS.p_read += 8;
@@ -1592,7 +1592,7 @@ int TextScriptProc(void)
 			break;
 
 		case 7: // WAS
-			if (((gMC.flag | gMCP2.flag) & 8) == 0)
+			if (((gMC->flag | gMCP2.flag) & 8) == 0)
 				break;
 
 			gTS.mode = 1;

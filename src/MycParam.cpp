@@ -58,10 +58,10 @@ void AddExpMyChar(int x)
 		{
 			gArmsData[gSelectedArms].exp = gArmsLevelTable[arms_code].exp[lv];
 
-			if (gMC.equip & 0x80)
+			if (gMC->equip & 0x80)
 			{
-				if (gMC.star < 3)
-					++gMC.star;
+				if (gMC->star < 3)
+					++gMC->star;
 			}
 		}
 	}
@@ -77,7 +77,7 @@ void AddExpMyChar(int x)
 				if (gArmsData[gSelectedArms].code != 13)
 				{
 					PlaySoundObject(27, 1);
-					SetCaret(gMC.x, gMC.y, 10, 0);
+					SetCaret(gMC->x, gMC->y, 10, 0);
 				}
 			}
 		}
@@ -85,12 +85,12 @@ void AddExpMyChar(int x)
 
 	if (gArmsData[gSelectedArms].code != 13)
 	{
-		gMC.exp_count += x;
-		gMC.exp_wait = 30;
+		gMC->exp_count += x;
+		gMC->exp_wait = 30;
 	}
 	else
 	{
-		gMC.exp_wait = 10;
+		gMC->exp_wait = 10;
 	}
 }
 
@@ -125,7 +125,7 @@ void DamageMyChar(int damage)
 #endif
 		return;
 
-	if (gMC.shock)
+	if (gMC->shock)
 		return;
 
 	if (gDebug.bNoclip || gDebug.bGodmode)
@@ -133,29 +133,29 @@ void DamageMyChar(int damage)
 	
 	// Damage player
 	PlaySoundObject(16, 1);
-	gMC.cond &= ~1;
-	gMC.shock = 128;
+	gMC->cond &= ~1;
+	gMC->shock = 128;
 
-	if (gMC.unit == 1)
+	if (gMC->unit == 1)
 	{
 		// Another weird case where there *has* to be an empty 'if' here to produce the same assembly.
 		// Chances are there used to be some commented-out code here.
 	}
 	else
 	{
-		gMC.ym = -0x400;
+		gMC->ym = -0x400;
 	}
 	
 	if(nifiIsLinked() && gEnemyDamageMultiplier > 0)
 		damage = damage * (gEnemyDamageMultiplier + 1);
-	gMC.life -= (short)damage;
+	gMC->life -= (short)damage;
 
 	// Lose a whimsical star
-	if (gMC.equip & 0x80 && gMC.star > 0)
-		gMC.star = (short)gMC.star - 1;	// For some reason, this does a cast to short. Might not be accurate to the original source code (possibly, Pixel was just being careful about int size/conversion, or this is from some weird macro)
+	if (gMC->equip & 0x80 && gMC->star > 0)
+		gMC->star = (short)gMC->star - 1;	// For some reason, this does a cast to short. Might not be accurate to the original source code (possibly, Pixel was just being careful about int size/conversion, or this is from some weird macro)
 
 	// Lose experience
-	if (gMC.equip & 4)
+	if (gMC->equip & 4)
 		gArmsData[gSelectedArms].exp -= damage;
 	else
 		gArmsData[gSelectedArms].exp -= damage * 2;
@@ -171,8 +171,8 @@ void DamageMyChar(int damage)
 
 			gArmsData[gSelectedArms].exp = gArmsLevelTable[arms_code].exp[lv] + gArmsData[gSelectedArms].exp;
 
-			if (gMC.life > 0 && gArmsData[gSelectedArms].code != 13)
-				SetCaret(gMC.x, gMC.y, 10, 2);
+			if (gMC->life > 0 && gArmsData[gSelectedArms].code != 13)
+				SetCaret(gMC->x, gMC->y, 10, 2);
 		}
 		else
 		{
@@ -182,17 +182,17 @@ void DamageMyChar(int damage)
 
 	// Tell player how much damage was taken
 	if(gCurMyChar == 0)
-		SetValueView(&gMC.x, &gMC.y, -damage);
+		SetValueView(&gMC->x, &gMC->y, -damage);
 	else
 		SetValueView(&gMCP2.x, &gMCP2.y, -damage);
 	
 
 	// Death
-	if (gMC.life <= 0)
+	if (gMC->life <= 0)
 	{
 		PlaySoundObject(17, 1);
-		gMC.cond = 0;
-		SetDestroyNpChar(gMC.x, gMC.y, 0x1400, 0x40);
+		gMC->cond = 0;
+		SetDestroyNpChar(gMC->x, gMC->y, 0x1400, 0x40);
 		if(!nifiIsLinked() || nifiIsLinked() && !gRespawnEnabled)
 			StartTextScript(40);
 		else
@@ -207,7 +207,7 @@ void DamageMyChar(int damage)
 			}
 			else
 			{
-				gMC.respawnTimer = 120;
+				gMC->respawnTimer = 120;
 			}
 		}
 		
@@ -255,19 +255,19 @@ void AddBulletMyChar(int no, int val)
 
 void AddLifeMyChar(int x)
 {
-	gMC.life += (short)x;
-	if (gMC.life > gMC.max_life)
-		gMC.life = gMC.max_life;
-	gMC.lifeBr = gMC.life;
+	gMC->life += (short)x;
+	if (gMC->life > gMC->max_life)
+		gMC->life = gMC->max_life;
+	gMC->lifeBr = gMC->life;
 }
 
 void AddMaxLifeMyChar(int val)
 {
-	gMC.max_life += (short)val;
-	if (gMC.max_life > 232)
-		gMC.max_life = 232;
-	gMC.life += (short)val;
-	gMC.lifeBr = gMC.life;
+	gMC->max_life += (short)val;
+	if (gMC->max_life > 232)
+		gMC->max_life = 232;
+	gMC->life += (short)val;
+	gMC->lifeBr = gMC->life;
 }
 
 void PutArmsEnergy(BOOL flash)
@@ -310,7 +310,7 @@ void PutArmsEnergy(BOOL flash)
 	}
 
 	// Draw experience and ammo
-	if (flash == TRUE && (gMC.shock / 2) % 2)
+	if (flash == TRUE && (gMC->shock / 2) % 2)
 		return;
 
 	PutBitmap3(&rcView, gArmsEnergyXx + 32, 24, &rcPer, SURFACE_ID_TEXT_BOX);
@@ -343,7 +343,7 @@ void PutArmsEnergy(BOOL flash)
 		PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpVal, SURFACE_ID_TEXT_BOX);
 	}
 
-	if (gMC.exp_wait && ((add_flash++ / 2) % 2))
+	if (gMC->exp_wait && ((add_flash++ / 2) % 2))
 		PutBitmap3(&rcView, gArmsEnergyXx + 24, 32, &rcExpFlash, SURFACE_ID_TEXT_BOX);
 }
 
@@ -397,31 +397,31 @@ void PutMyLife(BOOL flash)
 	if(gDebug.bGodmode)
 		return;
 
-	if (flash == TRUE && gMC.shock / 2 % 2)
+	if (flash == TRUE && gMC->shock / 2 % 2)
 		return;
 
-	if (gMC.lifeBr < gMC.life)
-		gMC.lifeBr = gMC.life;
+	if (gMC->lifeBr < gMC->life)
+		gMC->lifeBr = gMC->life;
 
-	if (gMC.lifeBr > gMC.life)
+	if (gMC->lifeBr > gMC->life)
 	{
-		if (++gMC.lifeBr_count > 30)
-			--gMC.lifeBr;
+		if (++gMC->lifeBr_count > 30)
+			--gMC->lifeBr;
 	}
 	else
 	{
-		gMC.lifeBr_count = 0;
+		gMC->lifeBr_count = 0;
 	}
 
 	// Draw bar
 	rcCase.right = 64;
-	rcLife.right = ((gMC.life * 40) / gMC.max_life) - 1;
-	rcBr.right = ((gMC.lifeBr * 40) / gMC.max_life) - 1;
+	rcLife.right = ((gMC->life * 40) / gMC->max_life) - 1;
+	rcBr.right = ((gMC->lifeBr * 40) / gMC->max_life) - 1;
 
 	PutBitmap3(&grcGame, 16, 40, &rcCase, SURFACE_ID_TEXT_BOX);
 	PutBitmap3(&grcGame, 40, 40, &rcBr, SURFACE_ID_TEXT_BOX);
 	PutBitmap3(&grcGame, 40, 40, &rcLife, SURFACE_ID_TEXT_BOX);
-	PutNumber4(8, 40, gMC.lifeBr, FALSE);
+	PutNumber4(8, 40, gMC->lifeBr, FALSE);
 }
 
 void PutMyAir(int x, int y)
@@ -431,17 +431,17 @@ void PutMyAir(int x, int y)
 		{112, 80, 144, 88},
 	};
 
-	if (gMC.equip & 0x10)
+	if (gMC->equip & 0x10)
 		return;
 
-	if (gMC.air_get != 0)
+	if (gMC->air_get != 0)
 	{
 		// Draw how much air is left
-		if (gMC.air_get % 6 < 4)
-			PutNumber4(x + 32, y, gMC.air / 10, FALSE);
+		if (gMC->air_get % 6 < 4)
+			PutNumber4(x + 32, y, gMC->air / 10, FALSE);
 
 		// Draw "AIR" text
-		if (gMC.air % 30 > 10)
+		if (gMC->air % 30 > 10)
 			PutBitmap3(&grcGame, x, y, &rcAir[0], SURFACE_ID_TEXT_BOX);
 		else
 			PutBitmap3(&grcGame, x, y, &rcAir[1], SURFACE_ID_TEXT_BOX);
@@ -458,7 +458,7 @@ void PutTimeCounter(int x, int y)
 		{128, 104, 160, 112},
 	};
 
-	if (gMC.equip & 0x100)
+	if (gMC->equip & 0x100)
 	{
 		// Draw clock and increase time
 		if (g_GameFlags & 2)
@@ -497,7 +497,7 @@ BOOL SaveTimeCounter(void)
 	char path[MAX_PATH];
 
 	// Quit if player doesn't have the Nikumaru Counter
-	if (!(gMC.equip & 0x100))
+	if (!(gMC->equip & 0x100))
 		return TRUE;
 
 	// Get last time

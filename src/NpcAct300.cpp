@@ -118,8 +118,8 @@ void ActNpc302(NPCHAR *npc)
 	{
 		case 10:
 
-			npc->x = gMC.x;
-			npc->y = gMC.y - 32 * 0x200;
+			npc->x = gMC->x;
+			npc->y = gMC->y - 32 * 0x200;
 			if(nifiIsClient())
 			{
 				npc->x = gMCP2.x;
@@ -147,8 +147,8 @@ void ActNpc302(NPCHAR *npc)
 					break;
 			}
 			
-			gMC.x = npc->x;
-			gMC.y = npc->y;
+			gMC->x = npc->x;
+			gMC->y = npc->y;
 			
 			if(nifiIsLinked())
 			{
@@ -158,8 +158,8 @@ void ActNpc302(NPCHAR *npc)
 			break;
 
 		case 30:
-			npc->x = gMC.x;
-			npc->y = gMC.y + (80 * 0x200);
+			npc->x = gMC->x;
+			npc->y = gMC->y + (80 * 0x200);
 			if(nifiIsClient())
 			{
 				npc->x = gMCP2.x;
@@ -193,8 +193,8 @@ void ActNpc302(NPCHAR *npc)
 			}
 			// Fallthrough
 		case 101:
-			npc->x = (gMC.x + npc->pNpc->x) / 2;
-			npc->y = (gMC.y + npc->pNpc->y) / 2;
+			npc->x = (gMC->x + npc->pNpc->x) / 2;
+			npc->y = (gMC->y + npc->pNpc->y) / 2;
 
 			if(nifiIsClient())
 			{

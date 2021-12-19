@@ -81,16 +81,16 @@ BOOL SaveProfile(const char *name)
 	memcpy(profile.FLAG, FLAG, sizeof(profile.FLAG));
 	profile.stage = gStageNo;
 	profile.music = gMusicNo;
-	profile.x = gMC.x;
-	profile.y = gMC.y;
-	profile.direct = gMC.direct;
-	profile.max_life = gMC.max_life;
-	profile.life = gMC.life;
-	profile.star = gMC.star;
+	profile.x = gMC->x;
+	profile.y = gMC->y;
+	profile.direct = gMC->direct;
+	profile.max_life = gMC->max_life;
+	profile.life = gMC->life;
+	profile.star = gMC->star;
 	profile.select_arms = gSelectedArms;
 	profile.select_item = gSelectedItem;
-	profile.equip = gMC.equip;
-	profile.unit = gMC.unit;
+	profile.equip = gMC->equip;
+	profile.unit = gMC->unit;
 	profile.counter = gCounter;
 	memcpy(profile.arms, gArmsData, sizeof(profile.arms));
 	memcpy(profile.items, gItemData, sizeof(profile.items));
@@ -177,17 +177,17 @@ static BOOL LoadProfileReal()
 		return FALSE;
 
 	// Set character properties
-	gMC.equip = profile.equip;
-	gMC.unit = profile.unit;
-	gMC.direct = profile.direct;
-	gMC.max_life = profile.max_life;
-	gMC.life = profile.life;
-	gMC.star = profile.star;
-	gMC.cond = 0x80;
-	gMC.air = 1000;
-	gMC.lifeBr = profile.life;
-	gMC.x = profile.x;
-	gMC.y = profile.y;
+	gMC->equip = profile.equip;
+	gMC->unit = profile.unit;
+	gMC->direct = profile.direct;
+	gMC->max_life = profile.max_life;
+	gMC->life = profile.life;
+	gMC->star = profile.star;
+	gMC->cond = 0x80;
+	gMC->air = 1000;
+	gMC->lifeBr = profile.life;
+	gMC->x = profile.x;
+	gMC->y = profile.y;
 
 	gMCP2.equip = profile.equip;
 	gMCP2.unit = profile.unit;
@@ -201,10 +201,10 @@ static BOOL LoadProfileReal()
 	gMCP2.x = profile.x;
 	gMCP2.y = profile.y;
 
-	gMC.rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
-	gMC.rect_arms.right = gMC.rect_arms.left + 24;
-	gMC.rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
-	gMC.rect_arms.bottom = gMC.rect_arms.top + 16;
+	gMC->rect_arms.left = (gArmsData[gSelectedArms].code % 10) * 24;
+	gMC->rect_arms.right = gMC->rect_arms.left + 24;
+	gMC->rect_arms.top = (gArmsData[gSelectedArms].code / 10) * 32;
+	gMC->rect_arms.bottom = gMC->rect_arms.top + 16;
 
 	// Reset stuff
 	ClearFade();

@@ -424,7 +424,7 @@ void ActNpc340(NPCHAR *npc)
 			if (npc->act_wait > 200 && npc->act_wait % 40 == 1)
 			{
 				npc->ani_wait = 0;
-				SetNpChar(333, gMC.x, 304 * 0x200, 0, 0, 0, NULL, 0x100);
+				SetNpChar(333, gMC->x, 304 * 0x200, 0, 0, 0, NULL, 0x100);
 				if(nifiIsLinked())
 				{
 					SetNpChar(333, gMCP2.x, 304 * 0x200, 0, 0, 0, NULL, 0x100);

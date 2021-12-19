@@ -552,7 +552,7 @@ static BOOL DamageNpchar(int n, int b)
 			if (gActiveNPC[n]->bits & NPC_SHOW_DAMAGE)
 				gActiveNPC[n]->damage_view -= gBul[b].damage;
 
-			if ((gMC.cond & 0x80) && gActiveNPC[n]->bits & NPC_EVENT_WHEN_KILLED)
+			if ((gMC->cond & 0x80) && gActiveNPC[n]->bits & NPC_EVENT_WHEN_KILLED)
 				StartTextScript(gActiveNPC[n]->code_event);
 			else
 			{

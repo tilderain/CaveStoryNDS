@@ -104,12 +104,12 @@ static void Callback_Script(char** args, int num)
 static void Callback_HP(char** args, int num)
 {
 	int health = atoi(args[0]);
-	gMC.life = health;
+	gMC->life = health;
 }
 static void Callback_MaxHP(char** args, int num)
 {
 	int health = atoi(args[0]);
-	gMC.max_life = health;
+	gMC->max_life = health;
 }
 
 static void Callback_GiveWeapon(char** args, int num)
@@ -222,7 +222,7 @@ const char* equipnames[] =
 	{
 		if(strncmp(args[0], equipnames[i], strlen(args[0])) == 0)
 		{
-			if(gMC.equip & equip)
+			if(gMC->equip & equip)
 			{
 				EquipItem(equip, false);
 				ConsoleRespond("Un-equipped item %s (0x%x).", equipnames[i], equip);
@@ -355,17 +355,17 @@ static void PutHitboxes(void)
 	GetFramePosition(&fx, &fy);
 
 	//Player collision box
-	rect.left = SubpixelToScreenCoord(gMC.x) - SubpixelToScreenCoord(gMC.hit.back) - SubpixelToScreenCoord(fx);
-	rect.top = SubpixelToScreenCoord(gMC.y) - SubpixelToScreenCoord(gMC.hit.top) - SubpixelToScreenCoord(fy);
-	rect.right = SubpixelToScreenCoord(gMC.x) + SubpixelToScreenCoord(gMC.hit.back) - SubpixelToScreenCoord(fx);
-	rect.bottom = SubpixelToScreenCoord(gMC.y) + SubpixelToScreenCoord(gMC.hit.bottom) - SubpixelToScreenCoord(fy);
+	rect.left = SubpixelToScreenCoord(gMC->x) - SubpixelToScreenCoord(gMC->hit.back) - SubpixelToScreenCoord(fx);
+	rect.top = SubpixelToScreenCoord(gMC->y) - SubpixelToScreenCoord(gMC->hit.top) - SubpixelToScreenCoord(fy);
+	rect.right = SubpixelToScreenCoord(gMC->x) + SubpixelToScreenCoord(gMC->hit.back) - SubpixelToScreenCoord(fx);
+	rect.bottom = SubpixelToScreenCoord(gMC->y) + SubpixelToScreenCoord(gMC->hit.bottom) - SubpixelToScreenCoord(fy);
 	PutSquare(rect, yellow_color);
 
 	//Player hitbox
-	rect.left = SubpixelToScreenCoord(gMC.x) - SubpixelToScreenCoord(gMC.hit.back) - SubpixelToScreenCoord(fx) + SubpixelToScreenCoord(3 * 0x200);
-	rect.top = SubpixelToScreenCoord(gMC.y) - SubpixelToScreenCoord(gMC.hit.top) - SubpixelToScreenCoord(fy) + SubpixelToScreenCoord(6 * 0x200);
-	rect.right = SubpixelToScreenCoord(gMC.x) + SubpixelToScreenCoord(gMC.hit.back) - SubpixelToScreenCoord(fx) - SubpixelToScreenCoord(3 * 0x200);
-	rect.bottom = SubpixelToScreenCoord(gMC.y) + SubpixelToScreenCoord(gMC.hit.bottom) - SubpixelToScreenCoord(fy) - SubpixelToScreenCoord(6 * 0x200);
+	rect.left = SubpixelToScreenCoord(gMC->x) - SubpixelToScreenCoord(gMC->hit.back) - SubpixelToScreenCoord(fx) + SubpixelToScreenCoord(3 * 0x200);
+	rect.top = SubpixelToScreenCoord(gMC->y) - SubpixelToScreenCoord(gMC->hit.top) - SubpixelToScreenCoord(fy) + SubpixelToScreenCoord(6 * 0x200);
+	rect.right = SubpixelToScreenCoord(gMC->x) + SubpixelToScreenCoord(gMC->hit.back) - SubpixelToScreenCoord(fx) - SubpixelToScreenCoord(3 * 0x200);
+	rect.bottom = SubpixelToScreenCoord(gMC->y) + SubpixelToScreenCoord(gMC->hit.bottom) - SubpixelToScreenCoord(fy) - SubpixelToScreenCoord(6 * 0x200);
 	CortBox(&rect, cyan_color);
 
 	for (int n = 0; n < NPC_MAX; ++n)

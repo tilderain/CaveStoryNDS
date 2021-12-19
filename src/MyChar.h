@@ -9,7 +9,7 @@
 
 #include "WindowsWrapper.h"
 
-// TODO - When I add bitmask constants for gMC.flags...
+// TODO - When I add bitmask constants for gMC->flags...
 // 0x100 is a 'player is underwater' flag
 
 typedef struct MYCHAR

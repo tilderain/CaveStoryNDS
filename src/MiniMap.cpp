@@ -179,8 +179,8 @@ int MiniMapLoop(void)
 	unsigned char my_wait;
 	RECT my_rect = {0, 57, 1, 58};
 
-	my_x = ((gMC.x / 0x200) + 8) / 16;
-	my_y = ((gMC.y / 0x200) + 8) / 16;
+	my_x = ((gMC->x / 0x200) + 8) / 16;
+	my_y = ((gMC->y / 0x200) + 8) / 16;
 
 	my_x2 = ((gMCP2.x / 0x200) + 8) / 16;
 	my_y2 = ((gMCP2.y / 0x200) + 8) / 16;

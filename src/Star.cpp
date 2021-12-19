@@ -61,14 +61,14 @@ void InitStar(void)
 	memset(star, 0, sizeof(star));
 
 	// Position
-	star[0].x = gMC.x;
-	star[0].y = gMC.y;
+	star[0].x = gMC->x;
+	star[0].y = gMC->y;
 
-	star[1].x = gMC.x;
-	star[1].y = gMC.y;
+	star[1].x = gMC->x;
+	star[1].y = gMC->y;
 
-	star[2].x = gMC.x;
-	star[2].y = gMC.y;
+	star[2].x = gMC->x;
+	star[2].y = gMC->y;
 
 	// Speed
 	star[0].xm = 0x400;
@@ -128,12 +128,12 @@ void ActStar(void)
 		}
 		else
 		{
-			if (gMC.x < star[i].x)
+			if (gMC->x < star[i].x)
 				star[i].xm -= 0x80;
 			else
 				star[i].xm += 0x80;
 
-			if (gMC.y < star[i].y)
+			if (gMC->y < star[i].y)
 				star[i].ym -= 0xAA;
 			else
 				star[i].ym += 0xAA;
@@ -163,7 +163,7 @@ void ActStar(void)
 		star[i].x += star[i].xm;
 		star[i].y += star[i].ym;
 
-		if (i < gMC.star && (gMC.equip & 0x80) && (g_GameFlags & 2) && a == i)
+		if (i < gMC->star && (gMC->equip & 0x80) && (g_GameFlags & 2) && a == i)
 			SetBullet(45, star[a].x, star[a].y, 0, 0);
 	}
 	if(nifiIsLinked())
@@ -236,15 +236,15 @@ void PutStar(int fx, int fy)
 
 	int i;
 	bool p1 = true;
-	if (gMC.cond & 2)
+	if (gMC->cond & 2)
 		p1 = false;
 
-	if (!(gMC.equip & 0x80))
+	if (!(gMC->equip & 0x80))
 		p1 = false;
 	if(p1)
 	{
 		for (i = 0; i < 3; ++i)
-			if (i < gMC.star)
+			if (i < gMC->star)
 				PutBitmap3(&grcGame, (star[i].x / 0x200) - (fx / 0x200) - 4, (star[i].y / 0x200) - (fy / 0x200) - 4, &rc[i], SURFACE_ID_MY_CHAR);
 	}
 
