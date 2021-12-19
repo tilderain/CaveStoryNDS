@@ -58,7 +58,7 @@ extern int gSelectedArmsP2;
 extern int gSelectedItem;
 
 /// Contains data for all the weapons the character currently has
-extern ARMS gArmsData[ARMS_MAX];
+extern ARMS* gArmsData;
 extern ARMS gArmsDataP1[ARMS_MAX];
 extern ARMS gArmsDataP2[ARMS_MAX];
 

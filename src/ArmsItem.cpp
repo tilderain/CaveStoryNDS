@@ -61,7 +61,7 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
-ARMS gArmsData[ARMS_MAX];
+ARMS* gArmsData;
 ARMS gArmsDataP1[ARMS_MAX];
 ARMS gArmsDataP2[ARMS_MAX];
 
@@ -92,7 +92,7 @@ void ClearArmsData(void)
 #endif
 	gArmsEnergyX = 32;
 	gArmsEnergyXP2 = 32;	
-	memset(gArmsData, 0, sizeof(gArmsData));
+	gArmsData = gArmsDataP1;
 	memset(gArmsDataP1, 0, sizeof(gArmsDataP1));
 	memset(gArmsDataP2, 0, sizeof(gArmsDataP2));
 }
