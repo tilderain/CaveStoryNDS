@@ -694,56 +694,45 @@ BOOL Flip_SystemTask()
 	}
 	else
 	{
+
 		glEnd2D();
 		glFlush(0);
+
 
 		CopyFaceTexture();
 		CopyDirtyText();
 
-		if(!nifiIsLinked() || gb50Fps)
+
+		swiWaitForVBlank();
+
+		if(gb50Fps)
 		{
-			if(!gb50Fps)
-				swiWaitForVBlank();
-			else
+			static unsigned long timePrev;
+			static unsigned long timeNow;
+
+			while (TRUE)
 			{
-				static unsigned long timePrev;
-				static unsigned long timeNow;
+				// Framerate limiter
+				timeNow = timerTicks2msec(cpuGetTiming());
 
-				while (TRUE)
+				if (timeNow >= timePrev + 20)
+					break;
+
+				if (timeNow + 10000 < timePrev)
 				{
-					// Framerate limiter
-					timeNow = timerTicks2msec(cpuGetTiming());
-
-					if (timeNow >= timePrev + 20)
-						break;
-
-					if (timeNow + 10000 < timePrev)
-					{
-						timeNow = timePrev = 0; //Timer overflowed
-						break;
-					}
-
-					swiIntrWait(1, IRQ_TIMER2); //sleep(1)
+					timeNow = timePrev = 0; //Timer overflowed
+					break;
 				}
 
-				if (timeNow >= timePrev + 100)
-					timePrev = timeNow;	// If the timer is freakishly out of sync, panic and reset it, instead of spamming frames for who-knows how long
-				else
-					timePrev += 20;
-
-			}
-		}
-
-		else
-		{
-			if(nifiConsecutiveWaitingFramesPrev <= 400)
-			{
-				swiWaitForVBlank();
-				nifiConsecutiveWaitingFramesPrev = 0;
+				swiIntrWait(1, IRQ_TIMER2); //sleep(1)
 			}
 
+			if (timeNow >= timePrev + 100)
+				timePrev = timeNow;	// If the timer is freakishly out of sync, panic and reset it, instead of spamming frames for who-knows how long
+			else
+				timePrev += 20;
+
 		}
-		
 
 		glBegin2D();
 	}
