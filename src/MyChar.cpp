@@ -109,7 +109,7 @@ bool SwapMyChar(void)
 		gKeyTrgP2 = gKeyTrg;
 		gKeyP2 = gKey;
 		gSelectedArmsP2 = gSelectedArms;
-		
+
 		gCurMyChar = 0;
 		gMC = &gMCP1;
 		gKeyTrg = gKeyTrgP1;
@@ -165,6 +165,8 @@ void InitMyChar(void)
 	cache_x = 0;
 	cache_y = 0;
 	prev_ret = 0;
+
+	gArmsData = gArmsDataP1;
 }
 
 void AnimationMyChar(BOOL bKey)

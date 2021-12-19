@@ -92,7 +92,7 @@ void ClearArmsData(void)
 #endif
 	gArmsEnergyX = 32;
 	gArmsEnergyXP2 = 32;	
-	gArmsData = gArmsDataP1;
+	
 	memset(gArmsDataP1, 0, sizeof(gArmsDataP1));
 	memset(gArmsDataP2, 0, sizeof(gArmsDataP2));
 }
