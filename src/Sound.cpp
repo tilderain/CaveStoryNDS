@@ -325,6 +325,9 @@ SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 int gVBlankCounter = 0;
 void Vblankhandler(void)
 {
+	CopyDirtyText();
+	CopyFaceTexture();
+
 	gOrgTimer += SND_BUFFERSIZE;
 	
 	if (gOrgTimer > gOrgSamplePerStep)
@@ -335,8 +338,7 @@ void Vblankhandler(void)
 	updateChannelStates();
 	gVBlankCounter++;
 
-	CopyFaceTexture();
-	CopyDirtyText();
+
 }
 
 mm_stream mystream;
