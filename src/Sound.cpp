@@ -46,6 +46,13 @@ equivalents.
 
 #include "Generic.h"
 
+#ifdef READ_FROM_SD
+
+	#define DR_WAV_IMPLEMENTATION
+	#include "dr_wav.h"
+
+#endif
+
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
@@ -473,6 +480,7 @@ BOOL ReadSound(int no)
 {
     //Get file path
     char path[MAX_PATH];
+	bool pass;
 
 	//try read swav
     sprintf(path, "%s/Wave/%03d.swav", gDataPath, no);
@@ -481,7 +489,28 @@ BOOL ReadSound(int no)
     FILE_e *fp = fopen_embed(path, "rb");
     if (fp != NULL)
 	{
+	#ifndef READ_FROM_SD
     	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
+	#else
+		int size = GetFileSizeLong(path);
+    	signed char *data = (signed char *)malloc(size);
+		fread_embed(data, size, 1, fp);
+
+		if (lpSECONDARYBUFFER[no] != NULL)
+		{
+			s8 *buf;
+    		lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
+    		memcpy(buf, data, size);
+    		lpSECONDARYBUFFER[no]->Unlock();
+    		lpSECONDARYBUFFER[no]->SetFrequency(22050);
+			free(data);
+			fclose_embed(fp);
+			
+			printf("loaded swav for slot %d\n", no);
+			return TRUE;
+		}
+	#endif
+
 		fclose_embed(fp);    
 		if (lpSECONDARYBUFFER[no] != NULL)
         	return TRUE;		
@@ -509,6 +538,7 @@ BOOL ReadSound(int no)
 			free(data);
 			fclose_embed(fp);
 
+			printf("loaded raw for slot %d\n", no);
 			return TRUE;
 
 		}
@@ -518,6 +548,41 @@ BOOL ReadSound(int no)
 		}
 
 	}
+	//try read wav
+
+#ifdef READ_FROM_SD
+    sprintf(path, "%s/Wave/%03d.wav", gDataPath, no);
+    //Open file
+	drwav wav;
+	if (!drwav_init_file(&wav, path, NULL)) return FALSE;
+
+	unsigned char* pSampleData = (unsigned char*)malloc((size_t)wav.totalPCMFrameCount * wav.channels * sizeof(unsigned char));
+    drwav_read_pcm_frames(&wav, wav.totalPCMFrameCount, pSampleData);
+
+    // At this point pSampleData contains every decoded sample as signed 32-bit PCM.
+	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(wav.totalPCMFrameCount, NULL);
+
+	if (lpSECONDARYBUFFER[no] != NULL)
+	{
+		s8 *buf;
+    	lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
+		for (size_t i = 0; i < wav.totalPCMFrameCount; ++i)
+			buf[i] = pSampleData[i] - 0x80;	// Convert from unsigned 8-bit PCM to signed
+
+    	lpSECONDARYBUFFER[no]->Unlock();
+    	lpSECONDARYBUFFER[no]->SetFrequency(22050);
+		pass = true;
+	}
+	fclose(fp);
+
+    drwav_uninit(&wav);
+	free(pSampleData);
+	if(pass)
+	{
+		printf("loaded wav for slot %d\n", no);
+		return true;
+	}
+#endif
 
 	
 
