@@ -5,6 +5,11 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h> 
+
 long LoadFileToMemory(const char *file_path, unsigned char **file_buffer)
 {
 	long returned_size = -1;
@@ -18,7 +23,9 @@ long LoadFileToMemory(const char *file_path, unsigned char **file_buffer)
 		#ifndef READ_FROM_SD
 			file_size = file->size;
 		#else
-			fstat(fileno(fp), &file_descriptor);
+			struct stat file_descriptor;
+			
+			fstat(fileno(file), &file_descriptor);
 			file_size = file_descriptor.st_size;
 		#endif
 
