@@ -4,11 +4,11 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdio.h>
+
 
 #include "fopen.h"
 
-unsigned char* LoadFileToMemory(const char *file_path, size_t *file_size);
+long LoadFileToMemory(const char *file_path, unsigned char **file_buffer);
 
 #ifndef READ_FROM_SD
 unsigned char File_ReadU8(FILE_e *stream);

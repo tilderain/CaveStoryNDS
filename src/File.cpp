@@ -4,44 +4,40 @@
 #include "File.h"
 
 #include <stddef.h>
-#include <stdio.h>
 #include <stdlib.h>
-
-unsigned char* LoadFileToMemory(const char *file_path, size_t *file_size)
+long LoadFileToMemory(const char *file_path, unsigned char **file_buffer)
 {
-	unsigned char *buffer = NULL;
+	long returned_size = -1;
+	long file_size = 0;
 
-	FILE *file = fopen(file_path, "rb");
+	FILE_e *file = fopen_embed(file_path, "rb");
 
 	if (file != NULL)
 	{
-		if (!fseek(file, 0, SEEK_END))
-		{
-			const long _file_size = ftell(file);
+		
+		#ifndef READ_FROM_SD
+			file_size = file->size;
+		#else
+			fstat(fileno(fp), &file_descriptor);
+			file_size = file_descriptor.st_size;
+		#endif
 
-			if (_file_size >= 0)
+			if (file_size >= 0)
 			{
-				rewind(file);
-				buffer = (unsigned char*)malloc(_file_size);
+				*file_buffer = (unsigned char*)malloc(file_size);
 
-				if (buffer != NULL)
+				if (*file_buffer != NULL)
 				{
-					if (fread(buffer, _file_size, 1, file) == 1)
-					{
-						fclose(file);
-						*file_size = (size_t)_file_size;
-						return buffer;
-					}
-
-					free(buffer);
+					if (fread_embed(*file_buffer, file_size, 1, file) == 1)
+						returned_size = file_size;
 				}
 			}
-		}
+		
 
-		fclose(file);
+		fclose_embed(file);
 	}
 
-	return NULL;
+	return returned_size;
 }
 
 #ifndef READ_FROM_SD

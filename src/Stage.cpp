@@ -38,7 +38,9 @@ MusicID gMusicNo;
 unsigned int gOldPos;
 MusicID gOldNo;
 
-const STAGE_TABLE gTMT[95] = {
+#include "Main.h"
+
+const STAGE_TABLE gTMTDefault[95] = {
 	STAGE_ENTRY("0", "0", 4, "bk0", "Guest", "0", 0, "Null", "\x96\xB3"),	// 無
 	STAGE_ENTRY("Pens", "Pens1", 1, "bkBlue", "Guest", "0", 0, "Arthur's House", "\x83\x41\x81\x5B\x83\x54\x81\x5B\x82\xCC\x89\xC6"),	// アーサーの家
 	STAGE_ENTRY("Eggs", "Eggs", 1, "bkGreen", "Eggs1", "Ravil", 0, "Egg Corridor", "\x83\x5E\x83\x7D\x83\x53\x89\xF1\x98\x4C"),	// タマゴ回廊
@@ -135,6 +137,104 @@ const STAGE_TABLE gTMT[95] = {
 	STAGE_ENTRY("White", "e_Blcn", 7, "bkFog", "Miza", "0", 9, "", ""),
 	STAGE_ENTRY("Oside", "Clock", 6, "bkMoon", "Moon", "0", 0, "Clock Room", "\x8E\x9E\x8C\x76\x89\xAE"),	// 時計屋
 };
+
+const STAGE_TABLE *gTMT = gTMTDefault;
+
+#include "File.h"
+
+
+BOOL LoadStageTable()
+{
+	char path[MAX_PATH];
+
+	unsigned char *file_buffer;
+	long file_size;
+
+	// Try to load stage.tbl
+	sprintf(path, "%s/stage.tbl", gDataPath);
+	file_size = LoadFileToMemory(path, &file_buffer);
+
+
+	if (file_size != -1)
+	{
+		const long entry_count = file_size / 0xE5;
+
+		STAGE_TABLE *pTMT = (STAGE_TABLE*)malloc(entry_count * sizeof(STAGE_TABLE));
+
+		if (pTMT == NULL)
+		{
+			free(file_buffer);
+		}
+		else
+		{
+			for (long i = 0; i < entry_count; ++i)
+			{
+				unsigned char *entry = file_buffer + i * 0xE5;
+
+				memcpy(pTMT[i].parts, entry, 0x20);
+				memcpy(pTMT[i].map, entry + 0x20, 0x20);
+				pTMT[i].bkType = (entry[0x40 + 3] << 24) | (entry[0x40 + 2] << 16) | (entry[0x40 + 1] << 8) | entry[0x40];
+				memcpy(pTMT[i].back, entry + 0x44, 0x20);
+				memcpy(pTMT[i].npc, entry + 0x64, 0x20);
+				memcpy(pTMT[i].boss, entry + 0x84, 0x20);
+				pTMT[i].boss_no = entry[0xA4];
+#ifdef JAPANESE
+				memcpy(pTMT[i].name, entry + 0xA5, 0x20);
+#else
+				memcpy(pTMT[i].name, entry + 0xC5, 0x20);
+#endif
+			}
+
+			gTMT = pTMT;
+			free(file_buffer);
+			return TRUE;
+		}
+	}
+
+	// Try to load mrmap.bin
+	sprintf(path, "%s/mrmap.bin", gDataPath);
+	file_size = LoadFileToMemory(path, &file_buffer);
+
+	if (file_size != -1)
+	{
+		const long entry_count = file_buffer[0] | (file_buffer[1] << 8) | (file_buffer[2] << 16) | (file_buffer[3] << 24);
+
+		STAGE_TABLE *pTMT = (STAGE_TABLE*)malloc(entry_count * sizeof(STAGE_TABLE));
+
+		if (pTMT == NULL)
+		{
+			free(file_buffer);
+		}
+		else
+		{
+			for (long i = 0; i < entry_count; ++i)
+			{
+				// For compatibility with Booster's Lab, we store our stage table in "MOD_MR" format.
+				// This way, BL will load the sprites as PNG files instead of BMP.
+				unsigned char *entry = file_buffer + 4 + i * 0x74;
+
+				memcpy(pTMT[i].parts, entry, 0x10);
+				memcpy(pTMT[i].map, entry + 0x10, 0x10);
+				pTMT[i].bkType = entry[0x20];
+				memcpy(pTMT[i].back, entry + 0x21, 0x10);
+				memcpy(pTMT[i].npc, entry + 0x31, 0x10);
+				memcpy(pTMT[i].boss, entry + 0x41, 0x10);
+				pTMT[i].boss_no = entry[0x51];
+				memcpy(pTMT[i].name, entry + 0x52, 0x22);
+			}
+
+			gTMT = pTMT;
+			free(file_buffer);
+			return TRUE;
+		}
+
+	}
+
+	printf("Failed to load stage.tbl/mrmap.bin\n");
+	
+	return FALSE;
+}
+
 
 BOOL TransferStage(int no, int w, int x, int y)
 {

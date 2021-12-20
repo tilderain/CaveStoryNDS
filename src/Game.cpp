@@ -894,6 +894,8 @@ BOOL Game(void)
 		printf("Error: Couldn't read the NPC table");
 	}
 
+	LoadStageTable();
+
 	InitTextScript2();
 	InitSkipFlags();
 	InitMapData2();
