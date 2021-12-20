@@ -473,37 +473,53 @@ BOOL ReadSound(int no)
 {
     //Get file path
     char path[MAX_PATH];
+
+	//try read swav
     sprintf(path, "%s/Wave/%03d.swav", gDataPath, no);
     
     //Open file
     FILE_e *fp = fopen_embed(path, "rb");
-    if (fp == NULL)
-        return FALSE;
-    
-    //Create buffer
-#ifndef READ_FROM_SD
-    lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
-#else
-	int size = GetFileSizeLong(path);
-    signed char *data = (signed char *)malloc(size);
-	fread(data, size, 1, fp);
+    if (fp != NULL)
+	{
+    	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
+		fclose_embed(fp);    
+		if (lpSECONDARYBUFFER[no] != NULL)
+        	return TRUE;		
+	}
 
-	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);
+	//try read raw
+    sprintf(path, "%s/Wave/%03d.raw", gDataPath, no);
+    //Open file
+    fp = fopen_embed(path, "rb");
+    if (fp != NULL)
+	{
+		int size = GetFileSizeLong(path);
+    	signed char *data = (signed char *)malloc(size);
+		fread_embed(data, size, 1, fp);
 
-	if (lpSECONDARYBUFFER[no] == NULL)
-        return FALSE;
+		lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);
 
-	s8 *buf;
-    lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
-    memcpy(buf, data, size);
-    lpSECONDARYBUFFER[no]->Unlock();
-    lpSECONDARYBUFFER[no]->SetFrequency(22050);
-	free(data);
-#endif
+		if (lpSECONDARYBUFFER[no] != NULL)
+		{
+			s8 *buf;
+    		lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
+    		memcpy(buf, data, size);
+    		lpSECONDARYBUFFER[no]->Unlock();
+    		lpSECONDARYBUFFER[no]->SetFrequency(22050);
+			free(data);
+			fclose_embed(fp);
 
-    if (lpSECONDARYBUFFER[no] == NULL)
-        return FALSE;
+			return TRUE;
+
+		}
+		else
+		{
+			fclose_embed(fp);
+		}
+
+	}
+
 	
-    fclose_embed(fp);    
-    return TRUE;
+
+    return FALSE;
 }
