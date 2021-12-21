@@ -29,8 +29,9 @@ GAME_SUBTITLE2 := github.com/tilderain/CaveStoryDS
 GAME_ICON := $(CURDIR)/../icon.bmp
 
 
-
-NITRODATA	:=	
+ifeq ($(NITRO), 1)
+NITRODATA	:=	game_english_bmp
+endif
 ifneq ($(strip $(NITRODATA)),)
 	export NITRO_FILES	:=	$(CURDIR)/$(NITRODATA)
 endif
@@ -48,6 +49,19 @@ CFLAGS	:= -g -Wall -Os\
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9 -DLODEPNG_NO_COMPILE_ANCILLARY_CHUNKS -DLODEPNG_NO_COMPILE_ENCODER -DLODEPNG_NO_COMPILE_DISK -DLODEPNG_NO_COMPILE_ERROR_TEXT -DLODEPNG_NO_COMPILE_CPP
+
+ifeq ($(NITRO), 1)
+	CFLAGS	+= -DREAD_FROM_SD -DNITROFS
+endif
+
+ifeq ($(SD), 1)
+	CFLAGS	+= -DREAD_FROM_SD
+endif
+
+ifeq ($(JPN), 1)
+	CFLAGS	+= -DJAPANESE
+endif
+
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
@@ -160,6 +174,13 @@ $(SOURCEARM7)/CSE2-arm7.elf:
 #---------------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------------
+
+ifeq ($(DSI), 1)
+%.nds: %.elf
+	$(SILENTCMD)ndstool -c $@ -9 $< -7 $(TOPDIRREAL)/$(SOURCEARM7)/CSE2-arm7.elf -b $(GAME_ICON) "$(GAME_TITLE);$(GAME_SUBTITLE1);$(GAME_SUBTITLE2)" $(_ADDFILES)
+	echo built ... $(notdir $@)
+else
 %.nds: %.elf
 	$(SILENTCMD)ndstool -h 0x200 -c $@ -9 $< -7 $(TOPDIRREAL)/$(SOURCEARM7)/CSE2-arm7.elf -b $(GAME_ICON) "$(GAME_TITLE);$(GAME_SUBTITLE1);$(GAME_SUBTITLE2)" $(_ADDFILES)
 	echo built ... $(notdir $@)
+endif
