@@ -78,10 +78,11 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 	{
 		MakeSurface_Generic(sizex, sizey, surf_no);
 	}
-
+	u8 *buffer = NULL;
+	if(colornumber == 16)
+		buffer = (u8*)malloc(sizex * sizey);
 
 	surf[surf_no].data = (BUFFER_PIXEL*)malloc(sizex * sizey);
-
 
 	GL_TEXTURE_TYPE_ENUM paletteType;
 	switch (colornumber)
@@ -118,6 +119,9 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 		break;
 	}
 	// Then, the image
+
+
+
 	int y, x;
 	if (colornumber == 256) {
 		// For BMPs with width not multiple of 4
@@ -184,7 +188,7 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 						value = (IMAGEDATA[srcidx] >> 4) & 0x0F;
 					}
 
-					surf[surf_no].data[y * sizex + x].color = value;
+					buffer[y * sizex + x] = value;
 				}
 			}
 		} else {
@@ -197,13 +201,31 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 					} else {
 						value = (IMAGEDATA[srcidx] >> 4) & 0x0F;
 					}
-					surf[surf_no].data[y * sizex + x].color = value;
+					buffer[y * sizex + x] = value;
 				}
 			}
 		}
 	}
 
+	//finally convert the 256 color to 16 color
+	if(colornumber == 16)
+	{
+		for (int y = 0; y < sizey; y++)
+		{
+			for (int x = 0; x < sizex; x++)
+			{
+				int pos;
+				char color;
+				pos = (y*sizex) + x;
+				color = (buffer[pos*2] | buffer[pos*2+1] << 4);
+				surf[surf_no].data[ pos ].color = color;
+			}
+		}
+		free(buffer);
+	}
 
+
+	
 	return TRUE;
 
 }
