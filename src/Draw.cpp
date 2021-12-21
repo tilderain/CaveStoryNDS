@@ -1002,6 +1002,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	FILE_e *fp = NULL;
 	for(;;)
 	{
+
 		sprintf(path, "%s.png", name);
 		fp = fopen_embed(path, "rb");
 		if (fp)
@@ -1013,7 +1014,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 
 		sprintf(path, "%s.bmp", name);
 		
-		unsigned char *file_buffer;
+		unsigned char *file_buffer = NULL;
 		LoadFileToMemory(path, &file_buffer);
 		if (file_buffer)
 		{
