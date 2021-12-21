@@ -49,7 +49,17 @@
 
 #include "NitroEngineBMP.h"
 
+
 #include "File.h"
+
+
+
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
+#define STBI_ONLY_BMP
+#define STBI_NO_LINEAR
+#define STBI_NO_STDIO
+#include "stb_image.h"
 
 void Timer_1ms()
 {
@@ -1001,7 +1011,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	for(;;)
 	{
 		sprintf(path, "%s.png", name);
-		fp = fopen_embed(name, "rb");
+		fp = fopen_embed(path, "rb");
 		if (fp)
 		{
 			printf("Loading surface (as .png) from %s for surface id %d\n", name, surf_no);
@@ -1015,21 +1025,23 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 		LoadFileToMemory(path, &file_buffer);
 		if (file_buffer)
 		{
-			printf("Loading surface (as .bmp) from %s for surface id %d\n", name, surf_no);
-			if(LoadPalettedBMP(file_buffer, surf_no, create_surface))
+			printf("Loading surface (as .bmp) from %s for surface id %d\n", path, surf_no);
+			if(LoadPalettedBMP(file_buffer, surf_no, create_surface, image_buffer))
 			{
 				free(file_buffer);
 				break;
 			}
+
 			free(file_buffer);
+
 		}
 
 		//You FAILED
 		fclose_embed(fp);
 		return FALSE;
 	}
-	
-	fclose_embed(fp);
+	if(fp)
+		fclose_embed(fp);
 
 	int yoffset = 0;
 	int xoffset = 0;
@@ -1134,10 +1146,10 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	else if(!strcmp(name, surf[surf_no].name)) return TRUE; //don't reload surf if it's the same
 	printf("LoadBitmap_File %s\n", name);
 	printf("Memory: %d %d %d\n", mallinfo().arena, mallinfo().uordblks, mallinfo().fordblks);
-	//Attempt to load PNG
+	//Attempt to load file
 	
 	char path[MAX_PATH];
-	sprintf(path, "%s/%s.png", gDataPath, name);
+	sprintf(path, "%s/%s", gDataPath, name);
 	
 	if (LoadBitmap(path, surf_no, create_surface))
 	{
