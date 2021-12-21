@@ -1241,7 +1241,7 @@ FILE_e *fopen_embed(const char *file, const char *mode)
 {
 	//Get our referenced file
 	const FILEREF *fileref = NULL;
-	FILE_e *fp;
+	FILE_e *fp = NULL;
 	int i;
 	
 	for (i = 0; i < sizeof(files) / sizeof(FILEREF); i++)

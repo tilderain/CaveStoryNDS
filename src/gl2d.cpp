@@ -151,7 +151,7 @@ void glSpriteTransparent( int x1, int y1, RECT *rect, int textureID, int palette
 	glPolyFmt(POLY_ALPHA(alpha) | POLY_CULL_NONE );
 	glBegin( GL_QUADS );	
 
-	gl_texture_data *tex;
+	gl_texture_data *tex = NULL;
 	if(gCurTexType != texType && (tex = (gl_texture_data*)DynamicArrayGet( &glGlob->texturePtrs, textureID)))
 	{
 		uint32 texFormat = tex->texFormat;

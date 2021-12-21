@@ -879,7 +879,7 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 	fread_embed(file_buffer, file_size, 1, fp);
 
 	unsigned int bitmap_width, bitmap_height;
-	unsigned char *bitmap_pixels;
+	unsigned char *bitmap_pixels = NULL;
 
 	LodePNGState state;
 	lodepng_state_init(&state);
