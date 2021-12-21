@@ -74,6 +74,9 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 			surf[surf_no].palette[0] = 0;
 		}
 	}
+
+	surf[surf_no].w = sizex; surf[surf_no].h = sizey;
+
 	if (create_surface)
 	{
 		MakeSurface_Generic(sizex, sizey, surf_no);
