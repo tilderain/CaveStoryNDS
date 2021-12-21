@@ -506,7 +506,7 @@ int AssignColorPalette(SURFACE* surf, uint16 width, const uint16* table)
 			GFX_PAL_FORMAT = glGlob->activePalette = 0;
 			return -1;
 		}
-		gl_palette_data *palette;
+		gl_palette_data *palette = NULL;
 		palette = (gl_palette_data*)malloc( sizeof( gl_palette_data ));
 		palette->palIndex = vramBlock_allocateSpecial( glGlob->vramBlocks[ 1 ], checkAddr, width << 1 );
 		palette->vramAddr = checkAddr;
@@ -548,7 +548,7 @@ int AssignColorPalette(SURFACE* surf, uint16 width, const uint16* table)
 // Copy data from surf_no to texture
 BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect)
 {
-	BUFFER_PIXEL* tex;
+	BUFFER_PIXEL* tex = NULL;
 	int texH;
 	int texW;
 	

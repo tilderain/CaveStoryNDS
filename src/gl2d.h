@@ -56,7 +56,7 @@ static void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffs
 		gCurTexType = -1;
     }
 	
-	gl_texture_data *tex;
+	gl_texture_data *tex = NULL;
 	if(gCurTexType != texType && (tex = (gl_texture_data*)DynamicArrayGet( &glGlob->texturePtrs, textureID)))
 	{
 		uint32 texFormat = tex->texFormat;

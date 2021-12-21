@@ -147,7 +147,7 @@ BOOL LoadStageTable()
 {
 	char path[MAX_PATH];
 
-	unsigned char *file_buffer;
+	unsigned char *file_buffer = NULL;
 	long file_size;
 
 	// Try to load stage.tbl
