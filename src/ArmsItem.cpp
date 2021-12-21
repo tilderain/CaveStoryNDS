@@ -61,8 +61,9 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
-ARMS* gArmsData;
+
 ARMS gArmsDataP1[ARMS_MAX];
+ARMS* gArmsData = gArmsDataP1;
 ARMS gArmsDataP2[ARMS_MAX];
 
 ITEM gItemData[ITEM_MAX];

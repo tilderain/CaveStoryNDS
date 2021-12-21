@@ -34,8 +34,9 @@
 
 #include "Frame.h"
 
-MYCHAR* gMC;
+
 MYCHAR gMCP1;
+MYCHAR* gMC = &gMCP1;
 MYCHAR gMCP2;
 
 int gCurMyChar = 0;
