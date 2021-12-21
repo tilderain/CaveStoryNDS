@@ -857,7 +857,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 
 bool npcSymInArmsSlot = false;
 
-BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
+BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surface)
 {
 
 	struct stat file_descriptor;
@@ -878,6 +878,8 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	LodePNGState state;
 	lodepng_state_init(&state);
 
+
+//i'm pretty sure this code doesn't do anything
 	if(surf_no == SURFACE_ID_NPC_REGU || surf_no == SURFACE_ID_FACE || !strcmp("Npc/NpcGuest", surf[surf_no].name)) //hardcode 256 color bitmap
 	{
 		state.info_raw.palettesize = 256;
@@ -892,7 +894,7 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	}
 	
 	state.decoder.color_convert = true;
-	
+///
 	
 	lodepng_decode(&bitmap_pixels, &bitmap_width, &bitmap_height, &state, file_buffer, file_size); //if only this worked 100% of the time
 
@@ -975,12 +977,51 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		}
 	}
 
+	free(bitmap_pixels);
+
+	surf[surf_no].paletteType = paletteType;
+	surf[surf_no].palettesize = palettesize;
+	return TRUE;
+
+}
+
+BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
+{
+
+	bool loaded = false;
+
+	char path[MAX_PATH];
+	sprintf(path, "%s.png", name);
+
+	FILE_e *fp = fopen_embed(name, "rb");
+	if (fp)
+	{
+		printf("Loading surface (as .png) from %s for surface id %d\n", name, surf_no);
+		if(LoadPortableNetworkGraphics(fp, surf_no, create_surface))
+			loaded = true;
+	}
+	if(!loaded)
+	{
+		sprintf(path, "%s.bmp", name);
+		FILE_e *fp = fopen_embed(name, "rb");
+		if (fp)
+		{
+			printf("Loading surface (as .bmp) from %s for surface id %d\n", name, surf_no);
+				loaded = true;
+		}
+	}
+	if(!loaded)
+	{
+		fclose_embed(fp);
+		return FALSE;
+	}
+
 	int yoffset = 0;
 	int xoffset = 0;
 	int paletteOffset = 0;
 	int textureid = gAtlas16Color1;
 
-	RECT datarect = {0, 0, bitmap_width, bitmap_height};
+	RECT datarect = {0, 0, surf[surf_no].w, surf[surf_no].h};
 
 	VramSlot table[] =
 	{
@@ -1023,9 +1064,8 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 	if(!found)
 	{
 		fclose_embed(fp);
-		free(bitmap_pixels);
 		free(surf[surf_no].data);
-		return TRUE;
+		return FALSE;
 	}
 
 	if(surf_no == SURFACE_ID_NPC_SYM && npcSymInArmsSlot)
@@ -1042,30 +1082,29 @@ BOOL LoadBitmap(FILE_e *fp, SurfaceID surf_no, bool create_surface)
 		{datarect.right = 384; datarect.bottom = 39;}
 #endif
 
-	if(!CopyDataToTexture(paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
+	if(!CopyDataToTexture(surf[surf_no].paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
 		fclose_embed(fp);
-		free(bitmap_pixels);
 		free(surf[surf_no].data);
-		return TRUE;
+		return FALSE;
 	}
 
 facejump:
-	surf[surf_no].paletteType = paletteType;
-	surf[surf_no].palettesize = palettesize;
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
 	surf[surf_no].paletteOffset = AssignColorPalette(&surf[surf_no], 256, surf[surf_no].palette);
 
 
-	free(bitmap_pixels);
 	if(surf_no != SURFACE_ID_TEXT_BOX && surf_no != SURFACE_ID_FACE
 #ifdef JAPANESE
 	&& surf_no != SURFACE_ID_FONT
 #endif
 	)
+	{
 		free(surf[surf_no].data);
+	}
+
 	fclose_embed(fp);
 	
 	return TRUE;
@@ -1088,17 +1127,13 @@ BOOL LoadBitmap_File(const char *name, SurfaceID surf_no, bool create_surface)
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s.png", gDataPath, name);
 	
-	FILE_e *fp = fopen_embed(path, "rb");
-	if (fp)
+	if (LoadBitmap(path, surf_no, create_surface))
 	{
-		printf("Loading surface (as .png) from %s for surface id %d\n", path, surf_no);
-		if (LoadBitmap(fp, surf_no, create_surface))
-		{
-			strcpy(surf[surf_no].name, name);
-			return TRUE;
-		}
-			
+		strcpy(surf[surf_no].name, name);
+		return TRUE;
 	}
+			
+	
 	ErrorInitConsole();
 	printf("Failed to open file %s\n", name);
 	printf("Error: %d (%s)\n", errno, strerror(errno));
