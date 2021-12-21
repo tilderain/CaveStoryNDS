@@ -1018,7 +1018,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 		if (file_buffer)
 		{
 			printf("Loading surface (as .bmp) from %s for surface id %d\n", path, surf_no);
-			if(LoadPalettedBMP(file_buffer, surf_no, create_surface, image_buffer))
+			if(LoadPalettedBMP(file_buffer, surf_no, create_surface))
 			{
 				free(file_buffer);
 				break;
