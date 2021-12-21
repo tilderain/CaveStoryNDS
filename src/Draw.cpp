@@ -53,14 +53,6 @@
 #include "File.h"
 
 
-
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_STATIC
-#define STBI_ONLY_BMP
-#define STBI_NO_LINEAR
-#define STBI_NO_STDIO
-#include "stb_image.h"
-
 void Timer_1ms()
 {
 
