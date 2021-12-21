@@ -47,6 +47,10 @@
 
 #include "errno.h"
 
+#include "NitroEngineBMP.h"
+
+#include "File.h"
+
 void Timer_1ms()
 {
 
@@ -940,9 +944,8 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 			break;
 	}
 
-	surf[surf_no].data = (BUFFER_PIXEL*)malloc(bitmap_width * bitmap_height * sizeof(BUFFER_PIXEL));
+	surf[surf_no].data = (BUFFER_PIXEL*)malloc(bitmap_width * bitmap_height);
 
-	// Image must have transparency..
 	for (int y = 0; y < bitmap_height; y++)
 	{
 		for (int x = 0; x < bitmap_width; x++)
@@ -985,36 +988,48 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 
 }
 
+
+
 BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 {
 
 	bool loaded = false;
 
 	char path[MAX_PATH];
-	sprintf(path, "%s.png", name);
 
-	FILE_e *fp = fopen_embed(name, "rb");
-	if (fp)
+	FILE_e *fp = NULL;
+	for(;;)
 	{
-		printf("Loading surface (as .png) from %s for surface id %d\n", name, surf_no);
-		if(LoadPortableNetworkGraphics(fp, surf_no, create_surface))
-			loaded = true;
-	}
-	if(!loaded)
-	{
-		sprintf(path, "%s.bmp", name);
-		FILE_e *fp = fopen_embed(name, "rb");
+		sprintf(path, "%s.png", name);
+		fp = fopen_embed(name, "rb");
 		if (fp)
 		{
-			printf("Loading surface (as .bmp) from %s for surface id %d\n", name, surf_no);
-				loaded = true;
+			printf("Loading surface (as .png) from %s for surface id %d\n", name, surf_no);
+			if(LoadPortableNetworkGraphics(fp, surf_no, create_surface))
+				break;
 		}
-	}
-	if(!loaded)
-	{
+
+		sprintf(path, "%s.bmp", name);
+		
+		unsigned char *file_buffer;
+		LoadFileToMemory(path, &file_buffer);
+		if (file_buffer)
+		{
+			printf("Loading surface (as .bmp) from %s for surface id %d\n", name, surf_no);
+			if(LoadPalettedBMP(file_buffer, surf_no, create_surface))
+			{
+				free(file_buffer);
+				break;
+			}
+			free(file_buffer);
+		}
+
+		//You FAILED
 		fclose_embed(fp);
 		return FALSE;
 	}
+	
+	fclose_embed(fp);
 
 	int yoffset = 0;
 	int xoffset = 0;
@@ -1063,7 +1078,6 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	}
 	if(!found)
 	{
-		fclose_embed(fp);
 		free(surf[surf_no].data);
 		return FALSE;
 	}
@@ -1084,7 +1098,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 
 	if(!CopyDataToTexture(surf[surf_no].paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
-		fclose_embed(fp);
+
 		free(surf[surf_no].data);
 		return FALSE;
 	}
@@ -1104,8 +1118,6 @@ facejump:
 	{
 		free(surf[surf_no].data);
 	}
-
-	fclose_embed(fp);
 	
 	return TRUE;
 }
