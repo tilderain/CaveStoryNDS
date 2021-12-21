@@ -110,6 +110,9 @@ void fifoDataHandler(int bytes, void *user_data)
 
 int main(int argc, char *argv[])
 {
+#ifdef NITROFS
+	nitroFSInit(NULL);
+#endif
 	defaultExceptionHandler();
 	
 	//Get executable's path
@@ -128,7 +131,11 @@ int main(int argc, char *argv[])
 	strcpy(gModulePath, "/");
 	
 	//Get path of the data folder
+#ifndef NITROFS
 	strcpy(gDataPath, "data");
+#else
+	strcpy(gDataPath, "nitro:/data");
+#endif
 	
 	//Load configuration
 	
