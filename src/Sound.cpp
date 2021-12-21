@@ -523,8 +523,7 @@ BOOL ReadSound(int no)
     if (fp != NULL)
 	{
 		int size = GetFileSizeLong(path);
-    	signed char *data = (signed char *)malloc(size);
-		fread_embed(data, size, 1, fp);
+
 
 		lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);
 
@@ -532,10 +531,9 @@ BOOL ReadSound(int no)
 		{
 			s8 *buf;
     		lpSECONDARYBUFFER[no]->Lock(&buf, NULL);
-    		memcpy(buf, data, size);
+    		fread_embed(buf, size, 1, fp);
     		lpSECONDARYBUFFER[no]->Unlock();
     		lpSECONDARYBUFFER[no]->SetFrequency(22050);
-			free(data);
 			fclose_embed(fp);
 
 			printf("loaded raw for slot %d\n", no);
