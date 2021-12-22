@@ -69,7 +69,7 @@ struct VramSlot
 RECT grcGame = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 RECT grcFull = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 
-SURFACE surf[SURFACE_ID_MAX];
+SURFACE surf[SURFACE_ID_MAX] = {0};
 
 PrintConsole bottomScreen;
 
@@ -855,6 +855,12 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
 		surf[surf_no].textureid = NULL;
 		surf[surf_no].paletteAddress = NULL;
+		if(surf[surf_no].data)
+		{
+			free(surf[surf_no].data);
+			surf[surf_no].data = NULL;
+		}
+		
 	}
 
 	return TRUE;
@@ -1084,6 +1090,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	if(!found)
 	{
 		free(surf[surf_no].data);
+		surf[surf_no].data = NULL;
 		return FALSE;
 	}
 
@@ -1105,6 +1112,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	{
 
 		free(surf[surf_no].data);
+		surf[surf_no].data = NULL;
 		return FALSE;
 	}
 
