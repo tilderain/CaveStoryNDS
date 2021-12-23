@@ -35,16 +35,22 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 		return FALSE;
 	}
 
-	if (infoheader->bits != 8 && infoheader->bits != 4) {
+	if (infoheader->bits != 8 && infoheader->bits != 4 && infoheader->bits != 1) {
 		printf("Unsupported depth for GL_RGB256 conversion (%d)",
 			      infoheader->bits);
 		return FALSE;
 	}
 
 	// Decode
-	int colornumber = (infoheader->bits == 8) ? 256 : 16;
+	int colornumber = 0;
+	if(infoheader->bits == 8)
+		colornumber = 256;
+	else if(infoheader->bits == 4)
+		colornumber = 16;
+	else
+		colornumber = 2;
 
-	printf("Size %d\n", colornumber);
+	printf("Size %d W: %d H: %d\n", colornumber, sizex, sizey);
 
 	u8 *PALETTEDATA = (u8 *)infoheader + sizeof(NE_BMPInfoHeader);
 	u8 *IMAGEDATA = (u8 *)header + header->offset;
@@ -78,13 +84,13 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 	}
 
 	surf[surf_no].w = sizex; surf[surf_no].h = sizey;
-
+	
 	if (create_surface)
 	{
 		MakeSurface_Generic(sizex, sizey, surf_no);
 	}
 	u8 *buffer = NULL;
-	if(colornumber == 16)
+	if(colornumber <= 16)
 		buffer = (u8*)malloc(sizex * sizey);
 
 	surf[surf_no].data = (BUFFER_PIXEL*)malloc(sizex * sizey);
@@ -92,10 +98,7 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 	GL_TEXTURE_TYPE_ENUM paletteType;
 	switch (colornumber)
 	{
-		case 2:
-		case 4:
-			paletteType = GL_RGB4;
-			break;
+
 		case 16:
 			paletteType = GL_RGB16;
 			break;
@@ -110,23 +113,7 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 	surf[surf_no].paletteType = paletteType;
 	surf[surf_no].palettesize = colornumber;
 
-	int texDivi = 2;
-	switch(paletteType)
-	{
-		case GL_RGB4:
-			texDivi = 4;
-		break;
-		case GL_RGB16:
-			texDivi = 2;
-		break;
-		case GL_RGB256:
-			texDivi = 1;
-		break;
-	}
 	// Then, the image
-
-
-
 	int y, x;
 	if (colornumber == 256) {
 		// For BMPs with width not multiple of 4
@@ -176,7 +163,7 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 				}
 			}
 		}
-	} else { //colornumber == 16
+	} else if (colornumber == 16) { //colornumber == 16
 		// For BMPs with width not multiple of 8
 		int disalign = sizex & 7;
 
@@ -210,10 +197,28 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 				}
 			}
 		}
+	} else //colornumber == 2
+	{
+		int linesize = ((sizex + 31) / 32) * 4;
+
+		for(int y = sizey - 1; y >= 0; y--)
+    		{
+        	for(int x = 0; x < sizex; x++)
+        	{
+        	    int pos = y * linesize + x / 8;
+        	    int bit = 1 << (7 - x % 8);
+        	    int v = (IMAGEDATA[pos] & bit) > 0;
+        	    //printf("%d", v);
+				
+				buffer[(sizey - y - 1) * (sizex) + (x)] = v;
+        	}
+        //printf("end\n");
+    }
+
 	}
 
 	//finally convert the 256 color to 16 color
-	if(colornumber == 16)
+	if(colornumber <= 16)
 	{
 		for (int y = 0; y < sizey; y++)
 		{
