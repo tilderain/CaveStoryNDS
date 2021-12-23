@@ -10,6 +10,8 @@
 
 #include "stdlib.h"
 
+#include "nds.h"
+
 BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 {
 
@@ -52,7 +54,7 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 	surf[surf_no].palette = (u16*)malloc(colornumber*2);
 
 	int i = 0;
-	char firstBlank = -1;
+	signed short firstBlank = -1;
 	bool swap0WithFirstBlank = false;
 	while (i < colornumber) {
 		u8 r, g, b;
@@ -220,7 +222,22 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 				int pos;
 				char color;
 				pos = (y*sizex) + x;
-				color = (buffer[pos*2] | buffer[pos*2+1] << 4);
+				char col1 = buffer[pos*2];
+				char col2 = buffer[pos*2+1];
+
+				if(swap0WithFirstBlank)
+				{
+					if(col1 == 0)
+						col1 = firstBlank;
+					else if(col1 == firstBlank)
+						col1 = 0;
+					if(col2 == 0)
+						col2 = firstBlank;
+					else if(col2 == firstBlank)
+						col2 = 0;
+					
+				}
+				color = (col1 | col2 << 4);
 				surf[surf_no].data[ pos ].color = color;
 			}
 		}
