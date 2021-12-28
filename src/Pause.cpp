@@ -974,7 +974,7 @@ int Call_Pause(void)
 		{"Cheat Mode", Callback_Cheat, &conf, NULL, 0, FALSE},
 		{"Play song", Callback_Music, NULL, NULL, 0, FALSE},
 		{"Play sound", Callback_Sound, NULL, NULL, 0, FALSE},
-		{"CSE2 for NDS", Callback_Stub, NULL, "= v0.3a =", 0, TRUE},
+		{"CSE2 for NDS", Callback_Stub, NULL, "= v0.4 =", 0, TRUE},
 	};
 
 	OptionsMenu options_menu = {
