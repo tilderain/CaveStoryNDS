@@ -70,6 +70,16 @@ static const char *lpWindowName = "Cave Story ~ Doukutsu Monogatari";
 #endif
 
 
+void card_line_irq()
+{
+	printf("card line irq popped");
+
+	while(1){
+		printf("card line irq popped");
+		swiWaitForVBlank();
+	}
+}
+
 //Framerate stuff
 void PutFramePerSecound()
 {
@@ -118,6 +128,8 @@ int main(int argc, char *argv[])
 	//Get executable's path
 	fatInitDefault();
 
+ 	irqEnable(IRQ_CARD_LINE); 
+ 	irqSet(IRQ_CARD_LINE, card_line_irq);
 #ifdef CYG_PROFILER
  irqEnable(IRQ_HBLANK); 
  irqSet(IRQ_HBLANK, hblankCount);

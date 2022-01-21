@@ -188,12 +188,40 @@ void PutStage_Front(int fx, int fy)
 	// Get range to draw
 	int num_x = ((WINDOW_WIDTH + (16 - 1)) / 16) + 1;
 	int num_y = ((WINDOW_HEIGHT + (16 - 1)) / 16) + 1;
-	int put_x = ((fx / 0x200) + 8) / 16;
-	int put_y = ((fy / 0x200) + 8) / 16;
+	int put_x = ((fx / 0x200) + 8);
+	int put_y = ((fy / 0x200) + 8);
 
-	//int atrb;
+	int atrb;
 
-	for (int j = put_y; j < put_y + num_y; ++j)
+	TileMapEntry16 entry = {0};
+	u16* ptr = bgGetMapPtr(gBackground0);
+	u16* ptr_sub = bgGetMapPtr(gBackground0_sub);
+
+	ErrorInitConsole();
+
+	int asdf = 0;
+	for(int y = 0; y < 24/2; y++)
+	{
+		for(int x = 0; x < 32/2; x++)
+		{
+			int offset = (y * gMap.width) + x;
+			int atrb = GetAttribute(x, y);
+
+			if (atrb < 0x40 || atrb >= 0x80)
+				continue;
+
+			int tileX = (gMap.data[offset] % 16);
+			int tileY = (gMap.data[offset] / 16);
+
+			entry.index = (tileX * 2) + (tileY*32*2);
+
+			ptr[x*2 + (y * 32 * 2)] = entry.index;
+			ptr[x*2 + (y * 32 * 2)+1] = entry.index + 1;
+			ptr[x*2 + (y * 32 * 2) + 32] = entry.index + 32;
+			ptr[x*2 + (y * 32 * 2)+1 + 32] = entry.index + 32 +1;
+		}
+	}
+	/*for (int j = put_y; j < put_y + num_y; ++j)
 	{
 		for (int i = put_x; i < put_x + num_x; ++i)
 		{
@@ -207,15 +235,26 @@ void PutStage_Front(int fx, int fy)
 			// Draw tile
 			rect.left = (gMap.data[offset] % 16) * 16;
 			rect.top = (gMap.data[offset] / 16) * 16;
-			rect.right = rect.left + 16;
-			rect.bottom = rect.top + 16;
+			//rect.right = rect.left + 16;
+			//rect.bottom = rect.top + 16;
 
-			PutBitmap3(&grcGame, ((i * 16) - 8) - (fx / 0x200), ((j * 16) - 8) - (fy / 0x200), &rect, SURFACE_ID_LEVEL_TILESET);
+			//PutBitmap3(&grcGame, ((i * 16) - 8) - (fx / 0x200), ((j * 16) - 8) - (fy / 0x200), &rect, SURFACE_ID_LEVEL_TILESET);
 
-			if (atrb == 0x43)
-				PutBitmap3(&grcGame, ((i * 16) - 8) - (fx / 0x200), ((j * 16) - 8) - (fy / 0x200), &rcSnack, SURFACE_ID_NPC_SYM);
+			//if (atrb == 0x43)
+			//	PutBitmap3(&grcGame, ((i * 16) - 8) - (fx / 0x200), ((j * 16) - 8) - (fy / 0x200), &rcSnack, SURFACE_ID_NPC_SYM);
+			entry.index = rect.left * 2 + (rect.top * 32);
+			int x = ((i) - 1) - (fx / (0x200 * 8));
+			int y = ((j) - 1) - (fy / (0x200 * 8));
+			ptr[x/2 + (y*32)] = entry.index;
+			ptr[x/2 + (y*32) + 1] = entry.index + 1;
+			ptr_sub[x * y] = entry.index;
 		}
-	}
+	}*/
+
+	REG_BG0HOFS = put_x;
+	REG_BG0VOFS = put_y;
+	//REG_BG0HOFS_SUB = put_x;
+	//REG_BG0HOFS_SUB = put_y;
 }
 
 void PutMapDataVector(int fx, int fy)

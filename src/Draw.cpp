@@ -52,6 +52,8 @@
 
 #include "File.h"
 
+int gBackground0 = 0;
+int gBackground0_sub = 0;
 
 void Timer_1ms()
 {
@@ -180,6 +182,11 @@ int gTextureHeight256 = TEXTURE_SIZE_256;
 void* gCurrentPalette;
 
 char gConsoleInited = false;
+
+int curGfx;
+
+const int gfxPtrCount = 128;
+u16* gfxPtrs[gfxPtrCount] = {NULL};
 
 void ErrorInitConsole()
 {
@@ -704,8 +711,16 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
+		oamUpdate(&oamMain);
 
 		swiWaitForVBlank();
+
+
+
+
+		curGfx = 0;
+
+		oamClear(&oamMain, 0, 0);
 
 		if(gb50Fps)
 		{
@@ -778,8 +793,30 @@ BOOL StartDirectDraw()
 	vramSetBankC( VRAM_C_SUB_BG );
 	vramSetBankD( VRAM_D_SUB_SPRITE );
 	
+	oamInit(&oamMain, SpriteMapping_1D_32, false);
 
 	initSubSprites();
+
+	curGfx = 0;
+	for(int i = 0; i < gfxPtrCount; i++)
+	{
+		u16* gfx = oamAllocateGfx(&oamMain, SpriteSize_16x16, SpriteColorFormat_256Color);
+		for(int j = 0; j < 16 * 16; j++)
+		{
+			gfx[j] = 1 | (1 << 8);
+		}
+		for(int j = 0; j < 16 * 16; j++)
+		{
+			if(i==1)
+				gfx[j] = 2 | (2 << 8);
+		}
+		gfxPtrs[i] = gfx;
+	}
+
+	SPRITE_PALETTE[1] = RGB15(31,0,0);
+
+	SPRITE_PALETTE[2] = RGB15(0,31,31);	
+
 
 #ifndef TWO_SCREENS
 	videoSetModeSub( MODE_0_2D  );
@@ -969,7 +1006,7 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 
 void convert16BitmapToTile(int surf_no)
 {
-	BUFFER_PIXEL* temp = (BUFFER_PIXEL*)malloc(surf[surf_no].w * surf[surf_no].h);
+	BUFFER_PIXEL* temp = (BUFFER_PIXEL*)malloc(surf[surf_no].w / 2 * surf[surf_no].h);
 
 	int bitmap_width = surf[surf_no].w;
 	int tileW = surf[surf_no].w / 8;
@@ -985,7 +1022,7 @@ void convert16BitmapToTile(int surf_no)
 				{
 
 					//2 pixels in 1 byte
-					temp[i++] = surf[surf_no].data[tx + (ty*bitmap_width/2) + (y*4) + (x*bitmap_width/2*8)];
+					temp[i++] = surf[surf_no].data[tx + (ty*bitmap_width/2) + (y*8*bitmap_width/2) + (x*4)];
 					//ErrorInitConsole();
 					//printf("%d ", tx + (ty*bitmap_width/2) + (y*4) + (x*bitmap_width/2*8));
 					//swiWaitForVBlank();
@@ -1140,12 +1177,20 @@ facejump:
 
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)
 	{
-		bgInit(0, BgType_Text4bpp, BgSize_T_512x256, 0, 0);
-		dmaCopy(surf[surf_no].data, BG_TILE_RAM(0), surf[surf_no].w * surf[surf_no].h);
+		gBackground0 = bgInit(0, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
+		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
+		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
+		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0), surf[surf_no].w * surf[surf_no].h / 2);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE, surf[surf_no].palettesize*2);
+		dmaFillWords(0, bgGetMapPtr(gBackground0), 64*32*2);
 		
-
-		bgGetMapPtr(0)[0] = 1;
+		//gBackground0_sub = bgInitSub(0, BgType_Text4bpp, BgSize_T_512x256, 0, 0);
+		//dmaCopy(surf[surf_no].data, BG_TILE_RAM_SUB(gBackground0_sub), surf[surf_no].w * surf[surf_no].h / 2);
+		//dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB, surf[surf_no].palettesize*2);
+	}
+	else
+	{
+		free(surf[surf_no].data);
 	}
 	
 	return TRUE;
@@ -1281,6 +1326,107 @@ void CopyDirtyText()
 
 }
 
+void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
+{
+	if(curGfx >= gfxPtrCount) return;
+	if(x > WINDOW_WIDTH || x < -32) return;
+	if(y > WINDOW_HEIGHT || y < -32) return;
+
+	if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
+	if(surf_no == SURFACE_ID_FADE) return;
+	if(surf_no == SURFACE_ID_TEXT_BOX) return;
+	if(surf_no == SURFACE_ID_FACE) return;
+	if(surf_no == SURFACE_ID_LEVEL_TILESET)return;
+	int pal = 0;
+	oamSet(&oamMain, 
+			curGfx, 
+			x, 
+			y, 
+			0, 
+			0,
+			SpriteSize_16x16, 
+			SpriteColorFormat_256Color, 
+			gfxPtrs[pal], 
+			-1, 
+			false, 
+			false,			
+			false, false, 
+			false	
+			);           
+	   
+			
+	curGfx++;
+
+	return;
+	//TODO: draw queueing
+	//TODO: don't render if transparent
+#ifdef TWO_SCREENS
+	int temp = x;
+	x = WINDOW_HEIGHT - y;
+	y = temp;
+
+	if((gCounter & 1) == 0) // bottom screen
+	{
+		
+	}
+	else
+	{
+		y -= WINDOW_WIDTH / 2;
+	}
+
+#endif
+
+	if(x > WINDOW_WIDTH) return;
+	if(y > WINDOW_HEIGHT) return;
+
+	int textureid = surf[surf_no].textureid;
+	//if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
+////
+	RECT srcRect = *rect;
+
+	srcRect.top += surf[surf_no].yoffset;
+	srcRect.bottom += surf[surf_no].yoffset;
+
+	if(surf[surf_no].paletteType == GL_RGB16)
+	{
+		srcRect.left += surf[surf_no].xoffset;
+		srcRect.right += surf[surf_no].xoffset;
+	}
+	else
+	{
+		// To compensate for the texture size being halved when turning from 16 to 256 color
+		srcRect.left += surf[surf_no].xoffset / 2;
+		srcRect.right += surf[surf_no].xoffset / 2;
+	}
+
+	if(rcView->left > x)
+	{
+		srcRect.left += rcView->left - x;
+		x = rcView->left;
+	}
+
+	if(rcView->top > y)
+	{
+		srcRect.top += rcView->top - y;
+		y = rcView->top;
+	}
+
+	int width = srcRect.right - srcRect.left;
+	int height = srcRect.bottom - srcRect.top;
+	if(x + width > rcView->right)
+	{
+		srcRect.right -= x + width - rcView->right;
+	}
+
+	if(y + height > rcView->bottom)
+	{
+		srcRect.bottom -= y + height - rcView->bottom;
+	}
+////
+
+	//glSprite(x, y, rect, gAtlas16Color1, 0);
+	glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
+}
 
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent)
 {
