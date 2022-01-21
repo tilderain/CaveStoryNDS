@@ -770,45 +770,16 @@ BOOL StartDirectDraw()
 	//-----------------------------------------------------------------
 	// Initialize the graphics engines
 	//-----------------------------------------------------------------
-	videoSetMode( MODE_5_3D );
-#ifdef TWO_SCREENS
-	videoSetModeSub(MODE_5_2D);
- 
-	// sub sprites hold the bottom image when 3D directed to top
-	initSubSprites();
- 
-	// sub background holds the top image when 3D directed to bottom
-	bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
-#endif
+	videoSetMode( MODE_0_2D );
+	videoSetModeSub( MODE_0_2D  );
 
-    vramSetBankA( VRAM_A_TEXTURE );     
-	vramSetBankB( VRAM_B_TEXTURE );
-	vramSetBankC( VRAM_C_TEXTURE );
-	vramSetBankD( VRAM_D_TEXTURE );
+	vramSetBankA( VRAM_A_MAIN_BG );     
+	vramSetBankB( VRAM_B_MAIN_SPRITE );
+	vramSetBankC( VRAM_C_SUB_BG );
+	vramSetBankD( VRAM_D_SUB_SPRITE );
 	
-	vramSetBankE(VRAM_E_TEX_PALETTE);  // Allocate VRAM bank for all the palettes
-	glScreen2D();
-	glEnable(GL_TEXTURE_2D);
 
-	glBegin2D();
-
-	glGenTextures(1, &gAtlas16Color1);
-	glBindTexture(0, gAtlas16Color1);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight512, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
-	glGenTextures(1, &gAtlas16Color2);
-	glBindTexture(0, gAtlas16Color2);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
-
-	glGenTextures(1, &gAtlas256Color);
-	glBindTexture(0, gAtlas256Color);
-	glTexImage2D(0,0, GL_RGB16, gTextureWidth1024, gTextureHeight256, 0,
-		GL_TEXTURE_WRAP_S|GL_TEXTURE_WRAP_T|TEXGEN_OFF|GL_TEXTURE_COLOR0_TRANSPARENT,
-		NULL);
+	initSubSprites();
 
 #ifndef TWO_SCREENS
 	videoSetModeSub( MODE_0_2D  );
@@ -996,6 +967,37 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 
 }
 
+void convert16BitmapToTile(int surf_no)
+{
+	BUFFER_PIXEL* temp = (BUFFER_PIXEL*)malloc(surf[surf_no].w * surf[surf_no].h);
+
+	int bitmap_width = surf[surf_no].w;
+	int tileW = surf[surf_no].w / 8;
+	int tileH = surf[surf_no].h / 8;
+	int i=0;
+	for(int y=0; y<tileH; y++)
+	{
+		for(int x=0; x<tileW; x++)
+		{
+			for(int ty=0;ty<8;ty++)
+			{
+				for(int tx=0;tx<4;tx++)
+				{
+
+					//2 pixels in 1 byte
+					temp[i++] = surf[surf_no].data[tx + (ty*bitmap_width/2) + (y*4) + (x*bitmap_width/2*8)];
+					//ErrorInitConsole();
+					//printf("%d ", tx + (ty*bitmap_width/2) + (y*4) + (x*bitmap_width/2*8));
+					//swiWaitForVBlank();
+				}
+			}
+		}
+	}
+
+	free(surf[surf_no].data);
+	surf[surf_no].data = temp;
+
+}
 
 
 BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
@@ -1006,6 +1008,8 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	char path[MAX_PATH];
 
 	FILE_e *fp = NULL;
+
+
 	for(;;)
 	{
 
@@ -1108,13 +1112,15 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 		{datarect.right = 384; datarect.bottom = 39;}
 #endif
 
-	if(!CopyDataToTexture(surf[surf_no].paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
-	{
+	convert16BitmapToTile(surf_no);
 
-		free(surf[surf_no].data);
-		surf[surf_no].data = NULL;
-		return FALSE;
-	}
+//	if(!CopyDataToTexture(surf[surf_no].paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
+//	{
+//
+//		free(surf[surf_no].data);
+//		surf[surf_no].data = NULL;
+//		return FALSE;
+//	}
 
 facejump:
 	surf[surf_no].xoffset = xoffset;
@@ -1129,7 +1135,17 @@ facejump:
 #endif
 	)
 	{
-		free(surf[surf_no].data);
+//			free(surf[surf_no].data);
+	}
+
+	if(surf_no == SURFACE_ID_LEVEL_TILESET)
+	{
+		bgInit(0, BgType_Text4bpp, BgSize_T_512x256, 0, 0);
+		dmaCopy(surf[surf_no].data, BG_TILE_RAM(0), surf[surf_no].w * surf[surf_no].h);
+		dmaCopy(surf[surf_no].palette, BG_PALETTE, surf[surf_no].palettesize*2);
+		
+
+		bgGetMapPtr(0)[0] = 1;
 	}
 	
 	return TRUE;
