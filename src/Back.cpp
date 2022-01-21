@@ -71,10 +71,16 @@ void PutBack(int fx, int fy)
 			for (y = 0; y < WINDOW_HEIGHT; y += gBack.partsH)
 				for (x = 0; x < WINDOW_WIDTH; x += gBack.partsW)
 					PutBitmap4(&grcGame, x, y, &rect, SURFACE_ID_LEVEL_BACKGROUND);
+					
 
 			break;
 
 		case 1:
+			REG_BG3HOFS = -((fx / 4 / 0x200) % gBack.partsW);
+			REG_BG3VOFS = -((fy / 4 / 0x200) % gBack.partsH);
+			REG_BG3HOFS_SUB = -((fx / 4 / 0x200) % gBack.partsW);
+			REG_BG3VOFS_SUB = -((fy / 4 / 0x200) % gBack.partsH);
+
 			for (y = -((fy / 2 / 0x200) % gBack.partsH); y < WINDOW_HEIGHT; y += gBack.partsH)
 				for (x = -((fx / 2 / 0x200) % gBack.partsW); x < WINDOW_WIDTH; x += gBack.partsW)
 					PutBitmap4(&grcGame, x, y, &rect, SURFACE_ID_LEVEL_BACKGROUND);
@@ -82,6 +88,11 @@ void PutBack(int fx, int fy)
 			break;
 
 		case 2:
+			REG_BG3HOFS = -((fy / 0x200) % gBack.partsH);
+			REG_BG3VOFS = -((fx / 0x200) % gBack.partsW);
+			REG_BG3HOFS_SUB = -((fy / 0x200) % gBack.partsH);
+			REG_BG3VOFS_SUB = -((fx / 0x200) % gBack.partsW);
+
 			for (y = -((fy / 0x200) % gBack.partsH); y < WINDOW_HEIGHT; y += gBack.partsH)
 				for (x = -((fx / 0x200) % gBack.partsW); x < WINDOW_WIDTH; x += gBack.partsW)
 					PutBitmap4(&grcGame, x, y, &rect, SURFACE_ID_LEVEL_BACKGROUND);
@@ -89,6 +100,13 @@ void PutBack(int fx, int fy)
 			break;
 
 		case 5:
+			REG_BG3HOFS = -gBack.partsH;
+			REG_BG3VOFS = -((gBack.fx / 0x200) % gBack.partsW);
+			REG_BG3HOFS_SUB = -gBack.partsH;
+			REG_BG3VOFS_SUB = -((gBack.fx / 0x200) % gBack.partsW);
+			
+		
+
 			for (y = -gBack.partsH; y < WINDOW_HEIGHT; y += gBack.partsH)
 				for (x = -((gBack.fx / 0x200) % gBack.partsW); x < WINDOW_WIDTH; x += gBack.partsW)
 					PutBitmap4(&grcGame, x, y, &rect, SURFACE_ID_LEVEL_BACKGROUND);

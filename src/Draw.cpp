@@ -55,6 +55,9 @@
 int gBackground0 = 0;
 int gBackground0_sub = 0;
 
+int gBackground3 = 0;
+int gBackground3_sub = 0;
+
 void Timer_1ms()
 {
 
@@ -184,9 +187,10 @@ void* gCurrentPalette;
 char gConsoleInited = false;
 
 int curGfx;
-
+int curGfxSub;
 const int gfxPtrCount = 128;
 u16* gfxPtrs[gfxPtrCount] = {NULL};
+u16* gfxPtrsSub[gfxPtrCount] = {NULL};
 
 void ErrorInitConsole()
 {
@@ -638,36 +642,6 @@ BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset
 }
 
 
-void initSubSprites(void){
-//-------------------------------------------------------
- 
-	oamInit(&oamSub, SpriteMapping_Bmp_2D_256, false);
- 
-	int x = 0;
-	int y = 0;
- 
-	int id = 0;
-
-	//set up a 4x3 grid of 64x64 sprites to cover the screen
-	for(y = 0; y < 3; y++)
-	for(x = 0; x < 4; x++)
-	{
-	/*	u16 *offset = &SPRITE_GFX_SUB[(x * 64) + (y * 64 * 256)];
- 
-		oamSet(&oamSub, x + y * 4, x * 64, y * 64, 0, 15, SpriteSize_64x64, 
-			SpriteColorFormat_Bmp, offset, -1, false,false,false,false,false);
-	*/
-		oamSub.oamMemory[id].attribute[0] = ATTR0_BMP | ATTR0_SQUARE | (64 * y);
-		oamSub.oamMemory[id].attribute[1] = ATTR1_SIZE_64 | (64 * x);
-		oamSub.oamMemory[id].attribute[2] = ATTR2_ALPHA(1) | (8 * 32 * y) | (8 * x);
-		id++;
-	}
- 
-	swiWaitForVBlank();
- 
-	oamUpdate(&oamSub);
-}
-
 
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -711,7 +685,14 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
+		bgSetPriority(gBackground0_sub, 3);
+		bgSetPriority(gBackground3_sub, 3);
+		
+		oamEnable(&oamSub);
+		REG_DISPCNT_SUB |= (SpriteMapping_1D_128 & 0xffffff0);
+
 		oamUpdate(&oamMain);
+		oamUpdate(&oamSub);
 
 		swiWaitForVBlank();
 
@@ -719,8 +700,10 @@ BOOL Flip_SystemTask()
 
 
 		curGfx = 0;
+		curGfxSub = 0;
 
 		oamClear(&oamMain, 0, 0);
+		oamClear(&oamSub, 0, 0);
 
 		if(gb50Fps)
 		{
@@ -786,21 +769,23 @@ BOOL StartDirectDraw()
 	// Initialize the graphics engines
 	//-----------------------------------------------------------------
 	videoSetMode( MODE_0_2D );
-	videoSetModeSub( MODE_0_2D  );
+	videoSetModeSub( MODE_0_2D );
 
 	vramSetBankA( VRAM_A_MAIN_BG );     
 	vramSetBankB( VRAM_B_MAIN_SPRITE );
 	vramSetBankC( VRAM_C_SUB_BG );
 	vramSetBankD( VRAM_D_SUB_SPRITE );
 	
-	oamInit(&oamMain, SpriteMapping_1D_32, false);
+	oamInit(&oamMain, SpriteMapping_1D_128, false);
+	oamInit(&oamSub, SpriteMapping_1D_128, false);
 
-	initSubSprites();
-
+		
 	curGfx = 0;
+	curGfxSub = 0;
 	for(int i = 0; i < gfxPtrCount; i++)
 	{
-		u16* gfx = oamAllocateGfx(&oamMain, SpriteSize_16x16, SpriteColorFormat_256Color);
+		u16* gfx = oamAllocateGfx(&oamMain, SpriteSize_16x16, SpriteColorFormat_16Color);
+		u16* gfx2 = oamAllocateGfx(&oamSub, SpriteSize_16x16, SpriteColorFormat_16Color);
 		for(int j = 0; j < 16 * 16; j++)
 		{
 			gfx[j] = 1 | (1 << 8);
@@ -810,13 +795,25 @@ BOOL StartDirectDraw()
 			if(i==1)
 				gfx[j] = 2 | (2 << 8);
 		}
+		for(int j = 0; j < 16 * 16; j++)
+		{
+			gfx2[j] = 1 | (1 << 8);
+		}
+		for(int j = 0; j < 16 * 16; j++)
+		{
+			if(i==1)
+				gfx2[j] = 2 | (2 << 8);
+		}
 		gfxPtrs[i] = gfx;
+		gfxPtrsSub[i] = gfx2;
 	}
 
 	SPRITE_PALETTE[1] = RGB15(31,0,0);
 
 	SPRITE_PALETTE[2] = RGB15(0,31,31);	
+	SPRITE_PALETTE_SUB[1] = RGB15(31,0,0);
 
+	SPRITE_PALETTE_SUB[2] = RGB15(0,31,31);	
 
 #ifndef TWO_SCREENS
 	videoSetModeSub( MODE_0_2D  );
@@ -1163,7 +1160,7 @@ facejump:
 	surf[surf_no].xoffset = xoffset;
 	surf[surf_no].yoffset = yoffset;
 
-	surf[surf_no].paletteOffset = AssignColorPalette(&surf[surf_no], 256, surf[surf_no].palette);
+	//surf[surf_no].paletteOffset = AssignColorPalette(&surf[surf_no], 256, surf[surf_no].palette);
 
 
 	if(surf_no != SURFACE_ID_TEXT_BOX && surf_no != SURFACE_ID_FACE
@@ -1177,16 +1174,57 @@ facejump:
 
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)
 	{
-		gBackground0 = bgInit(0, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
+		gBackground0 = bgInit(1, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0), surf[surf_no].w * surf[surf_no].h / 2);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE, surf[surf_no].palettesize*2);
 		dmaFillWords(0, bgGetMapPtr(gBackground0), 64*32*2);
 		
-		//gBackground0_sub = bgInitSub(0, BgType_Text4bpp, BgSize_T_512x256, 0, 0);
-		//dmaCopy(surf[surf_no].data, BG_TILE_RAM_SUB(gBackground0_sub), surf[surf_no].w * surf[surf_no].h / 2);
-		//dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB, surf[surf_no].palettesize*2);
+		gBackground0_sub = bgInitSub(1, BgType_Text4bpp, BgSize_T_512x256, 0, 2);
+		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0_sub), surf[surf_no].w * surf[surf_no].h / 2);
+		dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB, surf[surf_no].palettesize*2);
+		dmaFillWords(0, bgGetMapPtr(gBackground0_sub), 64*32*2);
+	}
+	else if (surf_no == SURFACE_ID_MY_CHAR)
+	{
+		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
+		dmaCopy(surf[surf_no].data,gfxPtrs[0], surf[surf_no].w * surf[surf_no].h / 2);
+		dmaCopy(surf[surf_no].palette, SPRITE_PALETTE, surf[surf_no].palettesize*2);
+
+		dmaCopy(surf[surf_no].data,gfxPtrsSub[0], surf[surf_no].w * surf[surf_no].h / 2);
+		dmaCopy(surf[surf_no].palette, SPRITE_PALETTE_SUB, surf[surf_no].palettesize*2);
+	}
+	else if (surf_no == SURFACE_ID_LEVEL_BACKGROUND)
+	{
+		gBackground3 = bgInit(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
+		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
+		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
+		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground3), surf[surf_no].w * surf[surf_no].h / 2);
+		dmaCopy(surf[surf_no].palette, BG_PALETTE+(16), surf[surf_no].palettesize*2);
+		dmaFillWords(0, bgGetMapPtr(gBackground3), 64*32);
+
+		gBackground3_sub = bgInitSub(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
+		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground3_sub), surf[surf_no].w * surf[surf_no].h / 32);
+		dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB+(16), surf[surf_no].palettesize*2);
+		dmaFillWords(0, bgGetMapPtr(gBackground3_sub), 64*32*2);
+
+		TileMapEntry16 entry = {0};
+		u16* ptr = bgGetMapPtr(gBackground3);
+		u16* ptr_sub = bgGetMapPtr(gBackground3_sub);
+		entry.palette = 1;
+		//ErrorInitConsole();
+
+		int asdf = 0;
+		for(int y = 0; y < 32; y++)
+		{
+			for(int x = 0; x < 64; x++)
+			{
+				entry.index = (x % (surf[surf_no].w / 16)) + (y* (surf[surf_no].w/16));
+				ptr[x + (y * 32 * 2)] = entry.index | TILE_PALETTE(1);
+				ptr_sub[x + (y * 32 * 2)] = entry.index  | TILE_PALETTE(1);
+			}
+		}
 	}
 	else
 	{
@@ -1328,34 +1366,61 @@ void CopyDirtyText()
 
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 {
-	if(curGfx >= gfxPtrCount) return;
-	if(x > WINDOW_WIDTH || x < -32) return;
-	if(y > WINDOW_HEIGHT || y < -32) return;
+
+	if(x < -32 || y < -32) return;
 
 	if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
 	if(surf_no == SURFACE_ID_FADE) return;
 	if(surf_no == SURFACE_ID_TEXT_BOX) return;
 	if(surf_no == SURFACE_ID_FACE) return;
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)return;
-	int pal = 0;
-	oamSet(&oamMain, 
-			curGfx, 
-			x, 
-			y, 
-			0, 
-			0,
-			SpriteSize_16x16, 
-			SpriteColorFormat_256Color, 
-			gfxPtrs[pal], 
-			-1, 
-			false, 
-			false,			
-			false, false, 
-			false	
-			);           
-	   
-			
-	curGfx++;
+	if(x > WINDOW_WIDTH) return;
+	
+	if(y < SCREEN_HEIGHT)
+	{
+		if(curGfx >= gfxPtrCount) return;
+		int pal = 0;
+		oamSet(&oamMain, 
+				curGfx, 
+				x, 
+				y, 
+				0, 
+				0,
+				SpriteSize_16x16, 
+				SpriteColorFormat_16Color, 
+				gfxPtrs[pal], 
+				-1, 
+				false, 
+				false,			
+				false, false, 
+				false	
+				);           
+
+		curGfx++;
+
+	}
+	else if (y < SCREEN_HEIGHT * 2)
+	{
+		int pal = 0;
+			oamSet(&oamSub, 
+				curGfxSub, 
+				x, 
+				y-SCREEN_HEIGHT, 
+				1, 
+				0,
+				SpriteSize_16x16, 
+				SpriteColorFormat_16Color, 
+				gfxPtrsSub[pal], 
+				-1, 
+				false, 
+				false,			
+				false, false, 
+				false	
+				);           
+
+
+		curGfxSub++;	
+	}
 
 	return;
 	//TODO: draw queueing

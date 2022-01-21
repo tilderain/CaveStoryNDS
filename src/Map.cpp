@@ -197,12 +197,12 @@ void PutStage_Front(int fx, int fy)
 	u16* ptr = bgGetMapPtr(gBackground0);
 	u16* ptr_sub = bgGetMapPtr(gBackground0_sub);
 
-	ErrorInitConsole();
+	//ErrorInitConsole();
 
 	int asdf = 0;
-	for(int y = 0; y < 24/2; y++)
+	for(int y = 0; y < 16; y++)
 	{
-		for(int x = 0; x < 32/2; x++)
+		for(int x = 0; x < 16; x++)
 		{
 			int offset = (y * gMap.width) + x;
 			int atrb = GetAttribute(x, y);
@@ -219,6 +219,21 @@ void PutStage_Front(int fx, int fy)
 			ptr[x*2 + (y * 32 * 2)+1] = entry.index + 1;
 			ptr[x*2 + (y * 32 * 2) + 32] = entry.index + 32;
 			ptr[x*2 + (y * 32 * 2)+1 + 32] = entry.index + 32 +1;
+
+			offset = ((y + 12) * gMap.width) + x;
+
+			atrb = GetAttribute(x, y + 12);
+
+			if (atrb < 0x40 || atrb >= 0x80)
+				continue;
+			tileX = (gMap.data[offset] % 16);
+			tileY = (gMap.data[offset] / 16);
+			entry.index = (tileX * 2) + (tileY*32*2);
+
+			ptr_sub[x*2 + (y * 32 * 2)] = entry.index;
+			ptr_sub[x*2 + (y * 32 * 2)+1] = entry.index + 1;
+			ptr_sub[x*2 + (y * 32 * 2) + 32] = entry.index + 32;
+			ptr_sub[x*2 + (y * 32 * 2)+1 + 32] = entry.index + 32 +1;
 		}
 	}
 	/*for (int j = put_y; j < put_y + num_y; ++j)
@@ -251,10 +266,10 @@ void PutStage_Front(int fx, int fy)
 		}
 	}*/
 
-	REG_BG0HOFS = put_x;
-	REG_BG0VOFS = put_y;
-	//REG_BG0HOFS_SUB = put_x;
-	//REG_BG0HOFS_SUB = put_y;
+	REG_BG1HOFS = put_x;
+	REG_BG1VOFS = put_y;
+	REG_BG1HOFS_SUB = put_x;
+	REG_BG1VOFS_SUB = put_y;
 }
 
 void PutMapDataVector(int fx, int fy)

@@ -16,6 +16,10 @@
 extern int gBackground0;
 extern int gBackground0_sub;
 
+
+extern int gBackground3;
+extern int gBackground3_sub;
+
 extern RECT grcGame;
 extern RECT grcFull;
 
