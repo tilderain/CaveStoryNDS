@@ -192,6 +192,9 @@ const int gfxPtrCount = 128;
 u16* gfxPtrs[gfxPtrCount] = {NULL};
 u16* gfxPtrsSub[gfxPtrCount] = {NULL};
 
+int surfPaletteTable[SURFACE_ID_MAX] = {0};
+int gPaletteNo = 0;
+
 void ErrorInitConsole()
 {
 	if(!gConsoleInited)
@@ -208,6 +211,8 @@ static unsigned int nextPowerOf2(unsigned int n)
 		power <<= 1;
 	}
 }  
+
+
 
 
 
@@ -871,6 +876,32 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 	return TRUE;
 }
 
+void Upload16x16RectToOAM(int surf_no, RECT* rect, int index)
+{
+	int x = rect->left / 8;
+	int y = rect->top / 8;
+
+	int i = 0;
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrs[index] + (i++ * 64),
+		8*8/2 + 32 //16 color
+	);
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8) + (surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrs[index] + (i++ * 64),
+		8*8/2 + 32 //16 color
+	);
+
+	i=0;
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrsSub[index] + (i++ * 64),
+		8*8/2 + 32 //16 color
+	);
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8) + (surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrsSub[index] + (i++ * 64),
+		8*8/2 + 32 //16 color
+	);
+
+}
 
 bool npcSymInArmsSlot = false;
 
@@ -1174,6 +1205,9 @@ facejump:
 
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)
 	{
+
+
+		//todo bg init once
 		gBackground0 = bgInit(1, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
@@ -1186,17 +1220,9 @@ facejump:
 		dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB, surf[surf_no].palettesize*2);
 		dmaFillWords(0, bgGetMapPtr(gBackground0_sub), 64*32*2);
 	}
-	else if (surf_no == SURFACE_ID_MY_CHAR)
-	{
-		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
-		dmaCopy(surf[surf_no].data,gfxPtrs[0], surf[surf_no].w * surf[surf_no].h / 2);
-		dmaCopy(surf[surf_no].palette, SPRITE_PALETTE, surf[surf_no].palettesize*2);
-
-		dmaCopy(surf[surf_no].data,gfxPtrsSub[0], surf[surf_no].w * surf[surf_no].h / 2);
-		dmaCopy(surf[surf_no].palette, SPRITE_PALETTE_SUB, surf[surf_no].palettesize*2);
-	}
 	else if (surf_no == SURFACE_ID_LEVEL_BACKGROUND)
 	{
+		//todo palette in same slot
 		gBackground3 = bgInit(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
@@ -1225,6 +1251,18 @@ facejump:
 				ptr_sub[x + (y * 32 * 2)] = entry.index  | TILE_PALETTE(1);
 			}
 		}
+	}
+	else if (surf_no == SURFACE_ID_LEVEL_SPRITESET_1 || surf_no == SURFACE_ID_LEVEL_SPRITESET_2 || surf_no == SURFACE_ID_NPC_SYM
+			|| surf_no == SURFACE_ID_ARMS || surf_no == SURFACE_ID_CARET || surf_no == SURFACE_ID_ARMS_IMAGE || surf_no == SURFACE_ID_BULLET
+			|| surf_no == SURFACE_ID_FADE || surf_no == SURFACE_ID_FONT || surf_no == SURFACE_ID_TEXT_BOX || surf_no == SURFACE_ID_MY_CHAR)
+	{
+				DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
+
+				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE+(gPaletteNo*16), 16*2);
+				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE_SUB+(gPaletteNo*16), 16*2);
+				surfPaletteTable[surf_no] = gPaletteNo;
+
+				gPaletteNo ++;
 	}
 	else
 	{
@@ -1371,7 +1409,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 
 	if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
 	if(surf_no == SURFACE_ID_FADE) return;
-	if(surf_no == SURFACE_ID_TEXT_BOX) return;
+	//if(surf_no == SURFACE_ID_TEXT_BOX) return;
 	if(surf_no == SURFACE_ID_FACE) return;
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)return;
 	if(x > WINDOW_WIDTH) return;
@@ -1385,32 +1423,30 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				x, 
 				y, 
 				0, 
-				0,
+				surfPaletteTable[surf_no],
 				SpriteSize_16x16, 
 				SpriteColorFormat_16Color, 
-				gfxPtrs[pal], 
+				gfxPtrs[curGfx], 
 				-1, 
 				false, 
 				false,			
 				false, false, 
 				false	
 				);           
-
-		curGfx++;
 
 	}
 	else if (y < SCREEN_HEIGHT * 2)
 	{
 		int pal = 0;
 			oamSet(&oamSub, 
-				curGfxSub, 
+				curGfx, 
 				x, 
 				y-SCREEN_HEIGHT, 
-				1, 
-				0,
+				0, 
+				surfPaletteTable[surf_no],
 				SpriteSize_16x16, 
 				SpriteColorFormat_16Color, 
-				gfxPtrsSub[pal], 
+				gfxPtrsSub[curGfx], 
 				-1, 
 				false, 
 				false,			
@@ -1418,10 +1454,9 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				false	
 				);           
 
-
-		curGfxSub++;	
 	}
-
+	Upload16x16RectToOAM(surf_no, rect, curGfx);
+	curGfx++;
 	return;
 	//TODO: draw queueing
 	//TODO: don't render if transparent

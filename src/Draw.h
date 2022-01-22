@@ -173,6 +173,7 @@ void CopyDirtyText();
 void makeNpcSymTakeArmsSlot(bool toggle);
 void PutBitmap3Transparent(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, u32 alpha);
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent);
+void Upload16x16RectToOAM(int surf_no, RECT* rect, int index);
 void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 int GetSurfPixel(int x, int y, int surf_no);
