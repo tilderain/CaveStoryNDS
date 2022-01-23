@@ -826,8 +826,8 @@ void nifiUpdateInput() {
         receivedInputReady[(nifiFrameCounter-1)&31] = false;
     nifiFrameCounter = gCounter;
 
-    if (nifiIsClient())
-        inputFrame += CLIENT_FRAME_LAG;
+    
+    inputFrame += CLIENT_FRAME_LAG;
 
     int olderInput = oldInputs[OLD_INPUTS_BUFFER_SIZE-CLIENT_FRAME_LAG];
 
@@ -875,10 +875,10 @@ void nifiUpdateInput() {
 
     }
 
-    if (!nifiIsLinked() || nifiIsHost()) {
+    if (!nifiIsLinked()) {
         *inputDest = gKey;     
     }
-    else if (nifiIsClient()) {
+    else {
         *inputDest = olderInput;
     }
 }
