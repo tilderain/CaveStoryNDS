@@ -841,7 +841,16 @@ void EndDirectDraw()
 
 void ReleaseSurface(SurfaceID s)
 {
-	free(surf[s].data);
+	if(surf[s].data)
+	{
+		free(surf[s].data);
+		surf[s].data = NULL;
+	}
+	if(surf[s].palette)
+	{
+		free(surf[s].palette);
+		surf[s].palette = NULL;
+	}
 }
 
 BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
@@ -855,12 +864,7 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 		//surf[surf_no].palette = (u16*)malloc(256*(sizeof(u16)));
 		surf[surf_no].textureid = NULL;
 		surf[surf_no].paletteAddress = NULL;
-		if(surf[surf_no].data)
-		{
-			free(surf[surf_no].data);
-			surf[surf_no].data = NULL;
-		}
-		
+		ReleaseSurface(surf_no);
 	}
 
 	return TRUE;
@@ -1089,8 +1093,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	}
 	if(!found)
 	{
-		free(surf[surf_no].data);
-		surf[surf_no].data = NULL;
+		ReleaseSurface(surf_no);
 		return FALSE;
 	}
 
@@ -1111,8 +1114,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 	if(!CopyDataToTexture(surf[surf_no].paletteType, textureid, surf_no, xoffset, yoffset, &datarect))
 	{
 
-		free(surf[surf_no].data);
-		surf[surf_no].data = NULL;
+		ReleaseSurface(surf_no);
 		return FALSE;
 	}
 
@@ -1129,7 +1131,7 @@ facejump:
 #endif
 	)
 	{
-		free(surf[surf_no].data);
+		ReleaseSurface(surf_no);
 	}
 	
 	return TRUE;
