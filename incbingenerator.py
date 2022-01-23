@@ -1,3 +1,5 @@
+#this script generates the list of files in fopen.cpp
+
 path = "game_english"
 path2 = "game_japanese"
 

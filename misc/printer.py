@@ -1,3 +1,6 @@
+#this script determines the width of each character in the font
+#so that the non-monospace text display will have a distance of 1 pixel to the next character
+
 texts = \
 [
 " !\"#$%&`()*+,-./0123456789:;<=>?",
@@ -78,12 +81,16 @@ for chara in charas:
 		right = 0
 		for row in rows:
 			for i in range(len(row)):
+				#each row[i] is the color index
+				#so if it's 1 then that is the color white (if the palette is right)
 				if row[i] == 1 and i > right:
 					right = i
 				
 				#print(4 if row[i] == 4 else ".", end="")
 				
 			#print()
+			
+		#minimum width is 3
 		add = 3 if j > 2 else 2
 		print(str(right+add) + ",", end="")
 		#print()

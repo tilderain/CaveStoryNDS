@@ -1,3 +1,5 @@
+#this script exports the font_letters_shift_jis table
+#eventually I should just make the port read the letters from a file, lol
 texts = \
 [
 "々、「」。ｒ２－７３（＋４．ｚ６Ｍ～？Ｘ１９ＤＰ！）　、、、、、",
