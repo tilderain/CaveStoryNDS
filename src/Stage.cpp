@@ -307,6 +307,14 @@ BOOL TransferStage(int no, int w, int x, int y)
 	ResetFlash();
 	gStageNo = no;
 
+
+	dmaFillHalfWords(0, bgGetMapPtr(gBackground3), 64*32);
+	dmaFillHalfWords(0, bgGetMapPtr(gBackground3_sub), 64*32);
+	dmaFillHalfWords(0, bgGetMapPtr(gBackground0), 64*32);
+	dmaFillHalfWords(0, bgGetMapPtr(gBackground0_sub), 64*32);
+
+
+
 	return TRUE;
 }
 

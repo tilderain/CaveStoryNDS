@@ -22,6 +22,8 @@
 
 #include "fopen.h"
 
+#include "KeyControl.h"
+
 #define PXM_BUFFER_SIZE 0x9000
 
 MAP_DATA gMap;
@@ -186,21 +188,216 @@ void PutStage_Front(int fx, int fy)
 	//int offset;
 
 	// Get range to draw
-	int num_x = ((WINDOW_WIDTH + (16 - 1)) / 16) + 1;
-	int num_y = ((WINDOW_HEIGHT + (16 - 1)) / 16) + 1;
-	int put_x = ((fx / 0x200) + 8);
-	int put_y = ((fy / 0x200) + 8);
+	//int num_x = ((WINDOW_WIDTH + (16 - 1)) / 16) + 1;
+	//int num_y = ((WINDOW_HEIGHT + (16 - 1)) / 16) + 1;
+	int scroll_x = ((fx / 0x200) + 8);
+	int scroll_y = ((fy / 0x200) + 8);
+
+	int put_x = ((fx / 0x200) + 8) / 16;
+	int put_y = ((fy / 0x200) + 8) / 16;
 
 	int atrb;
+
+	const int bgWidth = 256;
 
 	TileMapEntry16 entry = {0};
 	u16* ptr = bgGetMapPtr(gBackground0);
 	u16* ptr_sub = bgGetMapPtr(gBackground0_sub);
 
+	videoBgDisableSub(3);
+
 	//ErrorInitConsole();
 
-	int asdf = 0;
-	for(int y = 0; y < 16; y++)
+	//calculate range of tiles to place in 1st half of bg0 based off of put_x and scroll
+	//scroll_x is in pixels
+
+	int bg0_0_x = abs((bgWidth - (scroll_x % bgWidth)) / 16); 
+	int bg0_0_y, bg0_1_y;
+
+	int bg0_1_x = abs((bgWidth / 16) - bg0_0_x);
+	if(scroll_y % bgWidth - bgWidth > 0)
+	{
+		bg0_0_y = SCREEN_HEIGHT / 16;
+		bg0_1_y = 0;
+	}
+	else
+	{
+		bg0_0_y = abs((bgWidth - (scroll_y % bgWidth)) / 16);
+		bg0_1_y = abs((bgWidth / 16) - bg0_0_y);
+	}
+
+	int startx = (scroll_x%bgWidth)/16;
+	int starty = (scroll_y%bgWidth)/16;
+
+	bool startOnSecondHalf = false;
+	if(scroll_x % 512 >= 256) startOnSecondHalf = true;
+	//topleft corner
+	for(int y=starty; y < starty + bg0_0_y; y++)
+	{
+		for(int x=startx; x < startx + bg0_0_x; x++)
+		{
+				int offset = ((put_y + y - starty) * gMap.width) + (put_x + x - startx);
+				int atrb = GetAttribute(x, y);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+
+				int tileX = (gMap.data[offset] % 16);
+				int tileY = (gMap.data[offset] / 16);
+
+				entry.index = (tileX * 2) + (tileY*32*2);
+				int gfxIndex = x*2 + (y * 32 * 2);
+
+				if(startOnSecondHalf) gfxIndex += 0x400;
+				ptr[gfxIndex] = entry.index;
+				ptr[gfxIndex+1] = entry.index + 1;
+				ptr[gfxIndex + 32] = entry.index + 32;
+				ptr[gfxIndex+1 + 32] = entry.index + 32 +1;
+
+				offset = ((put_y + y - starty + 12) * gMap.width) + (put_x + x - startx);
+
+				atrb = GetAttribute(x, y + 12);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+				tileX = (gMap.data[offset] % 16);
+				tileY = (gMap.data[offset] / 16);
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				ptr_sub[gfxIndex] = entry.index;
+				ptr_sub[gfxIndex+1] = entry.index + 1;
+				ptr_sub[gfxIndex + 32] = entry.index + 32;
+				ptr_sub[gfxIndex+1 + 32] = entry.index + 32 +1;
+		}
+	}
+	//topright corner
+	for(int y=starty; y < starty + bg0_0_y; y++)
+	{
+		for(int x=0; x < bg0_1_x; x++)
+		{
+				int offset = ((put_y + y - starty) * gMap.width) + (put_x + x + (16 - startx));
+				int atrb = GetAttribute(x, y);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+
+				int tileX = (gMap.data[offset] % 16);
+				int tileY = (gMap.data[offset] / 16);
+
+				entry.index = (tileX * 2) + (tileY*32*2);
+				int gfxIndex = x*2 + (y * 32 * 2);
+
+				if(!startOnSecondHalf) gfxIndex += 0x400;
+				ptr[gfxIndex] = entry.index;
+				ptr[gfxIndex+1] = entry.index + 1;
+				ptr[gfxIndex + 32] = entry.index + 32;
+				ptr[gfxIndex+1 + 32] = entry.index + 32 +1;
+
+				offset = ((put_y + y - starty + 12) * gMap.width) + (put_x + x + (16 - startx));
+
+				atrb = GetAttribute(x, y + 12);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+				tileX = (gMap.data[offset] % 16);
+				tileY = (gMap.data[offset] / 16);
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				ptr_sub[gfxIndex] = entry.index;
+				ptr_sub[gfxIndex+1] = entry.index + 1;
+				ptr_sub[gfxIndex + 32] = entry.index + 32;
+				ptr_sub[gfxIndex+1 + 32] = entry.index + 32 +1;
+		}
+	}
+	//ErrorInitConsole();
+	//printf("sX:%d sY:%d x0:%d x1:%d y0:%d y1:%d\n", startx, starty, bg0_0_x, bg0_1_x, bg0_0_y, bg0_1_y);
+	
+
+	//bottom right corner
+	for(int y=0; y < bg0_1_y; y++)
+	{
+		for(int x=0; x < bg0_1_x; x++)
+		{
+				int offset = ((put_y + y + (16 - starty)) * gMap.width) + (put_x + x - startx + 16);
+				int atrb = GetAttribute(x, y);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+
+				int tileX = (gMap.data[offset] % 16);
+				int tileY = (gMap.data[offset] / 16);
+
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				int gfxIndex = x*2 + (y * 32 * 2) ;
+
+				if(!startOnSecondHalf) gfxIndex += 0x400;
+
+				ptr[gfxIndex ] = entry.index;
+				ptr[gfxIndex+1 ] = entry.index + 1;
+				ptr[gfxIndex + 32 ] = entry.index + 32;
+				ptr[gfxIndex+1 + 32 ] = entry.index + 32 +1;
+
+				offset = ((put_y + y + 12 + (16 - starty)) * gMap.width) + (put_x + x - startx + 16);
+
+				atrb = GetAttribute(x, y + 12);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+				tileX = (gMap.data[offset] % 16);
+				tileY = (gMap.data[offset] / 16);
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				ptr_sub[gfxIndex ] = entry.index;
+				ptr_sub[gfxIndex+1 ] = entry.index + 1;
+				ptr_sub[gfxIndex + 32 ] = entry.index + 32;
+				ptr_sub[gfxIndex+1 + 32 ] = entry.index + 32 +1;
+		}
+	}
+	//bottom left corner
+
+	for(int y=0; y < bg0_1_y; y++)
+	{
+		for(int x=startx; x < startx + bg0_0_x; x++)
+		{
+				int offset = ((put_y + y - starty + 16) * gMap.width) + (put_x + x - startx);
+				int atrb = GetAttribute(x, y);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+
+				int tileX = (gMap.data[offset] % 16);
+				int tileY = (gMap.data[offset] / 16);
+
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				int gfxIndex = x*2 + (y * 32 * 2) ;
+
+				if(startOnSecondHalf) gfxIndex += 0x400;
+
+				ptr[gfxIndex ] = entry.index;
+				ptr[gfxIndex+1 ] = entry.index + 1;
+				ptr[gfxIndex + 32 ] = entry.index + 32;
+				ptr[gfxIndex+1 + 32 ] = entry.index + 32 +1;
+
+				offset = ((put_y + y + 12 - starty + 16) * gMap.width) + (put_x + x - startx);
+
+				atrb = GetAttribute(x, y + 12);
+
+				if (atrb < 0x40 || atrb >= 0x80)
+					continue;
+				tileX = (gMap.data[offset] % 16);
+				tileY = (gMap.data[offset] / 16);
+				entry.index = (tileX * 2) + (tileY*32*2);
+
+				ptr_sub[gfxIndex ] = entry.index;
+				ptr_sub[gfxIndex+1 ] = entry.index + 1;
+				ptr_sub[gfxIndex + 32 ] = entry.index + 32;
+				ptr_sub[gfxIndex+1 + 32 ] = entry.index + 32 +1;
+		}
+	}
+
+	/*for(int y = 0; y < 16; y++)
 	{
 		for(int x = 0; x < 16; x++)
 		{
@@ -236,6 +433,42 @@ void PutStage_Front(int fx, int fy)
 			ptr_sub[x*2 + (y * 32 * 2)+1 + 32] = entry.index + 32 +1;
 		}
 	}
+	for(int y = 0; y < 16; y++)
+	{
+		for(int x = 0; x < 16; x++)
+		{
+			int offset = (y * gMap.width) + x + 16;
+			int atrb = GetAttribute(x, y);
+
+			if (atrb < 0x40 || atrb >= 0x80)
+				continue;
+
+			int tileX = (gMap.data[offset] % 16);
+			int tileY = (gMap.data[offset] / 16);
+
+			entry.index = (tileX * 2) + (tileY*32*2);
+
+			ptr[x*2 + (y * 32 * 2) + 0x400] = entry.index;
+			ptr[x*2 + (y * 32 * 2)+1 + 0x400] = entry.index + 1;
+			ptr[x*2 + (y * 32 * 2) + 32 + 0x400 ] = entry.index + 32;
+			ptr[x*2 + (y * 32 * 2)+1 + 32 + 0x400] = entry.index + 32 +1;
+
+			offset = ((y + 12) * gMap.width) + x + 16;
+
+			atrb = GetAttribute(x, y + 12);
+
+			if (atrb < 0x40 || atrb >= 0x80)
+				continue;
+			tileX = (gMap.data[offset] % 16);
+			tileY = (gMap.data[offset] / 16);
+			entry.index = (tileX * 2) + (tileY*32*2);
+
+			ptr_sub[x*2 + (y * 32 * 2) + 0x400] = entry.index;
+			ptr_sub[x*2 + (y * 32 * 2)+1 + 0x400] = entry.index + 1;
+			ptr_sub[x*2 + (y * 32 * 2) + 32 + 0x400]  = entry.index + 32;
+			ptr_sub[x*2 + (y * 32 * 2)+1 + 32 + 0x400] = entry.index + 32 +1;
+		}
+	}*/
 	/*for (int j = put_y; j < put_y + num_y; ++j)
 	{
 		for (int i = put_x; i < put_x + num_x; ++i)
@@ -266,10 +499,10 @@ void PutStage_Front(int fx, int fy)
 		}
 	}*/
 
-	REG_BG1HOFS = put_x;
-	REG_BG1VOFS = put_y;
-	REG_BG1HOFS_SUB = put_x;
-	REG_BG1VOFS_SUB = put_y;
+	REG_BG1HOFS = scroll_x;
+	REG_BG1VOFS = scroll_y;
+	REG_BG1HOFS_SUB = scroll_x;
+	REG_BG1VOFS_SUB = scroll_y;
 }
 
 void PutMapDataVector(int fx, int fy)

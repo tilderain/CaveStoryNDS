@@ -192,13 +192,13 @@ const int gfxPtrCount = 128;
 u16* gfxPtrs[gfxPtrCount] = {NULL};
 u16* gfxPtrsSub[gfxPtrCount] = {NULL};
 
-int surfPaletteTable[SURFACE_ID_MAX] = {0};
+signed int surfPaletteTable[SURFACE_ID_MAX] = {0};
 int gPaletteNo = 0;
 
 void ErrorInitConsole()
 {
 	if(!gConsoleInited)
-		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 3, false, true );
 	gConsoleInited = 2;
 }
 
@@ -690,7 +690,7 @@ BOOL Flip_SystemTask()
 		glEnd2D();
 		glFlush(0);
 
-		bgSetPriority(gBackground0_sub, 3);
+		bgSetPriority(gBackground0_sub, 2);
 		bgSetPriority(gBackground3_sub, 3);
 		
 		oamEnable(&oamSub);
@@ -784,6 +784,7 @@ BOOL StartDirectDraw()
 	oamInit(&oamMain, SpriteMapping_1D_128, false);
 	oamInit(&oamSub, SpriteMapping_1D_128, false);
 
+	memset(surfPaletteTable, -1, SURFACE_ID_MAX*4);
 		
 	curGfx = 0;
 	curGfxSub = 0;
@@ -841,6 +842,12 @@ BOOL StartDirectDraw()
 
 	cpuStartTiming(0);
 
+
+		gBackground0 = bgInit(1, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
+		gBackground0_sub = bgInitSub(1, BgType_Text4bpp, BgSize_T_512x256, 0, 2);
+		gBackground3 = bgInit(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
+		gBackground3_sub = bgInitSub(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
+
 	return TRUE;
 }
 
@@ -876,10 +883,21 @@ BOOL MakeSurface_Generic(int bxsize, int bysize, SurfaceID surf_no)
 	return TRUE;
 }
 
-void Upload16x16RectToOAM(int surf_no, RECT* rect, int index)
+void Upload8x8RectToOAM(int surf_no, RECT* rect, int x, int y, int index)
 {
-	int x = rect->left / 8;
-	int y = rect->top / 8;
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrs[index],
+		8*8/2 //16 color
+	);
+
+	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8),
+		(void*)gfxPtrsSub[index],
+		8*8/2 //16 color
+	);
+}
+
+void Upload16x16RectToOAM(int surf_no, RECT* rect, int x, int y, int index)
+{
 
 	int i = 0;
 	dmaCopyAsynch(surf[surf_no].data + (x * 32) + (y * surf[surf_no].w / 2 * 8),
@@ -1207,33 +1225,26 @@ facejump:
 	{
 
 
-		//todo bg init once
-		gBackground0 = bgInit(1, BgType_Text4bpp, BgSize_T_512x256, 0, 1);
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0), surf[surf_no].w * surf[surf_no].h / 2);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE, surf[surf_no].palettesize*2);
-		dmaFillWords(0, bgGetMapPtr(gBackground0), 64*32*2);
-		
-		gBackground0_sub = bgInitSub(1, BgType_Text4bpp, BgSize_T_512x256, 0, 2);
+
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0_sub), surf[surf_no].w * surf[surf_no].h / 2);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB, surf[surf_no].palettesize*2);
-		dmaFillWords(0, bgGetMapPtr(gBackground0_sub), 64*32*2);
+		dmaFillHalfWords(0, bgGetMapPtr(gBackground0_sub), 64*32);
 	}
 	else if (surf_no == SURFACE_ID_LEVEL_BACKGROUND)
 	{
-		//todo palette in same slot
-		gBackground3 = bgInit(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
+
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground3), surf[surf_no].w * surf[surf_no].h / 2);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE+(16), surf[surf_no].palettesize*2);
-		dmaFillWords(0, bgGetMapPtr(gBackground3), 64*32);
 
-		gBackground3_sub = bgInitSub(3, BgType_Text4bpp, BgSize_T_512x256, 1, 2);
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground3_sub), surf[surf_no].w * surf[surf_no].h / 32);
 		dmaCopy(surf[surf_no].palette, BG_PALETTE_SUB+(16), surf[surf_no].palettesize*2);
-		dmaFillWords(0, bgGetMapPtr(gBackground3_sub), 64*32*2);
+		dmaFillHalfWords(0, bgGetMapPtr(gBackground3_sub), 64*32);
 
 		TileMapEntry16 entry = {0};
 		u16* ptr = bgGetMapPtr(gBackground3);
@@ -1258,11 +1269,19 @@ facejump:
 	{
 				DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 
-				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE+(gPaletteNo*16), 16*2);
-				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE_SUB+(gPaletteNo*16), 16*2);
-				surfPaletteTable[surf_no] = gPaletteNo;
 
-				gPaletteNo ++;
+				if(surfPaletteTable[surf_no] == -1)
+				{
+					surfPaletteTable[surf_no] = gPaletteNo;
+
+					gPaletteNo++;
+				}
+
+				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE+(surfPaletteTable[surf_no]*16), 16*2);
+				dmaCopy(surf[surf_no].palette, SPRITE_PALETTE_SUB+(surfPaletteTable[surf_no]*16), 16*2);
+
+
+
 	}
 	else
 	{
@@ -1405,6 +1424,8 @@ void CopyDirtyText()
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 {
 
+	if(curGfx >= gfxPtrCount) return;
+
 	if(x < -32 || y < -32) return;
 
 	if(surf_no == SURFACE_ID_LEVEL_BACKGROUND) return;
@@ -1414,9 +1435,24 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)return;
 	if(x > WINDOW_WIDTH) return;
 	
+
+	int rectx = rect->left / 8;
+	int recty = rect->top / 8;
+	int rectw = (rect->right / 8) - rectx;
+	int recth = (rect->bottom / 8) - recty;
+	SpriteSize size = SpriteSize_16x16;
+	if(rectw >= 2)
+	{
+		Upload16x16RectToOAM(surf_no, rect, rectx, recty, curGfx);
+	}
+	else
+	{
+		Upload8x8RectToOAM(surf_no, rect, rectx, recty, curGfx);
+		size = SpriteSize_8x8;
+	}
+
 	if(y < SCREEN_HEIGHT)
 	{
-		if(curGfx >= gfxPtrCount) return;
 		int pal = 0;
 		oamSet(&oamMain, 
 				curGfx, 
@@ -1424,7 +1460,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				y, 
 				0, 
 				surfPaletteTable[surf_no],
-				SpriteSize_16x16, 
+				size, 
 				SpriteColorFormat_16Color, 
 				gfxPtrs[curGfx], 
 				-1, 
@@ -1435,7 +1471,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				);           
 
 	}
-	else if (y < SCREEN_HEIGHT * 2)
+	if (y > SCREEN_HEIGHT - 16 && y < SCREEN_HEIGHT * 2-16)
 	{
 		int pal = 0;
 			oamSet(&oamSub, 
@@ -1444,7 +1480,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				y-SCREEN_HEIGHT, 
 				0, 
 				surfPaletteTable[surf_no],
-				SpriteSize_16x16, 
+				size, 
 				SpriteColorFormat_16Color, 
 				gfxPtrsSub[curGfx], 
 				-1, 
@@ -1455,7 +1491,7 @@ void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 				);           
 
 	}
-	Upload16x16RectToOAM(surf_no, rect, curGfx);
+
 	curGfx++;
 	return;
 	//TODO: draw queueing
