@@ -47,7 +47,8 @@
 		"sstream": "c",
 		"stdexcept": "c",
 		"streambuf": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"audio.h": "c"
 	},
 	"C_Cpp.dimInactiveRegions": false
 }
