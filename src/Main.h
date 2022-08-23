@@ -22,6 +22,7 @@ extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];
 
 extern bool gIsCardPopped;
+extern int gCardPopTimer;
 
 void PutFramePerSecound(void);
 unsigned long GetFramePerSecound(void);

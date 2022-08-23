@@ -61,6 +61,7 @@ static int windowWidth;
 static int windowHeight;
 
 bool gIsCardPopped = false;
+int gCardPopTimer = 0;
 
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
@@ -78,6 +79,7 @@ void card_line_irq()
 	{
 		printf("card line irq popped\n");
 		gIsCardPopped = true;
+		gCardPopTimer = 300;
 	}
 }
 

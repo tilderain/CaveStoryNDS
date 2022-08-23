@@ -1,18 +1,36 @@
 
+====for release 0.4
+
+card pop detection for fopen
+
+add pier walk, root, and wind fortress to music
+
+increase org, tsc buffer size, pxm malloc
+
+fix bmp credit image
+
+fix get filesizelong
+
+read start map from file
+
+console toggle
+
+internal percussion / beta drum switch
+
+rename data to datacse2
+
+remove svp temp save
+
+Release on gitlab
+
+====
 
 fix credit jpn caret zzz
 
 
-fix missing jpn map name
-
-fix missing credit.tsc jpn
-fix credit sripper size jpn
-
 fix bk0
 
 move old libnds fifo sync code to here
-
-GActiveNpc -- memcpy instead of swap
 
 
 framestep
@@ -32,10 +50,24 @@ make wifi blink better
 
 
 
-profile Swapmychar // optimize
+
 online wifi
 
-troubleshoot fat fs read // sound interrupt
+fat fs read x10 retry
+
+ending config black bar
+
+add mim and phy
+
+mp3 maxmod xm
+
+
+Properly decode png for 4 and 16 color
+
+single button remapping
+
+org 44khz
+
 
 3D mode, like 3DNES
 
