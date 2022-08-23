@@ -60,6 +60,8 @@ static BOOL bFps = FALSE;
 static int windowWidth;
 static int windowHeight;
 
+bool gIsCardPopped = false;
+
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
 
@@ -69,6 +71,15 @@ static const char *lpWindowName = "洞窟物語";	// "Cave Story"
 static const char *lpWindowName = "Cave Story ~ Doukutsu Monogatari";
 #endif
 
+
+void card_line_irq()
+{
+	if(!gIsCardPopped)
+	{
+		printf("card line irq popped\n");
+		gIsCardPopped = true;
+	}
+}
 
 //Framerate stuff
 void PutFramePerSecound()
@@ -117,6 +128,9 @@ int main(int argc, char *argv[])
 	
 	//Get executable's path
 	fatInitDefault();
+
+ 	irqEnable(IRQ_CARD_LINE); 
+ 	irqSet(IRQ_CARD_LINE, card_line_irq);
 
 #ifdef CYG_PROFILER
  irqEnable(IRQ_HBLANK); 

@@ -22,6 +22,11 @@ const char *config_magic = "CSDS03";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {
+	if(gIsCardPopped)
+	{
+		printf("card popped, skipping config load\n");
+		return FALSE;
+	}
 	// Clear old configuration data
 	memset(conf, 0, sizeof(CONFIG));
 
@@ -70,6 +75,11 @@ BOOL LoadConfigData(CONFIG *conf)
 
 BOOL SaveConfigData(const CONFIG *conf)
 {
+	if(gIsCardPopped)
+	{
+		printf("card popped, skipping config save\n");
+		return FALSE;
+	}
 	// Get path
 	char path[MAX_PATH];
 	sprintf(path, "%s/%s", gModulePath, config_filename);

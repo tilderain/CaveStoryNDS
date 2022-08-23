@@ -102,6 +102,9 @@ BOOL SaveProfile(const char *name)
 		SwapMyChar();
 		
 	if(nifiIsClient()) return TRUE;
+
+	if(gIsCardPopped)
+		return FALSE;
 	// Open file
 	fp = fopen(path, "wb");
 	if (fp == NULL)
@@ -231,8 +234,11 @@ BOOL LoadProfile(const char *name)
 		sprintf(path, "%s/%s", gModulePath, gDefaultName);
 
 	// Open file
-	fp = fopen(path, "rb");
-	if (fp == NULL || gStartingNetplay == NETPLAY_START_LOAD || (nifiIsClient()))
+	if(!gIsCardPopped)
+		fp = fopen(path, "rb");
+
+	//Check if profile is able to be loaded/valid
+	if (gIsCardPopped || fp == NULL || gStartingNetplay == NETPLAY_START_LOAD || (nifiIsClient()))
 	{
 		fclose(fp);
 		if (memcmp(profile.code, gProfileCode, 8) == 0) //couldn't read, read from RAM
