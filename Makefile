@@ -62,6 +62,9 @@ ifeq ($(JPN), 1)
 	CFLAGS	+= -DJAPANESE
 endif
 
+ifeq ($(PROFILER), 1)
+	CFLAGS	+= -DCYG_PROFILER -finstrument-functions
+endif
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 

@@ -12,6 +12,7 @@ Copyright (c) 2019 Regan "cuckydev" Green
 Copyright (c) 2019-2020 Clownacy
 Copyright (c) 2019-2020 Gabriel Ravier
 Copyright (c) 2020 Cameron Cawley
+Copyright (c) 2019-2022 tilderain
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

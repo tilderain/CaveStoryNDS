@@ -1,4 +1,4 @@
-Cave Story DS homebrew release v0.3a by rain - play Cave Story on your DS after 15 years
+Cave Story DS homebrew release v0.4 by rain - play Cave Story on your DS after 15 years
 
 Controls:
 	Press L+R+Start to access the escape menu.
@@ -6,8 +6,8 @@ Controls:
 	D-Pad: Move
 	A: Jump
 	B: Shoot
-	X: Previous Weapon
-	Y: Next Weapon
+	X: Next Weapon
+	Y: Previous Weapon
 	Start: Inventory
 	Select: Map
 
@@ -16,34 +16,93 @@ Additional notes
 	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
 
 	Config.dat and Profile.dat will be saved to the root of the SD card.
-	You can press Select during boot to see console output.
+	Profile.dat is compatible with freeware Cave Story.
+
+	You can hold Start during boot to start with display on the bottom screen.
+	You can hold Select during boot to see console output.
 
 Known issues:
 	The game will rarely crash when closing the lid.
-	The game will slow down when hitting a missile or using the Spur in the Plantation and Sand Zone.
+	The game will slow down in the Plantation and Sand Zone when hitting a missile or using the Spur.
+	Performance will lower in multiplayer when using the Spur or missiles.
 	There may be a loud noise during stage transition.
 
+SD card version information:
+
+	as an alternative version to run, or mainly to mod.
+	As of now there is only support for English mods.
+
+	Grab a copy of Booster's Lab 0.5.0.0 and export a stage.tbl.
+
+	For TSC, you can use the <MIM and <PHY commands.
+
+	You can read palettized bmps, compatible with freeware Cave Story. 
+	NpcGuest is in the 2nd 256 color slot.
+	the 0 index color is transparent.
+
+	To read sounds, place the corresponding sound as decimal
+	It will attempt to read the following formats in order: 
+		8-bit 22050hz unsigned WAV audio (as ".wav")
+		Raw 8-bit 22050hz signed audio (as ".raw")
+		ADPCM sound using Nintendo's waveconv.exe, from the NDS SDK (as ".swav")
+
 Thanks to:
-	CSE2- CuckyDev, Clownacy, GabrielRavier
-	Lusty_- Testing
-	Random people in the CSE2 Discord- Testing
+	The CSE2 Decompilation Project, by CuckyDev and Clownacy
+		(and our optimization mascot GabrielRavier)
+		The unauthorized source code recreation that lets us do weird things to this game.
+	CuckyDev, who helped me personally by making the font and file loading code, helped with the sound code,
+		and made this port too funny to make.
+	Lusty_ from GBATemp, who helped test and was able to help me figure out the compatibility issue with flashcarts.
+	Random people in the CSE2 Discord, who tried the port in its early stages and helped me discover that I'm not crazy for making it.
 
-	Aeon Genesis- Cave Story english translation
+	Aeon Genesis: Shih Tzu (TranslateDoggie), and GideonZhi,
+		whose expert translation and ROM hacking skills brought Cave Story to a boatload of people.
 
-	devKitPro
-	gl2D
+	devKitPro, the homebrew toolchain that lets us make games for Nintendo consoles without anyone's permission.
+	Martin Korth, for making N0$GBA and its fantastic debugging suite, as well as the GBA/DS/3DS documentation that shaped the scene.
 
-	lvandeve- lodepng
+	The DeSmuME developers for making an emulator with GDB debugging support making this port a lot less of a pain in the ass to develop.
+	gl2D- by Relminator, for making a pretty good 3D library saving my headaches looking at the documentation.
 
-	Drenn1- wifi code
-	huiminghao- wifi code
+	lvandeve, for the lodepng library that lets me painlessly load pngs.
+	and AntonioND, for the great BMP loading from Nitro Engine as well.
+	mackron, for the sexy dr_wav loading library.
+	graphitemaster, for the sleek incbin file embed library.
 
-	Ravenworks- Inspiring the port
+	Drenn1, for the WiFi code from GameYob, and the forum posts on the devKitPro forums that probably let me avoid
+		a dozen hours of debugging the sound.
+	huiminghao, for the WiFi code from NesDS.
+	Arisutora, for MelonDS and the NiFi debugging support.
 
-	Pixel
+	Ravenworks, who took on the Cave Story DS port in the first place, got destroyed by a publisher in the process, and inspired me 
+		to create the DS version that the people deserve.
+
+	And Pixel, who created this wonderful thing that inspired a generation of gamers.
+	Thank you Pixel!
 
 Changelog:
 
+v0.4:
+	This version adds the option of the SD card ROM, which supports basic mods.
+	See above for instructions on how to use it.
+
+	Updated credits in the readme.
+	Add version to game subtitle.
+	Holding down the Start button during boot will set display on the bottom screen.
+	50fps mode is now smoother. (Switched to a timer system instead of adding an additional wait)
+	Fixed missing tiles in Egg Corridor?.
+	Fixed arms graphic being corrupted after credits.
+	Fixed credits graphics corruption after viewing it twice.
+	Improved look of credit illustrations.
+	Fixed face portrait appearing for a bit before sliding.
+	Reduced flicker and save a few frames when uploading texture (use DMA).
+	Upload face portrait and Japanese text to texture only during vblank, reducing flicker.
+	Fix ending cloud parallax.
+	Multi: Fixed NPCs targeting dead players.
+	Multi: Optimized performance a bit.
+	JPN: Add some missing characters to the font. (whoops)
+	JPN: Fixed credit text being cut off.
+	JPN: Fixed some missing credit portraits.
 v0.3:
 	Local multiplayer is here! Explore the caves with a friend over wireless.
 	Thanks to Drenn1 and huiminghao's wonderful Nifi code from GameYob and NesDS respectively.
