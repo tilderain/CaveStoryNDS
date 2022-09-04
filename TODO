@@ -1,8 +1,6 @@
 
 ====for release 0.4
 
-card pop detection for fopen
-
 add pier walk, root, and wind fortress to music
 
 increase org, tsc buffer size, pxm malloc
@@ -13,7 +11,7 @@ fix get filesizelong
 
 read start map from file
 
-console toggle
+console toggle combo
 
 internal percussion / beta drum switch
 
@@ -21,7 +19,11 @@ rename data to datacse2
 
 remove svp temp save
 
-Release on gitlab
+Release on gitlab, change game subtitle
+
+fastforward on R, fast forward cutscenes
+
+lz77 compress org
 
 ====
 
@@ -34,7 +36,7 @@ move old libnds fifo sync code to here
 
 
 framestep
-fastforward on R
+
 
 
 vram viewer?

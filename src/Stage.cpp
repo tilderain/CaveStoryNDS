@@ -311,7 +311,7 @@ BOOL TransferStage(int no, int w, int x, int y)
 }
 
 // Music
-const char *gMusicTable[42] = {
+const char *gMusicTable[] = {
 	"XXXX",
 	"WANPAKU",
 	"ANZEN",
@@ -353,7 +353,13 @@ const char *gMusicTable[42] = {
 	"MARINE",
 	"BALLOS",
 	"TOROKO",
-	"WHITE"
+	"WHITE",
+	"CAVE",
+	"ROCKORG",
+	"LEEF",
+	"KAZE",
+	"SAMPLE",
+	"NEWDATA"
 };
 
 void ChangeMusic(MusicID no)
