@@ -522,7 +522,11 @@ BOOL ReadSound(int no)
     fp = fopen_embed(path, "rb");
     if (fp != NULL)
 	{
-		int size = GetFileSizeLong(fp);
+		#ifndef READ_FROM_SD
+			int size = fp->size;
+		#else
+			int size = GetFileSizeLong(fp);
+		#endif
 
 
 		lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);
