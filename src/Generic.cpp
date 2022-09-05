@@ -93,20 +93,14 @@ BOOL CheckFileExists(const char *name)
 	return TRUE;
 }
 
-long GetFileSizeLong(const char *path)
+long GetFileSizeLong(FILE* fp)
 {
 	long len;
-	FILE *fp;
-
 	len = 0;
-
-	fp = fopen(path, "rb");
-	if (fp == NULL)
-		return -1;
 
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
-	fclose(fp);
+	fseek(fp, 0, SEEK_SET);
 	return len;
 }
 
@@ -117,7 +111,7 @@ BOOL PrintBitmapError(const char *string, int value)
 
 	sprintf(path, "%s/%s", gModulePath, "error.log");
 
-	if (GetFileSizeLong(path) > 0x19000)	// Purge the error log if it gets too big, I guess
+	if (GetFileSizeLong(fp) > 0x19000)	// Purge the error log if it gets too big, I guess
 		remove(path);
 
 	fp = fopen(path, "a+");

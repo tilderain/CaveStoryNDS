@@ -492,7 +492,7 @@ BOOL ReadSound(int no)
 	#ifndef READ_FROM_SD
     	lpSECONDARYBUFFER[no] = new SOUNDBUFFER(fp->size, fp->file);
 	#else
-		int size = GetFileSizeLong(path);
+		int size = GetFileSizeLong(fp);
     	signed char *data = (signed char *)malloc(size);
 		fread_embed(data, size, 1, fp);
 
@@ -522,7 +522,7 @@ BOOL ReadSound(int no)
     fp = fopen_embed(path, "rb");
     if (fp != NULL)
 	{
-		int size = GetFileSizeLong(path);
+		int size = GetFileSizeLong(fp);
 
 
 		lpSECONDARYBUFFER[no] = new SOUNDBUFFER(size, NULL);

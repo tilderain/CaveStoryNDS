@@ -188,7 +188,7 @@ BOOL LoadTextScript2(const char *name)
 #ifndef READ_FROM_SD
 	gTS.size = fp->size;
 #else
-	gTS.size = GetFileSizeLong(path);
+	gTS.size = GetFileSizeLong(fp);
 #endif
 
 	if (gTS.size == -1)
@@ -226,7 +226,7 @@ BOOL LoadTextScript_Stage(const char *name)
 #ifndef READ_FROM_SD
 	head_size = fp->size;
 #else
-	head_size = GetFileSizeLong(path);
+	head_size = GetFileSizeLong(fp);
 #endif
 
 	if (head_size == -1)
@@ -248,7 +248,7 @@ BOOL LoadTextScript_Stage(const char *name)
 #ifndef READ_FROM_SD
 	body_size = fp->size;
 #else
-	body_size = GetFileSizeLong(path);
+	body_size = GetFileSizeLong(fp);
 #endif
 	if (body_size == -1)
 		return FALSE;

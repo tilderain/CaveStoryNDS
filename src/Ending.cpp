@@ -236,7 +236,7 @@ BOOL StartCreditScript(void)
 #ifndef READ_FROM_SD
 	Credit.size = fp->size;
 #else
-	Credit.size = GetFileSizeLong(path);
+	Credit.size = GetFileSizeLong(fp);
 #endif
 
 	if (Credit.size == -1)

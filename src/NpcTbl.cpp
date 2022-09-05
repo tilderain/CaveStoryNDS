@@ -404,7 +404,7 @@ BOOL LoadNpcTable(const char *path)
 #ifndef READ_FROM_SD
 	size = fp->size;
 #else
-	size = GetFileSizeLong(path);
+	size = GetFileSizeLong(fp);
 #endif
 
 	if (size == -1)
