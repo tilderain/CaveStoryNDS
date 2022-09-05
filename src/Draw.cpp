@@ -827,7 +827,7 @@ BOOL StartDirectDraw()
 	scanKeys();
 	if(keysHeld() & KEY_SELECT)
 	{
-		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 7, false, true );
 		gConsoleInited = TRUE;
 	}
 
@@ -973,6 +973,14 @@ BOOL LoadPortableNetworkGraphics(FILE_e* fp, SurfaceID surf_no, bool create_surf
 	if (create_surface)
 	{
 		MakeSurface_Generic(bitmap_width, bitmap_height, surf_no);
+	}
+	else
+	{
+		if (surf[surf_no].data)
+		{
+			free(surf[surf_no].data);
+			surf[surf_no].data = NULL;
+		}
 	}
 
 	surf[surf_no].palette = (u16*)malloc(palettesize*2);
@@ -1223,8 +1231,6 @@ facejump:
 
 	if(surf_no == SURFACE_ID_LEVEL_TILESET)
 	{
-
-
 		DC_FlushRange(surf[surf_no].data, surf[surf_no].w * surf[surf_no].h / 2);
 		DC_FlushRange(surf[surf_no].palette, surf[surf_no].palettesize*2);
 		dmaCopy(surf[surf_no].data, bgGetGfxPtr(gBackground0), surf[surf_no].w * surf[surf_no].h / 2);
@@ -1285,7 +1291,11 @@ facejump:
 	}
 	else
 	{
-		free(surf[surf_no].data);
+		if (surf[surf_no].data)
+		{
+			free(surf[surf_no].data);
+			surf[surf_no].data = NULL;
+		}
 	}
 	
 	return TRUE;
