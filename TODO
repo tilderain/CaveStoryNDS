@@ -8,6 +8,7 @@ read start map from file
 Release on gitlab, change game subtitle
 
 lz77 compress org
+lzss everything
 
 test jpn
 

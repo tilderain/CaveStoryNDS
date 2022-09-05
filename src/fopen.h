@@ -14,6 +14,7 @@ typedef struct{
 	const unsigned char *point;
 	unsigned int size;
 	unsigned int position;
+	bool compressed;
 }FILE_e;
 
 FILE_e *fopen_embed(const char *file, const char *mode);
