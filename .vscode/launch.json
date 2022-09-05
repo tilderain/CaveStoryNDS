@@ -9,7 +9,7 @@
 			"request": "attach",
 			"name": "Attach to gdbserver",
 			"executable": "CSE2-DS-New.elf",
-			"target": "127.0.0.1:30004",
+			"target": "127.0.0.1:30005",
 			"remote": true,
 			"cwd": "${workspaceRoot}", 
 			"gdbpath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gdb",

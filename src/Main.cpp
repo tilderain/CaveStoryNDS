@@ -149,9 +149,9 @@ int main(int argc, char *argv[])
 	
 	//Get path of the data folder
 #ifndef NITROFS
-	strcpy(gDataPath, "data");
+	strcpy(gDataPath, "datacse2");
 #else
-	strcpy(gDataPath, "nitro:/data");
+	strcpy(gDataPath, "nitro:/datacse2");
 #endif
 	
 	//Load configuration

@@ -9,7 +9,7 @@
 		{
 			"type": "shell",
 			"label": "make and launch desmume",
-			"command": "make NITRO=1 && nohup desmume --arm9gdb 30004 ${workspaceFolder}/CSE2-DS-New.nds >/dev/null 2>&1 & && sleep 1",
+			"command": "make NITRO=1 && nohup desmume --arm9gdb 30005 ${workspaceFolder}/CSE2-DS-New.nds >/dev/null 2>&1 & && sleep 1",
 			"args": [],
 			"options": {
 				"cwd": "${workspaceFolder}"
