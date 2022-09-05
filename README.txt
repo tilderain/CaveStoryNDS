@@ -73,6 +73,7 @@ Thanks to:
 	and AntonioND, for the great BMP loading from Nitro Engine as well.
 	mackron, for the sexy dr_wav loading library.
 	graphitemaster, for the sleek incbin file embed library.
+	CUE, for the sly NDS lzss compression library.
 
 	Drenn1, for the WiFi code from GameYob, and the forum posts on the devKitPro forums that probably let me avoid
 		a dozen hours of debugging the sound.

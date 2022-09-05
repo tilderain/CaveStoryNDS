@@ -78,4 +78,4 @@ resolve.pl
 *.ml1
 /release*
 
-*.lzss
+lzss
