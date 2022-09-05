@@ -100,6 +100,7 @@ v0.4:
 	- Disabled file opening after ejecting card, so saves and config menu won't just crash.
 	- You can toggle the console output with L+R+Select.
 	- Holding down the Start button during boot will set display on the bottom screen.
+	- Reduced size of ROM by compressing songs.
 	- Improved look of credit illustrations.
 	- Updated credits in the readme.
 	- Add version to game subtitle and config menu.
