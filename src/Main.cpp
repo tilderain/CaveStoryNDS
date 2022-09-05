@@ -162,6 +162,7 @@ int main(int argc, char *argv[])
 	gDebug.bEnabled = conf.bDebug;
 	gb50Fps = conf.bFps;
 	gbTransparency = conf.bTransparency;
+	gbAlternateDrams = conf.bDrams;
 	
 	scanKeys();
 	if(conf.bBottomScreen || keysHeld() & KEY_START)
