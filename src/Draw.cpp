@@ -1071,6 +1071,7 @@ BOOL LoadBitmap(const char *name, SurfaceID surf_no, bool create_surface)
 		}
 
 		//You FAILED
+		ReleaseSurface(surf_no);
 		fclose_embed(fp);
 		return FALSE;
 	}

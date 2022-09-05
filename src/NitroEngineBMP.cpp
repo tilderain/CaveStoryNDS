@@ -52,11 +52,15 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 
 	printf("Size %d W: %d H: %d\n", colornumber, sizex, sizey);
 
+	if (create_surface)
+	{
+		MakeSurface_Generic(sizex, sizey, surf_no);
+	}
+
 	u8 *PALETTEDATA = (u8 *)infoheader + sizeof(NE_BMPInfoHeader);
 	u8 *IMAGEDATA = (u8 *)header + header->offset;
 
 	// First, we read the palette
-
 	surf[surf_no].palette = (u16*)malloc(colornumber*2);
 
 	int i = 0;
@@ -85,10 +89,6 @@ BOOL LoadPalettedBMP(void* file_buffer, SurfaceID surf_no, bool create_surface)
 
 	surf[surf_no].w = sizex; surf[surf_no].h = sizey;
 	
-	if (create_surface)
-	{
-		MakeSurface_Generic(sizex, sizey, surf_no);
-	}
 	u8 *buffer = NULL;
 	if(colornumber <= 16)
 		buffer = (u8*)malloc(sizex * sizey);

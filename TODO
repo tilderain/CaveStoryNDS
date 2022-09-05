@@ -10,8 +10,6 @@ fix get filesizelong
 
 read start map from file
 
-rename data to datacse2
-
 Release on gitlab, change game subtitle
 
 lz77 compress org

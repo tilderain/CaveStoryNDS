@@ -94,7 +94,7 @@ bool UpdateInput()
 			gConsoleInited = 1;
 			videoBgDisableSub(0);
 		}
-		gConsoleTimer = 30;
+		gConsoleTimer = 60;
 	}
 	if(gConsoleTimer > 0) gConsoleTimer--;
 
