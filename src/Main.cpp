@@ -148,10 +148,12 @@ int main(int argc, char *argv[])
 	strcpy(gModulePath, "/");
 	
 	//Get path of the data folder
-#ifndef NITROFS
-	strcpy(gDataPath, "datacse2");
-#else
+#ifdef READ_FROM_SD
+	strcpy(gDataPath, "fat:/datacse2");
+#elif NITROFS
 	strcpy(gDataPath, "nitro:/datacse2");
+#else
+	strcpy(gDataPath, "datacse2");
 #endif
 	
 	//Load configuration
