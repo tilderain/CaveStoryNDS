@@ -359,7 +359,14 @@ const char *gMusicTable[] = {
 	"LEEF",
 	"KAZE",
 	"SAMPLE",
-	"NEWDATA"
+	"NEWDATA",
+	"CURLYB",
+	"IRONHB",
+	"MDOWN",
+	"REQUIEMB",
+	"PLANTB1",
+	"PLANTB2",
+	
 };
 
 void ChangeMusic(MusicID no)

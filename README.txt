@@ -87,11 +87,14 @@ v0.4:
 	This version adds the option of the SD card ROM, which supports basic mods.
 	See above for instructions on how to use it.
 
+	Added a setting to use an alternate set of percussion for songs.
 	You can now fast forward during cutscenes and events by holding down the R button.
-	Updated credits in the readme.
-	Add version to game subtitle.
-	Holding down the Start button during boot will set display on the bottom screen.
+	Added a few songs to the sound test.
 	50fps mode is now smoother. (Switched to a timer system instead of adding an additional wait)
+	Disabled file opening after ejecting card, so saves and config menu won't just crash.
+	Updated credits in the readme.
+	Add version to game subtitle and config menu.
+	Holding down the Start button during boot will set display on the bottom screen.
 	Fixed missing tiles in Egg Corridor?.
 	Fixed arms graphic being corrupted after credits.
 	Fixed credits graphics corruption after viewing it twice.

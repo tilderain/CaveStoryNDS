@@ -615,12 +615,12 @@ static int Callback_Music(OptionsMenu *parent_menu, size_t this_option, Callback
 			{
 				// Decrement value (with wrapping)
 				if (--parent_menu->options[this_option].value < 0)
-					parent_menu->options[this_option].value = 47;
+					parent_menu->options[this_option].value = 53;
 			}
 			else if (action == ACTION_RIGHT)
 			{
 				// Increment value (with wrapping)
-				if (++parent_menu->options[this_option].value > 47)
+				if (++parent_menu->options[this_option].value > 53)
 					parent_menu->options[this_option].value = 0;
 			}
 
@@ -662,12 +662,12 @@ static int Callback_Sound(OptionsMenu *parent_menu, size_t this_option, Callback
 			{
 				// Decrement value (with wrapping)
 				if (--parent_menu->options[this_option].value < 0)
-					parent_menu->options[this_option].value = 159;
+					parent_menu->options[this_option].value = 164;
 			}
 			else if (action == ACTION_RIGHT)
 			{
 				// Increment value (with wrapping)
-				if (++parent_menu->options[this_option].value > 159)
+				if (++parent_menu->options[this_option].value > 164)
 					parent_menu->options[this_option].value = 0;
 			}
 

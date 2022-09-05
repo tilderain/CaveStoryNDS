@@ -695,7 +695,6 @@ BOOL Flip_SystemTask()
 
 	if(gDisconnectTimer) gDisconnectTimer--;
 
-	printf("%d is true\n", gKey & CEY_FASTFORWARD);
 	if(gDebug.bFastForward ||
 		((gKey & CEY_FASTFORWARD || gKeyP2 & CEY_FASTFORWARD) && g_GameFlags & 4) )
 	{

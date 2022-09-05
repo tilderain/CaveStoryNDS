@@ -413,6 +413,7 @@ INCBIN(BDOWNorg, "../game_english/data/ORG/BDOWN.org");
 INCBIN(CAVEorg, "../game_english/data/ORG/CAVE.org");
 INCBIN(CEMETERYorg, "../game_english/data/ORG/CEMETERY.org");
 INCBIN(CURLYorg, "../game_english/data/ORG/CURLY.org");
+INCBIN(CURLYBorg, "../game_english/data/ORG/CURLYB.org");
 INCBIN(DRorg, "../game_english/data/ORG/DR.org");
 INCBIN(ENDINGorg, "../game_english/data/ORG/ENDING.org");
 INCBIN(ESCAPEorg, "../game_english/data/ORG/ESCAPE.org");
@@ -426,6 +427,7 @@ INCBIN(GRANDorg, "../game_english/data/ORG/GRAND.org");
 INCBIN(GRAVITYorg, "../game_english/data/ORG/GRAVITY.org");
 INCBIN(HELLorg, "../game_english/data/ORG/HELL.org");
 INCBIN(IRONHorg, "../game_english/data/ORG/IRONH.org");
+INCBIN(IRONHBorg, "../game_english/data/ORG/IRONHB.org");
 INCBIN(JENKAorg, "../game_english/data/ORG/JENKA.org");
 INCBIN(JENKA2org, "../game_english/data/ORG/JENKA2.org");
 INCBIN(KAZEorg, "../game_english/data/ORG/KAZE.org");
@@ -436,13 +438,17 @@ INCBIN(LASTCAVEorg, "../game_english/data/ORG/LASTCAVE.org");
 INCBIN(LEEForg, "../game_english/data/ORG/LEEF.org");
 INCBIN(MARINEorg, "../game_english/data/ORG/MARINE.org");
 INCBIN(MAZEorg, "../game_english/data/ORG/MAZE.org");
+INCBIN(MDOWNorg, "../game_english/data/ORG/MDOWN.org");
 INCBIN(MDOWN2org, "../game_english/data/ORG/MDOWN2.org");
 INCBIN(MURAorg, "../game_english/data/ORG/MURA.org");
 INCBIN(NEWDATAorg, "../game_english/data/ORG/NEWDATA.org");
 INCBIN(OSIDEorg, "../game_english/data/ORG/OSIDE.org");
 INCBIN(PLANTorg, "../game_english/data/ORG/PLANT.org");
+INCBIN(PLANTB1org, "../game_english/data/ORG/PLANTB1.org");
+INCBIN(PLANTB2org, "../game_english/data/ORG/PLANTB2.org");
 INCBIN(QUIETorg, "../game_english/data/ORG/QUIET.org");
 INCBIN(REQUIEMorg, "../game_english/data/ORG/REQUIEM.org");
+INCBIN(REQUIEMBorg, "../game_english/data/ORG/REQUIEMB.org");
 INCBIN(ROCKORGorg, "../game_english/data/ORG/ROCKORG.org");
 INCBIN(SAMPLEorg, "../game_english/data/ORG/SAMPLE.org");
 INCBIN(TOROKOorg, "../game_english/data/ORG/TOROKO.org");
@@ -1196,6 +1202,7 @@ const FILEREF files[] = {
 	{gCAVEorgData, gCAVEorgSize, "data/ORG/CAVE.org"},
 	{gCEMETERYorgData, gCEMETERYorgSize, "data/ORG/CEMETERY.org"},
 	{gCURLYorgData, gCURLYorgSize, "data/ORG/CURLY.org"},
+	{gCURLYBorgData, gCURLYBorgSize, "data/ORG/CURLYB.org"},
 	{gDRorgData, gDRorgSize, "data/ORG/DR.org"},
 	{gENDINGorgData, gENDINGorgSize, "data/ORG/ENDING.org"},
 	{gESCAPEorgData, gESCAPEorgSize, "data/ORG/ESCAPE.org"},
@@ -1209,6 +1216,7 @@ const FILEREF files[] = {
 	{gGRAVITYorgData, gGRAVITYorgSize, "data/ORG/GRAVITY.org"},
 	{gHELLorgData, gHELLorgSize, "data/ORG/HELL.org"},
 	{gIRONHorgData, gIRONHorgSize, "data/ORG/IRONH.org"},
+	{gIRONHBorgData, gIRONHBorgSize, "data/ORG/IRONHB.org"},
 	{gJENKAorgData, gJENKAorgSize, "data/ORG/JENKA.org"},
 	{gJENKA2orgData, gJENKA2orgSize, "data/ORG/JENKA2.org"},
 	{gKAZEorgData, gKAZEorgSize, "data/ORG/KAZE.org"},
@@ -1219,13 +1227,17 @@ const FILEREF files[] = {
 	{gLEEForgData, gLEEForgSize, "data/ORG/LEEF.org"},
 	{gMARINEorgData, gMARINEorgSize, "data/ORG/MARINE.org"},
 	{gMAZEorgData, gMAZEorgSize, "data/ORG/MAZE.org"},
+	{gMDOWNorgData, gMDOWNorgSize, "data/ORG/MDOWN.org"},
 	{gMDOWN2orgData, gMDOWN2orgSize, "data/ORG/MDOWN2.org"},
 	{gMURAorgData, gMURAorgSize, "data/ORG/MURA.org"},
 	{gNEWDATAorgData, gNEWDATAorgSize, "data/ORG/NEWDATA.org"},
 	{gOSIDEorgData, gOSIDEorgSize, "data/ORG/OSIDE.org"},
 	{gPLANTorgData, gPLANTorgSize, "data/ORG/PLANT.org"},
+	{gPLANTB1orgData, gPLANTB1orgSize, "data/ORG/PLANTB1.org"},
+	{gPLANTB2orgData, gPLANTB2orgSize, "data/ORG/PLANTB2.org"},
 	{gQUIETorgData, gQUIETorgSize, "data/ORG/QUIET.org"},
 	{gREQUIEMorgData, gREQUIEMorgSize, "data/ORG/REQUIEM.org"},
+	{gREQUIEMBorgData, gREQUIEMBorgSize, "data/ORG/REQUIEMB.org"},
 	{gROCKORGorgData, gROCKORGorgSize, "data/ORG/ROCKORG.org"},
 	{gSAMPLEorgData, gSAMPLEorgSize, "data/ORG/SAMPLE.org"},
 	{gTOROKOorgData, gTOROKOorgSize, "data/ORG/TOROKO.org"},
