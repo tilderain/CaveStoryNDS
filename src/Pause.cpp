@@ -851,7 +851,7 @@ static int Callback_Drams(OptionsMenu *parent_menu, size_t this_option, Callback
 			break;
 
 		case ACTION_DEINIT:
-			conf->bTransparency = parent_menu->options[this_option].value;
+			conf->bDrams = parent_menu->options[this_option].value;
 			break;
 
 		case ACTION_OK:
