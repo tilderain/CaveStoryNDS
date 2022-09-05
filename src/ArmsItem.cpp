@@ -623,11 +623,12 @@ int CampLoop(void)
 		int frame_x;
 		int frame_y;
 		unsigned long color = GetCortBoxColor(RGB(0, 0, 0x20));
-		CortBox(&grcFull, color);		
-		GetFramePosition(&frame_x, &frame_y);
-		
 		if(!gFastForwarding || gDebug.FastForwardTimer % 5 == 4)
 		{
+			CortBox(&grcFull, color);		
+			GetFramePosition(&frame_x, &frame_y);
+		
+
 			PutBack(frame_x, frame_y);
 			PutStage_Back(frame_x, frame_y);
 			PutBossChar(frame_x, frame_y);
