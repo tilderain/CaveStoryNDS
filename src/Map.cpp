@@ -22,7 +22,7 @@
 
 #include "fopen.h"
 
-#define PXM_BUFFER_SIZE 0x9000
+#define PXM_BUFFER_SIZE 0x4B000
 
 MAP_DATA gMap;
 
