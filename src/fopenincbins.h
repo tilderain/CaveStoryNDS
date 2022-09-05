@@ -405,60 +405,60 @@ INCBIN(e_Mazepxe, "../game_english/datacse2/Stage/e_Maze.pxe");
 INCBIN(e_Mazepxm, "../game_english/datacse2/Stage/e_Maze.pxm");
 INCBIN(e_Skypxe, "../game_english/datacse2/Stage/e_Sky.pxe");
 INCBIN(e_Skypxm, "../game_english/datacse2/Stage/e_Sky.pxm");
-INCBIN(ACCESSorg, "../game_english/datacse2/ORG/ACCESS.org");
-INCBIN(ANZENorg, "../game_english/datacse2/ORG/ANZEN.org");
-INCBIN(BALCONYorg, "../game_english/datacse2/ORG/BALCONY.org");
-INCBIN(BALLOSorg, "../game_english/datacse2/ORG/BALLOS.org");
-INCBIN(BDOWNorg, "../game_english/datacse2/ORG/BDOWN.org");
-INCBIN(CAVEorg, "../game_english/datacse2/ORG/CAVE.org");
-INCBIN(CEMETERYorg, "../game_english/datacse2/ORG/CEMETERY.org");
-INCBIN(CURLYorg, "../game_english/datacse2/ORG/CURLY.org");
-INCBIN(CURLYBorg, "../game_english/datacse2/ORG/CURLYB.org");
-INCBIN(DRorg, "../game_english/datacse2/ORG/DR.org");
-INCBIN(ENDINGorg, "../game_english/datacse2/ORG/ENDING.org");
-INCBIN(ESCAPEorg, "../game_english/datacse2/ORG/ESCAPE.org");
-INCBIN(FANFALE1org, "../game_english/datacse2/ORG/FANFALE1.org");
-INCBIN(FANFALE2org, "../game_english/datacse2/ORG/FANFALE2.org");
-INCBIN(FANFALE3org, "../game_english/datacse2/ORG/FANFALE3.org");
-INCBIN(FIREEYEorg, "../game_english/datacse2/ORG/FIREEYE.org");
-INCBIN(GAMEOVERorg, "../game_english/datacse2/ORG/GAMEOVER.org");
-INCBIN(GINSUKEorg, "../game_english/datacse2/ORG/GINSUKE.org");
-INCBIN(GRANDorg, "../game_english/datacse2/ORG/GRAND.org");
-INCBIN(GRAVITYorg, "../game_english/datacse2/ORG/GRAVITY.org");
-INCBIN(HELLorg, "../game_english/datacse2/ORG/HELL.org");
-INCBIN(IRONHorg, "../game_english/datacse2/ORG/IRONH.org");
-INCBIN(IRONHBorg, "../game_english/datacse2/ORG/IRONHB.org");
-INCBIN(JENKAorg, "../game_english/datacse2/ORG/JENKA.org");
-INCBIN(JENKA2org, "../game_english/datacse2/ORG/JENKA2.org");
-INCBIN(KAZEorg, "../game_english/datacse2/ORG/KAZE.org");
-INCBIN(KODOUorg, "../game_english/datacse2/ORG/KODOU.org");
-INCBIN(LASTBT3org, "../game_english/datacse2/ORG/LASTBT3.org");
-INCBIN(LASTBTLorg, "../game_english/datacse2/ORG/LASTBTL.org");
-INCBIN(LASTCAVEorg, "../game_english/datacse2/ORG/LASTCAVE.org");
-INCBIN(LEEForg, "../game_english/datacse2/ORG/LEEF.org");
-INCBIN(MARINEorg, "../game_english/datacse2/ORG/MARINE.org");
-INCBIN(MAZEorg, "../game_english/datacse2/ORG/MAZE.org");
-INCBIN(MDOWNorg, "../game_english/datacse2/ORG/MDOWN.org");
-INCBIN(MDOWN2org, "../game_english/datacse2/ORG/MDOWN2.org");
-INCBIN(MURAorg, "../game_english/datacse2/ORG/MURA.org");
-INCBIN(NEWDATAorg, "../game_english/datacse2/ORG/NEWDATA.org");
-INCBIN(OSIDEorg, "../game_english/datacse2/ORG/OSIDE.org");
-INCBIN(PLANTorg, "../game_english/datacse2/ORG/PLANT.org");
-INCBIN(PLANTB1org, "../game_english/datacse2/ORG/PLANTB1.org");
-INCBIN(PLANTB2org, "../game_english/datacse2/ORG/PLANTB2.org");
-INCBIN(QUIETorg, "../game_english/datacse2/ORG/QUIET.org");
-INCBIN(REQUIEMorg, "../game_english/datacse2/ORG/REQUIEM.org");
-INCBIN(REQUIEMBorg, "../game_english/datacse2/ORG/REQUIEMB.org");
-INCBIN(ROCKORGorg, "../game_english/datacse2/ORG/ROCKORG.org");
-INCBIN(SAMPLEorg, "../game_english/datacse2/ORG/SAMPLE.org");
-INCBIN(TOROKOorg, "../game_english/datacse2/ORG/TOROKO.org");
-INCBIN(VIVIorg, "../game_english/datacse2/ORG/VIVI.org");
-INCBIN(WANPAK2org, "../game_english/datacse2/ORG/WANPAK2.org");
-INCBIN(WANPAKUorg, "../game_english/datacse2/ORG/WANPAKU.org");
-INCBIN(WEEDorg, "../game_english/datacse2/ORG/WEED.org");
-INCBIN(WHITEorg, "../game_english/datacse2/ORG/WHITE.org");
-INCBIN(XXXXorg, "../game_english/datacse2/ORG/XXXX.org");
-INCBIN(ZONBIEorg, "../game_english/datacse2/ORG/ZONBIE.org");
+INCBIN(ACCESSorglzss, "../game_english/datacse2/ORG/ACCESS.org.lzss");
+INCBIN(ANZENorglzss, "../game_english/datacse2/ORG/ANZEN.org.lzss");
+INCBIN(BALCONYorglzss, "../game_english/datacse2/ORG/BALCONY.org.lzss");
+INCBIN(BALLOSorglzss, "../game_english/datacse2/ORG/BALLOS.org.lzss");
+INCBIN(BDOWNorglzss, "../game_english/datacse2/ORG/BDOWN.org.lzss");
+INCBIN(CAVEorglzss, "../game_english/datacse2/ORG/CAVE.org.lzss");
+INCBIN(CEMETERYorglzss, "../game_english/datacse2/ORG/CEMETERY.org.lzss");
+INCBIN(CURLYorglzss, "../game_english/datacse2/ORG/CURLY.org.lzss");
+INCBIN(CURLYBorglzss, "../game_english/datacse2/ORG/CURLYB.org.lzss");
+INCBIN(DRorglzss, "../game_english/datacse2/ORG/DR.org.lzss");
+INCBIN(ENDINGorglzss, "../game_english/datacse2/ORG/ENDING.org.lzss");
+INCBIN(ESCAPEorglzss, "../game_english/datacse2/ORG/ESCAPE.org.lzss");
+INCBIN(FANFALE1orglzss, "../game_english/datacse2/ORG/FANFALE1.org.lzss");
+INCBIN(FANFALE2orglzss, "../game_english/datacse2/ORG/FANFALE2.org.lzss");
+INCBIN(FANFALE3orglzss, "../game_english/datacse2/ORG/FANFALE3.org.lzss");
+INCBIN(FIREEYEorglzss, "../game_english/datacse2/ORG/FIREEYE.org.lzss");
+INCBIN(GAMEOVERorglzss, "../game_english/datacse2/ORG/GAMEOVER.org.lzss");
+INCBIN(GINSUKEorglzss, "../game_english/datacse2/ORG/GINSUKE.org.lzss");
+INCBIN(GRANDorglzss, "../game_english/datacse2/ORG/GRAND.org.lzss");
+INCBIN(GRAVITYorglzss, "../game_english/datacse2/ORG/GRAVITY.org.lzss");
+INCBIN(HELLorglzss, "../game_english/datacse2/ORG/HELL.org.lzss");
+INCBIN(IRONHorglzss, "../game_english/datacse2/ORG/IRONH.org.lzss");
+INCBIN(IRONHBorglzss, "../game_english/datacse2/ORG/IRONHB.org.lzss");
+INCBIN(JENKAorglzss, "../game_english/datacse2/ORG/JENKA.org.lzss");
+INCBIN(JENKA2orglzss, "../game_english/datacse2/ORG/JENKA2.org.lzss");
+INCBIN(KAZEorglzss, "../game_english/datacse2/ORG/KAZE.org.lzss");
+INCBIN(KODOUorglzss, "../game_english/datacse2/ORG/KODOU.org.lzss");
+INCBIN(LASTBT3orglzss, "../game_english/datacse2/ORG/LASTBT3.org.lzss");
+INCBIN(LASTBTLorglzss, "../game_english/datacse2/ORG/LASTBTL.org.lzss");
+INCBIN(LASTCAVEorglzss, "../game_english/datacse2/ORG/LASTCAVE.org.lzss");
+INCBIN(LEEForglzss, "../game_english/datacse2/ORG/LEEF.org.lzss");
+INCBIN(MARINEorglzss, "../game_english/datacse2/ORG/MARINE.org.lzss");
+INCBIN(MAZEorglzss, "../game_english/datacse2/ORG/MAZE.org.lzss");
+INCBIN(MDOWNorglzss, "../game_english/datacse2/ORG/MDOWN.org.lzss");
+INCBIN(MDOWN2orglzss, "../game_english/datacse2/ORG/MDOWN2.org.lzss");
+INCBIN(MURAorglzss, "../game_english/datacse2/ORG/MURA.org.lzss");
+INCBIN(NEWDATAorglzss, "../game_english/datacse2/ORG/NEWDATA.org.lzss");
+INCBIN(OSIDEorglzss, "../game_english/datacse2/ORG/OSIDE.org.lzss");
+INCBIN(PLANTorglzss, "../game_english/datacse2/ORG/PLANT.org.lzss");
+INCBIN(PLANTB1orglzss, "../game_english/datacse2/ORG/PLANTB1.org.lzss");
+INCBIN(PLANTB2orglzss, "../game_english/datacse2/ORG/PLANTB2.org.lzss");
+INCBIN(QUIETorglzss, "../game_english/datacse2/ORG/QUIET.org.lzss");
+INCBIN(REQUIEMorglzss, "../game_english/datacse2/ORG/REQUIEM.org.lzss");
+INCBIN(REQUIEMBorglzss, "../game_english/datacse2/ORG/REQUIEMB.org.lzss");
+INCBIN(ROCKORGorglzss, "../game_english/datacse2/ORG/ROCKORG.org.lzss");
+INCBIN(SAMPLEorglzss, "../game_english/datacse2/ORG/SAMPLE.org.lzss");
+INCBIN(TOROKOorglzss, "../game_english/datacse2/ORG/TOROKO.org.lzss");
+INCBIN(VIVIorglzss, "../game_english/datacse2/ORG/VIVI.org.lzss");
+INCBIN(WANPAK2orglzss, "../game_english/datacse2/ORG/WANPAK2.org.lzss");
+INCBIN(WANPAKUorglzss, "../game_english/datacse2/ORG/WANPAKU.org.lzss");
+INCBIN(WEEDorglzss, "../game_english/datacse2/ORG/WEED.org.lzss");
+INCBIN(WHITEorglzss, "../game_english/datacse2/ORG/WHITE.org.lzss");
+INCBIN(XXXXorglzss, "../game_english/datacse2/ORG/XXXX.org.lzss");
+INCBIN(ZONBIEorglzss, "../game_english/datacse2/ORG/ZONBIE.org.lzss");
 INCBIN(wavedat, "../game_english/datacse2/ORG/wave.dat");
 
 #ifndef JAPANESE
@@ -1194,59 +1194,59 @@ const FILEREF files[] = {
 	{ge_SkypxeData, ge_SkypxeSize, "datacse2/Stage/e_Sky.pxe"},
 	{ge_SkypxmData, ge_SkypxmSize, "datacse2/Stage/e_Sky.pxm"},
 	{ge_SkytscData, ge_SkytscSize, "datacse2/Stage/e_Sky.tsc"},
-	{gACCESSorgData, gACCESSorgSize, "datacse2/ORG/ACCESS.org"},
-	{gANZENorgData, gANZENorgSize, "datacse2/ORG/ANZEN.org"},
-	{gBALCONYorgData, gBALCONYorgSize, "datacse2/ORG/BALCONY.org"},
-	{gBALLOSorgData, gBALLOSorgSize, "datacse2/ORG/BALLOS.org"},
-	{gBDOWNorgData, gBDOWNorgSize, "datacse2/ORG/BDOWN.org"},
-	{gCAVEorgData, gCAVEorgSize, "datacse2/ORG/CAVE.org"},
-	{gCEMETERYorgData, gCEMETERYorgSize, "datacse2/ORG/CEMETERY.org"},
-	{gCURLYorgData, gCURLYorgSize, "datacse2/ORG/CURLY.org"},
-	{gCURLYBorgData, gCURLYBorgSize, "datacse2/ORG/CURLYB.org"},
-	{gDRorgData, gDRorgSize, "datacse2/ORG/DR.org"},
-	{gENDINGorgData, gENDINGorgSize, "datacse2/ORG/ENDING.org"},
-	{gESCAPEorgData, gESCAPEorgSize, "datacse2/ORG/ESCAPE.org"},
-	{gFANFALE1orgData, gFANFALE1orgSize, "datacse2/ORG/FANFALE1.org"},
-	{gFANFALE2orgData, gFANFALE2orgSize, "datacse2/ORG/FANFALE2.org"},
-	{gFANFALE3orgData, gFANFALE3orgSize, "datacse2/ORG/FANFALE3.org"},
-	{gFIREEYEorgData, gFIREEYEorgSize, "datacse2/ORG/FIREEYE.org"},
-	{gGAMEOVERorgData, gGAMEOVERorgSize, "datacse2/ORG/GAMEOVER.org"},
-	{gGINSUKEorgData, gGINSUKEorgSize, "datacse2/ORG/GINSUKE.org"},
-	{gGRANDorgData, gGRANDorgSize, "datacse2/ORG/GRAND.org"},
-	{gGRAVITYorgData, gGRAVITYorgSize, "datacse2/ORG/GRAVITY.org"},
-	{gHELLorgData, gHELLorgSize, "datacse2/ORG/HELL.org"},
-	{gIRONHorgData, gIRONHorgSize, "datacse2/ORG/IRONH.org"},
-	{gIRONHBorgData, gIRONHBorgSize, "datacse2/ORG/IRONHB.org"},
-	{gJENKAorgData, gJENKAorgSize, "datacse2/ORG/JENKA.org"},
-	{gJENKA2orgData, gJENKA2orgSize, "datacse2/ORG/JENKA2.org"},
-	{gKAZEorgData, gKAZEorgSize, "datacse2/ORG/KAZE.org"},
-	{gKODOUorgData, gKODOUorgSize, "datacse2/ORG/KODOU.org"},
-	{gLASTBT3orgData, gLASTBT3orgSize, "datacse2/ORG/LASTBT3.org"},
-	{gLASTBTLorgData, gLASTBTLorgSize, "datacse2/ORG/LASTBTL.org"},
-	{gLASTCAVEorgData, gLASTCAVEorgSize, "datacse2/ORG/LASTCAVE.org"},
-	{gLEEForgData, gLEEForgSize, "datacse2/ORG/LEEF.org"},
-	{gMARINEorgData, gMARINEorgSize, "datacse2/ORG/MARINE.org"},
-	{gMAZEorgData, gMAZEorgSize, "datacse2/ORG/MAZE.org"},
-	{gMDOWNorgData, gMDOWNorgSize, "datacse2/ORG/MDOWN.org"},
-	{gMDOWN2orgData, gMDOWN2orgSize, "datacse2/ORG/MDOWN2.org"},
-	{gMURAorgData, gMURAorgSize, "datacse2/ORG/MURA.org"},
-	{gNEWDATAorgData, gNEWDATAorgSize, "datacse2/ORG/NEWDATA.org"},
-	{gOSIDEorgData, gOSIDEorgSize, "datacse2/ORG/OSIDE.org"},
-	{gPLANTorgData, gPLANTorgSize, "datacse2/ORG/PLANT.org"},
-	{gPLANTB1orgData, gPLANTB1orgSize, "datacse2/ORG/PLANTB1.org"},
-	{gPLANTB2orgData, gPLANTB2orgSize, "datacse2/ORG/PLANTB2.org"},
-	{gQUIETorgData, gQUIETorgSize, "datacse2/ORG/QUIET.org"},
-	{gREQUIEMorgData, gREQUIEMorgSize, "datacse2/ORG/REQUIEM.org"},
-	{gREQUIEMBorgData, gREQUIEMBorgSize, "datacse2/ORG/REQUIEMB.org"},
-	{gROCKORGorgData, gROCKORGorgSize, "datacse2/ORG/ROCKORG.org"},
-	{gSAMPLEorgData, gSAMPLEorgSize, "datacse2/ORG/SAMPLE.org"},
-	{gTOROKOorgData, gTOROKOorgSize, "datacse2/ORG/TOROKO.org"},
-	{gVIVIorgData, gVIVIorgSize, "datacse2/ORG/VIVI.org"},
-	{gWANPAK2orgData, gWANPAK2orgSize, "datacse2/ORG/WANPAK2.org"},
-	{gWANPAKUorgData, gWANPAKUorgSize, "datacse2/ORG/WANPAKU.org"},
-	{gWEEDorgData, gWEEDorgSize, "datacse2/ORG/WEED.org"},
-	{gWHITEorgData, gWHITEorgSize, "datacse2/ORG/WHITE.org"},
-	{gXXXXorgData, gXXXXorgSize, "datacse2/ORG/XXXX.org"},
-	{gZONBIEorgData, gZONBIEorgSize, "datacse2/ORG/ZONBIE.org"},
+	{gACCESSorglzssData, gACCESSorglzssSize, "datacse2/ORG/ACCESS.org.lzss"},
+	{gANZENorglzssData, gANZENorglzssSize, "datacse2/ORG/ANZEN.org.lzss"},
+	{gBALCONYorglzssData, gBALCONYorglzssSize, "datacse2/ORG/BALCONY.org.lzss"},
+	{gBALLOSorglzssData, gBALLOSorglzssSize, "datacse2/ORG/BALLOS.org.lzss"},
+	{gBDOWNorglzssData, gBDOWNorglzssSize, "datacse2/ORG/BDOWN.org.lzss"},
+	{gCAVEorglzssData, gCAVEorglzssSize, "datacse2/ORG/CAVE.org.lzss"},
+	{gCEMETERYorglzssData, gCEMETERYorglzssSize, "datacse2/ORG/CEMETERY.org.lzss"},
+	{gCURLYorglzssData, gCURLYorglzssSize, "datacse2/ORG/CURLY.org.lzss"},
+	{gCURLYBorglzssData, gCURLYBorglzssSize, "datacse2/ORG/CURLYB.org.lzss"},
+	{gDRorglzssData, gDRorglzssSize, "datacse2/ORG/DR.org.lzss"},
+	{gENDINGorglzssData, gENDINGorglzssSize, "datacse2/ORG/ENDING.org.lzss"},
+	{gESCAPEorglzssData, gESCAPEorglzssSize, "datacse2/ORG/ESCAPE.org.lzss"},
+	{gFANFALE1orglzssData, gFANFALE1orglzssSize, "datacse2/ORG/FANFALE1.org.lzss"},
+	{gFANFALE2orglzssData, gFANFALE2orglzssSize, "datacse2/ORG/FANFALE2.org.lzss"},
+	{gFANFALE3orglzssData, gFANFALE3orglzssSize, "datacse2/ORG/FANFALE3.org.lzss"},
+	{gFIREEYEorglzssData, gFIREEYEorglzssSize, "datacse2/ORG/FIREEYE.org.lzss"},
+	{gGAMEOVERorglzssData, gGAMEOVERorglzssSize, "datacse2/ORG/GAMEOVER.org.lzss"},
+	{gGINSUKEorglzssData, gGINSUKEorglzssSize, "datacse2/ORG/GINSUKE.org.lzss"},
+	{gGRANDorglzssData, gGRANDorglzssSize, "datacse2/ORG/GRAND.org.lzss"},
+	{gGRAVITYorglzssData, gGRAVITYorglzssSize, "datacse2/ORG/GRAVITY.org.lzss"},
+	{gHELLorglzssData, gHELLorglzssSize, "datacse2/ORG/HELL.org.lzss"},
+	{gIRONHorglzssData, gIRONHorglzssSize, "datacse2/ORG/IRONH.org.lzss"},
+	{gIRONHBorglzssData, gIRONHBorglzssSize, "datacse2/ORG/IRONHB.org.lzss"},
+	{gJENKAorglzssData, gJENKAorglzssSize, "datacse2/ORG/JENKA.org.lzss"},
+	{gJENKA2orglzssData, gJENKA2orglzssSize, "datacse2/ORG/JENKA2.org.lzss"},
+	{gKAZEorglzssData, gKAZEorglzssSize, "datacse2/ORG/KAZE.org.lzss"},
+	{gKODOUorglzssData, gKODOUorglzssSize, "datacse2/ORG/KODOU.org.lzss"},
+	{gLASTBT3orglzssData, gLASTBT3orglzssSize, "datacse2/ORG/LASTBT3.org.lzss"},
+	{gLASTBTLorglzssData, gLASTBTLorglzssSize, "datacse2/ORG/LASTBTL.org.lzss"},
+	{gLASTCAVEorglzssData, gLASTCAVEorglzssSize, "datacse2/ORG/LASTCAVE.org.lzss"},
+	{gLEEForglzssData, gLEEForglzssSize, "datacse2/ORG/LEEF.org.lzss"},
+	{gMARINEorglzssData, gMARINEorglzssSize, "datacse2/ORG/MARINE.org.lzss"},
+	{gMAZEorglzssData, gMAZEorglzssSize, "datacse2/ORG/MAZE.org.lzss"},
+	{gMDOWNorglzssData, gMDOWNorglzssSize, "datacse2/ORG/MDOWN.org.lzss"},
+	{gMDOWN2orglzssData, gMDOWN2orglzssSize, "datacse2/ORG/MDOWN2.org.lzss"},
+	{gMURAorglzssData, gMURAorglzssSize, "datacse2/ORG/MURA.org.lzss"},
+	{gNEWDATAorglzssData, gNEWDATAorglzssSize, "datacse2/ORG/NEWDATA.org.lzss"},
+	{gOSIDEorglzssData, gOSIDEorglzssSize, "datacse2/ORG/OSIDE.org.lzss"},
+	{gPLANTorglzssData, gPLANTorglzssSize, "datacse2/ORG/PLANT.org.lzss"},
+	{gPLANTB1orglzssData, gPLANTB1orglzssSize, "datacse2/ORG/PLANTB1.org.lzss"},
+	{gPLANTB2orglzssData, gPLANTB2orglzssSize, "datacse2/ORG/PLANTB2.org.lzss"},
+	{gQUIETorglzssData, gQUIETorglzssSize, "datacse2/ORG/QUIET.org.lzss"},
+	{gREQUIEMorglzssData, gREQUIEMorglzssSize, "datacse2/ORG/REQUIEM.org.lzss"},
+	{gREQUIEMBorglzssData, gREQUIEMBorglzssSize, "datacse2/ORG/REQUIEMB.org.lzss"},
+	{gROCKORGorglzssData, gROCKORGorglzssSize, "datacse2/ORG/ROCKORG.org.lzss"},
+	{gSAMPLEorglzssData, gSAMPLEorglzssSize, "datacse2/ORG/SAMPLE.org.lzss"},
+	{gTOROKOorglzssData, gTOROKOorglzssSize, "datacse2/ORG/TOROKO.org.lzss"},
+	{gVIVIorglzssData, gVIVIorglzssSize, "datacse2/ORG/VIVI.org.lzss"},
+	{gWANPAK2orglzssData, gWANPAK2orglzssSize, "datacse2/ORG/WANPAK2.org.lzss"},
+	{gWANPAKUorglzssData, gWANPAKUorglzssSize, "datacse2/ORG/WANPAKU.org.lzss"},
+	{gWEEDorglzssData, gWEEDorglzssSize, "datacse2/ORG/WEED.org.lzss"},
+	{gWHITEorglzssData, gWHITEorglzssSize, "datacse2/ORG/WHITE.org.lzss"},
+	{gXXXXorglzssData, gXXXXorglzssSize, "datacse2/ORG/XXXX.org.lzss"},
+	{gZONBIEorglzssData, gZONBIEorglzssSize, "datacse2/ORG/ZONBIE.org.lzss"},
 	{gwavedatData, gwavedatSize, "datacse2/ORG/wave.dat"},
 };
