@@ -1,8 +1,6 @@
 
 ====for release 0.4
 
-add pier walk, root, and wind fortress to music
-
 increase org, tsc buffer size, pxm malloc
 
 fix bmp credit image
@@ -20,8 +18,6 @@ rename data to datacse2
 remove svp temp save
 
 Release on gitlab, change game subtitle
-
-fastforward on R, fast forward cutscenes
 
 lz77 compress org
 

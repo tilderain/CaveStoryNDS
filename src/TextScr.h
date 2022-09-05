@@ -76,3 +76,5 @@ void StopTextScript(void);
 void PutTextScript(void);
 int TextScriptProc(void);
 void RestoreTextScript(void);
+
+extern TEXT_SCRIPT gTS;

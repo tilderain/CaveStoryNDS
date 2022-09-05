@@ -75,6 +75,10 @@ bool UpdateInput()
 	if (keys & KEY_L && keys & KEY_UP)
 		gKey |= CEY_CHEAT;
 
+	if (keys & KEY_R)
+		gKey |= CEY_FASTFORWARD;
+
+
 	int status = nifiGetStatus();
 	if(status == HOST_INGAME || status == CLIENT_INGAME)
 	{

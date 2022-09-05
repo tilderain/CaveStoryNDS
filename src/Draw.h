@@ -28,6 +28,7 @@ extern char gConsoleInited;
 extern int gAtlas16Color1;
 extern int gAtlas16Color2;
 
+extern bool gFastForwarding;
 
 void ErrorInitConsole();
 

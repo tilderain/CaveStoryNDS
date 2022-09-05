@@ -52,6 +52,10 @@
 
 #include "File.h"
 
+#include "KeyControl.h"
+#include "TextScr.h"
+
+bool gFastForwarding = false;
 
 void Timer_1ms()
 {
@@ -691,9 +695,14 @@ BOOL Flip_SystemTask()
 
 	if(gDisconnectTimer) gDisconnectTimer--;
 
-	if(gDebug.bFastForward)
+	printf("%d is true\n", gKey & CEY_FASTFORWARD);
+	if(gDebug.bFastForward ||
+		((gKey & CEY_FASTFORWARD || gKeyP2 & CEY_FASTFORWARD) && g_GameFlags & 4) )
 	{
-
+		char* text4 = "Fast Forward >>";
+		gFastForwarding = true;
+		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text4), 16, text4, RGB(255, 255, 255));
+		gTS.flags |= 0x40;
 		if(gDebug.FastForwardTimer++ % 5 == 0)
 		{
 			glEnd2D();
@@ -708,7 +717,7 @@ BOOL Flip_SystemTask()
 	}
 	else
 	{
-
+		gFastForwarding = false;
 		glEnd2D();
 		glFlush(0);
 

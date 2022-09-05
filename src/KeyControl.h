@@ -26,6 +26,7 @@ enum KeyBind
 	CEY_ITEM =      0x00000200,
 	CEY_ESCAPE =	0x00000400,
 	CEY_CHEAT =     0x00000800,
+	CEY_FASTFORWARD = 0x00001000,
 };
 
 extern int gKey;
