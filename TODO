@@ -3,7 +3,6 @@
 
 increase org, tsc buffer size, pxm malloc
 
-fix bmp credit image
 add orgs and sounds to bmp ver.
 
 fix get filesizelong
