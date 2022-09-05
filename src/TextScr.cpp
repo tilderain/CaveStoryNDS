@@ -193,6 +193,12 @@ BOOL LoadTextScript2(const char *name)
 
 	if (gTS.size == -1)
 		return FALSE;
+		
+
+	free(gTS.data);
+	gTS.data = (char*)malloc(gTS.size + 1);
+	if (gTS.data == NULL)
+		return FALSE;
 
 	// Read data
 	fread_embed(gTS.data, 1, gTS.size, fp);
@@ -211,7 +217,7 @@ BOOL LoadTextScript2(const char *name)
 // Load stage .tsc
 BOOL LoadTextScript_Stage(const char *name)
 {
-	FILE_e *fp;
+	FILE_e *fp_head, *fp_body;
 	char path[MAX_PATH];
 	long head_size;
 	long body_size;
@@ -219,45 +225,50 @@ BOOL LoadTextScript_Stage(const char *name)
 	// Open Head.tsc
 	sprintf(path, "%s/%s", gDataPath, "Head.tsc");
 
-	fp = fopen_embed(path, "rb");
-	if (fp == NULL)
+	fp_head = fopen_embed(path, "rb");
+	if (fp_head == NULL)
 		return FALSE;
 
 #ifndef READ_FROM_SD
-	head_size = fp->size;
+	head_size = fp_head->size;
 #else
-	head_size = GetFileSizeLong(fp);
+	head_size = GetFileSizeLong(fp_head);
 #endif
 
 	if (head_size == -1)
 		return FALSE;
 
-	// Read Head.tsc
-	fread_embed(gTS.data, 1, head_size, fp);
-	EncryptionBinaryData2((unsigned char*)gTS.data, head_size);
-	gTS.data[head_size] = 0;
-	fclose_embed(fp);
-
 	// Open stage's .tsc
 	sprintf(path, "%s/%s", gDataPath, name);
 
-	fp = fopen_embed(path, "rb");
-	if (fp == NULL)
+	fp_body = fopen_embed(path, "rb");
+	if (fp_body == NULL)
 		return FALSE;
 
-#ifndef READ_FROM_SD
-	body_size = fp->size;
-#else
-	body_size = GetFileSizeLong(fp);
-#endif
+	#ifndef READ_FROM_SD
+		body_size = fp_body->size;
+	#else
+		body_size = GetFileSizeLong(path);
+	#endif
 	if (body_size == -1)
 		return FALSE;
 
+	free(gTS.data);
+	gTS.data = (char*)malloc(head_size + body_size + 1);
+	if (gTS.data == NULL)
+		return FALSE;
+
+	// Read Head.tsc
+	fread_embed(gTS.data, 1, head_size, fp_head);
+	EncryptionBinaryData2((unsigned char*)gTS.data, head_size);
+	gTS.data[head_size] = 0;
+	fclose_embed(fp_head);
+
 	// Read stage's tsc
-	fread_embed(&gTS.data[head_size], 1, body_size, fp);
+	fread_embed(&gTS.data[head_size], 1, body_size, fp_body);
 	EncryptionBinaryData2((unsigned char*)&gTS.data[head_size], body_size);
 	gTS.data[head_size + body_size] = 0;
-	fclose_embed(fp);
+	fclose_embed(fp_body);
 
 	// Set parameters
 	gTS.size = head_size + body_size;
