@@ -13,7 +13,7 @@ Controls:
 	R: Fast Forward during cutscenes
 
 Additional notes
-	On 3DS or DSi you will need the DSi version to run. (though if you're on a 3DS you probably want to play Clownacy's 3DS port)
+	On 3DS or DSi you will need the DSi version to run. (if you're on a 3DS you can also play Clownacy's 3DS port)
 	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
 
 	Config.dat and Profile.dat will be saved to the root of the SD card.
@@ -21,6 +21,7 @@ Additional notes
 
 	You can hold Start during boot to start with display on the bottom screen.
 	You can hold Select during boot to see console output.
+	You can press L+R+Select to toggle console output.
 
 Known issues:
 	The game will rarely crash when closing the lid.
@@ -87,27 +88,30 @@ v0.4:
 	This version adds the option of the SD card ROM, which supports basic mods.
 	See above for instructions on how to use it.
 
-	Added a setting to use an alternate set of percussion for songs.
-	You can now fast forward during cutscenes and events by holding down the R button.
-	Added a few songs to the sound test.
-	50fps mode is now smoother. (Switched to a timer system instead of adding an additional wait)
-	Disabled file opening after ejecting card, so saves and config menu won't just crash.
-	Updated credits in the readme.
-	Add version to game subtitle and config menu.
-	Holding down the Start button during boot will set display on the bottom screen.
-	Fixed missing tiles in Egg Corridor?.
-	Fixed arms graphic being corrupted after credits.
-	Fixed credits graphics corruption after viewing it twice.
-	Improved look of credit illustrations.
-	Fixed face portrait appearing for a bit before sliding.
-	Reduced flicker and save a few frames when uploading texture (use DMA).
-	Upload face portrait and Japanese text to texture only during vblank, reducing flicker.
-	Fix ending cloud parallax.
-	Multi: Fixed NPCs targeting dead players.
-	Multi: Optimized performance a bit.
-	JPN: Add some missing characters to the font. (whoops)
-	JPN: Fixed credit text being cut off.
-	JPN: Fixed some missing credit portraits.
+	- Added a setting to use an alternate set of percussion for songs.
+	- You can now fast forward during cutscenes and events by holding down the R button.
+	- Added a few songs to the sound test.
+	- 50fps mode is now smoother. (Switched to a timer system instead of adding an additional wait)
+	- Disabled file opening after ejecting card, so saves and config menu won't just crash.
+	- You can toggle the console output with L+R+Select.
+	- Holding down the Start button during boot will set display on the bottom screen.
+	- Updated credits in the readme.
+	- Add version to game subtitle and config menu.
+	- Fixed missing tiles in Egg Corridor?.
+	- Fixed arms graphic being corrupted after credits.
+	- Fixed credits graphics corruption after viewing it twice.
+	- Improved look of credit illustrations.
+	- Fixed face portrait appearing for a bit before sliding.
+	- Reduced flicker and save a few frames when uploading texture (use DMA).
+	- Upload face portrait and Japanese text to texture only during vblank, reducing flicker.
+	- Fix ending cloud parallax.
+	- Multi: Fixed NPCs targeting dead players.
+	- Multi: Optimized performance a bit.
+	- Multi: reduced flicker.
+	- Multi. Changed to 2 frame delay for both host and client.
+	- JPN: Add some missing characters to the font. (whoops)
+	- JPN: Fixed credit text being cut off.
+	- JPN: Fixed some missing credit portraits.
 v0.3:
 	Local multiplayer is here! Explore the caves with a friend over wireless.
 	Thanks to Drenn1 and huiminghao's wonderful Nifi code from GameYob and NesDS respectively.

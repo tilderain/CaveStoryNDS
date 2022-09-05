@@ -44,6 +44,8 @@ bool InitDirectInput()
 
 int gDisconnectTimer = 0;
 
+int gConsoleTimer = 0;
+
 bool UpdateInput()
 {
 	
@@ -78,6 +80,23 @@ bool UpdateInput()
 	if (keys & KEY_R)
 		gKey |= CEY_FASTFORWARD;
 
+
+	if(keys & KEY_L && keys & KEY_R && keys & KEY_SELECT && gConsoleTimer == 0)
+	{
+		if(gConsoleInited == 1) // disabled bottom screen
+		{
+			gConsoleInited = 2;
+			videoBgEnableSub(0);
+		}
+		else
+		{
+
+			gConsoleInited = 1;
+			videoBgDisableSub(0);
+		}
+		gConsoleTimer = 30;
+	}
+	if(gConsoleTimer > 0) gConsoleTimer--;
 
 	int status = nifiGetStatus();
 	if(status == HOST_INGAME || status == CLIENT_INGAME)

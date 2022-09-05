@@ -189,7 +189,8 @@ void ErrorInitConsole()
 {
 	if(!gConsoleInited)
 		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
-	gConsoleInited = 2;
+	gConsoleInited = 3;
+	videoBgEnableSub(0);
 }
 
 static unsigned int nextPowerOf2(unsigned int n)  
@@ -830,10 +831,18 @@ BOOL StartDirectDraw()
 	videoSetModeSub( MODE_0_2D  );
 	vramSetBankI( VRAM_I_SUB_BG_0x06208000 );
 	scanKeys();
+	//if(keysHeld() & KEY_SELECT)
+	//{
+		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
+		gConsoleInited = 1;
+
+		videoBgDisableSub(0);
+	//}
+
 	if(keysHeld() & KEY_SELECT)
 	{
-		consoleInit( NULL, 0, BgType_Text4bpp, BgSize_T_256x256, 23, 2, false, true );
-		gConsoleInited = TRUE;
+		videoBgEnableSub(0);
+		gConsoleInited = 2;
 	}
 
 #endif
