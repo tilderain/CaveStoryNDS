@@ -63,6 +63,8 @@ char text[4][0x40];
 
 char gTextScriptInitiator = 0;
 
+int gSaveFailedTimer = 0;
+
 RECT gRect_line = {0, 0, 216, 16};
 
 #ifdef FIX_BUGS
@@ -1354,15 +1356,9 @@ int TextScriptProc(void)
 						#ifdef CYG_PROFILER
 						cygprofile_end();
 						#endif
-						z = GetTextScriptNo(gTS.p_read + 4); 
-						if(!SaveProfile(NULL)) //jump to save failed script
-						{
-							if(!nifiIsLinked())
-								JumpTextScript(z);
-						}
-
-
-						gTS.p_read += 8;
+						if(!SaveProfile(NULL)) //show failed save text
+							gSaveFailedTimer = 150;
+						gTS.p_read += 4;
 					}
 					else if (IS_COMMAND('L','D','P'))
 					{

@@ -694,6 +694,12 @@ BOOL Flip_SystemTask()
 		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text3), 16, text3, RGB(255, 255, 255));
 	}
 
+	char* text5 = "Save failed. Temporary save created.";
+	if(gSaveFailedTimer > 0) 
+		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text5), 16, text5, RGB(255, 255, 255));
+
+	if(gSaveFailedTimer) gSaveFailedTimer--;
+
 	if(gDisconnectTimer) gDisconnectTimer--;
 
 	if(gDebug.bFastForward ||

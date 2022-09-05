@@ -78,3 +78,4 @@ int TextScriptProc(void);
 void RestoreTextScript(void);
 
 extern TEXT_SCRIPT gTS;
+extern int gSaveFailedTimer;

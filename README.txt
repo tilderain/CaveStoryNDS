@@ -12,7 +12,7 @@ Controls:
 	Select: Map
 	R: Fast Forward during cutscenes
 
-Additional notes
+Additional notes:
 	On 3DS or DSi you will need the DSi version to run. (if you're on a 3DS you can also play Clownacy's 3DS port)
 	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
 
@@ -22,6 +22,9 @@ Additional notes
 	You can hold Start during boot to start with display on the bottom screen.
 	You can hold Select during boot to see console output.
 	You can press L+R+Select to toggle console output.
+
+	Emulators can use temporary save points if there is no SD card connected.
+	You can also eject the card and play normally on the non SD card version.
 
 Known issues:
 	The game will rarely crash when closing the lid.
