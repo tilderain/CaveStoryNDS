@@ -44,12 +44,12 @@
 char magic1 = 'C';
 char magic2 = 'D';
 char magic3 = 'E';
-char magic4 = '1';
+char magic4 = '2';
 #else
 char magic1 = 'C';
 char magic2 = 'D';
 char magic3 = 'J';
-char magic4 = '1';
+char magic4 = '2';
 #endif
 
 void nifiLinkTypeMenu();

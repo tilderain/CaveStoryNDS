@@ -162,6 +162,12 @@ INCBIN(154swav, "../game_english/data/Wave/154.swav");
 INCBIN(155swav, "../game_english/data/Wave/155.swav");
 INCBIN(156swav, "../game_english/data/Wave/156.swav");
 INCBIN(157swav, "../game_english/data/Wave/157.swav");
+INCBIN(158swav, "../game_english/data/Wave/158.swav");
+INCBIN(159swav, "../game_english/data/Wave/159.swav");
+INCBIN(160swav, "../game_english/data/Wave/160.swav");
+INCBIN(161swav, "../game_english/data/Wave/161.swav");
+INCBIN(162swav, "../game_english/data/Wave/162.swav");
+INCBIN(163swav, "../game_english/data/Wave/163.swav");
 INCBIN(0pxa, "../game_english/data/Stage/0.pxa");
 INCBIN(0pxe, "../game_english/data/Stage/0.pxe");
 INCBIN(0pxm, "../game_english/data/Stage/0.pxm");
@@ -843,6 +849,12 @@ const FILEREF files[] = {
 	{g155swavData, g155swavSize, "data/Wave/155.swav"},
 	{g156swavData, g156swavSize, "data/Wave/156.swav"},
 	{g157swavData, g157swavSize, "data/Wave/157.swav"},
+	{g158swavData, g158swavSize, "data/Wave/158.swav"},
+	{g159swavData, g159swavSize, "data/Wave/159.swav"},
+	{g160swavData, g160swavSize, "data/Wave/160.swav"},
+	{g161swavData, g161swavSize, "data/Wave/161.swav"},
+	{g162swavData, g162swavSize, "data/Wave/162.swav"},
+	{g163swavData, g163swavSize, "data/Wave/163.swav"},
 	{g0pxaData, g0pxaSize, "data/Stage/0.pxa"},
 	{g0pxeData, g0pxeSize, "data/Stage/0.pxe"},
 	{g0pxmData, g0pxmSize, "data/Stage/0.pxm"},
@@ -1226,3 +1238,4 @@ const FILEREF files[] = {
 	{gZONBIEorgData, gZONBIEorgSize, "data/ORG/ZONBIE.org"},
 	{gwavedatData, gwavedatSize, "data/ORG/wave.dat"},
 };
+

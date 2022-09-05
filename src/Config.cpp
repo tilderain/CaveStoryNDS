@@ -18,7 +18,7 @@
 #include "nds.h"
 
 const char *config_filename = "Config.dat";	// Not the original name
-const char *config_magic = "CSDS03";	// Not the original name
+const char *config_magic = "CSDS04";	// Not the original name
 
 BOOL LoadConfigData(CONFIG *conf)
 {

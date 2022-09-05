@@ -51,6 +51,7 @@ BOOL gbUseJoystick = FALSE;
 
 BOOL gb50Fps = FALSE;
 BOOL gbTransparency = FALSE;
+BOOL gbAlternateDrams = FALSE;
 
 int gJoystickButtonTable[8];
 

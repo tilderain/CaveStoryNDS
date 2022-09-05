@@ -41,6 +41,7 @@ struct CONFIG
 	BOOL bFps;
 	BOOL bDebug;
 	BOOL bTransparency;
+	bool bDrams;
 	CONFIG_BINDING bindings[BINDING_TOTAL];
 };
 

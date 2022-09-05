@@ -17,6 +17,7 @@ extern BOOL bFullscreen;
 
 extern BOOL gb50Fps;
 extern BOOL gbTransparency;
+extern BOOL gbAlternateDrams;
 
 extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];

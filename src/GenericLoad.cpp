@@ -340,6 +340,13 @@ bool LoadGenericData()
 		ReadSound(3);
 		ReadSound(6);
 
+		ReadSound(158);
+		ReadSound(159);
+		ReadSound(160);
+		ReadSound(161);
+		ReadSound(162);
+		ReadSound(163);
+
 		//		sprintf(&v1, "PixTone = %d byte", pixtone_bytes);
 		printf("done\n");
 		return true;

@@ -16,7 +16,7 @@
 
 #include "nds/ndstypes.h"
 
-#define SE_MAX 160	// According to the Organya source code release, this is the real name for this constant
+#define SE_MAX 164	// According to the Organya source code release, this is the real name for this constant
 
 extern int gVBlankCounter;
 
