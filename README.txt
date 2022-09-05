@@ -10,6 +10,7 @@ Controls:
 	Y: Previous Weapon
 	Start: Inventory
 	Select: Map
+	R: Fast Forward during cutscenes
 
 Additional notes
 	On 3DS or DSi you will need the DSi version to run. (though if you're on a 3DS you probably want to play Clownacy's 3DS port)
@@ -86,6 +87,7 @@ v0.4:
 	This version adds the option of the SD card ROM, which supports basic mods.
 	See above for instructions on how to use it.
 
+	You can now fast forward during cutscenes and events by holding down the R button.
 	Updated credits in the readme.
 	Add version to game subtitle.
 	Holding down the Start button during boot will set display on the bottom screen.
