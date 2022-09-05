@@ -729,32 +729,37 @@ int ModeAction(void)
 			ActionIllust();
 			ActionStripper();
 		}
-
+		
 		ProcFade();
-		CortBox(&grcFull, color);
-		GetFramePosition(&frame_x, &frame_y);
-		PutBack(frame_x, frame_y);
-		PutStage_Back(frame_x, frame_y);
-		PutBossChar(frame_x, frame_y);
-		PutNpChar(frame_x, frame_y);
-		PutBullet(frame_x, frame_y);
-		PutMyChar(frame_x, frame_y);
-		if(SwapMyChar())
+
+		if(!gFastForwarding || gDebug.FastForwardTimer % 5 == 4)
 		{
+			CortBox(&grcFull, color);
+			GetFramePosition(&frame_x, &frame_y);
+			PutBack(frame_x, frame_y);
+			PutStage_Back(frame_x, frame_y);
+			PutBossChar(frame_x, frame_y);
+			PutNpChar(frame_x, frame_y);
+			PutBullet(frame_x, frame_y);
 			PutMyChar(frame_x, frame_y);
-			SwapMyChar();
+			if(SwapMyChar())
+			{
+				PutMyChar(frame_x, frame_y);
+				SwapMyChar();
+			}
+
+
+			PutStar(frame_x, frame_y);
+			PutMapDataVector(frame_x, frame_y);
+			PutStage_Front(frame_x, frame_y);
+			PutFront(frame_x, frame_y);
+			PutFlash();
+			PutCaret(frame_x, frame_y);
+			PutValueView(frame_x, frame_y);
+			PutBossLife();
+			PutFade();
 		}
 
-		
-		PutStar(frame_x, frame_y);
-		PutMapDataVector(frame_x, frame_y);
-		PutStage_Front(frame_x, frame_y);
-		PutFront(frame_x, frame_y);
-		PutFlash();
-		PutCaret(frame_x, frame_y);
-		PutValueView(frame_x, frame_y);
-		PutBossLife();
-		PutFade();
 
 		if (!(g_GameFlags & 4))
 		{
