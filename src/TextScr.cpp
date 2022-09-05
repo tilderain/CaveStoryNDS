@@ -248,7 +248,7 @@ BOOL LoadTextScript_Stage(const char *name)
 	#ifndef READ_FROM_SD
 		body_size = fp_body->size;
 	#else
-		body_size = GetFileSizeLong(path);
+		body_size = GetFileSizeLong(fp_body);
 	#endif
 	if (body_size == -1)
 		return FALSE;
