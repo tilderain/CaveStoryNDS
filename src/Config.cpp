@@ -56,6 +56,8 @@ BOOL LoadConfigData(CONFIG *conf)
 
 	fread(&conf->bTransparency, 1, 1, fp);
 
+	fread(&conf->bDrams, 1, 1, fp);
+
 	for (size_t i = 0; i < BINDING_TOTAL; ++i)
 		conf->bindings[i].keyboard = File_ReadLE32(fp);
 
@@ -101,6 +103,7 @@ BOOL SaveConfigData(const CONFIG *conf)
 	fputc(conf->bBottomScreen, fp);
 	fputc(conf->bDebug, fp);
 	fputc(conf->bTransparency, fp);
+	fputc(conf->bDrams, fp);
 
 	// Write key-bindings
 	for (size_t i = 0; i < BINDING_TOTAL; ++i)

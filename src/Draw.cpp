@@ -708,7 +708,7 @@ BOOL Flip_SystemTask()
 		char* text4 = "Fast Forward >>";
 		gFastForwarding = true;
 		PutText(&grcGame, WINDOW_WIDTH - 16 - GetTextSpacing(text4), 16, text4, RGB(255, 255, 255));
-		gTS.flags |= 0x40;
+		//gTS.flags |= 0x40;
 		if(gDebug.FastForwardTimer++ % 5 == 0)
 		{
 			glEnd2D();

@@ -1,9 +1,9 @@
 
 ====for release 0.4
 
-increase org, tsc buffer size, pxm malloc
-
 read start map from file
+
+write sd card readme
 
 Release on gitlab, change game subtitle
 
@@ -45,6 +45,8 @@ ending config black bar
 add mim and phy
 
 mp3 maxmod xm
+
+Pxtone music playback
 
 
 Properly decode png for 4 and 16 color
