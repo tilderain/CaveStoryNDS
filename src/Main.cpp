@@ -150,10 +150,16 @@ int main(int argc, char *argv[])
 	//Get path of the data folder
 #ifdef READ_FROM_SD
 	strcpy(gDataPath, "fat:/datacse2");
-#elif NITROFS
+#endif
+
+#ifdef NITROFS
 	strcpy(gDataPath, "nitro:/datacse2");
-#else
+#endif
+
+#ifndef READ_FRON_SD //fopen embedded files
+#ifndef NITROFS //Why elif not work??
 	strcpy(gDataPath, "datacse2");
+#endif
 #endif
 	
 	//Load configuration
