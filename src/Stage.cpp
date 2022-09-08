@@ -235,6 +235,13 @@ BOOL LoadStageTable()
 	return FALSE;
 }
 
+void Waitfor1second(void)
+{
+	for(int i = 0;i<60;i++)
+	{
+		swiWaitForVBlank();
+	}
+}
 
 BOOL TransferStage(int no, int w, int x, int y)
 {
@@ -253,31 +260,64 @@ BOOL TransferStage(int no, int w, int x, int y)
 	// Load tileset
 	sprintf(path, "%s/Prt%s", path_dir, gTMT[no].parts);
 	if (!ReloadBitmap_File(path, SURFACE_ID_LEVEL_TILESET))
-		bError = TRUE;
+	{
+		Waitfor1second();
+		//return FALSE;
+	}
+
 	
 	sprintf(path, "%s/%s.pxa", path_dir, gTMT[no].parts);
 	if (!LoadAttributeData(path))
-		bError = TRUE;
+	{
+		ErrorInitConsole();
+		printf("Failed to load pxa %s", path);
+		Waitfor1second();
+		//return FALSE;
+	}
+
 
 	// Load tilemap
 	sprintf(path, "%s/%s.pxm", path_dir, gTMT[no].map);
 	if (!LoadMapData2(path))
-		bError = TRUE;
+	{
+		ErrorInitConsole();
+		printf("Failed to load mapdata %s\n", path);
+		Waitfor1second();
+		//return FALSE;
+	}
+
 
 	// Load NPCs
 	sprintf(path, "%s/%s.pxe", path_dir, gTMT[no].map);
 	if (!LoadEvent(path))
-		bError = TRUE;
+	{
+		ErrorInitConsole();
+		printf("Failed to load event %s\n", path);
+		Waitfor1second();
+		//return FALSE;
+	}
+
 
 	// Load script
 	sprintf(path, "%s/%s.tsc", path_dir, gTMT[no].map);
 	if (!LoadTextScript_Stage(path))
-		bError = TRUE;
+	{
+		ErrorInitConsole();
+		printf("Failed to load textscript %s\n", path);
+		Waitfor1second();
+		//return FALSE;
+	}
+
 
 	// Load background
 	sprintf(path, "%s", gTMT[no].back);
 	if (!InitBack(path, gTMT[no].bkType))
-		bError = TRUE;
+	{
+		ErrorInitConsole();
+		printf("Failed to load bg %s\n", path);
+		Waitfor1second();
+		//return FALSE;
+	}
 
 	// Get path
 	strcpy(path_dir, "Npc");
@@ -285,14 +325,22 @@ BOOL TransferStage(int no, int w, int x, int y)
 	// Load NPC sprite sheets
 	sprintf(path, "%s/Npc%s", path_dir, gTMT[no].npc);
 	if (!ReloadBitmap_File(path, SURFACE_ID_LEVEL_SPRITESET_1))
-		bError = TRUE;
+	{
+		Waitfor1second();
+		//return FALSE;
+	}
+
 
 	sprintf(path, "%s/Npc%s", path_dir, gTMT[no].boss);
 	if (!ReloadBitmap_File(path, SURFACE_ID_LEVEL_SPRITESET_2))
-		bError = TRUE;
+	{
+		Waitfor1second();
+		//return FALSE;
+	}
 
-	if (bError)
-		return FALSE;
+
+	//if (bError)
+	//return FALSE;
 
 	// Load map name
 	ReadyMapName(gTMT[no].name);

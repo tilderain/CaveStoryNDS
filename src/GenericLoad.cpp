@@ -17,6 +17,8 @@
 #include "PixTone.h"
 #include "Sound.h"
 
+#include "Stage.h"
+
 static const PIXTONEPARAMETER gPtpTable[139] =
 	{
 		{1, 5000, {5, 10.0, 32, 0}, {4, 4.0, 32, 0}, {0, 0.0, 63, 0}, 63, 6, 63, 45, 8, 119, 46},
@@ -165,34 +167,35 @@ bool LoadGenericData()
 	printf("loading generic data\n");
 	bool bError = false;
 	if (!MakeSurface_File("MyChar2", SURFACE_ID_MY_CHAR2))
-		bError = true;	
+		Waitfor1second();
 	if (!MakeSurface_File("MyChar", SURFACE_ID_MY_CHAR))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("ArmsImage", SURFACE_ID_ARMS_IMAGE))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Arms", SURFACE_ID_ARMS))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("ItemImage", SURFACE_ID_ITEM_IMAGE))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("StageImage", SURFACE_ID_STAGE_ITEM))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Npc/NpcSym", SURFACE_ID_NPC_SYM))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Npc/NpcRegu", SURFACE_ID_NPC_REGU))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("TextBox", SURFACE_ID_TEXT_BOX))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Caret", SURFACE_ID_CARET))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Bullet", SURFACE_ID_BULLET))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Face", SURFACE_ID_FACE))
-		bError = true;
+		Waitfor1second();
 	if (!MakeSurface_File("Fade", SURFACE_ID_FADE))
-		bError = true;
+		Waitfor1second();
 
 	if (bError)
 	{
+		Waitfor1second();
 		return false;
 	}
 	else
