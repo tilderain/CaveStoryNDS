@@ -79,3 +79,5 @@ resolve.pl
 /release*
 
 lzss
+batchpxttoraw
+batchpxttoraw.exe
