@@ -417,6 +417,37 @@ const char *gMusicTable[] = {
 	
 };
 
+#include "./pxtone/pxtnService.h"
+#include "./pxtone/pxtnError.h"
+
+#include "Main.h"
+
+
+bool LoadPxtone(const char *name)
+{
+	if(!gPxtoneInited) return false;
+	pxtnERR        pxtn_err = pxtnERR_VOID;
+	char path[255] = "";
+	sprintf(path, "%s/ORG/%s.ptcop", gDataPath, name);
+	//printf("Try load ptcop %s\n", path);
+	if(_load_ptcop( pxtn, path, &pxtn_err ))
+	{
+
+		int32_t smp_total = pxtn->moo_get_total_sample();
+
+		pxtnVOMITPREPARATION prep = {0};
+		prep.flags          |= pxtnVOMITPREPFLAG_loop;
+		prep.start_pos_float =     0;
+		prep.master_volume   = 0.80f;
+
+		pxtn->moo_preparation( &prep );
+
+		printf("Loaded ptcop %s\n", name);
+		return true;
+	}
+	return false;
+}
+
 void ChangeMusic(MusicID no)
 {
 	if (no != MUS_SILENCE && no == gMusicNo)
@@ -427,13 +458,24 @@ void ChangeMusic(MusicID no)
 	gOldNo = gMusicNo;
 	StopOrganyaMusic();
 
-	// Load .org
-	LoadOrganya(gMusicTable[no]);
+	pxtn->moo_set_fade(-1, 0.1, false);
 
-	// Reset position, volume, and then play the song
-	ChangeOrganyaVolume(100);
-	SetOrganyaPosition(0);
-	PlayOrganyaMusic();
+	//try load ptcop
+	if(LoadPxtone(gMusicTable[no]))
+	{
+
+	}
+	else
+	{
+		// Load .org
+		LoadOrganya(gMusicTable[no]);
+
+		// Reset position, volume, and then play the song
+		ChangeOrganyaVolume(100);
+		SetOrganyaPosition(0);
+		PlayOrganyaMusic();
+	}
+
 	gMusicNo = no;
 }
 
@@ -442,12 +484,24 @@ void ReCallMusic(void)
 	// Stop old song
 	StopOrganyaMusic();
 
-	// Load .org that was playing before
-	LoadOrganya(gMusicTable[gOldNo]);
+	pxtn->moo_set_fade(-1, 0.1, false);
 
-	// Reset position, volume, and then play the song
-	SetOrganyaPosition(gOldPos);
-	ChangeOrganyaVolume(100);
-	PlayOrganyaMusic();
+	//try load ptcop
+	if(LoadPxtone(gMusicTable[gOldNo]))
+	{
+
+	}
+	else
+	{
+		// Load .org that was playing before
+		LoadOrganya(gMusicTable[gOldNo]);
+
+		// Reset position, volume, and then play the song
+		SetOrganyaPosition(gOldPos);
+		ChangeOrganyaVolume(100);
+		PlayOrganyaMusic();
+	}
+
+
 	gMusicNo = gOldNo;
 }

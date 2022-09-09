@@ -66,6 +66,8 @@ int gCardPopTimer = 0;
 
 int gLoadingProgress = 0;
 
+bool gPxtoneInited = false;
+
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
 
@@ -74,6 +76,59 @@ static const char *lpWindowName = "洞窟物語";	// "Cave Story"
 #else
 static const char *lpWindowName = "Cave Story ~ Doukutsu Monogatari";
 #endif
+
+#include "./pxtone/pxtnService.h"
+#include "./pxtone/pxtnError.h"
+
+pxtnService*   pxtn     = NULL ;
+
+#define _CHANNEL_NUM           1
+#define _SAMPLE_PER_SECOND 11025
+#define _BUFFER_PER_SEC    (0.3f)
+
+void Timer_1ms()
+{
+	int p_req_size = 22*4;
+	pxtn->Moo( NULL, p_req_size);
+}
+
+
+bool _load_ptcop( pxtnService* pxtn, const char* path_src, pxtnERR* p_pxtn_err )
+{
+	bool           b_ret     = false;
+	pxtnDescriptor desc;
+	pxtnERR        pxtn_err  = pxtnERR_VOID;
+	FILE*          fp        = NULL;
+	int32_t        event_num =    0;
+
+	if( !( fp = fopen( path_src, "rb" ) ) ) goto term;
+	if( !desc.set_file_r( fp ) ) goto term;
+
+	pxtn_err = pxtn->read       ( &desc ); if( pxtn_err != pxtnOK ) goto term;
+	pxtn_err = pxtn->tones_ready(       ); if( pxtn_err != pxtnOK ) goto term;
+
+	b_ret = true;
+term:
+
+	if( fp     ) fclose( fp );
+	if( !b_ret ) pxtn->evels->Release();
+
+	if( p_pxtn_err ) *p_pxtn_err = pxtn_err;
+
+	return b_ret;
+}
+
+static bool _sampling_func( void *user, void *buf, int *p_res_size, int *p_req_size )
+{
+	pxtnService* pxtn = static_cast<pxtnService*>( user );
+
+	if( !pxtn->Moo( buf, *p_req_size ) ) return false;
+	if( p_res_size ) *p_res_size = *p_req_size;
+
+	return true;
+}
+
+
 
 
 void card_line_irq()
@@ -227,10 +282,37 @@ int main(int argc, char *argv[])
 	CortBox(&clip_rect, 0x000000);
 	PutBitmap3(&clip_rect, (WINDOW_WIDTH - 64) / 2, (WINDOW_HEIGHT - 8) / 2, &loading_rect, SURFACE_ID_LOADING);
 	
-	
 	//Draw to screen
 	if (Flip_SystemTask())
 	{
+
+
+		gLoadingProgress = 2;
+		PutLoadingProgress();
+		//pxtone stuff
+
+		// INIT PXTONE.
+		printf("initing pxtone\n");
+		pxtnERR        pxtn_err = pxtnERR_VOID;
+		pxtn = new pxtnService();
+		pxtn_err = pxtn->init();
+		pxtn->set_destination_quality( _CHANNEL_NUM, _SAMPLE_PER_SECOND );
+
+		printf("pxtone INIT\n");
+
+		irqDisable(IRQ_TIMER2);
+		// re-set timer2
+		TIMER2_CR = 0;
+		TIMER2_DATA = TIMER_FREQ_256(250); //1000ms
+		TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
+		irqEnable(IRQ_TIMER2);
+		irqSet(IRQ_TIMER2, Timer_1ms);
+
+		cpuStartTiming(0);
+
+		gPxtoneInited = true;
+
+
 		//Initialize sound
 		InitDirectSound();
 		

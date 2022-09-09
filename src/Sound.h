@@ -90,6 +90,9 @@ enum SoundMode
 	SOUND_MODE_PLAY = 1
 };
 
+#define NUM_CHANNELS 16
+extern int channelStates[NUM_CHANNELS];
+
 extern SOUNDBUFFER* lpSECONDARYBUFFER[SE_MAX];
 
 extern BOOL audio_backend_initialised;
@@ -104,3 +107,4 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no);
 void Vblankhandler(void);
 void killAllSounds(void);
 BOOL ReadSound(int no);
+s8 getFreeChannel(void);

@@ -68,7 +68,7 @@ void soundeDataHandler(int bytes, void *user_data) {
 			SCHANNEL_SOURCE(channel) = (u32)msg.SoundPlay.data;
 			SCHANNEL_REPEAT_POINT(channel) = msg.SoundPlay.loopPoint;
 			SCHANNEL_LENGTH(channel) = msg.SoundPlay.dataSize;
-			SCHANNEL_TIMER(channel) = SOUND_FREQ(msg.SoundPlay.freq);
+			SCHANNEL_TIMER(channel) = msg.SoundPlay.freq;
 			SCHANNEL_CR(channel) = SCHANNEL_ENABLE | SOUND_VOL(msg.SoundPlay.volume) | SOUND_PAN(msg.SoundPlay.pan) | (msg.SoundPlay.format << 29) | (msg.SoundPlay.loop ? SOUND_REPEAT : SOUND_ONE_SHOT);
 	} 
 }
@@ -102,7 +102,7 @@ void soundeCommandHandler(u32 command, void* userdata) {
 		break;
 
 	case SOUND_SET_FREQ:
-		SCHANNEL_TIMER(channel) = SOUND_FREQ(data);
+		SCHANNEL_TIMER(channel) = data;
 		break;
 
 	case SOUND_SET_WAVEDUTY:

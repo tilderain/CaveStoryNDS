@@ -57,10 +57,7 @@
 
 bool gFastForwarding = false;
 
-void Timer_1ms()
-{
 
-}
 
 struct VramSlot
 {
@@ -852,15 +849,6 @@ BOOL StartDirectDraw()
 	}
 
 #endif
-
-	irqDisable(IRQ_TIMER2);
-	// re-set timer2
-	TIMER2_CR = 0;
-	TIMER2_DATA = TIMER_FREQ_256(1000); //1000ms
-	TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
-	irqEnable(IRQ_TIMER2);
-
-	cpuStartTiming(0);
 
 	return TRUE;
 }

@@ -27,9 +27,16 @@ extern CONFIG_BINDING bindings[BINDING_TOTAL];
 extern bool gIsCardPopped;
 extern int gCardPopTimer;
 
+extern bool gPxtoneInited;
+
+#include "./pxtone/pxtnService.h"
+extern pxtnService*   pxtn;
+
 void PutFramePerSecound(void);
 unsigned long GetFramePerSecound(void);
 
 void PutLoadingProgress();
 
 BOOL SystemTask(void);
+
+bool _load_ptcop( pxtnService* pxtn, const char* path_src, pxtnERR* p_pxtn_err );

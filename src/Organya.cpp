@@ -658,6 +658,7 @@ void StopOrganyaMusic()
 
 void SetOrganyaFadeout()
 {
+	pxtn->moo_set_fade(-1, 2, true);
 	bFadeout = true;
 }
 

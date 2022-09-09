@@ -56,9 +56,13 @@ equivalents.
 #define clamp(x, y, z) ((x > z) ? z : (x < y) ? y : x)
 
 //static long mixer_buffer[SND_BUFFERSIZE * 2];
-#define NUM_CHANNELS 16
 
-SOUNDBUFFER* channelStates[NUM_CHANNELS] = {NULL};
+#define SOUND_FREQ(n)	((-0x1000000 / (n)))
+
+
+
+int channelStates[NUM_CHANNELS] = {NULL};
+SOUNDBUFFER* sChannelStates[NUM_CHANNELS] = {NULL};
 
 s8 getFreeChannel(void)
 {
@@ -84,7 +88,7 @@ void updateChannelStates(void)
 	//if a one-shot sound has passed all of its samples already, make channelStates[channel] free
 	for (int i = 0; i < NUM_CHANNELS; i++)
 	{
-		SOUNDBUFFER *sound = channelStates[i];
+		SOUNDBUFFER *sound = sChannelStates[i];
 		if(sound && sound->playing && sound->looping == false)
 		{
 			if(sound->timer++ > sound->endTimer) // samples in a frame plus a bit
@@ -92,6 +96,7 @@ void updateChannelStates(void)
 				// TODO: give organbuffer priority
 				sound->playing = false;
 				channelStates[sound->channelId] = NULL;
+				sChannelStates[sound->channelId] = NULL;
 				soundKill(sound->channelId);
 				sound->channelId = -1;
 				sound->timer = 0;
@@ -193,7 +198,7 @@ void SOUNDBUFFER::SetFrequency(uint32_t dwFrequency)
 	frequency = dwFrequency;
 	//SCHANNEL_TIMER(channelId) = SOUND_FREQ(frequency);
 	if (channelId == -1) return;
-	soundSetFreq(channelId, (u16)frequency);
+	soundSetFreq(channelId, (u16)SOUND_FREQ(frequency));
 }
 
 float MillibelToVolume(int32_t lVolume)
@@ -235,6 +240,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 		//org for some reason sends a play message without looping for stopping..
 		//so it is better to just cut it off here rather than start a new sound
 		soundKill(channelId);
+		sChannelStates[channelId] = NULL;
 		channelStates[channelId] = NULL;
 		channelId = -1;
 		return;
@@ -245,11 +251,12 @@ void SOUNDBUFFER::Play(bool bLooping)
 	}
 
 	if(channelId == -1) return;
-	channelStates[channelId] = this;
+	sChannelStates[channelId] = this;
+	channelStates[channelId] = 1;
 
 	//printf() pan
 	SoundFormat format = (adpcm ? SoundFormat_ADPCM : SoundFormat_8Bit);
-	soundPlaySampleC(data, format, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
+	soundPlaySampleC(data, format, (u32)size, (u16)SOUND_FREQ(frequency), (u8)volume, (u8)pan, looping, (u16)0, channelId);
 	timer = 0;
 	endTimer = size * (adpcm?2:1) / (frequency / 63);
 }
@@ -259,6 +266,7 @@ void SOUNDBUFFER::Stop()
 	playing = false;
 	if(channelId != -1) soundKill(channelId);
 	channelStates[channelId] = NULL;
+	sChannelStates[channelId] = NULL;
 	channelId = -1;
 }
 
