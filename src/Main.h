@@ -19,6 +19,8 @@ extern BOOL gb50Fps;
 extern BOOL gbTransparency;
 extern BOOL gbAlternateDrams;
 
+extern int gLoadingProgress;
+
 extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];
 
@@ -27,5 +29,7 @@ extern int gCardPopTimer;
 
 void PutFramePerSecound(void);
 unsigned long GetFramePerSecound(void);
+
+void PutLoadingProgress();
 
 BOOL SystemTask(void);

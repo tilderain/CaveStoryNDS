@@ -163,7 +163,11 @@ void PutStage_Back(int fx, int fy)
 			int offset = (j * gMap.width) + i;
 			int atrb = GetAttribute(i, j);
 
+#ifndef READ_FROM_SD
 			if (atrb >= 0x20 || atrb == 0)
+#else
+			if (atrb >= 0x20)
+#endif
 				continue;
 
 			// Draw tile

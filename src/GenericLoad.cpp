@@ -19,6 +19,8 @@
 
 #include "Stage.h"
 
+#include "Main.h"
+
 static const PIXTONEPARAMETER gPtpTable[139] =
 	{
 		{1, 5000, {5, 10.0, 32, 0}, {4, 4.0, 32, 0}, {0, 0.0, 63, 0}, 63, 6, 63, 45, 8, 119, 46},
@@ -172,12 +174,16 @@ bool LoadGenericData()
 		Waitfor1second();
 	if (!MakeSurface_File("ArmsImage", SURFACE_ID_ARMS_IMAGE))
 		Waitfor1second();
+	gLoadingProgress = 5;
+	PutLoadingProgress();
 	if (!MakeSurface_File("Arms", SURFACE_ID_ARMS))
 		Waitfor1second();
 	if (!MakeSurface_File("ItemImage", SURFACE_ID_ITEM_IMAGE))
 		Waitfor1second();
 	if (!MakeSurface_File("StageImage", SURFACE_ID_STAGE_ITEM))
 		Waitfor1second();
+	gLoadingProgress = 10;
+	PutLoadingProgress();
 	if (!MakeSurface_File("Npc/NpcSym", SURFACE_ID_NPC_SYM))
 		Waitfor1second();
 	if (!MakeSurface_File("Npc/NpcRegu", SURFACE_ID_NPC_REGU))
@@ -192,6 +198,9 @@ bool LoadGenericData()
 		Waitfor1second();
 	if (!MakeSurface_File("Fade", SURFACE_ID_FADE))
 		Waitfor1second();
+
+	gLoadingProgress = 25;
+	PutLoadingProgress();
 
 	if (bError)
 	{
@@ -254,6 +263,8 @@ bool LoadGenericData()
 		printf("done\n");
 		printf("pxt creation (please wait)\n");
 
+		gLoadingProgress = 35;
+		PutLoadingProgress();
 		ReadSound(32);
 		ReadSound(33);
 		ReadSound(34);
@@ -273,6 +284,8 @@ bool LoadGenericData()
 		ReadSound(35);
 		ReadSound(39);
 		ReadSound(52);
+		gLoadingProgress = 50;
+		PutLoadingProgress();
 		ReadSound(53);
 		ReadSound(70);
 		ReadSound(71);
@@ -317,6 +330,8 @@ bool LoadGenericData()
 		ReadSound(150);
 		ReadSound(151);
 		ReadSound(152);
+		gLoadingProgress = 75;
+		PutLoadingProgress();
 		ReadSound(153);
 		ReadSound(154);
 		ReadSound(155);
@@ -342,7 +357,8 @@ bool LoadGenericData()
 		ReadSound(65);
 		ReadSound(3);
 		ReadSound(6);
-
+		gLoadingProgress = 90;
+		PutLoadingProgress();
 		ReadSound(158);
 		ReadSound(159);
 		ReadSound(160);
@@ -352,6 +368,9 @@ bool LoadGenericData()
 
 		//		sprintf(&v1, "PixTone = %d byte", pixtone_bytes);
 		printf("done\n");
+
+		gLoadingProgress = 100;
+		PutLoadingProgress();
 		return true;
 	}
 }

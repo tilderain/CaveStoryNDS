@@ -64,6 +64,8 @@ static int windowHeight;
 bool gIsCardPopped = false;
 int gCardPopTimer = 0;
 
+int gLoadingProgress = 0;
+
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
 
@@ -82,6 +84,21 @@ void card_line_irq()
 		gIsCardPopped = true;
 		gCardPopTimer = 300;
 	}
+}
+
+void PutLoadingProgress()
+{
+
+	RECT loading_rect = {0, 0, 64, 8};
+	RECT clip_rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+	PutBitmap3(&clip_rect, (WINDOW_WIDTH - 64) / 2, (WINDOW_HEIGHT - 8) / 2, &loading_rect, SURFACE_ID_LOADING);
+
+	int baseW = (WINDOW_WIDTH - 64) / 2 - 5;
+	int baseH = ((WINDOW_HEIGHT - 8) / 2) + 25;
+	
+	glBoxFilled(baseW, baseH, baseW + (gLoadingProgress / 1.38), baseH, RGB15(50, 255, 50));
+
+	Flip_SystemTask();
 }
 
 //Framerate stuff
