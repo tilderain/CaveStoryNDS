@@ -56,10 +56,15 @@
 #include "Multi.h"
 #include "nifi.h"
 
+#include "fopen.h"
+
 int g_GameFlags;
 int gCounter;
 
 int gCursorPos;
+
+start_map_info intro_map = {72, 100, 3, 3};
+start_map_info start_map = {13, 200, 10, 8};
 
 int Random(int min, int max)
 {
@@ -133,7 +138,7 @@ int ModeOpening(void)
 	InitFlash();
 	InitBossLife();
 	ChangeMusic(MUS_SILENCE);
-	TransferStage(72, 100, 3, 3);
+	TransferStage(intro_map.stage, intro_map.event, intro_map.x, intro_map.y);
 	SetFrameTargetMyChar(16);
 	SetFadeMask();
 
@@ -877,6 +882,14 @@ int ModeAction(void)
 	return 0;
 }
 
+void inputLine(FILE *fp, start_map_info* info) 
+{  
+    fscanf(fp, "%d %d %d %d", &info->stage, &info->event, &info->x, &info->y);
+	//printf("i read these %d %d %d %d\n", info->stage, info->event, info->x, info->y);
+	//Waitfor1second();
+
+}
+
 BOOL Game(void)
 {
 	int mode;
@@ -906,6 +919,23 @@ BOOL Game(void)
 	InitMapData2();
 	InitCreditScript();
 
+#ifdef READ_FROM_SD
+	sprintf(path, "%s/mapstart.txt", gDataPath);
+
+	FILE_e* fp = fopen_embed(path, "rb");
+	if(fp != NULL)
+		inputLine(fp, &start_map);
+
+	fclose_embed(fp);
+
+	sprintf(path, "%s/mapintro.txt", gDataPath);
+
+	fp = fopen_embed(path, "rb");
+	if(fp != NULL)
+		inputLine(fp, &intro_map);
+
+	fclose_embed(fp);
+#endif
 	mode = 1;
 	while (mode)
 	{

@@ -33,6 +33,17 @@ enum GameFlagsValues
 	// To be continued
 };
 
+struct start_map_info
+{
+	int stage;
+	int event;
+	int x;
+	int y;
+};
+
+extern start_map_info start_map;
+extern start_map_info intro_map;
+
 extern int g_GameFlags;
 extern int gCounter;
 
