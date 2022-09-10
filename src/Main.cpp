@@ -293,7 +293,14 @@ bool usebasepath = true;
 		gLoadingProgress = 2;
 		PutLoadingProgress();
 
-#ifdef READ_WITH_SD
+		irqDisable(IRQ_TIMER2);
+		// re-set timer2
+		TIMER2_CR = 0;
+		TIMER2_DATA = TIMER_FREQ_256(250); //1000ms
+		TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
+		irqEnable(IRQ_TIMER2);
+
+#ifdef READ_FROM_SD
 		//pxtone stuff
 
 		// INIT PXTONE.
@@ -305,18 +312,14 @@ bool usebasepath = true;
 
 		printf("pxtone INIT\n");
 
-		irqDisable(IRQ_TIMER2);
-		// re-set timer2
-		TIMER2_CR = 0;
-		TIMER2_DATA = TIMER_FREQ_256(250); //1000ms
-		TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
-		irqEnable(IRQ_TIMER2);
+		gPxtoneInited = 1;
 		irqSet(IRQ_TIMER2, Timer_1ms);
+#endif
+
+
+
 
 		cpuStartTiming(0);
-
-		gPxtoneInited = 1;
-#endif
 
 		//Initialize sound
 		InitDirectSound();
