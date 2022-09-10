@@ -220,7 +220,7 @@ void pxtnUnit::Tone_Sample( bool b_mute_by_unit, int32_t ch_num, int32_t  time_p
 					p_vt->channelId = getFreeChannel();
 
 					if(p_vt->channelId == -1) continue;
-					printf("new sound wooo   %d\n", p_vt->channelId);
+					//printf("new sound wooo   %d\n", p_vt->channelId);
 					channelStates[p_vt->channelId] = 1;
 
 					u8 volume = _v_VELOCITY * _v_VOLUME / 128;

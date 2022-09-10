@@ -27,7 +27,7 @@ extern CONFIG_BINDING bindings[BINDING_TOTAL];
 extern bool gIsCardPopped;
 extern int gCardPopTimer;
 
-extern bool gPxtoneInited;
+extern int gPxtoneInited;
 
 #include "./pxtone/pxtnService.h"
 extern pxtnService*   pxtn;

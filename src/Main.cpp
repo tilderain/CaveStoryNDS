@@ -66,7 +66,7 @@ int gCardPopTimer = 0;
 
 int gLoadingProgress = 0;
 
-bool gPxtoneInited = false;
+int gPxtoneInited = 0;
 
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
@@ -218,22 +218,22 @@ int main(int argc, char *argv[])
 	//fifoInit();
 	
 	strcpy(gModulePath, "/");
-	
+bool usebasepath = true;
 	//Get path of the data folder
 #ifdef READ_FROM_SD
 	strcpy(gDataPath, "fat:/datacse2");
+	usebasepath = false;
 #endif
 
 #ifdef NITROFS
 	strcpy(gDataPath, "nitro:/datacse2");
+	usebasepath = false;
 #endif
 
-#ifndef READ_FRON_SD //fopen embedded files
-#ifndef NITROFS //Why elif not work??
-	strcpy(gDataPath, "datacse2");
-#endif
-#endif
-	
+	if(usebasepath)
+		strcpy(gDataPath, "datacse2");
+
+
 	//Load configuration
 	
 	if (!LoadConfigData(&conf))
@@ -282,6 +282,9 @@ int main(int argc, char *argv[])
 	CortBox(&clip_rect, 0x000000);
 	PutBitmap3(&clip_rect, (WINDOW_WIDTH - 64) / 2, (WINDOW_HEIGHT - 8) / 2, &loading_rect, SURFACE_ID_LOADING);
 	
+
+	printf("gDataPath is %s\n", gDataPath);
+
 	//Draw to screen
 	if (Flip_SystemTask())
 	{
@@ -289,6 +292,8 @@ int main(int argc, char *argv[])
 
 		gLoadingProgress = 2;
 		PutLoadingProgress();
+
+#ifdef READ_WITH_SD
 		//pxtone stuff
 
 		// INIT PXTONE.
@@ -310,8 +315,8 @@ int main(int argc, char *argv[])
 
 		cpuStartTiming(0);
 
-		gPxtoneInited = true;
-
+		gPxtoneInited = 1;
+#endif
 
 		//Initialize sound
 		InitDirectSound();

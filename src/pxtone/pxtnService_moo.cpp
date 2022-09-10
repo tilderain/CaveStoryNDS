@@ -4,6 +4,8 @@
 #include "./pxtnMem.h"
 #include "./pxtnService.h"
 
+#include "../Main.h"
+
 void pxtnService::_moo_constructor()
 {
 	_moo_b_init         = false;
@@ -258,7 +260,8 @@ bool pxtnService::_moo_PXTONE_SAMPLE( int smp_num )
 		}
 		else
 		{
-			_moo_InitUnitTone();
+			if(gPxtoneInited == 2)
+				_moo_InitUnitTone();
 			return false;
 		}
 	}
@@ -320,7 +323,7 @@ bool pxtnService::moo_set_fade( int32_t  fade, float sec, bool half)
 
 	_moo_fade_half = half;
 
-	printf("fade\n");
+	//printf("fade\n");
 	_moo_fade_max = (int32_t)( (float)_dst_sps * sec ) >> 8;
 	if(      fade < 0 ){ _moo_fade_fade  = -1; _moo_fade_count = _moo_fade_max << 8; } // out
 	else if( fade > 0 ){ _moo_fade_fade  =  1; _moo_fade_count =  0;                 } // in

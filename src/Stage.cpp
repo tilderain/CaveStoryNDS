@@ -443,6 +443,7 @@ bool LoadPxtone(const char *name)
 		pxtn->moo_preparation( &prep );
 
 		printf("Loaded ptcop %s\n", name);
+		gPxtoneInited = 2;
 		return true;
 	}
 	return false;
