@@ -40,3 +40,5 @@ void PutLoadingProgress();
 BOOL SystemTask(void);
 
 bool _load_ptcop( pxtnService* pxtn, const char* path_src, pxtnERR* p_pxtn_err );
+
+void Timer_1ms();

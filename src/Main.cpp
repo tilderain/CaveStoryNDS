@@ -285,6 +285,18 @@ bool usebasepath = true;
 
 	printf("gDataPath is %s\n", gDataPath);
 
+	//pxtone timer and 50 fps timer
+	irqDisable(IRQ_TIMER2);
+	// re-set timer2
+	TIMER2_CR = 0;
+	TIMER2_DATA = TIMER_FREQ_256(250); //1000ms
+	TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
+	irqEnable(IRQ_TIMER2);
+	irqSet(IRQ_TIMER2, Timer_1ms);
+
+	cpuStartTiming(0);
+
+
 	//Draw to screen
 	if (Flip_SystemTask())
 	{
@@ -292,14 +304,7 @@ bool usebasepath = true;
 
 		gLoadingProgress = 2;
 		PutLoadingProgress();
-
-		irqDisable(IRQ_TIMER2);
-		// re-set timer2
-		TIMER2_CR = 0;
-		TIMER2_DATA = TIMER_FREQ_256(250); //1000ms
-		TIMER2_CR = TIMER_ENABLE | ClockDivider_256 | TIMER_IRQ_REQ; 
-		irqEnable(IRQ_TIMER2);
-
+		
 #ifdef READ_FROM_SD
 		//pxtone stuff
 
@@ -313,13 +318,8 @@ bool usebasepath = true;
 		printf("pxtone INIT\n");
 
 		gPxtoneInited = 1;
-		irqSet(IRQ_TIMER2, Timer_1ms);
+
 #endif
-
-
-
-
-		cpuStartTiming(0);
 
 		//Initialize sound
 		InitDirectSound();
