@@ -122,7 +122,11 @@ Arisutora, for MelonDS and the NiFi debugging support.
 
 Ravenworks, who took on the Cave Story DS port in the first place, got destroyed by a publisher in the process, and inspired me 
 
+<<<<<<< HEAD
 to create the DS version that the people deserve.
+=======
+	to create the DS version that the people deserve.
+>>>>>>> acda353b5a27ff3e9f893d21150c5c2ae408cb30
 
 And Pixel, who created this wonderful thing that inspired a generation of gamers.
 
