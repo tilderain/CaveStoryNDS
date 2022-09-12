@@ -1,5 +1,9 @@
 # Cave Story DS
+<img src="/preview.jpg">
+
 CSE2 (for Nintendo DS)
+
+
 
 ## Table of Contents
 
@@ -53,6 +57,8 @@ The org files are already compressed.
 
 By default sounds are loaded as .swav. You can get waveconv.exe from the official Nintendo DS SDK to convert wavs into ADPCM.
 
+Tile 0 is not rendered by default. Check PutStage_Back() to change it.
+
 
 ## Licensing
 
@@ -71,36 +77,54 @@ BMP loading code is taken from Nitro Engine (MIT license). (https://github.com/A
 ## Thanks to
 
 The CSE2 Decompilation Project, by CuckyDev and Clownacy
-	(and our optimization mascot GabrielRavier)
-	The unauthorized source code recreation that lets us do weird things to this game.
+
+(and our optimization mascot GabrielRavier)
+
+The unauthorized source code recreation that lets us do weird things to this game.
+
 CuckyDev, who helped me personally by making the font and file loading code, helped with the sound code,
-	and made this port too funny to make.
+
+and made this port too funny to make.
+
 Lusty_ from GBATemp, who helped test and was able to help me figure out the compatibility issue with flashcarts.
+
 Random people in the CSE2 Discord, who tried the port in its early stages and helped me discover that I'm not crazy for making it.
 
 Aeon Genesis: Shih Tzu (TranslateDoggie), and GideonZhi,
-	whose expert translation and ROM hacking skills brought Cave Story to a boatload of people.
+
+whose expert translation and ROM hacking skills brought Cave Story to a boatload of people.
 
 devKitPro, the homebrew toolchain that lets us make games for Nintendo consoles without anyone's permission.
+
 Martin Korth, for making N0$GBA and its fantastic debugging suite, as well as the GBA/DS/3DS documentation that shaped the scene.
 
 The DeSmuME developers for making an emulator with GDB debugging support making this port a lot less of a pain in the ass to develop.
+
 gl2D- by Relminator, for making a pretty good 3D library saving my headaches looking at the documentation.
 
 lvandeve, for the lodepng library that lets me painlessly load pngs.
+
 and AntonioND, for the great BMP loading from Nitro Engine as well.
+
 mackron, for the sexy dr_wav loading library.
+
 graphitemaster, for the sleek incbin file embed library.
+
 CUE, for the sly NDS lzss compression library.
 
 Drenn1, for the WiFi code from GameYob, and the forum posts on the devKitPro forums that probably let me avoid
-	a dozen hours of debugging the sound.
+
+a dozen hours of debugging the sound.
+
 huiminghao, for the WiFi code from NesDS.
+
 Arisutora, for MelonDS and the NiFi debugging support.
 
 Ravenworks, who took on the Cave Story DS port in the first place, got destroyed by a publisher in the process, and inspired me 
+
 	to create the DS version that the people deserve.
 
 And Pixel, who created this wonderful thing that inspired a generation of gamers.
+
 Thank you Pixel!
 
