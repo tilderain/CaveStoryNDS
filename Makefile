@@ -25,7 +25,7 @@ SPRITES		:=  sprites
 
 GAME_TITLE := Cave Story DS ~ CSE2
 GAME_SUBTITLE1 := v0.4
-GAME_SUBTITLE2 := github.com/tilderain/CaveStoryDS
+GAME_SUBTITLE2 := github.com/tilderain/CaveStoryNDS
 GAME_ICON := $(CURDIR)/../icon.bmp
 
 

@@ -13,8 +13,8 @@ Controls:
 	R: Fast Forward during cutscenes
 
 Additional notes:
-	On 3DS or DSi you will need the DSi version to run. (if you're on a 3DS you can also play Clownacy's 3DS port)
-	If it fails to run, you can try launching it with nds-hb-menu 0.5.0 or TWiLight Menu.
+	On 3DS or DSi you will need the DSi version to run.
+	If it fails to run, you can try launching it with TWiLight Menu++, or nds-hb-menu 0.5.0.
 
 	Config.dat and Profile.dat will be saved to the root of the SD card.
 	Profile.dat is compatible with freeware Cave Story.
@@ -31,25 +31,6 @@ Known issues:
 	The game will slow down in the Plantation and Sand Zone when hitting a missile or using the Spur.
 	Performance will lower in multiplayer when using the Spur or missiles.
 	There may be a loud noise during stage transition.
-
-SD card version information:
-
-	as an alternative version to run, or mainly to mod.
-	As of now there is only support for English mods.
-
-	Grab a copy of Booster's Lab 0.5.0.0 and export a stage.tbl.
-
-	For TSC, you can use the <MIM and <PHY commands.
-
-	You can read palettized bmps, compatible with freeware Cave Story. 
-	NpcGuest is in the 2nd 256 color slot.
-	the 0 index color is transparent.
-
-	To read sounds, place the corresponding sound as decimal
-	It will attempt to read the following formats in order: 
-		8-bit 22050hz unsigned WAV audio (as ".wav")
-		Raw 8-bit 22050hz signed audio (as ".raw")
-		ADPCM sound using Nintendo's waveconv.exe, from the NDS SDK (as ".swav")
 
 Thanks to:
 	The CSE2 Decompilation Project, by CuckyDev and Clownacy
@@ -90,7 +71,7 @@ Changelog:
 
 v0.4:
 	This version adds the option of the SD card ROM, which supports basic mods.
-	See above for instructions on how to use it.
+	See the SD card folder readme for instructions on how to use it.
 	There are also many fixes and quality of life improvements.
 
 	- Added a setting to use an alternate set of percussion for songs.
@@ -101,6 +82,7 @@ v0.4:
 	- You can toggle the console output with L+R+Select.
 	- Holding down the Start button during boot will set display on the bottom screen.
 	- Reduced size of ROM by compressing songs.
+	- Added a loading progress indicator.
 	- Improved look of credit illustrations.
 	- Updated credits in the readme.
 	- Add version to game subtitle and config menu.
@@ -112,10 +94,10 @@ v0.4:
 	- Fixed flicker during fast forward.
 	- Upload face portrait and Japanese text to texture only during vblank, reducing flicker.
 	- Fix ending cloud parallax.
+	- Added an additional "fun" rom.
 	- Multi: Fixed NPCs targeting dead players.
 	- Multi: Optimized performance a bit.
 	- Multi: reduced flicker.
-	- Multi. Changed to 2 frame delay for both host and client.
 	- JPN: Add some missing characters to the font. (whoops)
 	- JPN: Fixed credit text being cut off.
 	- JPN: Fixed some missing credit portraits.
