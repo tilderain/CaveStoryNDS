@@ -1,7 +1,10 @@
 # Cave Story DS
+<img src="/preview.jpg">
+
 CSE2 (for Nintendo DS)
 
-<img src="/preview.jpg">
+
+
 ## Table of Contents
 
 This repo has two main branches:
