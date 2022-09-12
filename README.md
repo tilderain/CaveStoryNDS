@@ -78,13 +78,13 @@ BMP loading code is taken from Nitro Engine (MIT license). (https://github.com/A
 
 The CSE2 Decompilation Project, by CuckyDev and Clownacy
 
-	(and our optimization mascot GabrielRavier)
+(and our optimization mascot GabrielRavier)
 
-	The unauthorized source code recreation that lets us do weird things to this game.
+The unauthorized source code recreation that lets us do weird things to this game.
 
 CuckyDev, who helped me personally by making the font and file loading code, helped with the sound code,
 
-	and made this port too funny to make.
+and made this port too funny to make.
 
 Lusty_ from GBATemp, who helped test and was able to help me figure out the compatibility issue with flashcarts.
 
@@ -92,7 +92,7 @@ Random people in the CSE2 Discord, who tried the port in its early stages and he
 
 Aeon Genesis: Shih Tzu (TranslateDoggie), and GideonZhi,
 
-	whose expert translation and ROM hacking skills brought Cave Story to a boatload of people.
+whose expert translation and ROM hacking skills brought Cave Story to a boatload of people.
 
 devKitPro, the homebrew toolchain that lets us make games for Nintendo consoles without anyone's permission.
 
@@ -114,7 +114,7 @@ CUE, for the sly NDS lzss compression library.
 
 Drenn1, for the WiFi code from GameYob, and the forum posts on the devKitPro forums that probably let me avoid
 
-	a dozen hours of debugging the sound.
+a dozen hours of debugging the sound.
 
 huiminghao, for the WiFi code from NesDS.
 
