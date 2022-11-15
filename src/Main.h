@@ -21,6 +21,8 @@ extern BOOL gbTransparency;
 extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];
 
+extern bool gIsCardPopped;
+
 void PutFramePerSecound(void);
 unsigned long GetFramePerSecound(void);
 

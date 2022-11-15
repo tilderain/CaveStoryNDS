@@ -15,6 +15,8 @@ typedef struct {
 
 #include "fopen.h"
 
+#include "gba.h"
+
 
 // we are in the "build" folder
 INCBIN(Armspng, "../game_english/data/Arms.png");
@@ -681,7 +683,7 @@ INCBIN(e_Skytsc, "../game_japanese/data/Stage/e_Sky.tsc");
 
 #endif
 
-const FILEREF files[] = {
+EWRAM_DATA const FILEREF files[] = {
 	{gArmspngData, gArmspngSize, "data/Arms.png"},
 	{gArmsImagepngData, gArmsImagepngSize, "data/ArmsImage.png"},
 	{gArmsItemtscData, gArmsItemtscSize, "data/ArmsItem.tsc"},

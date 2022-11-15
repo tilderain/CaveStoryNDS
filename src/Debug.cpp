@@ -27,7 +27,7 @@
 #include "Stage.h"
 #include "TextScr.h"
 
-#include "nds.h"
+#include "gba.h"
 
 DebugVars gDebug;
 //spaghetti pizza

@@ -8,8 +8,7 @@
 #pragma once
 
 #include "WindowsWrapper.h"
-#include "nds.h"
-#include "gl2d.h"
+#include "gba.h"
 #include "CommonDefines.h"
 
 extern RECT grcGame;
@@ -137,7 +136,7 @@ struct SURFACE
 	int yoffset;
 	int paletteOffset; //offset from palette vram banks
 	int paletteAddress; //real address of palette in memory
-	GL_TEXTURE_TYPE_ENUM paletteType;
+	int paletteType;
 	int palettesize;
 	BUFFER_PIXEL *data;
 	u16* palette;
@@ -166,73 +165,10 @@ void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT
 static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 {
 	//TODO: draw queueing
-	//TODO: don't render if transparent
-#ifdef TWO_SCREENS
-	int temp = x;
-	x = WINDOW_HEIGHT - y;
-	y = temp;
 
-	if((gCounter & 1) == 0) // bottom screen
-	{
-		
-	}
-	else
-	{
-		y -= WINDOW_WIDTH / 2;
-	}
-
-#endif
-
-	if(x > WINDOW_WIDTH) return;
-	if(y > WINDOW_HEIGHT) return;
-
-	int textureid = surf[surf_no].textureid;
-	//if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
-////
-	RECT srcRect = *rect;
-
-	srcRect.top += surf[surf_no].yoffset;
-	srcRect.bottom += surf[surf_no].yoffset;
-
-	if(surf[surf_no].paletteType == GL_RGB16)
-	{
-		srcRect.left += surf[surf_no].xoffset;
-		srcRect.right += surf[surf_no].xoffset;
-	}
-	else
-	{
-		// To compensate for the texture size being halved when turning from 16 to 256 color
-		srcRect.left += surf[surf_no].xoffset / 2;
-		srcRect.right += surf[surf_no].xoffset / 2;
-	}
-
-	if(rcView->left > x)
-	{
-		srcRect.left += rcView->left - x;
-		x = rcView->left;
-	}
-
-	if(rcView->top > y)
-	{
-		srcRect.top += rcView->top - y;
-		y = rcView->top;
-	}
-
-	int width = srcRect.right - srcRect.left;
-	int height = srcRect.bottom - srcRect.top;
-	if(x + width > rcView->right)
-	{
-		srcRect.right -= x + width - rcView->right;
-	}
-
-	if(y + height > rcView->bottom)
-	{
-		srcRect.bottom -= y + height - rcView->bottom;
-	}
-////
 
 	//glSprite(x, y, rect, gAtlas16Color1, 0);
-	glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
+	//glSprite(x, y, &srcRect, surf[surf_no].textureid, surf[surf_no].paletteOffset, surf[surf_no].paletteType);
 }
 void PutBitmap4(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no);
 int GetSurfPixel(int x, int y, int surf_no);

@@ -15,7 +15,9 @@
 
 #define VALUEVIEW_MAX 0x20
 
-VALUEVIEW gVV[VALUEVIEW_MAX];
+#include "gba.h"
+
+EWRAM_DATA VALUEVIEW gVV[VALUEVIEW_MAX];
 int gVVIndex;
 
 void ClearValueView(void)

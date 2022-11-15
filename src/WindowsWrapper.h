@@ -9,6 +9,12 @@
 
 #include <stdio.h>
  #include <stdint.h>
+ #include <cstring>
+ #include <cstdlib>
+
+typedef unsigned int uint32;
+typedef unsigned short uint16;
+typedef unsigned char uint8;
 
 #define RGB(r,g,b) ((r) | ((g) << 8) | ((b) << 16))
 

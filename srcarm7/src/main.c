@@ -101,7 +101,7 @@ int main() {
 		//if ( 0 == (REG_KEYINPUT & (KEY_SELECT | KEY_START | KEY_L | KEY_R))) {
 		//	exitflag = true;
 		//}
-		swiWaitForVBlank();
+		VBlankIntrWait();
 	}
 	return 0;
 }

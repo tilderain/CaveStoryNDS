@@ -28,8 +28,12 @@
 #include "fopen.h"
 #include "Stage.h"
 
-NPCHAR* gNPC[NPC_MAX];
-NPCHAR* gActiveNPC[NPC_MAX];
+#include "gba.h"
+
+#include <cstdlib>
+
+EWRAM_DATA NPCHAR* gNPC[NPC_MAX];
+EWRAM_DATA NPCHAR* gActiveNPC[NPC_MAX];
 int gActiveNPCCount = 0;
 
 int gCurlyShoot_wait;
@@ -482,6 +486,9 @@ void PutNpChar(int fx, int fy)
 			(gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200,
 			&gActiveNPC[n]->rect,
 			(SurfaceID)gActiveNPC[n]->surf);
+			int xx = (gActiveNPC[n]->x - side) / 0x200 - fx / 0x200 + a;
+			int yy = (gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200;
+			//iprintf("\x1b[%hu;%huH%s\n", yy/10, xx/10, "1");
 	
 	}
 }

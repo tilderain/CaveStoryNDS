@@ -358,6 +358,7 @@ const char *gMusicTable[42] = {
 
 void ChangeMusic(MusicID no)
 {
+	return;
 	if (no != MUS_SILENCE && no == gMusicNo)
 		return;
 

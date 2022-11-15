@@ -35,7 +35,9 @@
 #include "Multi.h"
 #include "math.h"
 
-NPCHAR gBoss[BOSS_MAX];
+#include "gba.h"
+
+EWRAM_DATA NPCHAR gBoss[BOSS_MAX];
 
 void InitBossChar(int code)
 {

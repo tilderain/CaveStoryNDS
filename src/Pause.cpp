@@ -25,7 +25,7 @@
 
 #include "Flags.h"
 
-#include "nds.h"
+#include "gba.h"
 
 #include "Multi.h"
 #include "nifi.h"
@@ -34,7 +34,7 @@
 
 #include "Profile.h"
 
-#include "dswifi9.h"
+
 
 #define MAX_OPTIONS ((WINDOW_HEIGHT / 20) - 2)	// The maximum number of options we can fit on-screen at once
 
@@ -81,9 +81,6 @@ char* GetKeyName(int key)
  		case KEY_DOWN :   return "Down";   break;
 		case KEY_L     :  return "L";  break;
  		case KEY_R     :   return "R"; break;
- 		case KEY_X     :   return "X"; break;
- 		case KEY_Y     :   return "Y"; break;
- 		case KEY_TOUCH :   return "Touch"; break;
 	}
 
 	return "Unknown";
@@ -748,7 +745,7 @@ static int Callback_Screen(OptionsMenu *parent_menu, size_t this_option, Callbac
 
 			PlaySoundObject(SND_SWITCH_WEAPON, SOUND_MODE_PLAY);
 
-			lcdSwap();
+		//	lcdSwap();
 
 			parent_menu->options[this_option].value_string = strings[parent_menu->options[this_option].value];
 			break;
@@ -1086,7 +1083,7 @@ static int Callback_ChangeChannel(OptionsMenu *parent_menu, size_t this_option, 
 					parent_menu->options[this_option].value_string = strings[i];
 			}
 
-			Wifi_SetChannel(nifiChannel);
+
 
 			break;
 
@@ -1111,7 +1108,6 @@ static int Callback_ChangeChannel(OptionsMenu *parent_menu, size_t this_option, 
 					parent_menu->options[this_option].value_string = strings[i];
 			}
 
-			Wifi_SetChannel(nifiChannel);
 			
 			break;
 
@@ -1266,8 +1262,8 @@ static int Callback_MultiHost(OptionsMenu *parent_menu, size_t this_option, Call
 	PlaySoundObject(5, SOUND_MODE_PLAY);
 
 	int status = nifiGetStatus();
-	if(status != HOST_WAITING && status != HOST_CONNECTED && status != HOST_INGAME)
-		nifiHostMenu();
+	//if(status != HOST_WAITING && status != HOST_CONNECTED && status != HOST_INGAME)
+//		nifiHostMenu();
 	const int return_value = EnterOptionsMenu(&options_menu, 0);
 
 	if(!gStartingNetplay) nifiStop();
@@ -1298,7 +1294,7 @@ static int Callback_MultiConnect(OptionsMenu *parent_menu, size_t this_option, C
 		TRUE
 	};
 
-	nifiClientMenu();
+//	nifiClientMenu();
 
 	PlaySoundObject(5, SOUND_MODE_PLAY);
 	const int return_value = EnterOptionsMenu(&options_menu, 0);

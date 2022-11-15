@@ -12,7 +12,7 @@
 
 #include "Draw.h"
 
-#define NPC_MAX 0x200
+#define NPC_MAX 200
 
 enum NPCCond
 {

@@ -15,7 +15,7 @@
 #include "Main.h"
 
 #include "Sound.h"
-#include "nds.h"
+#include "gba.h"
 
 #include "Pause.h"
 

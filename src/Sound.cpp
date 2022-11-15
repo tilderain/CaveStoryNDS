@@ -28,9 +28,9 @@ equivalents.
 #include "Organya.h"
 #include "PixTone.h"
 
-#include "nds.h"
-#include "soundFifo.h"
-#include <maxmod9.h>
+#include "gba.h"
+
+
 
 #include "stdio.h"
 
@@ -92,7 +92,7 @@ void updateChannelStates(void)
 				// TODO: give organbuffer priority
 				sound->playing = false;
 				channelStates[sound->channelId] = NULL;
-				soundKill(sound->channelId);
+
 				sound->channelId = -1;
 				sound->timer = 0;
 				sound->endTimer = 0;
@@ -163,7 +163,7 @@ void SOUNDBUFFER::Release()
 	//TODO: find a better and more stable(?) way to handle this function
 	if(channelId != -1) 
 	{
-		soundKill(channelId);
+
 		channelStates[channelId] = NULL;
 	}
 	delete this;
@@ -193,7 +193,7 @@ void SOUNDBUFFER::SetFrequency(uint32_t dwFrequency)
 	frequency = dwFrequency;
 	//SCHANNEL_TIMER(channelId) = SOUND_FREQ(frequency);
 	if (channelId == -1) return;
-	soundSetFreq(channelId, (u16)frequency);
+
 }
 
 float MillibelToVolume(int32_t lVolume)
@@ -211,14 +211,14 @@ void SOUNDBUFFER::SetVolume(int32_t lVolume)
 	
 	//SCHANNEL_CR(channelId) = SCHANNEL_ENABLE | SOUND_FORMAT_8BIT | SOUND_VOL(lVolume);
 	if (channelId == -1) return;
-	soundSetVolume(channelId, volume);
+	//soundSetVolume(channelId, volume);
 }
 
 void SOUNDBUFFER::SetPan(int32_t lPan)
 {
 	pan = (int)((double)lPan / 512.0 * 127.0); // pan_tbl max to nds 127 pan max
 	if (channelId == -1) return;
-	soundSetPan(channelId, pan);
+	//soundSetPan(channelId, pan);
 }
 
 int played = false;
@@ -234,7 +234,7 @@ void SOUNDBUFFER::Play(bool bLooping)
 	{
 		//org for some reason sends a play message without looping for stopping..
 		//so it is better to just cut it off here rather than start a new sound
-		soundKill(channelId);
+
 		channelStates[channelId] = NULL;
 		channelId = -1;
 		return;
@@ -248,8 +248,8 @@ void SOUNDBUFFER::Play(bool bLooping)
 	channelStates[channelId] = this;
 
 	//printf() pan
-	SoundFormat format = (adpcm ? SoundFormat_ADPCM : SoundFormat_8Bit);
-	soundPlaySampleC(data, format, (u32)size, (u16)frequency, (u8)volume, (u8)pan, looping, (u16)0, channelId);
+	//SoundFormat format = (adpcm ? SoundFormat_ADPCM : SoundFormat_8Bit);
+
 	timer = 0;
 	endTimer = size * (adpcm?2:1) / (frequency / 63);
 }
@@ -257,14 +257,14 @@ void SOUNDBUFFER::Play(bool bLooping)
 void SOUNDBUFFER::Stop()
 {
 	playing = false;
-	if(channelId != -1) soundKill(channelId);
+
 	channelStates[channelId] = NULL;
 	channelId = -1;
 }
 
 void killAllSounds()
 {
-	soundMicOff();
+
 
 	for (int i=0;i<NUM_CHANNELS;i++)
 	{
@@ -348,8 +348,8 @@ void Vblankhandler(void)
 
 }
 
-mm_stream mystream;
-mm_ds_system sys;
+//mm_stream mystream;
+//mm_ds_system sys;
 
 bool InitDirectSound()
 {
@@ -372,7 +372,7 @@ bool InitDirectSound()
 	
 	StartOrganya();
 
-	soundEnable();
+
 	irqEnable(IRQ_VBLANK);
 	irqSet(IRQ_VBLANK, Vblankhandler);
 
@@ -478,6 +478,8 @@ size_t MakePixToneObject(const PIXTONEPARAMETER *ptp, int ptp_num, int no)
 
 BOOL ReadSound(int no)
 {
+
+	return TRUE;
     //Get file path
     char path[MAX_PATH];
 	bool pass;

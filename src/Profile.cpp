@@ -38,9 +38,11 @@
 
 #include "errno.h"
 
+#include "gba.h"
+
 const char *gDefaultName = "Profile.dat";
 const char *gProfileCode = "Do041220";
-PROFILE profile;
+EWRAM_DATA PROFILE profile;
 
 BOOL IsProfile(void)
 {

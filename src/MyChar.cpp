@@ -34,10 +34,11 @@
 
 #include "Frame.h"
 
+#include "gba.h"
 
-MYCHAR gMCP1;
+EWRAM_DATA MYCHAR gMCP1;
 MYCHAR* gMC = &gMCP1;
-MYCHAR gMCP2;
+EWRAM_DATA MYCHAR gMCP2;
 
 int gCurMyChar = 0;
 
@@ -363,6 +364,9 @@ void PutMyChar(int fx, int fy)
 	}
 	SurfaceID id = (gCurMyChar ? SURFACE_ID_MY_CHAR2 : SURFACE_ID_MY_CHAR);
 	PutBitmap3(&grcGame, ((gMC->x - gMC->view.front) / 0x200) - (fx / 0x200), ((gMC->y - gMC->view.top) / 0x200) - (fy / 0x200), &rect, id);
+	int x = ((gMC->x - gMC->view.front) / 0x200) - (fx / 0x200);
+	int y = ((gMC->y - gMC->view.top) / 0x200) - (fy / 0x200);
+	iprintf("\x1b[%hu;%huH%s\n", y/10, x/10, "0");
 
 	// Draw air tank
 	RECT rcBubble[2] = {

@@ -32,10 +32,10 @@
 #include "Sound.h"
 #include "Triangle.h"
 
-#include "nds.h"
-#include <filesystem.h>
+#include "gba.h"
+//#include <filesystem.h>
 //#include "../srccommon/csFifo.h"
-#include "nds/fifocommon.h"
+//#include "nds/fifocommon.h"
 
 #ifdef CYG_PROFILER
 #define __cplusplus
@@ -60,6 +60,8 @@ static BOOL bFps = FALSE;
 static int windowWidth;
 static int windowHeight;
 
+bool gIsCardPopped = false;
+
 CONFIG conf;
 CONFIG_BINDING bindings[BINDING_TOTAL];
 
@@ -69,6 +71,12 @@ static const char *lpWindowName = "洞窟物語";	// "Cave Story"
 static const char *lpWindowName = "Cave Story ~ Doukutsu Monogatari";
 #endif
 
+
+void card_line_irq()
+{
+	printf("card line irq popped\n");
+	gIsCardPopped = true;
+}
 
 //Framerate stuff
 void PutFramePerSecound()
@@ -110,13 +118,23 @@ void fifoDataHandler(int bytes, void *user_data)
 
 int main(int argc, char *argv[])
 {
+	consoleDemoInit();
+
+	irqInit();
+	irqEnable(IRQ_VBLANK);
+
+
 #ifdef NITROFS
 	nitroFSInit(NULL);
 #endif
-	defaultExceptionHandler();
+	//defaultExceptionHandler();
 	
 	//Get executable's path
-	fatInitDefault();
+	//fatInitDefault();
+
+ 	//irqEnable(IRQ_CARD_LINE); 
+ 	//irqSet(IRQ_CARD_LINE, card_line_irq);
+
 
 #ifdef CYG_PROFILER
  irqEnable(IRQ_HBLANK); 
@@ -150,7 +168,7 @@ int main(int argc, char *argv[])
 	if(conf.bBottomScreen || keysHeld() & KEY_START)
 	{
 		conf.bBottomScreen = true;
-		lcdMainOnBottom();
+		//lcdMainOnBottom();
 	}
 
 	
@@ -184,6 +202,7 @@ int main(int argc, char *argv[])
 	CortBox(&clip_rect, 0x000000);
 	PutBitmap3(&clip_rect, (WINDOW_WIDTH - 64) / 2, (WINDOW_HEIGHT - 8) / 2, &loading_rect, SURFACE_ID_LOADING);
 	
+
 	
 	//Draw to screen
 	if (Flip_SystemTask())

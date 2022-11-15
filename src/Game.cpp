@@ -240,6 +240,8 @@ int ModeOpening(void)
 		++gCounter;
 	}
 
+	//printf("exiting modeopening");
+
 	for (wait = 0; wait < 500; wait += 20)
 	{
 		CortBox(&grcGame, 0x000000);
@@ -399,7 +401,7 @@ int ModeTitle(void)
 				}
 				if(gCursorPos == 3)
 				{
-					switch (Call_Multi())
+					/*switch (Call_Multi())
 					{
 						case enum_ESCRETURN_exit:
 							return 0;
@@ -417,7 +419,7 @@ int ModeTitle(void)
 						gCursorPos = 1;
 						break;
 					}
-					continue;
+					continue;*/
 				}
 
 				PlaySoundObject(18, 1);
@@ -612,6 +614,8 @@ int ModeAction(void)
 
 	while (1)
 	{
+
+		iprintf("\x1b[2J");
 		// Get pressed keys
 		GetTrg();
 		long gKeyTrgMemo = gKeyTrg;

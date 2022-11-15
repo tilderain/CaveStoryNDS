@@ -65,6 +65,8 @@
 #include "TextScr.h"
 #include "ValueView.h"
 
+#include <cstdlib>
+
 bool gInMinimap = false;
 
 void WriteMiniMapLine()

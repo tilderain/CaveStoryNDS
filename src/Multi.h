@@ -20,8 +20,6 @@ static inline bool nifiIsLinkedInline() { return isHost || isClient; }
 //#include "../srccommon/wifi_shared.h"
 //#include "../srccommon/wifi_arm9.h"
 
-#include <nds.h>
-
 #endif
 
 #ifdef __cplusplus

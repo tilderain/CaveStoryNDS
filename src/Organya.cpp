@@ -280,7 +280,7 @@ void ReleaseOrganyaObject(int8_t track)
 }
 
 //Handling WAVE100
-int8_t wave_data[100][0x100];
+int8_t wave_data[1][1];
 
 bool InitWaveData100()
 {
@@ -295,7 +295,7 @@ bool InitWaveData100()
 		return false;
 	}
 
-	fread_embed(wave_data, 0x100, 100, fp);
+	fread_embed(wave_data, 1, 1, fp);
 	fclose_embed(fp);
 	return true;
 }
@@ -356,6 +356,21 @@ int32_t play_p = 0;
 NOTELIST *play_np[MAXTRACK];
 int32_t now_leng[MAXMELODY] = {0};
 
+enum dram_name 
+{
+	Bass01,
+	Bass02,
+	Snare01,
+	Snare02,
+	Tom01,
+
+	HiClose,
+	HiOpen,
+	Crash,
+	Per01,
+	Per02
+};
+
 void OrganyaPlayData()
 {
 	//Handle fading out
@@ -395,13 +410,28 @@ void OrganyaPlayData()
 	
 	for(int i = MAXMELODY; i < MAXTRACK; i++)
 	{
+		int wave_no = info.tdata[i].wave_no;
+
+		int dram;
+
+		switch (wave_no)
+		{
+			case Bass01: dram = 0; break;
+			case Snare01: dram = 1; break;
+			case HiClose: dram = 2; break;
+			case HiOpen: dram = 3; break;
+			case Tom01: dram = 4; break;
+			case Per01: dram = 5; break;
+			default: break;
+		}
+
 		if (play_np[i] != NULL && play_p == play_np[i]->x)
 		{
 			if (play_np[i]->y != KEYDUMMY)
-				PlayDramObject(play_np[i]->y,1,i-MAXMELODY);
+				PlayDramObject(play_np[i]->y, 1, dram);
 			
 			if(play_np[i]->pan != PANDUMMY)
-				ChangeDramPan(play_np[i]->pan,i-MAXMELODY);
+				ChangeDramPan(play_np[i]->pan, dram);
 			if(play_np[i]->volume != VOLDUMMY)
 				gTrackVol[i] = play_np[i]->volume;
 			
@@ -409,7 +439,7 @@ void OrganyaPlayData()
 		}
 		
 		if (play_np[i])
-			ChangeDramVolume(gOrgVolume * gTrackVol[i] / 0x7F, i - MAXMELODY);
+			ChangeDramVolume(gTrackVol[i] * gOrgVolume / 0x7F, dram);
 	}
 	
 	//Looping

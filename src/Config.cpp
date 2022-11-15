@@ -15,7 +15,7 @@
 #include "File.h"
 #include "Main.h"
 
-#include "nds.h"
+#include "gba.h"
 
 const char *config_filename = "Config.dat";	// Not the original name
 const char *config_magic = "CSDS03";	// Not the original name
@@ -126,8 +126,8 @@ void DefaultConfigData(CONFIG *conf)
 	conf->bindings[BINDING_CANCEL].keyboard = KEY_B;
 	conf->bindings[BINDING_JUMP].keyboard = KEY_A;
 	conf->bindings[BINDING_SHOT].keyboard = KEY_B;
-	conf->bindings[BINDING_ARMSREV].keyboard = KEY_Y;
-	conf->bindings[BINDING_ARMS].keyboard = KEY_X;
+	conf->bindings[BINDING_ARMSREV].keyboard = 255;
+	conf->bindings[BINDING_ARMS].keyboard = 255;
 	conf->bindings[BINDING_ITEM].keyboard = KEY_START;
 	conf->bindings[BINDING_MAP].keyboard = KEY_SELECT;
 }

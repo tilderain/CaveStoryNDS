@@ -20,7 +20,7 @@
 
 #include "Main.h"
 
-#include "nds.h"
+#include "gba.h"
 
 #include "nifi.h"
 

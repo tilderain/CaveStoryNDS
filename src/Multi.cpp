@@ -6,7 +6,7 @@
 
 #include "Multi.h"
 
-#include <nds.h>
+
 //#include "../srccommon/wifi_shared.h"
 //#include "../srccommon/wifi_arm9.h"
 
@@ -14,12 +14,10 @@
 
 #include "nifi.h"
 #include <stdio.h>
-#include "dswifi9.h"
-
 
 #include "Debug.h"
 
-#include "nds.h"
+#include "gba.h"
 
 #include "Game.h"
 
@@ -39,6 +37,8 @@
 #include "Frame.h"
 
 #include "Flags.h"
+
+#include "gba.h"
 
 #ifndef JAPANESE
 char magic1 = 'C';
@@ -115,10 +115,10 @@ volatile u32 hostId;
 //char linkedFilename[MAX_FILENAME_LEN];
 char linkedRomTitle[20];
 
-volatile int receivedInput[32];
-volatile bool receivedInputReady[32];
+EWRAM_DATA volatile int receivedInput[32];
+EWRAM_DATA volatile bool receivedInputReady[32];
 
-int oldInputs[OLD_INPUTS_BUFFER_SIZE];
+EWRAM_DATA int oldInputs[OLD_INPUTS_BUFFER_SIZE];
 char curAckSeq = 0;
 
 
@@ -128,10 +128,10 @@ bool WaitForDisconnect()
 	char* Text2 = "Please wait or press L+R+START to disconnect.";
 	PutText(&grcGame, 0, WINDOW_HEIGHT - 40, Text, RGB(255, 255, 255));
 	PutText(&grcGame, 0, WINDOW_HEIGHT - 16, Text2, RGB(255, 255, 255));
-	glEnd2D();
-	glFlush(0);
-	swiWaitForVBlank();
-	glBegin2D();
+	//glEnd2D();
+	////glFlush(0);
+	VBlankIntrWait();
+	//glBegin2D();
 	scanKeys();
 	int keys = keysHeld();
 	if (keys & KEY_L && keys & KEY_R && keys & KEY_START) 
@@ -193,24 +193,24 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
 
 
         packetAcknowledged = false;
-        if (Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014, (unsigned short *)buffer) != 0) {
-            printf("Nifi send error\n");
-            errcode = 1;
-        }
+       // if (Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014, (unsigned short *)buffer) != 0) {
+         //   printf("Nifi send error\n");
+           // errcode = 1;
+        //}
         if (acknowledge) {
             int attemptCounter = 0;
             while (!packetAcknowledged) {
                 int frameCounter = 0;
                 while (!packetAcknowledged && frameCounter < 10) {
-                    swiWaitForVBlank();
+                    VBlankIntrWait();
                     frameCounter++;
                 }
                 if (!packetAcknowledged) {
                     if (attemptCounter > 20) {
                         if(WaitForDisconnect()) break;
                     }
-                    Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014,
-                        (unsigned short *)buffer);
+                   // Wifi_RawTxFrame(dataLen+PACKET_HEADER_SIZE, 0x0014,
+                     //   (unsigned short *)buffer);
                 }
                 attemptCounter++;
             }
@@ -243,11 +243,11 @@ int nifiSendPacket(u8 command, u8* data, u32 dataLen, bool acknowledge)
                 errcode = 1;
                 break;
             }
-            swiWaitForVBlank(); // Excessive?
+            VBlankIntrWait(); // Excessive?
             // Send it twice for safety
 //             nifiSendPacket(NIFI_CMD_FRAGMENT, buffer,
 //                     fragmentSize+0x10, acknowledge);
-//             swiWaitForVBlank();
+//             VBlankIntrWait();
         }
 
         free(buffer);
@@ -444,7 +444,7 @@ void packetHandler(int packetID, int readlength)
     //  unsigned short * data:	location for the data to be read into
     
 	// bytesRead = Wifi_RxRawReadPacket(packetID, readlength, (unsigned short *)data); // Not used
-	Wifi_RxRawReadPacket(packetID, readlength, (unsigned short *)packet);
+	//Wifi_RxRawReadPacket(packetID, readlength, (unsigned short *)packet);
 	
     if (verifyPacket(packet, readlength)) {
         if (*(packet+32+HEADER_ACKNOWLEDGE))
@@ -459,7 +459,6 @@ void packetHandler(int packetID, int readlength)
                 nifiLinkType = data[0];
 				nifiChannel = data[4];
 
-				Wifi_SetChannel(nifiChannel);
 
             }
         }
@@ -470,7 +469,7 @@ void packetHandler(int packetID, int readlength)
 
 
 void Timer_10ms(void) {
-	Wifi_Timer(10);
+	//Wifi_Timer(10);
 }
 
 void nifiStop() {
@@ -488,59 +487,11 @@ static int wifiInited = false;
 
 void enableNifi()
 {
-    if (nifiInitialized)
-        return;
 
-	//Wifi_SetRawPacketMode(PACKET_MODE_NIFI);
-
-	if(!wifiInited)
-		Wifi_InitDefault(false);
-	wifiInited = true;
-
-// Wifi_SetPromiscuousMode: Allows the DS to enter or leave a "promsicuous" mode, in which 
-//   all data that can be received is forwarded to the arm9 for user processing.
-//   Best used with Wifi_RawSetPacketHandler, to allow user code to use the data
-//   (well, the lib won't use 'em, so they're just wasting CPU otherwise.)
-//  int enable:  0 to disable promiscuous mode, nonzero to engage
-	Wifi_SetPromiscuousMode(1);
-
-// Wifi_RawSetPacketHandler: Set a handler to process all raw incoming packets
-//  WifiPacketHandler wphfunc:  Pointer to packet handler (see WifiPacketHandler definition for more info)
-	Wifi_RawSetPacketHandler(packetHandler);
-
-// Wifi_SetChannel: If the wifi system is not connected or connecting to an access point, instruct
-//   the chipset to change channel
-//  int channel: the channel to change to, in the range of 1-13
-	Wifi_SetChannel(nifiChannel);
-
-	if(1) {
-		//for secial configuration for wifi
-		irqDisable(IRQ_TIMER3);
-		irqSet(IRQ_TIMER3, Timer_10ms); // replace timer IRQ
-		// re-set timer3
-		TIMER3_CR = 0;
-		TIMER3_DATA = -(6553 / 5); // 6553.1 * 256 / 5 cycles = ~10ms;
-		TIMER3_CR = 0x00C2; // enable, irq, 1/256 clock
-		irqEnable(IRQ_TIMER3);
-	}
-
-
-// Wifi_EnableWifi: Instructs the ARM7 to go into a basic "active" mode, not actually
-//   associated to an AP, but actively receiving and potentially transmitting
-	Wifi_EnableWifi();
-
-    nifiInitialized = true;
-	receivedSram = false;
 }
 
 void disableNifi() {
-    if (!nifiInitialized)
-        return;
 
-    Wifi_DisableWifi();
-    nifiInitialized = false;
-
-	status = CLIENT_NONE;
 }
 
 void nifiInterLinkMenu() {
@@ -561,7 +512,7 @@ void nifiSendSram() {
 int nifiReceiveSram() {
     nifiConsecutiveWaitingFrames = 0;
     while (!receivedSram) {
-        swiWaitForVBlank();
+        VBlankIntrWait();
         nifiConsecutiveWaitingFrames++;
         if (nifiConsecutiveWaitingFrames >= 60*5) {
             return 1;
@@ -666,7 +617,7 @@ int nifiStartLink() {
     /*if (isHost) {
         if (sendSram && gameboy->getNumSramBanks())
             nifiSendSram();
-        swiWaitForVBlank();
+        VBlankIntrWait();
         if (waitForSram && gameboy->getNumSramBanks()) {
             if (nifiReceiveSram())
                 return 1;
@@ -703,7 +654,7 @@ void nifiHostMenu() {
 
 void nifiClientMenu() {
     enableNifi();
-    consoleClear();
+    //consoleClear();
     printf("Waiting for host...\n\n");
 
 	gStartingNetplay = 0;
@@ -747,7 +698,7 @@ void nifiHostWait()
 void nifiClientWait()
 {
 	if (foundHost && status != CLIENT_CONNECTED && status != CLIENT_INGAME) {
-        swiWaitForVBlank();
+        VBlankIntrWait();
 
 		int bufferSize = 8;
         u8 buffer[bufferSize];
@@ -849,7 +800,7 @@ void nifiUpdateInput() {
         // Set other controller's input
 		while (!receivedInputReady[actualFrame&31])
 		{
-			swiDelay(1000);
+			//swiDelay(1000);
 			nifiConsecutiveWaitingFrames++;
 			if(nifiConsecutiveWaitingFrames % (40000 / 60) == 0)
 			{

@@ -5,18 +5,46 @@
     "version": "2.0.0",
     "configurations": [
     {
-			"type": "gdb",
-			"request": "attach",
-			"name": "Attach to gdbserver",
-			"executable": "CSE2-DS-New.elf",
-			"target": "127.0.0.1:30001",
-			"remote": true,
-			"cwd": "${workspaceRoot}", 
-			"gdbpath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gdb",
-		
-	
-			"preLaunchTask": "make and launch desmume",
-			"postDebugTask": "kill things"
+		"name": "(gdb) Make and Launch",
+		"type": "cppdbg",
+		"request": "launch",
+		"targetArchitecture": "arm",
+		"program": "${workspaceFolder}/CSE2-GBA.elf",
+		"args": [],
+		"stopAtEntry": false,
+		"cwd": "${workspaceFolder}",
+		"environment": [],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"miDebuggerServerAddress": "localhost:2345",
+		"windows": {
+			"miDebuggerPath": "${env:LOCALAPPDATA}/arm-gnu-toolchain/bin/arm-none-eabi-gdb.exe",
+			"setupCommands": [
+				{
+					"text": "shell start /b \"\" \"C:/Program Files/mGBA/mGBA.exe\" -g \"${workspaceFolder}/CSE2-GBA.elf\""
+				}
+			]
+		},
+		"linux": {
+			"miDebuggerPath": "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gdb",
+			"setupCommands": [
+				{
+					"text": "shell \"make\""
+				},
+				{
+					"text": "shell \"mgba-qt\" -g \"${workspaceFolder}/CSE2-GBA.elf\" &"
+				}
+			]
+		},
+		"osx": {
+			"miDebuggerPath": "/usr/local/share/arm-gnu-toolchain/bin/arm-none-eabi-gdb",
+			"setupCommands": [
+				{
+					"text": "shell open -a mGBA --args -g \"${workspaceFolder}/CSE2-GBA.elf\""
+				}
+			]
+		},
+		"postDebugTask": "kill things"
     }
     ]
 }

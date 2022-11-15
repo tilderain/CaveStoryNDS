@@ -15,8 +15,10 @@
 #include "Game.h"
 #include "Triangle.h"
 
-#define CARET_MAX 0x40
-CARET gCrt[CARET_MAX];
+#include "gba.h"
+
+#define CARET_MAX 20
+EWRAM_DATA CARET gCrt[CARET_MAX];
 
 CARET_TABLE gCaretTable[18] = {
 	{0, 0},

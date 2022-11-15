@@ -20,14 +20,16 @@
 #include "Sound.h"
 #include "nifi.h"
 
-BULLET gBul[BULLET_MAX2P];
+#include "gba.h"
+
+EWRAM_DATA BULLET gBul[20];
 
 void InitBullet(void)
 {
 	// Identical to ClearBullet
 	int i;
 
-	for (i = 0; i < BULLET_MAX2P; ++i)
+	for (i = 0; i < BULLET_MAX; ++i)
 		gBul[i].cond = 0;
 }
 

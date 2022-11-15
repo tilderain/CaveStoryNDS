@@ -14,7 +14,7 @@
 #include "Backends/Audio.h"
 #include "PixTone.h"
 
-#include "nds/ndstypes.h"
+#include "gba.h"
 
 #define SE_MAX 160	// According to the Organya source code release, this is the real name for this constant
 

@@ -68,7 +68,7 @@ typedef struct BULLET_TABLE
 
 #define BULLET_MAX 0x40
 #define BULLET_MAX2P 0x80
-extern BULLET gBul[BULLET_MAX2P];
+extern BULLET gBul[20];
 
 void InitBullet(void);
 int CountArmsBullet(int arms_code);

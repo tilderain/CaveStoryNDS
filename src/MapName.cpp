@@ -135,10 +135,10 @@ void PutMapName(BOOL bMini)
 		const unsigned char col_red = colour & 0x0000FF;
 		const unsigned char col_green = (colour & 0x00FF00) >> 8;
 		const unsigned char col_blue = (colour & 0xFF0000) >> 16;
-		colour = RGB15(col_red / 8, col_green / 8, col_blue / 8);
-		glColor(colour);
+		//colour = RGB15(col_red / 8, col_green / 8, col_blue / 8);
+		//glColor(colour);
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 71, &rc, SURFACE_ID_ROOM_NAME);
-		glColor(0x7fff);
+		//glColor(0x7fff);
 		PutBitmap3(&grcGame, (WINDOW_WIDTH / 2) - (spacing/2), 70, &rc, SURFACE_ID_ROOM_NAME);
 #endif
 		if (++gMapName.wait > 160)
