@@ -187,7 +187,7 @@ static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no
 	if(x > WINDOW_WIDTH) return;
 	if(y > WINDOW_HEIGHT) return;
 
-	int textureid = surf[surf_no].textureid;
+	//int textureid = surf[surf_no].textureid;
 	//if(!surf[surf_no].textureid) {textureid = gAtlas16Color1;}
 ////
 	RECT srcRect = *rect;
