@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 bool usebasepath = true;
 	//Get path of the data folder
 #ifdef READ_FROM_SD
-	strcpy(gDataPath, "fat:/datacse2");
+	strcpy(gDataPath, "sd:/datacse2");
 	usebasepath = false;
 #endif
 
