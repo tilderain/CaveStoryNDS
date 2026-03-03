@@ -70,7 +70,7 @@ Modifications and custom code are made available under the MIT licence. See
 
 There is some code that is modified from libnds. These are the ARM7 files, gl2d, soundFifo, and vram allocation in Draw.cpp.
 
-The WiFi code is taken mostly from Drenn1's GameYob (licensed under MIT), with minor changes from huiminghao's NesDS (no license).
+The WiFi code is taken mostly from Drenn1's GameYob (licensed under MIT), with minor changes from huiminghao's NesDS (public domain).
 
 BMP loading code is taken from Nitro Engine (MIT license). (https://github.com/AntonioND/nitro-engine/blob/master/source/NEFormats.c)
 
