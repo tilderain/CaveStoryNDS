@@ -28,8 +28,9 @@
 #include "fopen.h"
 #include "Stage.h"
 
-NPCHAR* gNPC[NPC_MAX];
-NPCHAR* gActiveNPC[NPC_MAX];
+
+DTCM_DATA NPCHAR* gNPC[NPC_MAX];
+DTCM_DATA NPCHAR* gActiveNPC[NPC_MAX];
 int gActiveNPCCount = 0;
 
 int gCurlyShoot_wait;
@@ -440,7 +441,7 @@ void PutNpCharGlobal(int fx, int fy)
 	}
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void PutNpChar(int fx, int fy)
 {
 	//int n;
@@ -487,7 +488,7 @@ void PutNpChar(int fx, int fy)
 }
 
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void ActNpChar(void)
 {
 	//int i;

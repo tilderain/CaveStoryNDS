@@ -37,7 +37,7 @@ void PutlittleStar(void)
 	}
 }
 
-int JudgeHitMyCharBlock(int x, int y)
+ITCM_CODE int JudgeHitMyCharBlock(int x, int y)
 {
 	int hit = 0;
 
@@ -120,7 +120,7 @@ int JudgeHitMyCharBlock(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleA(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleA(int x, int y)
 {
 	int hit = 0;
 
@@ -145,7 +145,7 @@ int JudgeHitMyCharTriangleA(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleB(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleB(int x, int y)
 {
 	int hit = 0;
 
@@ -170,7 +170,7 @@ int JudgeHitMyCharTriangleB(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleC(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleC(int x, int y)
 {
 	int hit = 0;
 
@@ -195,7 +195,7 @@ int JudgeHitMyCharTriangleC(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleD(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleD(int x, int y)
 {
 	int hit = 0;
 
@@ -220,7 +220,7 @@ int JudgeHitMyCharTriangleD(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleE(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleE(int x, int y)
 {
 	int hit = 0;
 
@@ -247,7 +247,7 @@ int JudgeHitMyCharTriangleE(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleF(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleF(int x, int y)
 {
 	int hit = 0;
 
@@ -274,7 +274,7 @@ int JudgeHitMyCharTriangleF(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleG(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleG(int x, int y)
 {
 	int hit = 0;
 
@@ -301,7 +301,7 @@ int JudgeHitMyCharTriangleG(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharTriangleH(int x, int y)
+ITCM_CODE int JudgeHitMyCharTriangleH(int x, int y)
 {
 	int hit = 0;
 
@@ -328,7 +328,7 @@ int JudgeHitMyCharTriangleH(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharWater(int x, int y)
+ITCM_CODE int JudgeHitMyCharWater(int x, int y)
 {
 	int hit = 0;
 
@@ -341,7 +341,7 @@ int JudgeHitMyCharWater(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharDamage(int x, int y)
+ITCM_CODE int JudgeHitMyCharDamage(int x, int y)
 {
 	int hit = 0;
 
@@ -354,7 +354,7 @@ int JudgeHitMyCharDamage(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharDamageW(int x, int y)
+ITCM_CODE int JudgeHitMyCharDamageW(int x, int y)
 {
 	int hit = 0;
 
@@ -367,7 +367,7 @@ int JudgeHitMyCharDamageW(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharVectLeft(int x, int y)
+ITCM_CODE int JudgeHitMyCharVectLeft(int x, int y)
 {
 	int hit = 0;
 	if (gMC->x - gMC->hit.back < (x * 0x10 + 6) * 0x200
@@ -379,7 +379,7 @@ int JudgeHitMyCharVectLeft(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharVectUp(int x, int y)
+ITCM_CODE int JudgeHitMyCharVectUp(int x, int y)
 {
 	int hit = 0;
 	if (gMC->x - gMC->hit.back < (x * 0x10 + 6) * 0x200
@@ -391,7 +391,7 @@ int JudgeHitMyCharVectUp(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharVectRight(int x, int y)
+ITCM_CODE int JudgeHitMyCharVectRight(int x, int y)
 {
 	int hit = 0;
 	if (gMC->x - gMC->hit.back < (x * 0x10 + 6) * 0x200
@@ -403,7 +403,7 @@ int JudgeHitMyCharVectRight(int x, int y)
 	return hit;
 }
 
-int JudgeHitMyCharVectDown(int x, int y)
+ITCM_CODE int JudgeHitMyCharVectDown(int x, int y)
 {
 	int hit = 0;
 	if (gMC->x - gMC->hit.back < (x * 0x10 + 6) * 0x200
@@ -415,7 +415,7 @@ int JudgeHitMyCharVectDown(int x, int y)
 	return hit;
 }
 
-void HitMyCharMap(void)
+ITCM_CODE void HitMyCharMap(void)
 {
 	int x, y;
 	int i;
@@ -597,7 +597,7 @@ void HitMyCharMap(void)
 		gMC->flag |= 0x100;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 int JudgeHitMyCharNPC(NPCHAR *npc)
 {
 	int hit = 0;
@@ -654,7 +654,7 @@ int JudgeHitMyCharNPC(NPCHAR *npc)
 	return hit;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 unsigned char JudgeHitMyCharNPC3(NPCHAR *npc)
 {
 	if (npc->direct == 0)
@@ -678,7 +678,7 @@ unsigned char JudgeHitMyCharNPC3(NPCHAR *npc)
 }
 
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 int JudgeHitMyCharNPC4(NPCHAR *npc)
 {
 	// TODO: comment this
@@ -781,7 +781,7 @@ int JudgeHitMyCharNPC4(NPCHAR *npc)
 	return hit;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void HitMyCharNpChar(void)
 {
 	int i;

@@ -24,8 +24,8 @@ extern int gLoadingProgress;
 extern CONFIG conf;
 extern CONFIG_BINDING bindings[BINDING_TOTAL];
 
-extern bool gIsCardPopped;
-extern int gCardPopTimer;
+extern volatile bool gIsCardPopped;
+extern volatile int gCardPopTimer;
 
 extern int gPxtoneInited;
 

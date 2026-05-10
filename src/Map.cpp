@@ -24,7 +24,7 @@
 
 #define PXM_BUFFER_SIZE 0x4B000
 
-MAP_DATA gMap;
+DTCM_DATA MAP_DATA gMap;
 
 const char *code_pxma = "PXM";
 
@@ -140,7 +140,7 @@ BOOL ChangeMapParts(int x, int y, unsigned char no)
 	return TRUE;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void PutStage_Back(int fx, int fy)
 {
 	//int i, j;
@@ -181,7 +181,7 @@ void PutStage_Back(int fx, int fy)
 	}
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void PutStage_Front(int fx, int fy)
 {
 	RECT rcSnack = {256, 48, 272, 64};

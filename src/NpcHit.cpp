@@ -274,7 +274,7 @@ void JudgeHitNpCharWater(NPCHAR *npc, int x, int y)
 	npc->flag |= hit;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void HitNpCharMap(void)
 {
 	int x, y;
@@ -591,7 +591,7 @@ static BOOL DamageNpchar(int n, int b)
 	return FALSE;
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 void HitNpCharBullet(void)
 {
 	//int n, b;

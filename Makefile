@@ -42,10 +42,13 @@ export TOPDIR	:=	$(CURDIR)
 export SDL_LIB	:=	$(DEVKITPRO)/msys2/usr/lib/SDL
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
-
+LTO_FLAGS :=
+ifeq ($(LTO), 1)
+	LTO_FLAGS := -flto
+endif
 CFLAGS	:= -g -Wall -O2\
  		 -mcpu=arm946e-s -march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-		-ffast-math -DFIX_BUGS \
+		-ffast-math $(LTO_FLAGS) -DFIX_BUGS \
 		$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9 -DLODEPNG_NO_COMPILE_ANCILLARY_CHUNKS -DLODEPNG_NO_COMPILE_ENCODER -DLODEPNG_NO_COMPILE_DISK -DLODEPNG_NO_COMPILE_ERROR_TEXT -DLODEPNG_NO_COMPILE_CPP
@@ -69,7 +72,7 @@ endif
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) -L$(SDL_LIB)
+LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) $(LTO_FLAGS) -Wl,-Map,$(notdir $*.map) -L$(SDL_LIB)
 
 
 #---------------------------------------------------------------------------------

@@ -20,7 +20,7 @@
 #include "fopen.h"
 
 // Npc function table
-const NPCFUNCTION gpNpcFuncTbl[361] = {
+DTCM_DATA const NPCFUNCTION gpNpcFuncTbl[361] = {
 	ActNpc000,
 	ActNpc001,
 	ActNpc002,

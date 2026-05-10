@@ -61,8 +61,8 @@ static BOOL bFps = FALSE;
 static int windowWidth;
 static int windowHeight;
 
-bool gIsCardPopped = false;
-int gCardPopTimer = 0;
+volatile bool gIsCardPopped = false;
+volatile int gCardPopTimer = 0;
 
 int gLoadingProgress = 0;
 

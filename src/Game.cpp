@@ -553,7 +553,7 @@ int ModeTitle(void)
 	return 3;
 }
 
-int ModeAction(void)
+ITCM_CODE int ModeAction(void)
 {
 	int frame_x;
 	int frame_y;

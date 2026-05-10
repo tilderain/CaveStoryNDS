@@ -9,6 +9,8 @@
 
 #include "WindowsWrapper.h"
 
+#include "nds.h"
+
 typedef struct MAP_DATA
 {
 	unsigned char *data;
@@ -25,8 +27,7 @@ BOOL LoadAttributeData(const char *path_atrb);
 void EndMapData(void);
 void ReleasePartsImage(void);
 void GetMapData(unsigned char **data, short *mw, short *ml);
-__attribute__((hot))
-static unsigned char GetAttribute(int x, int y)
+__attribute__((hot)) ITCM_CODE static unsigned char GetAttribute(int x, int y)
 {
 	size_t a;
 

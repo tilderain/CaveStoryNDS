@@ -17,7 +17,7 @@
 
 #include "nifi.h"
 
-FRAME gFrame;
+DTCM_DATA FRAME gFrame;
 
 void MoveFrame3(void)
 {
