@@ -16,24 +16,24 @@ void SetOrtho( void );
 
 void glBegin2D( void );
 void glEnd2D( void );
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 static inline void gxTexcoord2i(t16 u, t16 v)
 {
 	GFX_TEX_COORD = (v << 20) | ( (u << 4) & 0xFFFF );
 }
 
-static inline void gxVertex3i(v16 x, v16 y, v16 z)
+ITCM_CODE static inline void gxVertex3i(v16 x, v16 y, v16 z)
 {
 	GFX_VERTEX16 = (y << 16) | (x & 0xFFFF);
 	GFX_VERTEX16 = ((uint32)(uint16)z);
 }
 
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 static inline void gxVertex2i(v16 x, v16 y)
 {
 	GFX_VERTEX_XY = (y << 16) | (x & 0xFFFF);	
 }
-__attribute__((hot))
+ITCM_CODE __attribute__((hot))
 static void glSprite( int x1, int y1, RECT *rect, int textureID, int paletteOffset, int texType)
 {
 

@@ -164,7 +164,7 @@ void CopyDirtyText();
 void makeNpcSymTakeArmsSlot(bool toggle);
 void PutBitmap3Transparent(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no, u32 alpha);
 void DrawBitmapSizeParam(RECT *rcView, int x, int y, int width, int height, RECT *rect, SurfaceID surf_no, bool transparent);
-static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
+ITCM_CODE static void PutBitmap3(RECT *rcView, int x, int y, RECT *rect, SurfaceID surf_no)
 {
 	//TODO: draw queueing
 	//TODO: don't render if transparent
