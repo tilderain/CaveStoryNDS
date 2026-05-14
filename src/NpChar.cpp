@@ -454,7 +454,7 @@ void PutNpChar(int fx, int fy)
 
 	//hardcode cloud generator map
 	if(gStageNo == 71 || gStageNo == 78)
-	{	
+	{
 		PutNpCharGlobal(fx, fy);
 		return;
 	}
@@ -474,23 +474,10 @@ void PutNpChar(int fx, int fy)
 				gActiveNPC[n]->damage_view = 0;
 			}
 		}
-
-		if (gActiveNPC[n]->direct == 0)
-			side = gActiveNPC[n]->view.front;
-		else
-			side = gActiveNPC[n]->view.back;
-
-		PutBitmap3(
-			&grcGame,
-			(gActiveNPC[n]->x - side) / 0x200 - fx / 0x200 + a,
-			(gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200,
-			&gActiveNPC[n]->rect,
-			(SurfaceID)gActiveNPC[n]->surf);
-			int xx = (gActiveNPC[n]->x - side) / 0x200 - fx / 0x200 + a;
-			int yy = (gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200;
-			//iprintf("\x1b[%hu;%huH%s", yy/8, xx/8, "1");
-	
 	}
+
+	// Upload NPC positions to OAM sprites
+	UpdateNpcOam(fx, fy);
 }
 
 

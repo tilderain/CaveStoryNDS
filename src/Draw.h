@@ -188,3 +188,6 @@ void EndTextObject(void);
 BOOL CopyDataToTexture(int paletteType, int textureid, int surf_no,  int xoffset, int yoffset, RECT* rect);
 
 void glBegin2D( void );
+
+void InitSprites(void);
+void UpdateNpcOam(int fx, int fy);

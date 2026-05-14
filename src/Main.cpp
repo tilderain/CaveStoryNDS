@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
 {
 	REG_WAITCNT = 0x4316;
 	consoleDemoInit();
+	REG_DISPCNT |= OBJ_ON | OBJ_1D_MAP;
 
 	irqInit();
 	irqEnable(IRQ_VBLANK);

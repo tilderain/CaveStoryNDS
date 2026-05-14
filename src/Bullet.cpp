@@ -2408,11 +2408,12 @@ void ActBullet(void)
 	}
 }
 
-int GetMaxBullet(void)
+/*static inline int GetMaxBullet(void)
 {
+	return BULLET_MAX;
 	if(nifiIsLinked()) return BULLET_MAX2P;
 	return BULLET_MAX;
-}
+}*/
 
 BOOL IsActiveSomeBullet(void)
 {

@@ -467,6 +467,7 @@ void SetPlayPointer(int32_t x)
 //Load organya file
 void LoadOrganya(const char *name)
 {
+	return;
 	//Unload previous things
 	
 	OrganyaReleaseNote();

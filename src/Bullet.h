@@ -79,6 +79,9 @@ void PutBullet(int fx, int fy);
 void SetBullet(int no, int x, int y, int dir, signed char owner=gCurMyChar);
 void ActBullet(void);
 
-int GetMaxBullet(void);
+static inline int GetMaxBullet(void)
+{
+	return BULLET_MAX;
+}
 
 BOOL IsActiveSomeBullet(void);

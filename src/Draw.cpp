@@ -52,6 +52,8 @@
 
 #include "File.h"
 
+#include "NpChar.h"
+
 
 void Timer_1ms()
 {
@@ -367,9 +369,71 @@ BOOL Flip_SystemTask()
 
 BOOL StartDirectDraw()
 {
-	
-
+	InitSprites();
 	return TRUE;
+}
+
+void InitSprites(void)
+{
+	// Set sprite VRAM: fill 4 tiles (for 16x16 sprites) with red pixel data
+	// In 16-color mode, each 8x8 tile = 32 bytes. 4 tiles = 128 bytes = 64 uint16s
+	// Each uint16 = 4 pixels packed (0x1111 = all pixels color index 1)
+	u16 *sprite_vram = (u16*)SPRITE_GFX;
+	for (int i = 0; i < 64; i++)
+		sprite_vram[i] = 0x1111;
+
+	// Set sprite palette: entry 0 = transparent, entry 1 = pure red
+	OBJ_COLORS[0] = 0x0000;  // transparent
+	OBJ_COLORS[1] = RGB5(31, 0, 0);  // bright red
+}
+
+void UpdateNpcOam(int fx, int fy)
+{
+	int oam_index = 0;
+
+	for (int i = 0; i < gActiveNPCCount && oam_index < 128; i++)
+	{
+		NPCHAR *npc = gActiveNPC[i];
+		if (!(npc->cond & 0x80))
+			continue;
+
+		// Convert subpixel to screen coordinates
+		int side;
+		if (npc->direct == 0)
+			side = npc->view.front;
+		else
+			side = npc->view.back;
+
+		int x = (npc->x - side) / 0x200 - fx / 0x200;
+		int y = (npc->y - npc->view.top) / 0x200 - fy / 0x200;
+
+		// Clamp to valid OAM range (-64 to 255 for safe off-screen)
+		if (x > -16 && x < 256 && y > -16 && y < 176)
+		{
+			// Enable sprite at position
+			OAM[oam_index].attr0 = (y & 0x00FF) | ATTR0_NORMAL | ATTR0_SQUARE | ATTR0_COLOR_16;
+			OAM[oam_index].attr1 = (x & 0x01FF) | ATTR1_SIZE_16;
+			OAM[oam_index].attr2 = OBJ_CHAR(0) | OBJ_PRIORITY(0) | OBJ_PALETTE(0);
+		}
+		else
+		{
+			// Off-screen: disable sprite
+			OAM[oam_index].attr0 = ATTR0_DISABLED;
+			OAM[oam_index].attr1 = 0;
+			OAM[oam_index].attr2 = 0;
+		}
+		OAM[oam_index].dummy = 0;
+		oam_index++;
+	}
+
+	// Disable all remaining OAM entries
+	for (; oam_index < 128; oam_index++)
+	{
+		OAM[oam_index].attr0 = ATTR0_DISABLED;
+		OAM[oam_index].attr1 = 0;
+		OAM[oam_index].attr2 = 0;
+		OAM[oam_index].dummy = 0;
+	}
 }
 
 void EndDirectDraw()
