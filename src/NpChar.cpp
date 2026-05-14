@@ -114,7 +114,7 @@ BOOL LoadEvent(const char *path_event)
 
 	gActiveNPCCount = 0;
 
-	n = 170;
+	n = 30;
 	for (i = 0; i < count; ++i)
 	{
 		// Get data from file
@@ -488,7 +488,7 @@ void PutNpChar(int fx, int fy)
 			(SurfaceID)gActiveNPC[n]->surf);
 			int xx = (gActiveNPC[n]->x - side) / 0x200 - fx / 0x200 + a;
 			int yy = (gActiveNPC[n]->y - gActiveNPC[n]->view.top) / 0x200 - fy / 0x200;
-			//iprintf("\x1b[%hu;%huH%s\n", yy/10, xx/10, "1");
+			//iprintf("\x1b[%hu;%huH%s", yy/8, xx/8, "1");
 	
 	}
 }

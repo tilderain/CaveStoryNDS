@@ -960,7 +960,7 @@ int GetTextSpacing(const char *text)
 
 void PutText(RECT* rcView, int x, int y, const char *text, unsigned long colour)
 {
-	iprintf("\x1b[%hu;%huH%s\n", y/10, x/10, text);
+	iprintf("\x1b[%hu;%huH%s", y/10, x/10, text);
 	return;
     char v;
 

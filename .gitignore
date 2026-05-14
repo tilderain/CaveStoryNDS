@@ -77,3 +77,8 @@ resolve.pl
 
 *.ml1
 /release*
+
+*.gba
+*.sav
+Mesen
+all.txt

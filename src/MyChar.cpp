@@ -366,7 +366,7 @@ void PutMyChar(int fx, int fy)
 	PutBitmap3(&grcGame, ((gMC->x - gMC->view.front) / 0x200) - (fx / 0x200), ((gMC->y - gMC->view.top) / 0x200) - (fy / 0x200), &rect, id);
 	int x = ((gMC->x - gMC->view.front) / 0x200) - (fx / 0x200);
 	int y = ((gMC->y - gMC->view.top) / 0x200) - (fy / 0x200);
-	iprintf("\x1b[%hu;%huH%s\n", y/10, x/10, "0");
+	iprintf("\x1b[%hu;%huH%s", y/8, x/8, "0");
 
 	// Draw air tank
 	RECT rcBubble[2] = {

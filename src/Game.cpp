@@ -615,7 +615,7 @@ int ModeAction(void)
 	while (1)
 	{
 
-		iprintf("\x1b[2J");
+
 		// Get pressed keys
 		GetTrg();
 		long gKeyTrgMemo = gKeyTrg;
@@ -869,7 +869,7 @@ int ModeAction(void)
 
 		if (!Flip_SystemTask())
 			return 0;
-
+		iprintf("\x1b[2J");
 		++gCounter;
 	}
 
