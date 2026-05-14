@@ -226,8 +226,7 @@ static int EnterOptionsMenu(OptionsMenu *options_menu, size_t selected_option)
 	{
 		int status = nifiGetStatus();
 
-		if(nifiIsHost() && status != HOST_INGAME) nifiHostWait();
-		if(nifiIsClient() && status != CLIENT_INGAME) nifiClientWait();
+
 
 
 		if(status == HOST_CONNECTED)

@@ -373,6 +373,7 @@ enum dram_name
 
 void OrganyaPlayData()
 {
+	return;
 	//Handle fading out
 	if (bFadeout && gOrgVolume)
 		gOrgVolume -= 2;

@@ -115,9 +115,10 @@ void fifoDataHandler(int bytes, void *user_data)
   hblanks++;
  }
 #endif
-
+#define REG_WAITCNT *(volatile u16*)0x04000204
 int main(int argc, char *argv[])
 {
+	REG_WAITCNT = 0x4316;
 	consoleDemoInit();
 
 	irqInit();

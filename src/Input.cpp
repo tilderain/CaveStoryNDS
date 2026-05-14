@@ -78,7 +78,7 @@ bool UpdateInput()
 	int status = nifiGetStatus();
 	if(status == HOST_INGAME || status == CLIENT_INGAME)
 	{
-		nifiUpdateInput();
+	//	nifiUpdateInput();
 	}
 
 	return true;

@@ -115,10 +115,10 @@ volatile u32 hostId;
 //char linkedFilename[MAX_FILENAME_LEN];
 char linkedRomTitle[20];
 
-EWRAM_DATA volatile int receivedInput[32];
-EWRAM_DATA volatile bool receivedInputReady[32];
+volatile int receivedInput[32];
+volatile bool receivedInputReady[32];
 
-EWRAM_DATA int oldInputs[OLD_INPUTS_BUFFER_SIZE];
+int oldInputs[OLD_INPUTS_BUFFER_SIZE];
 char curAckSeq = 0;
 
 
@@ -431,10 +431,11 @@ void handlePacketCommand(int command, u8* data) {
             break;
     }
 }
+EWRAM_DATA u32 pkt[4096/2];
 
 void packetHandler(int packetID, int readlength)
 {
-    static u32 pkt[4096/2];
+
     static u8* packet = (u8*)pkt;
     // static int bytesRead = 0; // Not used
 
@@ -636,88 +637,6 @@ int nifiStartLink() {
     return 0;
 }
 
-void nifiHostMenu() {
-    enableNifi();
-    //clearConsole();
-
-    foundClient = false;
-    isHost = true;
-    isClient = false;
-    status = HOST_WAITING;
-	srand(gVBlankCounter);
-    hostId = rand();
-	gStartingNetplay = 0;
-
-    printf("Waiting for client...\n");
-    printf("Host ID: %d\n\n", hostId);
-}
-
-void nifiClientMenu() {
-    enableNifi();
-    //consoleClear();
-    printf("Waiting for host...\n\n");
-
-	gStartingNetplay = 0;
-    foundHost = false;
-    isClient = true;
-    isHost = false;
-    status = CLIENT_WAITING;
-}
-
-void nifiHostWait()
-{
-	static int count = 0;
-	if (!foundClient) {
-
-        int bufferSize = 8;
-        u8 buffer[bufferSize];
-
-        buffer[0] = nifiLinkType;
-		buffer[4] = nifiChannel;
-
-		if(count++ % 5 == 0)
-        	nifiSendPacket(NIFI_CMD_HOST, buffer, bufferSize, false);
-    }
-
-	if (foundClient && status != HOST_CONNECTED && status != HOST_INGAME) {
-        printf("Found client.\n");
-        status = HOST_CONNECTED;
-
-		if (nifiStartLink() != 0)
-       		printf("Link failed.\n");
-    	else
-        	printf("Starting link.\n");
-
-			PlaySoundObject(65, 1);
-
-    }
-
-
-}
-
-void nifiClientWait()
-{
-	if (foundHost && status != CLIENT_CONNECTED && status != CLIENT_INGAME) {
-        VBlankIntrWait();
-
-		int bufferSize = 8;
-        u8 buffer[bufferSize];
-
-        nifiSendPacket(NIFI_CMD_CLIENT, buffer, bufferSize, true);
-
-        printf("Connected to host.\nHost Id: %d\n", hostId);
-		printf("Channel: %d\n", nifiChannel);
-
-        status = CLIENT_CONNECTED;
-		if (nifiStartLink() != 0)
-            printf("Link failed.\n");
-        else
-            printf("Starting link.\n");
-
-		PlaySoundObject(65, 1);
-
-    }
-}
 
 bool nifiIsHost() { return isHost; }
 bool nifiIsClient() { return isClient; }
@@ -749,168 +668,3 @@ void nifiUnpause() {
 	nifiPaused = false;
 }
 
-void nifiUpdateInput() {
-    int* inputDest;
-    int* otherInputDest = nifiOtherInputDest;
-    if (nifiIsLinked())
-        inputDest = nifiInputDest;
-    else
-        inputDest = &gKey;
-
-    u32 bfr[4*4];
-    u8* buffer = (u8*)bfr;
-
-    u32 actualFrame = gCounter;
-    u32 inputFrame = gCounter;
-
-	if(gCounter==0)
-	{
-		nifiFrameCounter = -1;
-		memset(oldInputs, 0, sizeof(oldInputs));
-		memset((void*)&receivedInputReady, 0, sizeof(receivedInputReady));
-		memset((void*)&receivedInput, 0, sizeof(receivedInput));
-	}
-    bool frameHasPassed = nifiFrameCounter != gCounter;
-    if (nifiFrameCounter == -1)
-        printf("Start at %d", gCounter);
-    if (frameHasPassed && nifiFrameCounter > 0)
-        receivedInputReady[(nifiFrameCounter-1)&31] = false;
-    nifiFrameCounter = gCounter;
-
-    
-    inputFrame += CLIENT_FRAME_LAG;
-
-    int olderInput = oldInputs[OLD_INPUTS_BUFFER_SIZE-CLIENT_FRAME_LAG];
-
-    if (nifiIsLinked()) {
-        if (frameHasPassed) {
-            for (int i=0; i<OLD_INPUTS_BUFFER_SIZE-1; i++)
-                oldInputs[i] = oldInputs[i+1];
-            oldInputs[OLD_INPUTS_BUFFER_SIZE-1] = gKey;
-        }
-
-        // Send input to other ds
-        INT_TO(buffer+1, inputFrame-OLD_INPUTS_BUFFER_SIZE+1);
-        for (int i=0; i<OLD_INPUTS_BUFFER_SIZE; i++)
-            INT_TO(buffer+5+(i*4), oldInputs[i]);
-        buffer[0] = OLD_INPUTS_BUFFER_SIZE;
-		u8 type = isHost ? NIFI_CMD_INPUT_FOR_CLIENT : NIFI_CMD_INPUT_FOR_HOST;
-        nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
-
-        // Set other controller's input
-		while (!receivedInputReady[actualFrame&31])
-		{
-			//swiDelay(1000);
-			nifiConsecutiveWaitingFrames++;
-			if(nifiConsecutiveWaitingFrames % (40000 / 60) == 0)
-			{
-				printf("NIFI NOT READY %x\n", nifiFrameCounter);
-			}
-			if(nifiConsecutiveWaitingFrames >= 70 * 1000)
-			{
-				if(WaitForDisconnect()) break;
-			}
-
-			if(nifiConsecutiveWaitingFrames % 500 == 0)
-			{
-				nifiSendPacket(type, buffer, 5+(OLD_INPUTS_BUFFER_SIZE*4), false);
-			}
-			if(!nifiIsLinked())	break;
-		}
-		
-        *otherInputDest = receivedInput[actualFrame&31];
-        nifiUnpause();
-		nifiConsecutiveWaitingFramesPrev = nifiConsecutiveWaitingFrames;
-        nifiConsecutiveWaitingFrames = 0;
-        
-
-    }
-
-    if (!nifiIsLinked()) {
-        *inputDest = gKey;     
-    }
-    else {
-        *inputDest = olderInput;
-    }
-}
-
-
-int Wifi_RawTxFrameNIFI(u16 datalen, u16 rate, u16 * data) {
-/*	int base,framelen, hdrlen, writelen;
-	int copytotal, copyexpect;
-	u16 framehdr[6 + 12 + 2];
-	framelen=datalen + 8 + (WifiData->wepmode7 ? 4 : 0);
-
-	if(framelen + 40>Wifi_TxBufferWordsAvailable()*2) { // error, can't send this much!
-		return -1; //?
-	}
-
-	framehdr[0]=0;
-	framehdr[1]=0;
-	framehdr[2]=0;
-	framehdr[3]=0;
-	framehdr[4]=0; // rate, will be filled in by the arm7.
-	hdrlen=18;
-	framehdr[6]=0x0208;
-	framehdr[7]=0;
-
-	// MACs.
-	memset(framehdr + 8, 0xFF, 18);
-
-	if(WifiData->wepmode7)
-	{
-		framehdr[6] |=0x4000;
-		hdrlen=20;
-	}
-	framehdr[17] = 0;
-	framehdr[18] = 0; // wep IV, will be filled in if needed on the arm7 side.
-	framehdr[19] = 0;
-
-	framehdr[5]=framelen+hdrlen * 2 - 12 + 4;
-	copyexpect= ((framelen+hdrlen * 2 - 12 + 4) + 12 - 4 + 1)/2;
-	copytotal=0;
-
-	WifiData->stats[WSTAT_TXQUEUEDPACKETS]++;
-	WifiData->stats[WSTAT_TXQUEUEDBYTES] += framelen + hdrlen * 2;
-
-	base = WifiData->txbufOut;
-	Wifi_TxBufferWrite(base,hdrlen,framehdr);
-	base += hdrlen;
-	copytotal += hdrlen;
-	if(base >= (WIFI_TXBUFFER_SIZE / 2)) base -= WIFI_TXBUFFER_SIZE / 2;
-
-	// add LLC header
-	framehdr[0]=0xAAAA;
-	framehdr[1]=0x0003;
-	framehdr[2]=0x0000;
-	unsigned short protocol = 0x08FE;
-	framehdr[3] = ((protocol >> 8) & 0xFF) | ((protocol << 8) & 0xFF00);
-
-	Wifi_TxBufferWrite(base, 4, framehdr);
-	base += 4;
-	copytotal += 4;
-	if(base>=(WIFI_TXBUFFER_SIZE/2)) base -= WIFI_TXBUFFER_SIZE/2;
-
-	writelen = datalen;
-	if(writelen) {
-		Wifi_TxBufferWrite(base,(writelen+1)/2,data);
-		base += (writelen + 1) / 2;
-		copytotal += (writelen + 1) / 2;
-		if(base>=(WIFI_TXBUFFER_SIZE/2)) base -= WIFI_TXBUFFER_SIZE/2;
-	}
-	if(WifiData->wepmode7)
-	{ // add required extra bytes
-		base += 2;
-		copytotal += 2;
-		if(base >= (WIFI_TXBUFFER_SIZE / 2)) base -= WIFI_TXBUFFER_SIZE / 2;
-	}
-	WifiData->txbufOut = base; // update fifo out pos, done sending packet.
-
-	if(copytotal!=copyexpect)
-	{
-		//corrupted frame sent
-	}
-	if(synchandler) synchandler();
-	return 0;*/
-	return 0;
-}

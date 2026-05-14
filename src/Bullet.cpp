@@ -22,7 +22,7 @@
 
 #include "gba.h"
 
-EWRAM_DATA BULLET gBul[20];
+EWRAM_DATA BULLET gBul[BULLET_MAX];
 
 void InitBullet(void)
 {
@@ -109,7 +109,7 @@ void PutBullet(int fx, int fy)
 	}
 }
 
-BULLET_TABLE gBulTbl[46] =
+EWRAM_DATA BULLET_TABLE gBulTbl[46] =
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}},
 	{4, 1, 20, 36, 4, 4, 2, 2, {8, 8, 8, 8}},

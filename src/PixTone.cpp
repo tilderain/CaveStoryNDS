@@ -15,7 +15,9 @@
 
 #include "Random.h"
 
-signed char gWaveModelTable[6][0x100];
+#include "gba.h"
+
+EWRAM_DATA signed char gWaveModelTable[6][0x100];
 
 void MakeWaveTables(void)
 {
